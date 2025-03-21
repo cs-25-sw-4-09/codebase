@@ -33,7 +33,21 @@ grammar context_free_grammar
     start -> program; 
     program -> decl 'begin' stmt; 
    
+    //Declarations
+    decl -> (import | desireable)*;
+    import -> 'import' id STRING ';';
+    desireable -> id ':' types ';';
 
+    //Statements
+    stmt -> (forkS ';' | 'for' id 'in' exprS '{' stmt '}' 
+    | 'draw' exprS ('at' point)? ';' | id (':' types)? '=' exprS ';' 
+    | 'return' exprS ';' | id '(' params ')' ':' types '->' '{' stmt '}') stmt?;
+    //todo: spørg om funktioner kan kaldes uden nogle parametre. 
+
+    forkS -> 'fork' '(' fork ')';
+    fork -> '(' expr ')' '->' '{' stmt '}' fork? 
+    | '(' 'otherwise' ')' '->' '{' stmt '}';
+    
     //Expressions
     //exprS -> expr | manipulation; 
     exprS -> manipulation | expr | FCall | SCall | arr_args |  color | path | range;
@@ -44,62 +58,29 @@ grammar context_free_grammar
     expr4 -> expr4 '%' expr5 | expr4 '*' expr5 | expr4 '/' expr5 | expr5; 
     expr5 -> '-'expr6 | '!'expr6 | expr6;
     expr6 -> '(' expr ')' | FLOAT | INTEGER | id | properties | index ;
-
+    
+    properties -> id '.' id; 
     range -> expr '..' expr;
-
-
-    //Definitions
     point  -> '('expr ',' expr')';
     color -> '('expr',' expr ',' expr ',' expr')' ;
-    //todo: Tilføj identifier
-    path   -> point '--' path | point | '*';
-    //curve  -> point '~~' curve | point | '*';
+    //todo: Tilføj identifier v
+    path   -> point ('--' | '~~') path | point | '*';
+    FCall -> id '(' args ')';
+    args -> exprS | exprS ',' args;
+    SCall -> (path | id) '(|' attr '|)';
+    attr -> id '=' exprS (',' attr)?;
+    index -> id '[' expr ']' | index '[' expr ']';
+    pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr point?;
+    manipulation -> 'place' expr pos | 'scale' expr 'by' expr 
+    | 'rotate' expr 'by' expr;
+    arr_args -> '[' args ']';
+    params -> id ':' types (',' params)?;
 
     //Types
     types -> 'int' | 'float' | types'[]' | 'point' | 'color' 
     | 'shape' | 'path' | 'polygon';
     
-    index -> id '[' expr ']' | index '[' expr ']';
-
-    FCall -> id '(' args ')';
-    args -> exprS | exprS ',' args;
-    SCall -> (path | id) '(|' attr '|)';
-    attr -> id '=' exprS (',' attr)?;
-
-    arr_args -> '[' args ']';
-
-    //Statements
-    stmt -> (forkS ';' | 'for' id 'in' exprS '{' stmt '}' 
-    | 'draw' exprS ('at' point)? ';' | id (':' types)? '=' exprS ';' 
-    | 'return' exprS ';' | id '(' params ')' ':' types '->' '{' stmt '}') stmt?;
-    //todo: spørg om funktioner kan kaldes uden nogle parametre. 
-
-    //stmt -> 'for' id 'in' exprS '{' exprS '}';
-
-    params -> id ':' types (',' params)?;
-
-    forkS -> 'fork' '(' fork ')';
-    fork -> '(' expr ')' '->' '{' stmt '}' fork? 
-    | '(' 'otherwise' ')' '->' '{' stmt '}';
-    
-    //Declarations
-    decl -> (import | desireable)*;
-    import -> 'import' id STRING ';';
-    desireable -> id ':' types ';';
-
-    manipulation -> 'place' expr pos | 'scale' expr 'by' expr 
-    | 'rotate' expr 'by' expr;
-
-    pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr point?;
-
-
-    //Identifier
-    id -> IDENTIFIER;
-    //id -> LETTER | LETTER id2;
-    //id2 -> (LETTER | INTEGER) id2?; 
-
-    //Object properties
-    properties -> id '.' id; 
-    
+    //Simple things
+    id -> IDENTIFIER;    
   }
 }
