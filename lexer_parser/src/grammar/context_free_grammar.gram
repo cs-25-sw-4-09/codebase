@@ -9,63 +9,72 @@ grammar context_free_grammar
   }
   terminals
   {
-    WHITE_SPACE -> U+0020 | U+0009 | U+000B | U+000C ;
+    WHITE_SPACE -> U+0020 | U+0009 | U+000B | U+000C | U+000A 
+                  | U+000D | U+0085 | U+2028 | U+2029 | U+0009;
     SEPARATOR   -> WHITE_SPACE+;
 
-    INTEGER     -> [1-9] [0-9]* | '0' ;
-    FLOAT       -> INTEGER? '.' INTEGER;
-    NUMBER      -> INTEGER | FLOAT;
-    CHAR      -> [a-z];
-    LETTER -> [A-Z] | [a-z];
-    CONST -> [0-9];
+    CONST       -> [0-9];
+    INTEGER -> [1-9] CONST* | '0';
     
+    FLOAT       -> INTEGER? '.' CONST+;
+    //CHAR      -> [U+0000-U+FFFF];
+    LETTER      -> [A-Z] | [a-z];
+    //todo: Tilføj alle valid tegn her i identifiers
+    IDENTIFIER -> (LETTER | '_') (LETTER | CONST | '_')*;
+    STRING -> '"'(LETTER | '\\' | '/' | CONST | '.')*'"';
+    //MEMBER -> 'r' | 'g' | 'b' | 'a' | 'height' | 'width' | 'size' | 'x' | 'y' ;
+    //todo: find ud af om member først håndteres i typechek
+
   }
   rules
   {
 
     //Start place
-    start -> decl; 
-    //String
-    string -> '"'CHAR*'"';
+    start -> program; 
+    program -> decl 'begin' stmt; 
+   
 
     //Expressions
     //exprS -> expr | manipulation; 
-    exprS -> manipulation | id | expr | index 
-    | FCall | SCall | arr_args | properties | colour | path;
+    exprS -> manipulation | expr | FCall | SCall | arr_args |  color | path | range;
     expr -> expr '||' expr1 | expr1;
     expr1 -> expr1 '&&' expr2 | expr2;
-    expr2 -> expr3 '==' expr3 | expr3 '<' expr3 | expr3 | string '==' string;
+    expr2 -> expr3 '==' expr3 | expr3 '<' expr3 | expr3;
     expr3 -> expr3 '+' expr4 | expr3 '-' expr4 | expr4;
     expr4 -> expr4 '%' expr5 | expr4 '*' expr5 | expr4 '/' expr5 | expr5; 
     expr5 -> '-'expr6 | '!'expr6 | expr6;
-    expr6 -> '(' expr ')' | NUMBER;
+    expr6 -> '(' expr ')' | FLOAT | INTEGER | id | properties | index ;
+
+    range -> expr '..' expr;
 
 
     //Definitions
     point  -> '('expr ',' expr')';
-    colour -> '('expr',' expr ',' expr ',' expr')' ;
+    color -> '('expr',' expr ',' expr ',' expr')' ;
     //todo: Tilføj identifier
     path   -> point '--' path | point | '*';
-    curve  -> point '~~' curve | point | '*';
+    //curve  -> point '~~' curve | point | '*';
 
     //Types
-    types -> 'int' | 'float' | types'[]' | 'point' | 'colour' 
+    types -> 'int' | 'float' | types'[]' | 'point' | 'color' 
     | 'shape' | 'path' | 'polygon';
     
     index -> id '[' expr ']' | index '[' expr ']';
 
     FCall -> id '(' args ')';
-    args -> expr | expr ',' args;
-    
-    SCall -> (expr | id) '(' attr ')';
-    attr -> id '=' expr (',' attr)?;
+    args -> exprS | exprS ',' args;
+    SCall -> (path | id) '(|' attr '|)';
+    attr -> id '=' exprS (',' attr)?;
 
     arr_args -> '[' args ']';
 
     //Statements
-    stmt -> (forkS | 'for' id 'in' exprS '..' exprS '{' stmt '}' 
-    | 'draw' exprS ('at' point)? | id (':' types)? '=' exprS 
-    | 'return' exprS | id '(' params ')' ':' types '->' '{' stmt '}') ';' stmt?; 
+    stmt -> (forkS ';' | 'for' id 'in' exprS '{' stmt '}' 
+    | 'draw' exprS ('at' point)? ';' | id (':' types)? '=' exprS ';' 
+    | 'return' exprS ';' | id '(' params ')' ':' types '->' '{' stmt '}') stmt?;
+    //todo: spørg om funktioner kan kaldes uden nogle parametre. 
+
+    //stmt -> 'for' id 'in' exprS '{' exprS '}';
 
     params -> id ':' types (',' params)?;
 
@@ -74,9 +83,8 @@ grammar context_free_grammar
     | '(' 'otherwise' ')' '->' '{' stmt '}';
     
     //Declarations
-    decl -> idecl 'begin' stmt; 
-    idecl -> import*  desireable*;
-    import -> 'import' id string ';';
+    decl -> (import | desireable)*;
+    import -> 'import' id STRING ';';
     desireable -> id ':' types ';';
 
     manipulation -> 'place' expr pos | 'scale' expr 'by' expr 
@@ -86,11 +94,12 @@ grammar context_free_grammar
 
 
     //Identifier
-    id -> LETTER id2;
-    id2 -> (LETTER | CONST) id2?; 
+    id -> IDENTIFIER;
+    //id -> LETTER | LETTER id2;
+    //id2 -> (LETTER | INTEGER) id2?; 
 
     //Object properties
-    properties -> id '.' member; 
-    member -> 'r' | 'g' | 'b' | 'a' | 'height' | 'width' | 'size' | 'x' | 'y' ;
+    properties -> id '.' id; 
+    
   }
 }
