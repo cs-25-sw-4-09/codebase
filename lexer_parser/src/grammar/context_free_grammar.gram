@@ -1,31 +1,35 @@
 grammar context_free_grammar
 {
-  //todo: Tilføj comments
 
   options
   {
     Axiom = "start"; // the top variable for this grammar
     Separator = "SEPARATOR"; // the terminal that represent white space
+    
+    
   }
   terminals
   {
     WHITE_SPACE -> U+0020 | U+0009 | U+000B | U+000C | U+000A 
                   | U+000D | U+0085 | U+2028 | U+2029 | U+0009;
-    SEPARATOR   -> WHITE_SPACE+;
+                  
+    COMMENT_MULTI -> '/*' ( .* - (.* '*/' .*) ) '*/';
+    COMMENT_SINGLE -> '//' [^\r\n]* ;
+    SEPARATOR   -> WHITE_SPACE+ | COMMENT_MULTI | COMMENT_SINGLE;
 
     CONST       -> [0-9];
     INTEGER -> [1-9] CONST* | '0';
     
     FLOAT       -> INTEGER? '.' CONST+;
     //CHAR      -> [U+0000-U+FFFF];
-    LETTER      -> [A-Z] | [a-z];
+    LETTER      -> [A-Za-z] | [a-z];
     //todo: Tilføj alle valid tegn her i identifiers
+
     IDENTIFIER -> (LETTER | '_') (LETTER | CONST | '_')*;
     STRING -> '"'(LETTER | '\\' | '/' | CONST | '.')*'"';
-    //MEMBER -> 'r' | 'g' | 'b' | 'a' | 'height' | 'width' | 'size' | 'x' | 'y' ;
-    //todo: find ud af om member først håndteres i typechek
 
   }
+  
   rules
   {
 
@@ -57,7 +61,7 @@ grammar context_free_grammar
     expr3 -> expr3 '+' expr4 | expr3 '-' expr4 | expr4;
     expr4 -> expr4 '%' expr5 | expr4 '*' expr5 | expr4 '/' expr5 | expr5; 
     expr5 -> '-'expr6 | '!'expr6 | expr6;
-    expr6 -> '(' expr ')' | FLOAT | INTEGER | id | properties | index ;
+    expr6 -> '(' expr ')' | FLOAT | INTEGER | id | properties | index;
     
     properties -> id '.' id; 
     range -> expr '..' expr;
@@ -65,6 +69,9 @@ grammar context_free_grammar
     color -> '('expr',' expr ',' expr ',' expr')' ;
     //todo: Tilføj identifier v
     path   -> point ('--' | '~~') path | point | '*';
+
+    //x = (0,0)
+    //y = x--(2,3)--*;
     FCall -> id '(' args ')';
     args -> exprS | exprS ',' args;
     SCall -> (path | id) '(|' attr '|)';
@@ -81,6 +88,6 @@ grammar context_free_grammar
     | 'shape' | 'path' | 'polygon';
     
     //Simple things
-    id -> IDENTIFIER;    
+    id -> IDENTIFIER; 
   }
 }
