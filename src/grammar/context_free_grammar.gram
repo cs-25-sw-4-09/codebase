@@ -1,0 +1,96 @@
+grammar context_free_grammar
+{
+  //todo: Tilføj comments
+
+  options
+  {
+    Axiom = "start"; // the top variable for this grammar
+    Separator = "SEPARATOR"; // the terminal that represent white space
+  }
+  terminals
+  {
+    WHITE_SPACE -> U+0020 | U+0009 | U+000B | U+000C ;
+    SEPARATOR   -> WHITE_SPACE+;
+
+    INTEGER     -> [1-9] [0-9]* | '0' ;
+    FLOAT       -> INTEGER? '.' INTEGER;
+    NUMBER      -> INTEGER | FLOAT;
+    CHAR      -> [a-z];
+    LETTER -> [A-Z] | [a-z];
+    CONST -> [0-9];
+    
+  }
+  rules
+  {
+
+    //Start place
+    start -> decl; 
+    //String
+    string -> '"'CHAR*'"';
+
+    //Expressions
+    //exprS -> expr | manipulation; 
+    exprS -> manipulation | id | expr | index 
+    | FCall | SCall | arr_args | properties | colour | path;
+    expr -> expr '||' expr1 | expr1;
+    expr1 -> expr1 '&&' expr2 | expr2;
+    expr2 -> expr3 '==' expr3 | expr3 '<' expr3 | expr3 | string '==' string;
+    expr3 -> expr3 '+' expr4 | expr3 '-' expr4 | expr4;
+    expr4 -> expr4 '%' expr5 | expr4 '*' expr5 | expr4 '/' expr5 | expr5; 
+    expr5 -> '-'expr6 | '!'expr6 | expr6;
+    expr6 -> '(' expr ')' | NUMBER;
+
+
+    //Definitions
+    point  -> '('expr ',' expr')';
+    colour -> '('expr',' expr ',' expr ',' expr')' ;
+    //todo: Tilføj identifier
+    path   -> point '--' path | point | '*';
+    curve  -> point '~~' curve | point | '*';
+
+    //Types
+    types -> 'int' | 'float' | types'[]' | 'point' | 'colour' 
+    | 'shape' | 'path' | 'polygon';
+    
+    index -> id '[' expr ']' | index '[' expr ']';
+
+    FCall -> id '(' args ')';
+    args -> expr | expr ',' args;
+    
+    SCall -> (expr | id) '(' attr ')';
+    attr -> id '=' expr (',' attr)?;
+
+    arr_args -> '[' args ']';
+
+    //Statements
+    stmt -> (forkS | 'for' id 'in' exprS '..' exprS '{' stmt '}' 
+    | 'draw' exprS ('at' point)? | id (':' types)? '=' exprS 
+    | 'return' exprS | id '(' params ')' ':' types '->' '{' stmt '}') ';' stmt?; 
+
+    params -> id ':' types (',' params)?;
+
+    forkS -> 'fork' '(' fork ')';
+    fork -> '(' expr ')' '->' '{' stmt '}' fork? 
+    | '(' 'otherwise' ')' '->' '{' stmt '}';
+    
+    //Declarations
+    decl -> idecl 'begin' stmt; 
+    idecl -> import*  desireable*;
+    import -> 'import' id string ';';
+    desireable -> id ':' types ';';
+
+    manipulation -> 'place' expr pos | 'scale' expr 'by' expr 
+    | 'rotate' expr 'by' expr;
+
+    pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr point?;
+
+
+    //Identifier
+    id -> LETTER id2;
+    id2 -> (LETTER | CONST) id2?; 
+
+    //Object properties
+    properties -> id '.' member; 
+    member -> 'r' | 'g' | 'b' | 'a' | 'height' | 'width' | 'size' | 'x' | 'y' ;
+  }
+}
