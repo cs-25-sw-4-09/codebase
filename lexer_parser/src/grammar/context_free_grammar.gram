@@ -5,8 +5,6 @@ grammar context_free_grammar
   {
     Axiom = "start"; // the top variable for this grammar
     Separator = "SEPARATOR"; // the terminal that represent white space
-    
-    
   }
   terminals
   {
@@ -22,9 +20,8 @@ grammar context_free_grammar
     
     FLOAT       -> INTEGER? '.' CONST+;
     //CHAR      -> [U+0000-U+FFFF];
-    LETTER      -> [A-Za-z] | [a-z];
-    //todo: Tilføj alle valid tegn her i identifiers
-
+    LETTER      -> [A-Za-z];
+    
     IDENTIFIER -> (LETTER | '_') (LETTER | CONST | '_')*;
     STRING -> '"'(LETTER | '\\' | '/' | CONST | '.')*'"';
 
@@ -32,7 +29,6 @@ grammar context_free_grammar
   
   rules
   {
-
     //Start place
     start -> program; 
     program -> decl 'begin' stmt; 
@@ -45,8 +41,7 @@ grammar context_free_grammar
     //Statements
     stmt -> (forkS ';' | 'for' id 'in' exprS '{' stmt '}' 
     | 'draw' exprS ('at' point)? ';' | id (':' types)? '=' exprS ';' 
-    | 'return' exprS ';' | id '(' params ')' ':' types '->' '{' stmt '}') stmt?;
-    //todo: spørg om funktioner kan kaldes uden nogle parametre. 
+    | 'return' exprS ';' | id '(' params? ')' ':' types '->' '{' stmt '}') stmt?;
 
     forkS -> 'fork' '(' fork ')';
     fork -> '(' expr ')' '->' '{' stmt '}' fork? 
@@ -61,17 +56,16 @@ grammar context_free_grammar
     expr3 -> expr3 '+' expr4 | expr3 '-' expr4 | expr4;
     expr4 -> expr4 '%' expr5 | expr4 '*' expr5 | expr4 '/' expr5 | expr5; 
     expr5 -> '-'expr6 | '!'expr6 | expr6;
-    expr6 -> '(' expr ')' | FLOAT | INTEGER | id | properties | index;
+    expr6 -> parenthesis | FLOAT | INTEGER | id | properties | index;
     
+    parenthesis -> '(' (expr | expr ',' expr) ')';
+
     properties -> id '.' id; 
     range -> expr '..' expr;
     point  -> '('expr ',' expr')';
     color -> '('expr',' expr ',' expr ',' expr')' ;
-    //todo: Tilføj identifier v
-    path   -> point ('--' | '~~') path | point | '*';
+    path   -> expr (('--' | '~~') expr)+ (('--' | '~~')'*')?;
 
-    //x = (0,0)
-    //y = x--(2,3)--*;
     FCall -> id '(' args ')';
     args -> exprS | exprS ',' args;
     SCall -> (path | id) '(|' attr '|)';
