@@ -5,8 +5,8 @@
 
 use hime_redist::ast::AstNode;
 
-use test_hime::grammar::context_free_grammar;
-use test_hime::programs::get_example;
+use lexer_parser::grammar::context_free_grammar;
+use lexer_parser::programs::get_example;
 
 
 fn main() {
