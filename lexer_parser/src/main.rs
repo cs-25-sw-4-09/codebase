@@ -5,7 +5,7 @@
 
 use hime_redist::ast::AstNode;
 
-use test_hime::grammar::math_exp;
+use test_hime::grammar::context_free_grammar;
 use test_hime::programs::get_example;
 
 
@@ -17,7 +17,7 @@ fn main() {
     begin 
     x: int = 5 + 5;"; 
     let string3 = "5 + 4";
-    let result = math_exp::parse_str(string3);
+    let result = context_free_grammar::parse_str(string3);
     let ast = result.get_ast();
     let root = ast.get_root(); 
     print(root, &[]);
