@@ -5,8 +5,8 @@
 
 use hime_redist::ast::AstNode;
 
-use test_hime::grammar::context_free_grammar;
-use test_hime::programs::get_example;
+use lexer_parser::grammar::context_free_grammar;
+use lexer_parser::programs::get_example;
 
 
 fn main() {
@@ -17,7 +17,18 @@ fn main() {
     begin 
     x: int = 5 + 5;"; 
     let string3 = "5 + 4";
-    let result = context_free_grammar::parse_str(string3);
+    let str = "
+    begin
+    x = (x, y);
+    ";
+
+    let str = "begin
+    x: int = (f(x), f(x));
+    for i in f(x)..f(x) {
+        x = 5;
+    }
+    ";
+    let result = context_free_grammar::parse_str(str);
     let ast = result.get_ast();
     let root = ast.get_root(); 
     print(root, &[]);

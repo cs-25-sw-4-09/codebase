@@ -12,6 +12,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "lexer_parser"
+version = "1.0.0"
+dependencies = [
+ "hime_redist",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -58,13 +65,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "test_hime"
-version = "1.0.0"
-dependencies = [
- "hime_redist",
 ]
 
 [[package]]

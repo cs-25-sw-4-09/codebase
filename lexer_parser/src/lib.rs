@@ -1,5 +1,7 @@
 pub mod grammar;
 
+#[cfg(test)]
+pub mod test;
 
 pub mod programs {
     
