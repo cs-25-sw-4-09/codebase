@@ -20,17 +20,14 @@ fn main() {
 
     let example = "
     begin
-    _ = 5 + 6 * 4;
+    x = 5 + 5;
     ";
-
-
-
     let result = context_free_grammar::parse_str(example);
     let ast = result.get_ast();
     let root = ast.get_root(); 
     print(root, &[]);
 
-    println!("{}", stingify_tree(root));
+    //println!("{}", stingify_tree(root));
 
     let example = "
     begin

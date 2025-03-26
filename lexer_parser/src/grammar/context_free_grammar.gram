@@ -47,16 +47,16 @@ grammar context_free_grammar
     | '(' 'otherwise' ')' '->' '{' stmt '}';
     
     //Expressions 
-    exprS -> manipulation | expr_func | SCall | arr_args 
-    |  color | path | range;
-    expr_func -> expr | FCall;
-    expr -> expr '||' expr1 | expr1;
-    expr1 -> expr1 '&&' expr2 | expr2;
-    expr2 -> expr3 '==' expr3 | expr3 '<' expr3 | expr3;
-    expr3 -> expr3 '+' expr4 | expr3 '-' expr4 | expr4;
+    exprS -> (manipulation | expr_func | SCall | arr_args 
+    |  color | path | range)^;
+    expr_func -> (expr | FCall)^;
+    expr -> (expr '||' expr1 | expr1)^;
+    expr1 -> (expr1 '&&' expr2 | expr2)^;
+    expr2 -> (expr3 '==' expr3 | expr3 '<' expr3 | expr3)^;
+    expr3 -> (expr3 '+'^ expr4 | expr3 '-' expr4 | expr4)^;
     expr4 -> expr4 '%' expr5 | expr4 '*' expr5 | expr4 '/' expr5 | expr5; 
     expr5 -> '-'expr6 | '!'expr6 | expr6;
-    expr6 -> parenthesis | FLOAT | INTEGER | id | properties | index;
+    expr6 -> (parenthesis | FLOAT | INTEGER | id | properties | index)^;
     
     parenthesis -> '(' (expr | (expr | FCall) ',' (expr | FCall)) ')';
 
@@ -80,6 +80,6 @@ grammar context_free_grammar
     | 'shape' | 'path' | 'polygon';
     
     //Simple things
-    id -> IDENTIFIER; 
+    id -> IDENTIFIER^; 
   }
 }
