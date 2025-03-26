@@ -4,6 +4,35 @@ pub mod grammar;
 pub mod test;
 
 pub mod programs {
+        
+    use hime_redist::ast::AstNode;
+    use hime_redist::symbols::SemanticElementTrait;
+
+    pub fn stingify_tree(node: AstNode) -> String {
+        helper(node, &mut 0)
+    }
+
+    fn helper(node: AstNode, tabs: &mut usize) -> String {
+        //Insert tabs
+        let mut res = "".to_string();
+        let children = node.children();
+        let indent = children.iter().any(|child| child.get_value().is_some());
+    
+        if node.get_value().is_none() {
+            let children = node.children();
+            if indent { *tabs += 1 }
+            for child in children.iter() {
+                //if child.get_value().is_some() { *tabs += 1 } else { *tabs = (*tabs).saturating_sub(1) }
+                //println!("Node: {node}, val: {:?} and Tabs: {}, indent: {indent}", child.get_value(), tabs, );
+                //if indent { res += &(node.to_string() + " ") }
+                res += &helper(child, tabs);
+            }
+            if indent { *tabs -= 1 }
+            return res;
+        }    
+        "  ".repeat(*tabs).to_string() + node.get_value().unwrap() + "\n"
+    }
+
     
     const ex1: &str = 
 "width: int;
