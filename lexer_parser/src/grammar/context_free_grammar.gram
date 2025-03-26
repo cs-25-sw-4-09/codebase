@@ -30,7 +30,7 @@ grammar context_free_grammar
   {
     //Start place
     start -> program; 
-    program -> decl 'begin' stmt; 
+    program -> decl 'begin' stmtS; 
    
     //Declarations
     decl -> (import | var_decl)*;
@@ -38,9 +38,10 @@ grammar context_free_grammar
     var_decl -> id ':' types ';';
 
     //Statements
+    stmtS -> stmt+;
     stmt -> (forkS ';' | 'for' id 'in' exprS '{' stmt '}' 
     | 'draw' exprS ('at' exprS)? ';' | id (':' types)? '=' exprS ';' 
-    | 'return' exprS ';' | id '(' params? ')' ':' types '->' '{' stmt '}') stmt?;
+    | 'return' exprS ';' | id '(' params? ')' ':' types '->' '{' stmt '}');
 
     forkS -> 'fork' '(' fork ')';
     fork -> '(' expr_func ')' '->' '{' stmt '}' fork? 
@@ -48,14 +49,14 @@ grammar context_free_grammar
     
     //Expressions 
     exprS -> (manipulation | expr_func | SCall | arr_args 
-    |  color | path | range)^;
+    |  color | path | range);
     expr_func -> (expr | FCall)^;
-    expr -> (expr '||' expr1 | expr1)^;
-    expr1 -> (expr1 '&&' expr2 | expr2)^;
-    expr2 -> (expr3 '==' expr3 | expr3 '<' expr3 | expr3)^;
-    expr3 -> (expr3 '+'^ expr4 | expr3 '-' expr4 | expr4)^;
-    expr4 -> expr4 '%' expr5 | expr4 '*' expr5 | expr4 '/' expr5 | expr5; 
-    expr5 -> '-'expr6 | '!'expr6 | expr6;
+    expr -> expr '||' expr1 | expr1^;
+    expr1 -> expr1 '&&' expr2 | expr2^;
+    expr2 -> expr3 '==' expr3 | expr3 '<' expr3 | expr3^;
+    expr3 -> expr3 '+'^ expr4 | expr3 '-' expr4 | expr4^;
+    expr4 -> expr4 '%' expr5 | expr4 '*'^ expr5 | expr4 '/' expr5 | expr5^; 
+    expr5 -> '-'expr6 | '!'expr6 | expr6^;
     expr6 -> (parenthesis | FLOAT | INTEGER | id | properties | index)^;
     
     parenthesis -> '(' (expr | (expr | FCall) ',' (expr | FCall)) ')';
@@ -76,8 +77,8 @@ grammar context_free_grammar
     params -> id ':' types (',' params)?;
 
     //Types
-    types -> 'int' | 'float' | types'[]' | 'point' | 'color' 
-    | 'shape' | 'path' | 'polygon';
+    types -> ('int' | 'float' | types'[]' | 'point' | 'color' 
+    | 'shape' | 'path' | 'polygon')^;
     
     //Simple things
     id -> IDENTIFIER^; 
