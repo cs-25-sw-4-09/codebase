@@ -5,55 +5,38 @@
 
 use hime_redist::ast::AstNode;
 
-use hime_redist::symbols::SemanticElementTrait;
 use lexer_parser::grammar::context_free_grammar;
-use lexer_parser::programs::{get_example, stingify_tree};
+use lexer_parser::programs::{get_example, stringify_tree, print};
 
 
 fn main() {
-    let string = get_example(0); 
+    let _string = get_example(0); 
 
-    let str = 
-    "begin
-    x = 5 + 5;
-    ";
+    let example = 
+    "
+    import func \"hello\";
+    import func2 \"world\";
 
-    let example = "
+    x: int;
+    
     begin
-    x = 5 + 5;
+    x = 5 * 5 + 6;
+    y = x + 7;
+
+
+    draw x;
     ";
+    let example = 
+    "begin 
+    x = 5 +5 * 5;";
+
     let result = context_free_grammar::parse_str(example);
     let ast = result.get_ast();
     let root = ast.get_root(); 
     print(root, &[]);
 
-    //println!("{}", stingify_tree(root));
-
-    let example = "
-    begin
-    x = 5 + 5 * 6;
-    ";
+    let str = stringify_tree(root);
+    println!("{}", str);
 
 }
 
-fn print(node: AstNode, crossings: &[bool]) {
-
-    let mut i = 0;
-    if !crossings.is_empty() {
-        while i < crossings.len() - 1 {
-            print!("{:}", if crossings[i] { "|   " } else { "    " });
-            i += 1;
-        }
-        print!("+-> ");
-    }
-    println!("{node}");
-
-    i = 0;
-    let children = node.children();
-    while i < children.len() {
-        let mut child_crossings = crossings.to_owned();
-        child_crossings.push(i < children.len() - 1);
-        print(children.at(i), &child_crossings);
-        i += 1;
-    }
-}

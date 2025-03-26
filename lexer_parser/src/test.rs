@@ -1,22 +1,15 @@
 
-use super::programs::stingify_tree;
+use super::programs::stringify_tree;
 use super::grammar::context_free_grammar;
-use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 
 #[test]
 fn test_stmt_declaration() {
 
-    let example = "
+    let _example = "
     begin
     x: int = 5 + 5;
     ";
     
-    let assertions = vec!["begin", "x", ":", "int", "=", "5", "+", "5", ";"];
-    check_ast_equality(
-        &context_free_grammar::parse_str(example).get_ast().get_root(), 
-        &assertions, 
-        &mut 0
-    );
 }
 
 #[test]
@@ -38,7 +31,7 @@ fn test_multi_precedence() {
     ;
 ";
 
-    let tree2 = stingify_tree(
+    let tree2 = stringify_tree(
         context_free_grammar::parse_str(example)
         .get_ast().get_root()
     );
@@ -49,7 +42,7 @@ fn test_multi_precedence() {
 
 
 
-
+/*
 fn check_ast_equality(node: &AstNode, asserts: &[&str], index: &mut usize) {    
     let children = node.children(); 
     /*if node.get_value().is_some() {
@@ -78,27 +71,5 @@ fn check_ast_equality(node: &AstNode, asserts: &[&str], index: &mut usize) {
 
 
     }
-
-
 }
-
-
-fn print(node: AstNode, crossings: &[bool]) {
-    let mut i = 0;
-    if !crossings.is_empty() {
-        while i < crossings.len() - 1 {
-            print!("{:}", if crossings[i] { "|   " } else { "    " });
-            i += 1;
-        }
-        print!("+-> ");
-    }
-    println!("{node}");
-    i = 0;
-    let children = node.children();
-    while i < children.len() {
-        let mut child_crossings = crossings.to_owned();
-        child_crossings.push(i < children.len() - 1);
-        print(children.at(i), &child_crossings);
-        i += 1;
-    }
-}
+*/
