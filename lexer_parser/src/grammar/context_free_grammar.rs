@@ -211,71 +211,71 @@ pub const TERMINALS: &[Symbol] = &[
         name: "]"
     },
     Symbol {
-        id: 0x0054,
+        id: 0x0055,
         name: "left"
     },
     Symbol {
-        id: 0x0055,
+        id: 0x0056,
         name: "right"
     },
     Symbol {
-        id: 0x0056,
+        id: 0x0057,
         name: "top"
     },
     Symbol {
-        id: 0x0057,
+        id: 0x0058,
         name: "bottom"
     },
     Symbol {
-        id: 0x0058,
+        id: 0x0059,
         name: "on"
     },
     Symbol {
-        id: 0x0059,
+        id: 0x005A,
         name: "place"
     },
     Symbol {
-        id: 0x005A,
+        id: 0x005B,
         name: "scale"
     },
     Symbol {
-        id: 0x005B,
+        id: 0x005C,
         name: "by"
     },
     Symbol {
-        id: 0x005C,
+        id: 0x005D,
         name: "rotate"
     },
     Symbol {
-        id: 0x005D,
+        id: 0x005E,
         name: "int"
     },
     Symbol {
-        id: 0x005E,
+        id: 0x005F,
         name: "float"
     },
     Symbol {
-        id: 0x005F,
+        id: 0x0060,
         name: "[]"
     },
     Symbol {
-        id: 0x0060,
+        id: 0x0061,
         name: "point"
     },
     Symbol {
-        id: 0x0061,
+        id: 0x0062,
         name: "color"
     },
     Symbol {
-        id: 0x0062,
+        id: 0x0063,
         name: "shape"
     },
     Symbol {
-        id: 0x0063,
+        id: 0x0064,
         name: "path"
     },
     Symbol {
-        id: 0x0064,
+        id: 0x0065,
         name: "polygon"
     }
 ];
@@ -300,8 +300,8 @@ pub const ID_VARIABLE_PROGRAM: u32 = 0x000E;
 pub const ID_VARIABLE_DECL: u32 = 0x000F;
 /// The unique identifier for variable `import`
 pub const ID_VARIABLE_IMPORT: u32 = 0x0010;
-/// The unique identifier for variable `desireable`
-pub const ID_VARIABLE_DESIREABLE: u32 = 0x0011;
+/// The unique identifier for variable `var_decl`
+pub const ID_VARIABLE_VAR_DECL: u32 = 0x0011;
 /// The unique identifier for variable `stmt`
 pub const ID_VARIABLE_STMT: u32 = 0x0012;
 /// The unique identifier for variable `forkS`
@@ -310,28 +310,28 @@ pub const ID_VARIABLE_FORK_S: u32 = 0x0013;
 pub const ID_VARIABLE_FORK: u32 = 0x0014;
 /// The unique identifier for variable `exprS`
 pub const ID_VARIABLE_EXPR_S: u32 = 0x0015;
+/// The unique identifier for variable `expr_func`
+pub const ID_VARIABLE_EXPR_FUNC: u32 = 0x0016;
 /// The unique identifier for variable `expr`
-pub const ID_VARIABLE_EXPR: u32 = 0x0016;
+pub const ID_VARIABLE_EXPR: u32 = 0x0017;
 /// The unique identifier for variable `expr1`
-pub const ID_VARIABLE_EXPR1: u32 = 0x0017;
+pub const ID_VARIABLE_EXPR1: u32 = 0x0018;
 /// The unique identifier for variable `expr2`
-pub const ID_VARIABLE_EXPR2: u32 = 0x0018;
+pub const ID_VARIABLE_EXPR2: u32 = 0x0019;
 /// The unique identifier for variable `expr3`
-pub const ID_VARIABLE_EXPR3: u32 = 0x0019;
+pub const ID_VARIABLE_EXPR3: u32 = 0x001A;
 /// The unique identifier for variable `expr4`
-pub const ID_VARIABLE_EXPR4: u32 = 0x001A;
+pub const ID_VARIABLE_EXPR4: u32 = 0x001B;
 /// The unique identifier for variable `expr5`
-pub const ID_VARIABLE_EXPR5: u32 = 0x001B;
+pub const ID_VARIABLE_EXPR5: u32 = 0x001C;
 /// The unique identifier for variable `expr6`
-pub const ID_VARIABLE_EXPR6: u32 = 0x001C;
+pub const ID_VARIABLE_EXPR6: u32 = 0x001D;
 /// The unique identifier for variable `parenthesis`
-pub const ID_VARIABLE_PARENTHESIS: u32 = 0x001D;
+pub const ID_VARIABLE_PARENTHESIS: u32 = 0x001E;
 /// The unique identifier for variable `properties`
-pub const ID_VARIABLE_PROPERTIES: u32 = 0x001E;
+pub const ID_VARIABLE_PROPERTIES: u32 = 0x001F;
 /// The unique identifier for variable `range`
-pub const ID_VARIABLE_RANGE: u32 = 0x001F;
-/// The unique identifier for variable `point`
-pub const ID_VARIABLE_POINT: u32 = 0x0020;
+pub const ID_VARIABLE_RANGE: u32 = 0x0020;
 /// The unique identifier for variable `color`
 pub const ID_VARIABLE_COLOR: u32 = 0x0021;
 /// The unique identifier for variable `path`
@@ -382,7 +382,7 @@ pub const VARIABLES: &[Symbol] = &[
     },
     Symbol {
         id: 0x0011,
-        name: "desireable"
+        name: "var_decl"
     },
     Symbol {
         id: 0x0012,
@@ -402,47 +402,47 @@ pub const VARIABLES: &[Symbol] = &[
     },
     Symbol {
         id: 0x0016,
-        name: "expr"
+        name: "expr_func"
     },
     Symbol {
         id: 0x0017,
-        name: "expr1"
+        name: "expr"
     },
     Symbol {
         id: 0x0018,
-        name: "expr2"
+        name: "expr1"
     },
     Symbol {
         id: 0x0019,
-        name: "expr3"
+        name: "expr2"
     },
     Symbol {
         id: 0x001A,
-        name: "expr4"
+        name: "expr3"
     },
     Symbol {
         id: 0x001B,
-        name: "expr5"
+        name: "expr4"
     },
     Symbol {
         id: 0x001C,
-        name: "expr6"
+        name: "expr5"
     },
     Symbol {
         id: 0x001D,
-        name: "parenthesis"
+        name: "expr6"
     },
     Symbol {
         id: 0x001E,
-        name: "properties"
+        name: "parenthesis"
     },
     Symbol {
         id: 0x001F,
-        name: "range"
+        name: "properties"
     },
     Symbol {
         id: 0x0020,
-        name: "point"
+        name: "range"
     },
     Symbol {
         id: 0x0021,
@@ -505,7 +505,11 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V79"
     },
     Symbol {
-        id: 0x0065,
+        id: 0x0054,
+        name: "__V84"
+    },
+    Symbol {
+        id: 0x0066,
         name: "__VAxiom"
     }
 ];
@@ -577,11 +581,12 @@ pub trait Visitor {
     fn on_variable_program(&self, node: &AstNode) {}
     fn on_variable_decl(&self, node: &AstNode) {}
     fn on_variable_import(&self, node: &AstNode) {}
-    fn on_variable_desireable(&self, node: &AstNode) {}
+    fn on_variable_var_decl(&self, node: &AstNode) {}
     fn on_variable_stmt(&self, node: &AstNode) {}
     fn on_variable_fork_s(&self, node: &AstNode) {}
     fn on_variable_fork(&self, node: &AstNode) {}
     fn on_variable_expr_s(&self, node: &AstNode) {}
+    fn on_variable_expr_func(&self, node: &AstNode) {}
     fn on_variable_expr(&self, node: &AstNode) {}
     fn on_variable_expr1(&self, node: &AstNode) {}
     fn on_variable_expr2(&self, node: &AstNode) {}
@@ -592,7 +597,6 @@ pub trait Visitor {
     fn on_variable_parenthesis(&self, node: &AstNode) {}
     fn on_variable_properties(&self, node: &AstNode) {}
     fn on_variable_range(&self, node: &AstNode) {}
-    fn on_variable_point(&self, node: &AstNode) {}
     fn on_variable_color(&self, node: &AstNode) {}
     fn on_variable_path(&self, node: &AstNode) {}
     fn on_variable_fcall(&self, node: &AstNode) {}
@@ -631,22 +635,22 @@ pub fn visit_ast_node(node: AstNode, visitor: &dyn Visitor) {
         0x000E => visitor.on_variable_program(&node),
         0x000F => visitor.on_variable_decl(&node),
         0x0010 => visitor.on_variable_import(&node),
-        0x0011 => visitor.on_variable_desireable(&node),
+        0x0011 => visitor.on_variable_var_decl(&node),
         0x0012 => visitor.on_variable_stmt(&node),
         0x0013 => visitor.on_variable_fork_s(&node),
         0x0014 => visitor.on_variable_fork(&node),
         0x0015 => visitor.on_variable_expr_s(&node),
-        0x0016 => visitor.on_variable_expr(&node),
-        0x0017 => visitor.on_variable_expr1(&node),
-        0x0018 => visitor.on_variable_expr2(&node),
-        0x0019 => visitor.on_variable_expr3(&node),
-        0x001A => visitor.on_variable_expr4(&node),
-        0x001B => visitor.on_variable_expr5(&node),
-        0x001C => visitor.on_variable_expr6(&node),
-        0x001D => visitor.on_variable_parenthesis(&node),
-        0x001E => visitor.on_variable_properties(&node),
-        0x001F => visitor.on_variable_range(&node),
-        0x0020 => visitor.on_variable_point(&node),
+        0x0016 => visitor.on_variable_expr_func(&node),
+        0x0017 => visitor.on_variable_expr(&node),
+        0x0018 => visitor.on_variable_expr1(&node),
+        0x0019 => visitor.on_variable_expr2(&node),
+        0x001A => visitor.on_variable_expr3(&node),
+        0x001B => visitor.on_variable_expr4(&node),
+        0x001C => visitor.on_variable_expr5(&node),
+        0x001D => visitor.on_variable_expr6(&node),
+        0x001E => visitor.on_variable_parenthesis(&node),
+        0x001F => visitor.on_variable_properties(&node),
+        0x0020 => visitor.on_variable_range(&node),
         0x0021 => visitor.on_variable_color(&node),
         0x0022 => visitor.on_variable_path(&node),
         0x0023 => visitor.on_variable_fcall(&node),

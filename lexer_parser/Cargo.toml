@@ -1,5 +1,5 @@
 [package]
-name = "test_hime"
+name = "lexer_parser"
 version = "1.0.0"
 edition = "2021"
 
