@@ -49,14 +49,14 @@ grammar context_free_grammar
     
     //Expressions 
     exprS -> (manipulation | expr_func | SCall | arr_args 
-    |  color | path | range);
+    |  color | path | range)^;
     expr_func -> (expr | FCall)^;
-    expr -> expr '||' expr1 | expr1^;
-    expr1 -> expr1 '&&' expr2 | expr2^;
-    expr2 -> expr3 '==' expr3 | expr3 '<' expr3 | expr3^;
-    expr3 -> expr3 '+'^ expr4 | expr3 '-' expr4 | expr4^;
-    expr4 -> expr4 '%' expr5 | expr4 '*'^ expr5 | expr4 '/' expr5 | expr5^; 
-    expr5 -> '-'expr6 | '!'expr6 | expr6^;
+    expr -> expr '||'^ expr1 | expr1^;
+    expr1 -> expr1 '&&'^ expr2 | expr2^;
+    expr2 -> expr3 '=='^ expr3 | expr3 '<'^ expr3 | expr3^;
+    expr3 -> expr3 '+'^ expr4 | expr3 '-'^ expr4 | expr4^;
+    expr4 -> expr4 '%'^ expr5 | expr4 '*'^ expr5 | expr4 '/'^ expr5 | expr5^; 
+    expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
     expr6 -> (parenthesis | FLOAT | INTEGER | id | properties | index)^;
     
     parenthesis -> '(' (expr | (expr | FCall) ',' (expr | FCall)) ')';
@@ -68,7 +68,7 @@ grammar context_free_grammar
     FCall -> id '(' args ')';
     args -> exprS | exprS ',' args;
     SCall -> (path | id) '(|' attr '|)';
-    attr -> id '=' exprS (',' attr)?;
+    attr -> id '=' exprS (',' attr^)?;
     index -> id ('[' expr_func ']')+;
     pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr (id | parenthesis | FCall)?;
     manipulation -> 'place' expr_func pos | 'scale' expr_func 'by' expr_func 
