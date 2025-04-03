@@ -1,9 +1,9 @@
-grammar context_free_grammar
+grammar cfg
 {
 
   options
   {
-    Axiom = "start"; // the top variable for this grammar
+    Axiom = "program"; // the top variable for this grammar
     Separator = "SEPARATOR"; // the terminal that represent white space
   }
   terminals
@@ -29,7 +29,6 @@ grammar context_free_grammar
   rules
   {
     //Start place
-    start -> program; 
     program -> decl 'begin' stmtS; 
    
     //Declarations
@@ -60,8 +59,8 @@ grammar context_free_grammar
     expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
     expr6 -> (parenthesis | FLOAT | INTEGER | id | properties | index)^;
     
-    add -> 'add('id ',' expr_func')';
-    remove -> 'remove('id ',' expr_func')'; 
+    add -> 'add' '(' id ',' expr_func')';
+    remove -> 'remove' '(' id ',' expr_func')'; 
     
     parenthesis -> '(' (expr | (expr | FCall) ',' (expr | FCall)) ')';
 
