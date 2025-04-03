@@ -1,5 +1,10 @@
-use super::utils::{tree_converter::stringify_tree, tree_builder::TreeBuilderStr};
-use super::grammar::cfg;
+use super::{
+    utils::{
+        tree_converter::stringify_tree, 
+        tree_builder::TreeBuilderStr
+    }, 
+    grammar::cfg
+};
 
 /* Helper functions */
 fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
