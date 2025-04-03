@@ -1,75 +1,63 @@
 
-use super::programs::stringify_tree;
-use super::grammar::context_free_grammar;
+use super::programs::{stringify_tree, TreeBuilderStr};
+use super::grammar::cfg;
+
 
 #[test]
-fn test_stmt_declaration() {
-
-    let _example = "
-    begin
-    x: int = 5 + 5;
-    ";
-    
-}
-
-#[test]
-fn test_multi_precedence() {
-    let example = "
+fn test_multi_and_add_precedence() {
+    let nodes = vec![
+        ("program", 0),
+        ("decl", 1),
+        ("begin", 1),
+        ("stmtS", 1),
+        ("stmt", 2),
+        ("_", 3),
+        ("=", 3),
+        ("+", 3),
+        ("5", 4),
+        ("*", 4),
+        ("5", 5),
+        ("6", 5),
+        (";", 3)];
+    let program = "
     begin
     _ = 5 + 5 * 6;
     ";
+    test_equality(nodes, program);
+    let program = "
+    begin
+    _ = 1 * 2 + 3;
+    ";
+    let nodes = vec![
+        ("program", 0),
+        ("decl", 1),
+        ("begin", 1),
+        ("stmtS", 1),
+        ("stmt", 2),
+        ("_", 3),
+        ("=", 3),
+        ("+", 3),
+        ("*", 4),
+        ("1", 5),
+        ("2", 5),
+        ("3", 4),
+        (";", 3)
+    ];
+    test_equality(nodes, program);
+}
 
-    let correct_tree = 
-"  begin
-      _
-    =
-        5
-      +
-          5
-        *
-          6
-    ;
-";
-
-    let tree2 = stringify_tree(
-        context_free_grammar::parse_str(example)
-        .get_ast().get_root()
+fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
+    assert_eq!(
+        convert_nodes(nodes),
+        stringify_tree(
+            cfg::parse_str(program)
+            .get_ast().get_root()
+        )
     );
-    println!("{correct_tree}");
-    assert_eq!(correct_tree, tree2);
-
 }
 
-
-
-/*
-fn check_ast_equality(node: &AstNode, asserts: &[&str], index: &mut usize) {    
-    let children = node.children(); 
-    /*if node.get_value().is_some() {
-        assert_eq!(node.get_value().unwrap(), asserts[*index]);
-        *index += 1; 
-        return;
-    }*/
-
-    for child in children.iter() { 
-        if child.get_value().is_some() {
-            assert_eq!(child.get_value().unwrap(), asserts[*index]);
-            *index += 1; 
-            return;
-        }
-    }
-
-    for child in children.iter() {
-        check_ast_equality(&child, asserts, index);
-    }    
-
-    let nodes = node.children().into_iter().collect::<Vec<_>>();
-    let mut i = 0;
-    while i < nodes.len() {
-
-
-
-
-    }
+fn convert_nodes(nodes: Vec<(&str, usize)>) -> String {
+    nodes.into_iter() 
+    .fold( TreeBuilderStr::new(), |builder: TreeBuilderStr, (content, indent)| builder.add(content, indent))
+    .build()
 }
-*/

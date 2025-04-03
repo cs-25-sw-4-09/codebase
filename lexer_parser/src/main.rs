@@ -5,7 +5,7 @@
 
 use hime_redist::ast::AstNode;
 
-use lexer_parser::grammar::context_free_grammar;
+use lexer_parser::grammar::cfg;
 use lexer_parser::programs::{get_example, stringify_tree, print};
 
 
@@ -30,7 +30,7 @@ fn main() {
     "begin 
     x = 5 +5 * 5;";
 
-    let result = context_free_grammar::parse_str(example);
+    let result = cfg::parse_str(example);
     let ast = result.get_ast();
     let root = ast.get_root(); 
     print(root, &[]);

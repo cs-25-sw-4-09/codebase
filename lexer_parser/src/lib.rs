@@ -8,26 +8,8 @@ pub mod programs {
     use hime_redist::symbols::SemanticElementTrait;
 
     pub fn stringify_tree(node: AstNode) -> String {
-        helper(node, 0)
+        helper(node, 0).trim_end().to_string()
     }
-
-    fn helper2(node: AstNode, tabs: usize) -> String {
-        //Insert tabs
-        let mut res = "".to_string();
-        if node.get_value().is_some() {
-            res += &("  ".repeat(tabs) + node.get_value().unwrap() + "\n"); 
-        } else {
-            res += &("  ".repeat(tabs) + format!("{}", node.get_symbol()).as_str() + "\n");
-        }
-        res += node.children().iter().fold(
-            "".to_string(), 
-            |res, child| {
-                    res + &helper(child, tabs + 1)
-                }
-            ).as_str();
-        res
-    }
-
     fn helper(node: AstNode, tabs: usize) -> String {
         //Insert tabs
         format!("{}{}\n{}",
@@ -36,13 +18,32 @@ pub mod programs {
                 || node.get_symbol().to_string(), 
                 |v| v.to_string()
             ),
-            node.children().iter().fold(
-                "".to_string(), 
-                |res, child| {
-                    res + &helper(child, tabs + 1)
-                }
-            )
+            node.children().iter().map(|child| helper(child, tabs + 1)).collect::<String>()
         )
+    }
+
+
+    pub struct TreeBuilderStr {
+        lines: Vec<(String, usize)>
+    }
+
+    impl TreeBuilderStr {
+        pub fn new() -> Self {
+            Self { lines: Vec::new() }
+        }
+
+        pub fn add(mut self, content: &str, indent: usize) -> Self {
+            self.lines.push((content.to_string(), indent));
+            self
+        }
+
+        pub fn build(self) -> String {
+            self.lines.iter()
+            .map(|(content, indentation)| format!("{}{}", "  ".repeat(*indentation), content))
+            .collect::<Vec<_>>()
+            .join("\n")
+        }
+
     }
 
     /*
@@ -82,6 +83,23 @@ pub mod programs {
             i += 1;
         }
     }
+
+    /*fn helper2(node: AstNode, tabs: usize) -> String {
+        //Insert tabs
+        let mut res = "".to_string();
+        if node.get_value().is_some() {
+            res += &("  ".repeat(tabs) + node.get_value().unwrap() + "\n"); 
+        } else {
+            res += &("  ".repeat(tabs) + format!("{}", node.get_symbol()).as_str() + "\n");
+        }
+        res += node.children().iter().fold(
+            "".to_string(), 
+            |res, child| {
+                    res + &helper(child, tabs + 1)
+                }
+            ).as_str();
+        res
+    }*/
     
 
     
