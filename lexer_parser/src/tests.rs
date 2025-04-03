@@ -22,45 +22,26 @@ fn convert_nodes(nodes: Vec<(&str, usize)>) -> String {
 
 #[test]
 fn test_multi_and_add_precedence() {
-    let nodes = vec![
-        ("program", 0),
-        ("decl", 1),
-        ("begin", 1),
-        ("stmtS", 1),
-        ("stmt", 2),
-        ("_", 3),
-        ("=", 3),
-        ("+", 3),
-        ("5", 4),
-        ("*", 4),
-        ("5", 5),
-        ("6", 5),
-        (";", 3)];
     let program = "
     begin
     _ = 5 + 5 * 6;
     ";
-    test_equality(nodes, program);
+    let part_program = vec![ ("program", 0), ("decl", 1), ("begin", 1), ("stmtS", 1), ("stmt", 2), ("_", 3), ("=", 3), (";", 3) ];
+    let expr = vec![ ("+", 3), ("5", 4), ("*", 4), ("5", 5), ("6", 5)];
+    test_equality(
+        part_program.iter().take(part_program.len() - 1).cloned().chain(expr.into_iter()).chain(part_program.last().cloned()).collect(), 
+        program
+    );
+
     let program = "
     begin
     _ = 1 * 2 + 3;
     ";
-    let nodes = vec![
-        ("program", 0),
-        ("decl", 1),
-        ("begin", 1),
-        ("stmtS", 1),
-        ("stmt", 2),
-        ("_", 3),
-        ("=", 3),
-        ("+", 3),
-        ("*", 4),
-        ("1", 5),
-        ("2", 5),
-        ("3", 4),
-        (";", 3)
-    ];
-    test_equality(nodes, program);
+    let expr = vec![ ("+", 3), ("*", 4), ("1", 5), ("2", 5), ("3", 4), ];
+    test_equality(
+        part_program.iter().take(part_program.len() - 1).cloned().chain(expr.into_iter()).chain(part_program.last().cloned()).collect(), 
+        program
+    );
 }
 
 #[test]
@@ -74,24 +55,15 @@ fn multi_stmt() {
     _ = 5;
     _ = 5;
     ";
-    let stmt = vec![
-        ("stmt", 2),
-        ("_", 3),
-        ("=", 3),
-        ("5", 3),
-        (";", 3)
-    ];
-    let stmt_s: Vec<(&str, usize)> = vec![("stmtS", 1)].into_iter()
-    .chain(stmt.to_owned().into_iter().cycle().take(6))
-    .collect();
+    let stmt = vec![("stmt", 2), ("_", 3), ("=", 3), ("5", 3), (";", 3)];
+    let stmt_s = vec![("stmtS", 1)].into_iter()
+    .chain(stmt.iter().cycle().take(stmt.len() * 6).cloned())
+    .collect::<Vec<_>>();
 
-    let nodes = vec![
-        ("program", 0),
-        ("decl", 1),
-        ("begin", 1)
-    ].into_iter().chain(stmt_s).collect();
-
-    test_equality(nodes, program);
+    test_equality(
+        vec![("program", 0),("decl", 1),("begin", 1)].into_iter().chain(stmt_s).collect(), 
+        program
+    );
 
 }
 
