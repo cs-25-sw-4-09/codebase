@@ -1,11 +1,17 @@
 
 
-use lexer_parser::grammar::cfg;
-use lexer_parser::programs::{get_example, stringify_tree, print};
+use lexer_parser::{
+    grammar::cfg,
+    utils::tree_converter::{
+        stringify_tree,
+        print
+    },
+    valid_programs::get_programs
+};
 
 
 fn main() {
-    let _string = get_example(0); 
+    get_programs().into_iter().for_each(|el| { let _ = cfg::parse_str(el).get_ast().get_root(); });
 
     let _ = 
     "
@@ -21,9 +27,8 @@ fn main() {
 
     draw x;
     ";
-    let example = 
-    "begin 
-    x = 5 +5 * 5;";
+    let example = "begin
+    x= 5;";
 
     let result = cfg::parse_str(example);
     let ast = result.get_ast();

@@ -38,13 +38,13 @@ grammar cfg
 
     //Statements
     stmtS -> stmt+;
-    stmt -> (forkS ';' | 'for' id 'in' exprS '{' stmt '}' 
+    stmt -> (forkS ';' | 'for' id 'in' exprS '{' stmt+ '}' 
     | 'draw' exprS ('at' exprS)? ';' | id (':' types)? '=' exprS ';' 
     | 'return' exprS ';' | id '(' params? ')' ':' types '->' '{' stmt '}');
 
     forkS -> 'fork' '(' fork ')';
-    fork -> '(' expr_func ')' '->' '{' stmt '}' fork? 
-    | '(' 'otherwise' ')' '->' '{' stmt '}';
+    fork -> '(' expr_func ')' '->' '{' stmt+ '}' fork? 
+    | '(' 'otherwise' ')' '->' '{' stmt+ '}';
     
     //Expressions 
 
