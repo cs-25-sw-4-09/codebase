@@ -28,7 +28,7 @@ fn main() {
     draw x;
     ";
     let example = "begin
-    x= 5;";
+    x= 5 + 6 * 7;";
 
     let result = cfg::parse_str(example);
     let ast = result.get_ast();

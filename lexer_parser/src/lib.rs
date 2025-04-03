@@ -4,4 +4,4 @@ pub mod valid_programs;
 
 
 #[cfg(test)]
-pub mod test;
+pub mod tests;

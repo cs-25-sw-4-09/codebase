@@ -1,6 +1,25 @@
 use super::utils::{tree_converter::stringify_tree, tree_builder::TreeBuilderStr};
 use super::grammar::cfg;
 
+/* Helper functions */
+fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
+    assert_eq!(
+        convert_nodes(nodes),
+        stringify_tree(
+            cfg::parse_str(program)
+            .get_ast().get_root()
+        )
+    );
+}
+
+fn convert_nodes(nodes: Vec<(&str, usize)>) -> String {
+    nodes.into_iter() 
+    .fold( TreeBuilderStr::new(), |builder: TreeBuilderStr, (content, indent)| builder.add(content, indent))
+    .build()
+}
+
+
+
 #[test]
 fn test_multi_and_add_precedence() {
     let nodes = vec![
@@ -44,18 +63,3 @@ fn test_multi_and_add_precedence() {
     test_equality(nodes, program);
 }
 
-fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
-    assert_eq!(
-        convert_nodes(nodes),
-        stringify_tree(
-            cfg::parse_str(program)
-            .get_ast().get_root()
-        )
-    );
-}
-
-fn convert_nodes(nodes: Vec<(&str, usize)>) -> String {
-    nodes.into_iter() 
-    .fold( TreeBuilderStr::new(), |builder: TreeBuilderStr, (content, indent)| builder.add(content, indent))
-    .build()
-}

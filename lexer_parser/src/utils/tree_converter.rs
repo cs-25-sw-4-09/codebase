@@ -1,19 +1,21 @@
 use hime_redist::ast::AstNode;
 use hime_redist::symbols::SemanticElementTrait;
+use super::tree_builder::TreeBuilderStr;
 
 pub fn stringify_tree(node: AstNode) -> String {
-    helper(node, 0).trim_end().to_string()
+    helper(node, 0, TreeBuilderStr::new()).build()
 }
-fn helper(node: AstNode, tabs: usize) -> String {
-    //Insert tabs
-    format!("{}{}\n{}",
-        "  ".repeat(tabs),
+
+fn helper(node: AstNode, tabs: usize, tree: TreeBuilderStr) -> TreeBuilderStr {
+    let tree = tree.add(
         node.get_value().map_or_else(
             || node.get_symbol().to_string(), 
-            |v| v.to_string()
-        ),
-        node.children().iter().map(|child| helper(child, tabs + 1)).collect::<String>()
-    )
+            |v| v.to_string()).as_str(),
+        tabs
+    );
+    node.children().iter().fold(tree, |tree, child| {
+        helper(child, tabs + 1, tree)
+    })
 }
 
 
