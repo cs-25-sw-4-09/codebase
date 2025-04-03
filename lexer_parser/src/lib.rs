@@ -4,8 +4,88 @@ pub mod grammar;
 pub mod test;
 
 pub mod programs {
+    use hime_redist::ast::AstNode;
+    use hime_redist::symbols::SemanticElementTrait;
+
+    pub fn stringify_tree(node: AstNode) -> String {
+        helper(node, 0)
+    }
+
+    fn helper2(node: AstNode, tabs: usize) -> String {
+        //Insert tabs
+        let mut res = "".to_string();
+        if node.get_value().is_some() {
+            res += &("  ".repeat(tabs) + node.get_value().unwrap() + "\n"); 
+        } else {
+            res += &("  ".repeat(tabs) + format!("{}", node.get_symbol()).as_str() + "\n");
+        }
+        res += node.children().iter().fold(
+            "".to_string(), 
+            |res, child| {
+                    res + &helper(child, tabs + 1)
+                }
+            ).as_str();
+        res
+    }
+
+    fn helper(node: AstNode, tabs: usize) -> String {
+        //Insert tabs
+        format!("{}{}\n{}",
+            "  ".repeat(tabs),
+            node.get_value().map_or_else(
+                || node.get_symbol().to_string(), 
+                |v| v.to_string()
+            ),
+            node.children().iter().fold(
+                "".to_string(), 
+                |res, child| {
+                    res + &helper(child, tabs + 1)
+                }
+            )
+        )
+    }
+
+    /*
+    fn helper(node: AstNode, tabs: usize) -> String {
+        //Insert tabs
+        let mut res = "".to_string();
+        if node.get_value().is_some() {
+            res += &("  ".repeat(tabs - 2) + node.get_value().unwrap() + "\n"); 
+        }
+        res += node.children().iter().fold(
+            "".to_string(), 
+            |res, child| {
+                    res + &helper(child, tabs + 1)
+                }
+            ).as_str();
+        res
+    } */
+
+    pub fn print(node: AstNode, crossings: &[bool]) {
+
+        let mut i = 0;
+        if !crossings.is_empty() {
+            while i < crossings.len() - 1 {
+                print!("{:}", if crossings[i] { "|   " } else { "    " });
+                i += 1;
+            }
+            print!("+-> ");
+        }
+        println!("{node}, {:?}", node.get_value());
+
+        i = 0;
+        let children = node.children();
+        while i < children.len() {
+            let mut child_crossings = crossings.to_owned();
+            child_crossings.push(i < children.len() - 1);
+            print(children.at(i), &child_crossings);
+            i += 1;
+        }
+    }
     
-    const ex1: &str = 
+
+    
+    const EX1: &str = 
 "width: int;
 height: int;
 fill: color;
@@ -14,7 +94,7 @@ begin
 
 draw (0,0)--(width,0)--(width,height)--(0,height)--* (| fill = fill|);";
 
-const ex2: &str = 
+const EX2: &str = 
 "import triangle \"./triangle.EXTENSION\";
 import rectangle \"./rectangle.EXTENSION\";
 import window \"./window.EXTENSION\";
@@ -38,7 +118,7 @@ house = place door bottom house (width/2, door.height);
 
 draw house;"; 
 
-const ex3: &str = "import rectangle \"./rectangle.EXTENSION\";
+const EX3: &str = "import rectangle \"./rectangle.EXTENSION\";
 
 square_size: int;
 star_color: color;
@@ -56,7 +136,7 @@ for i in 1..square_amount {
 
 draw star;";
 
-const ex4: &str = "import square \"./square.EXTENSION\";
+const EX4: &str = "import square \"./square.EXTENSION\";
 
 scale_size: int; 
 border_color: color; 
@@ -90,7 +170,7 @@ draw spiral;";
 
 
     pub fn get_example(idx: usize) -> &'static str {
-        let arr = vec![ex1, ex2, ex3, ex4];
+        let arr = vec![EX1, EX2, EX3, EX4];
         arr[idx]
     }
 }
