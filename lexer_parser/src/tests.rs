@@ -17,7 +17,7 @@ fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
 fn convert_nodes(nodes: Vec<(&str, usize)>) -> String {
     nodes
     .into_iter() 
-    .fold( TreeBuilderStr::new(), |builder: TreeBuilderStr, (content, indent)| builder.add(content, indent))
+    .fold(TreeBuilderStr::new(), |builder: TreeBuilderStr, (content, indent)| builder.add(content, indent))
     .build()
 }
 
