@@ -5,15 +5,13 @@ use super::grammar::cfg;
 fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
     assert_eq!(
         convert_nodes(nodes),
-        stringify_tree(
-            cfg::parse_str(program)
-            .get_ast().get_root()
-        )
+        stringify_tree(cfg::parse_str(program).get_ast().get_root())
     );
 }
 
 fn convert_nodes(nodes: Vec<(&str, usize)>) -> String {
-    nodes.into_iter() 
+    nodes
+    .into_iter() 
     .fold( TreeBuilderStr::new(), |builder: TreeBuilderStr, (content, indent)| builder.add(content, indent))
     .build()
 }

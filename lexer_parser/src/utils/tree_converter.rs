@@ -8,17 +8,14 @@ pub fn stringify_tree(node: AstNode) -> String {
 
 fn helper(node: AstNode, tabs: usize, tree: TreeBuilderStr) -> TreeBuilderStr {
     let tree = tree.add(
-        node.get_value().map_or_else(
-            || node.get_symbol().to_string(), 
-            |v| v.to_string()).as_str(),
+        node.get_value().map_or_else(|| node.get_symbol().to_string(), |v| v.to_string()).as_str(),
         tabs
     );
     node.children().iter()
-    .fold(tree, |tree, child| {
+    .fold(tree, |tree, child| 
         helper(child, tabs + 1, tree)
-    })
+    )
 }
-
 
 pub fn print(node: AstNode, crossings: &[bool]) {
     if !crossings.is_empty() {
