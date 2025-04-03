@@ -9,16 +9,10 @@ use super::{
 /* Helper functions */
 fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
     assert_eq!(
-        convert_nodes(nodes),
+        TreeBuilderStr::new().multi_add(&nodes).build(),
         stringify_tree(cfg::parse_str(program).get_ast().get_root())
     );
 }
-
-fn convert_nodes(nodes: Vec<(&str, usize)>) -> String {
-    TreeBuilderStr::new().multi_add(&nodes).build()
-}
-
-
 
 #[test]
 fn test_multi_and_add_precedence() {
