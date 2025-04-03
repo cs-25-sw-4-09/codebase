@@ -1,7 +1,5 @@
-
 use super::programs::{stringify_tree, TreeBuilderStr};
 use super::grammar::cfg;
-
 
 #[test]
 fn test_multi_and_add_precedence() {

@@ -1,9 +1,4 @@
-#![forbid(unsafe_code)]
-#![warn(clippy::pedantic)]
 
-#[allow(dead_code)]
-
-use hime_redist::ast::AstNode;
 
 use lexer_parser::grammar::cfg;
 use lexer_parser::programs::{get_example, stringify_tree, print};
@@ -12,7 +7,7 @@ use lexer_parser::programs::{get_example, stringify_tree, print};
 fn main() {
     let _string = get_example(0); 
 
-    let example = 
+    let _ = 
     "
     import func \"hello\";
     import func2 \"world\";
