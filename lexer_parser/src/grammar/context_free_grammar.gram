@@ -52,7 +52,7 @@ grammar context_free_grammar
     expr_func -> expr | FCall;
     expr -> expr '||' expr1 | expr1;
     expr1 -> expr1 '&&' expr2 | expr2;
-    expr2 -> expr3 '==' expr3 | expr3 '<' expr3 | expr3;
+    expr2 -> expr3 ('==' | '<' | '>' | '>=' | '<=') expr3 | expr3;
     expr3 -> expr3 '+' expr4 | expr3 '-' expr4 | expr4;
     expr4 -> expr4 '%' expr5 | expr4 '*' expr5 | expr4 '/' expr5 | expr5; 
     expr5 -> '-'expr6 | '!'expr6 | expr6;
