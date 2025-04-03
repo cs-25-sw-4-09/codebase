@@ -12,6 +12,11 @@ impl TreeBuilderStr {
         self
     }
 
+    pub fn multi_add(mut self, lines: &[(&str, usize)]) -> Self {
+        lines.iter().for_each(|(content, indentation)| self.lines.push((content.to_string(), *indentation)));
+        self 
+    }
+
     pub fn build(self) -> String {
         self.lines.into_iter()
         .map(|(content, indentation)| format!("{}{}", "  ".repeat(indentation), content))

@@ -15,10 +15,7 @@ fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
 }
 
 fn convert_nodes(nodes: Vec<(&str, usize)>) -> String {
-    nodes
-    .into_iter() 
-    .fold(TreeBuilderStr::new(), |builder: TreeBuilderStr, (content, indent)| builder.add(content, indent))
-    .build()
+    TreeBuilderStr::new().multi_add(&nodes).build()
 }
 
 
@@ -64,5 +61,37 @@ fn test_multi_and_add_precedence() {
         (";", 3)
     ];
     test_equality(nodes, program);
+}
+
+#[test]
+fn multi_stmt() {
+    let program = "
+    begin
+    _ = 5;
+    _ = 5;
+    _ = 5;
+    _ = 5;
+    _ = 5;
+    _ = 5;
+    ";
+    let stmt = vec![
+        ("stmt", 2),
+        ("_", 3),
+        ("=", 3),
+        ("5", 3),
+        (";", 3)
+    ];
+    let stmt_s: Vec<(&str, usize)> = vec![("stmtS", 1)].into_iter()
+    .chain(stmt.to_owned().into_iter().cycle().take(6))
+    .collect();
+
+    let nodes = vec![
+        ("program", 0),
+        ("decl", 1),
+        ("begin", 1)
+    ].into_iter().chain(stmt_s).collect();
+
+    test_equality(nodes, program);
+
 }
 
