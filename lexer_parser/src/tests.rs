@@ -1,3 +1,4 @@
+
 use super::{
     utils::{
         tree_converter::stringify_tree, 
@@ -20,12 +21,13 @@ fn test_multi_and_add_precedence() {
     
     let expr = vec![ ("+", 3), ("5", 4), ("*", 4), ("5", 5), ("6", 5)];
     let nodes = part_program.iter().take(part_program.len() - 1).cloned().chain(expr.into_iter()).chain(part_program.last().cloned()).collect();
+
     test_equality(
         nodes, 
         "begin _ = 5 + 5 * 6;"
     );
 
-    let expr = vec![ ("+", 3), ("*", 4), ("1", 5), ("2", 5), ("3", 4), ];
+    let expr = vec![ ("+", 3), ("*", 4), ("1", 5), ("2", 5), ("3", 4)];
     let nodes = part_program.iter().take(part_program.len() - 1).cloned().chain(expr.into_iter()).chain(part_program.last().cloned()).collect();
     test_equality(
         nodes, 
