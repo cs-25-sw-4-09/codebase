@@ -13,30 +13,26 @@ fn helper(node: AstNode, tabs: usize, tree: TreeBuilderStr) -> TreeBuilderStr {
             |v| v.to_string()).as_str(),
         tabs
     );
-    node.children().iter().fold(tree, |tree, child| {
+    node.children().iter()
+    .fold(tree, |tree, child| {
         helper(child, tabs + 1, tree)
     })
 }
 
 
 pub fn print(node: AstNode, crossings: &[bool]) {
-
-    let mut i = 0;
     if !crossings.is_empty() {
-        while i < crossings.len() - 1 {
-            print!("{:}", if crossings[i] { "|   " } else { "    " });
-            i += 1;
-        }
+        crossings.iter().take(crossings.len() - 1).for_each(|&crossing|
+            print!("{:}", if crossing { "|   " } else { "    " })
+        );
         print!("+-> ");
     }
     println!("{node}, {:?}", node.get_value());
 
-    i = 0;
     let children = node.children();
-    while i < children.len() {
+    children.iter().enumerate().for_each(|(i, child)| {
         let mut child_crossings = crossings.to_owned();
         child_crossings.push(i < children.len() - 1);
-        print(children.at(i), &child_crossings);
-        i += 1;
-    }
+        print(child, &child_crossings);
+    });
 }
