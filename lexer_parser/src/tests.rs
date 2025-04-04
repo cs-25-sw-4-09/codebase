@@ -19,7 +19,7 @@ fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
 /* Expressions */
 #[test]
 fn test_multi_and_add_precedence() {
-    let part_program = vec![ ("program", 0), ("decl", 1), ("begin", 1), ("stmtS", 1), ("stmt", 2), ("_", 3), ("=", 3)].into_iter();
+    let part_program = vec![ ("program", 0), ("declS", 1), ("begin", 1), ("stmtS", 1), ("stmt", 2), ("_", 3), ("=", 3)].into_iter();
     let part_program2 = vec![(";", 3)].into_iter();
     
     let expr = vec![ ("+", 3), ("5", 4), ("*", 4), ("5", 5), ("6", 5)].into_iter();
@@ -45,7 +45,7 @@ fn multi_stmt() {
     let stmt = stmt.iter().cycle().take(stmt.len() * 6).cloned();
 
     test_equality(
-        vec![("program", 0),("decl", 1),("begin", 1),("stmtS", 1)].into_iter().chain(stmt).collect::<Vec<_>>(), 
+        vec![("program", 0),("declS", 1),("begin", 1),("stmtS", 1)].into_iter().chain(stmt).collect::<Vec<_>>(), 
         program
     );
 }
@@ -60,7 +60,7 @@ fn function_declaration() {
     a: int = x(5, 6);
     ";
     let mut start = vec![
-        ("program",0), ("decl",1), ("begin", 1), ("stmtS", 1),
+        ("program",0), ("declS",1), ("begin", 1), ("stmtS", 1),
     ];
     let stmt1 = vec![("stmt", 2), 
     ("x", 3), ("(", 3), ("params", 3), 
