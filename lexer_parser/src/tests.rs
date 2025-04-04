@@ -15,6 +15,8 @@ fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
     );
 }
 
+
+/* Expressions */
 #[test]
 fn test_multi_and_add_precedence() {
     let part_program = vec![ ("program", 0), ("decl", 1), ("begin", 1), ("stmtS", 1), ("stmt", 2), ("_", 3), ("=", 3)].into_iter();
@@ -47,4 +49,45 @@ fn multi_stmt() {
         program
     );
 }
+
+#[test]
+fn function_declaration() {
+    let program = 
+    "begin
+    x(y: int, z: int): int -> {
+        return y+z;
+    } 
+    a: int = x(5, 6);
+    ";
+    let mut start = vec![
+        ("program",0), ("decl",1), ("begin", 1), ("stmtS", 1),
+    ];
+    let stmt1 = vec![("stmt", 2), 
+    ("x", 3), ("(", 3), ("params", 3), 
+    ("param", 4), ("y", 5), (":", 5), ("int", 5), 
+    (",", 4), 
+    ("param", 4), ("z", 5), (":", 5), ("int", 5),
+    (")",3), (":",3), ("int",3), ("->",3)
+    ];
+    let func_stmt = vec![
+        ("{", 3), ("stmt", 3), ("return", 4), ("+", 4), ("y", 5), ("z", 5), (";", 4), ("}", 3)
+    ];
+    let stmt2 = vec![
+        ("stmt", 2), ("a", 3), (":", 3), ("int", 3), ("=", 3), 
+        ("FCall", 3),
+        ("x", 4), ("(", 4), 
+        ("args", 4), ("arg", 5), ("5", 6),(",", 5), ("arg", 5), ("6", 6),
+        (")", 4), (";", 3)
+    ];
+    start.extend(stmt1.iter());
+    start.extend(func_stmt.iter());
+    start.extend(stmt2.iter());
+    test_equality(
+        start, 
+        program
+    );
+}
+
+
+
 
