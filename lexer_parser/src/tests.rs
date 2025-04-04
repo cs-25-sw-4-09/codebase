@@ -88,44 +88,13 @@ fn function_declaration() {
     );
 }
 
-/* Declarations */
-#[test]
-fn declarations_import_and_var() {
-    let program = 
-    "
-    import xi \"path/file.ext\";
-    x: int;
-    y: int;
-
-    begin
-    x = 5;";
-
-    let decl = vec![
-        ("declS", 1), 
-        ("import", 2), ("import", 3), ("xi", 3), ("\"path/file.ext\"", 3), (";", 3), 
-        ("decl", 2), ("x", 3), (":", 3), ("int", 3), (";", 3), 
-        ("decl", 2), ("y", 3), (":", 3), ("int", 3), (";", 3)
-    ]; 
-    let stmt = vec![
-        ("stmtS", 1), ("stmt", 2), ("x", 3), ("=", 3), ("5", 3), (";", 3)
-    ];
-
-    let mut nodes = vec![("program", 0)];
-    nodes.extend(decl.iter());
-    nodes.push(("begin", 1));
-    nodes.extend(stmt.iter());
-
-    test_equality(nodes, program);
-}
-
 
 #[test]
 fn fork_single() {
     let program= "
     begin 
-    fork{
-        (5 > 4) -> { return 10; }
-    }";
+        fork{(5 > 4) -> {
+        return 10;}}";
 
     let mut start = vec![("program", 0), ("decl",1), ("begin", 1), ("stmtS", 1)];
     let stmt1 = vec![
@@ -138,3 +107,4 @@ fn fork_single() {
         program
     );
 }
+

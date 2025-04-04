@@ -39,7 +39,11 @@ grammar cfg
 
     //Statements
     stmtS -> stmt+;
+<<<<<<< HEAD
+    stmt -> (forkS | 'for' id 'in' exprS '{' stmt+ '}' 
+=======
     stmt -> ('fork' '{' fork+ otherwise? '}' | 'for' id 'in' exprS '{' stmt+ '}' 
+>>>>>>> 6ccfd120a7af12c67f2b472a8dfb1952a6d501dc
     | 'draw' exprS ('at' exprS)? ';' | id (':' types)? '=' exprS ';' 
     | 'return' exprS ';' | id '(' params? ')' ':' types '->' '{' stmt '}');
 
