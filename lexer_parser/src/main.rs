@@ -11,8 +11,7 @@ use lexer_parser::{
 
 
 fn main() {
-    //!Semicolon og () i fork er ændret
-    get_programs().into_iter().take(2).for_each(|el| { let _ = cfg::parse_str(el).get_ast().get_root(); });
+    get_programs().into_iter().for_each(|el| { let _ = cfg::parse_str(el).get_ast().get_root(); });
     let mut start = vec![
         ("program",0), ("decl",1), ("begin", 1), ("stmtS", 1),
     ];    
