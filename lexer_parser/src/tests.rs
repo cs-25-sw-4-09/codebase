@@ -93,7 +93,7 @@ fn stmt_decl_assign() {
     let program = "
     begin
     x: bool = true;
-    x = false;
+    x = !x;
     ";
     let stmts = vec![
         ("stmt", 2), ("x", 3), (":", 3), ("bool", 3), ("=", 3), ("true", 3), (";", 3),

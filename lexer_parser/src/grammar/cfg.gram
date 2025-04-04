@@ -60,7 +60,7 @@ grammar cfg
         
     parenthesis -> '(' (expr | (expr | FCall) ',' (expr | FCall)) ')';
 
-    bool -> 'true' | 'false';
+    bool -> ('true' | 'false')^;
 
     properties -> id '.' id; 
     range -> expr_func '..' expr_func;
