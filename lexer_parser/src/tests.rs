@@ -119,3 +119,22 @@ fn declarations_import_and_var() {
 }
 
 
+#[test]
+fn fork_single() {
+    let program= "
+    begin 
+    fork{
+        (5 > 4) -> { return 10; }
+    }";
+
+    let mut start = vec![("program", 0), ("decl",1), ("begin", 1), ("stmtS", 1)];
+    let stmt1 = vec![
+        ("stmt", 2), 
+        ("fork", 3), ("{", 3), ("(", 3), (">",3), ("5", 4), ("4", 4), ("->", 3), ("{", 3), ("stmt", 3), ("return", 4), ("10", 4), ("}", 3)];
+    start.extend(stmt1.iter());
+
+    test_equality(
+        start, 
+        program
+    );
+}

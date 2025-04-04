@@ -21,6 +21,7 @@ grammar cfg
     FLOAT       -> INTEGER? '.' CONST+;
     LETTER      -> [A-Za-z];
     
+     
     IDENTIFIER -> (LETTER | '_') (LETTER | CONST | '_')*;
     STRING -> '"'(LETTER | '\\' | '/' | CONST | '.')*'"';
 
@@ -54,9 +55,11 @@ grammar cfg
     expr3 -> expr3 '+'^ expr4 | expr3 '-'^ expr4 | expr4^;
     expr4 -> expr4 '%'^ expr5 | expr4 '*'^ expr5 | expr4 '/'^ expr5 | expr5^; 
     expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
-    expr6 -> (parenthesis | FLOAT | INTEGER | id | properties | array )^;
+    expr6 -> (parenthesis | FLOAT | INTEGER | id | properties | array | bool)^;
         
     parenthesis -> '(' (expr | (expr | FCall) ',' (expr | FCall)) ')';
+
+    bool -> 'true' | 'false';
 
     properties -> id '.' id; 
     range -> expr_func '..' expr_func;
@@ -79,7 +82,7 @@ grammar cfg
 
     //Types
     types -> ('int' | 'float' | types'[]' | 'point' | 'color' 
-    | 'shape' | 'path' | 'polygon')^;
+    | 'shape' | 'path' | 'polygon' | 'bool')^;
     
     //Simple things
     id -> IDENTIFIER^; 
