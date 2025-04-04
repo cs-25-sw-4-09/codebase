@@ -131,175 +131,175 @@ pub const TERMINALS: &[Symbol] = &[
         name: "->"
     },
     Symbol {
-        id: 0x0045,
+        id: 0x0044,
         name: "otherwise"
     },
     Symbol {
-        id: 0x0047,
+        id: 0x0045,
         name: "||"
     },
     Symbol {
-        id: 0x0048,
+        id: 0x0046,
         name: "&&"
     },
     Symbol {
-        id: 0x0049,
+        id: 0x0047,
         name: "=="
     },
     Symbol {
-        id: 0x004A,
+        id: 0x0048,
         name: "<"
     },
     Symbol {
-        id: 0x004B,
+        id: 0x0049,
         name: ">"
     },
     Symbol {
-        id: 0x004C,
+        id: 0x004A,
         name: ">="
     },
     Symbol {
-        id: 0x004D,
+        id: 0x004B,
         name: "<="
     },
     Symbol {
-        id: 0x004E,
+        id: 0x004C,
         name: "+"
     },
     Symbol {
-        id: 0x004F,
+        id: 0x004D,
         name: "-"
     },
     Symbol {
-        id: 0x0050,
+        id: 0x004E,
         name: "%"
     },
     Symbol {
-        id: 0x0051,
+        id: 0x004F,
         name: "*"
     },
     Symbol {
-        id: 0x0052,
+        id: 0x0050,
         name: "/"
     },
     Symbol {
-        id: 0x0053,
+        id: 0x0051,
         name: "!"
     },
     Symbol {
-        id: 0x0054,
+        id: 0x0052,
         name: ","
     },
     Symbol {
-        id: 0x0055,
+        id: 0x0053,
         name: "true"
     },
     Symbol {
-        id: 0x0056,
+        id: 0x0054,
         name: "false"
     },
     Symbol {
-        id: 0x0057,
+        id: 0x0055,
         name: "."
     },
     Symbol {
-        id: 0x0058,
+        id: 0x0056,
         name: ".."
     },
     Symbol {
-        id: 0x0059,
+        id: 0x0057,
         name: "--"
     },
     Symbol {
-        id: 0x005A,
+        id: 0x0058,
         name: "~~"
     },
     Symbol {
-        id: 0x005D,
+        id: 0x005B,
         name: "(|"
     },
     Symbol {
-        id: 0x005E,
+        id: 0x005C,
         name: "|)"
     },
     Symbol {
-        id: 0x005F,
+        id: 0x005D,
         name: "["
     },
     Symbol {
-        id: 0x0060,
+        id: 0x005E,
         name: "]"
     },
     Symbol {
-        id: 0x0062,
+        id: 0x0060,
         name: "left"
     },
     Symbol {
-        id: 0x0063,
+        id: 0x0061,
         name: "right"
     },
     Symbol {
-        id: 0x0064,
+        id: 0x0062,
         name: "top"
     },
     Symbol {
-        id: 0x0065,
+        id: 0x0063,
         name: "bottom"
     },
     Symbol {
-        id: 0x0066,
+        id: 0x0064,
         name: "on"
     },
     Symbol {
-        id: 0x0067,
+        id: 0x0065,
         name: "place"
     },
     Symbol {
-        id: 0x0068,
+        id: 0x0066,
         name: "scale"
     },
     Symbol {
-        id: 0x0069,
+        id: 0x0067,
         name: "by"
     },
     Symbol {
-        id: 0x006A,
+        id: 0x0068,
         name: "rotate"
     },
     Symbol {
-        id: 0x006C,
+        id: 0x006A,
         name: "int"
     },
     Symbol {
-        id: 0x006D,
+        id: 0x006B,
         name: "float"
     },
     Symbol {
-        id: 0x006E,
+        id: 0x006C,
         name: "[]"
     },
     Symbol {
-        id: 0x006F,
+        id: 0x006D,
         name: "point"
     },
     Symbol {
-        id: 0x0070,
+        id: 0x006E,
         name: "color"
     },
     Symbol {
-        id: 0x0071,
+        id: 0x006F,
         name: "shape"
     },
     Symbol {
-        id: 0x0072,
+        id: 0x0070,
         name: "path"
     },
     Symbol {
-        id: 0x0073,
+        id: 0x0071,
         name: "polygon"
     },
     Symbol {
-        id: 0x0074,
+        id: 0x0072,
         name: "bool"
     }
 ];
@@ -549,31 +549,23 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V60"
     },
     Symbol {
-        id: 0x0044,
-        name: "__V68"
+        id: 0x0059,
+        name: "__V89"
     },
     Symbol {
-        id: 0x0046,
-        name: "__V70"
+        id: 0x005A,
+        name: "__V90"
     },
     Symbol {
-        id: 0x005B,
-        name: "__V91"
+        id: 0x005F,
+        name: "__V95"
     },
     Symbol {
-        id: 0x005C,
-        name: "__V92"
+        id: 0x0069,
+        name: "__V105"
     },
     Symbol {
-        id: 0x0061,
-        name: "__V97"
-    },
-    Symbol {
-        id: 0x006B,
-        name: "__V107"
-    },
-    Symbol {
-        id: 0x0075,
+        id: 0x0073,
         name: "__VAxiom"
     }
 ];

@@ -88,6 +88,25 @@ fn function_declaration() {
     );
 }
 
+#[test]
+fn stmt_decl_assign() {
+    let program = "
+    begin
+    x: bool = true;
+    x = false;
+    ";
+    let stmts = vec![
+        ("stmt", 2), ("x", 3), (":", 3), ("bool", 3), ("=", 3), ("true", 3), (";", 3),
+        ("stmt", 2), ("x", 3), ("=", 3), ("false", 3), (";", 3)
+    ];
+    let mut nodes = vec![
+        ("program", 0), ("declS", 1), ("begin", 1), ("stmtS", 1)
+    ];
+    nodes.extend(stmts.iter());
+
+    test_equality(nodes, program);
+}
+
 
 #[test]
 fn fork_single() {
@@ -126,11 +145,12 @@ fn fork_multi() {
         ("fork", 3), ("{", 3), ("fork", 3),
         ("(", 4), (">",4),
         ("5", 5), ("4", 5), (")", 4), ("->", 4), ("{", 4), ("stmt", 4), ("return", 5), ("10", 5), (";", 5), ("}", 4), ("}", 3)];
+        ("5", 5), ("4", 5), (")", 4), ("->", 4), ("{", 4), ("stmtS", 4), ("stmt", 5), ("return", 6), ("10", 6), (";", 6), ("}", 4), ("}", 3)];
     start.extend(stmt1.iter());
 
     test_equality(
         start, 
         program
-    );
+    );  
 }
 
