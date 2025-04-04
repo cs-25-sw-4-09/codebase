@@ -44,8 +44,8 @@ grammar cfg
     | 'draw' exprS ('at' exprS)? ';' | id (':' types)? '=' exprS ';' 
     | 'return' exprS ';' | id '(' params? ')' ':' types '->' '{' stmt '}');
 
-    fork -> '(' expr_func ')' '->' '{' stmt+ '}'; 
-    otherwise -> '(' 'otherwise' ')' '->' '{' stmt+ '}';
+    fork -> '(' expr_func ')' '->' '{' stmtS '}'; 
+    otherwise -> '(' 'otherwise' ')' '->' '{' stmtS '}';
     
     //Expressions
     exprS -> (manipulation | expr_func | SCall | color | path | range)^;
