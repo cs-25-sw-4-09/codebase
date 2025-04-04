@@ -38,7 +38,7 @@ grammar cfg
 
     //Statements
     stmtS -> stmt+;
-    stmt -> (forkS ';' | 'for' id 'in' exprS '{' stmt+ '}' 
+    stmt -> (forkS | 'for' id 'in' exprS '{' stmt+ '}' 
     | 'draw' exprS ('at' exprS)? ';' | id (':' types)? '=' exprS ';' 
     | 'return' exprS ';' | id '(' params? ')' ':' types '->' '{' stmt '}');
 
