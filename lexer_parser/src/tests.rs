@@ -93,8 +93,9 @@ fn function_declaration() {
 fn fork_single() {
     let program= "
     begin 
-        fork{(5 > 4) -> {
-        return 10;}}";
+    fork {
+        (5 > 4) -> { return 10; }
+    }";
 
     let mut start = vec![("program", 0), ("decl",1), ("begin", 1), ("stmtS", 1)];
     let stmt1 = vec![
