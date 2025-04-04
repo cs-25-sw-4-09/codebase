@@ -29,20 +29,19 @@ grammar cfg
   rules
   {
     //Start place
-    program -> decl 'begin' stmtS; 
+    program -> declS 'begin' stmtS; 
    
     //Declarations
-    decl -> (import | var_decl)*;
+    declS -> (import | decl)*;
     import -> 'import' id STRING ';';
-    var_decl -> id ':' types ';';
+    decl -> id ':' types ';';
 
     //Statements
     stmtS -> stmt+;
-    stmt -> (forkS ';' | 'for' id 'in' exprS '{' stmt+ '}' 
+    stmt -> ('fork' '{' fork+ otherwise? '}' | 'for' id 'in' exprS '{' stmt+ '}' 
     | 'draw' exprS ('at' exprS)? ';' | id (':' types)? '=' exprS ';' 
     | 'return' exprS ';' | id '(' params? ')' ':' types '->' '{' stmt '}');
 
-    forkS -> 'fork' '{' fork+ otherwise? '}';
     fork -> '(' expr_func ')' '->' '{' stmt+ '}'; 
     otherwise -> '(' 'otherwise' ')' '->' '{' stmt+ '}';
     
