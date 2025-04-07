@@ -164,9 +164,9 @@ fn fork_multi() {
 
     let stmt2 = vec![("fork", stmt_depth+2), ("(", stmt_depth+3), (">", stmt_depth+3), 
     ("5", stmt_depth+4), ("3", stmt_depth+4), (")", stmt_depth+3), ("->", stmt_depth+3), ("{", stmt_depth+3),
-    ("stmtS", stmt_depth+3), ("stmt", stmt_depth+4), ("x", stmt_depth+5), (""),("int", stmt_depth+5), ("=", stmt_depth+5), ("*", stmt_depth+5),
-    ("6", stmt_depth+6), ("7", stmt_depth+6), (";", stmt_depth+5), ("return", stmt_depth+5), ("x", stmt_depth+5),
-     (";", stmt_depth+5), ("}", stmt_depth+3)];
+    ("stmtS", stmt_depth+3), ("stmt", stmt_depth+4), ("x", stmt_depth+5), (":", stmt_depth+5),("int", stmt_depth+5), ("=", stmt_depth+5), ("*", stmt_depth+5),
+    ("6", stmt_depth+6), ("7", stmt_depth+6), (";", stmt_depth+5), ("stmt", stmt_depth+4), ("return", stmt_depth+5), ("x", stmt_depth+5),
+     (";", stmt_depth+5),("}", stmt_depth+3), ("}", stmt_depth+1)];
 
     start.extend(stmt1.into_iter());
     start.extend(stmt2.into_iter());
