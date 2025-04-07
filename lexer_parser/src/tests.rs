@@ -4,7 +4,8 @@ use super::{
         tree_converter::stringify_tree, 
         tree_builder::TreeBuilderStr
     }, 
-    grammar::cfg
+    grammar::cfg,
+    valid_programs::get_programs
 };
 
 /* Helper functions */
@@ -15,6 +16,16 @@ fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
     );
 }
 
+/* Example Program parsing */
+#[test]
+fn example_program_parsing() {
+    //A program is succesfully parsed if get_root() does not panic.
+    get_programs()
+    .into_iter()
+    .for_each(|el| { 
+        let _ = cfg::parse_str(el).get_ast().get_root(); 
+    });
+}
 
 /* Expressions */
 #[test]
@@ -95,9 +106,10 @@ fn stmt_decl_assign() {
     x: bool = true;
     x = !x;
     ";
+    let stmt_l = 2;
     let stmts = vec![
-        ("stmt", 2), ("x", 3), (":", 3), ("bool", 3), ("=", 3), ("true", 3), (";", 3),
-        ("stmt", 2), ("x", 3), ("=", 3), ("false", 3), (";", 3)
+        ("stmt", stmt_l), ("x", stmt_l + 1), (":", stmt_l + 1), ("bool", stmt_l + 1), ("=", stmt_l + 1), ("true", stmt_l + 1), (";", stmt_l + 1),
+        ("stmt", stmt_l), ("x", stmt_l + 1), ("=", stmt_l + 1), ("!", stmt_l + 1), ("x", stmt_l + 2), (";", stmt_l + 1)
     ];
     let mut nodes = vec![
         ("program", 0), ("declS", 1), ("begin", 1), ("stmtS", 1)

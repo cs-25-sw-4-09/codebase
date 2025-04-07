@@ -74,12 +74,12 @@ for i in 1..square_count {
 
     cur_square: shape = square(|size=next_fib, border_color=border_color|);
 
-    fork (
+    fork {
         (i % 4 == 0) -> { spiral = place cur_square right spiral;}
         (i % 4 == 1) -> { spiral = place cur_square bottom spiral; }
         (i % 4 == 2) -> { spiral = place cur_square left spiral; }
         (i % 4 == 3) -> { spiral = place cur_square top spiral; }
-    );
+    }
 }
 
 spiral = scale spiral by scale_size;
