@@ -81,7 +81,7 @@ fn function_declaration() {
     (")",3), (":",3), ("int",3), ("->",3)
     ];
     let func_stmt = vec![
-        ("{", 3), ("stmt", 3), ("return", 4), ("+", 4), ("y", 5), ("z", 5), (";", 4), ("}", 3)
+        ("{", 3), ("stmtS", 3), ("stmt", 4), ("return", 5), ("+", 5), ("y", 6), ("z", 6), (";", 5), ("}", 3)
     ];
     let stmt2 = vec![
         ("stmt", 2), ("a", 3), (":", 3), ("int", 3), ("=", 3), 
@@ -131,9 +131,10 @@ fn fork_single() {
     let mut start = vec![("program", 0), ("declS",1), ("begin", 1), ("stmtS", 1)];
     let stmt1 = vec![
         ("stmt", 2), 
-        ("fork", 3), ("{", 3), ("fork", 3),
-        ("(", 4), (">",4),
-        ("5", 5), ("4", 5), (")", 4), ("->", 4), ("{", 4), ("stmtS", 4), ("stmt", 5), ("return", 6), ("10", 6), (";", 6), ("}", 4), ("}", 3)];
+        ("fork", 3), ("{", 3), ("forkS", 3),
+        ("fork", 4),("(", 5), (">",5),
+        ("5", 6), ("4", 6), (")", 5), ("->", 5), ("{", 5), ("stmtS", 5), ("stmt", 6), ("return", 7),
+        ("10", 7), (";", 7), ("}", 5), ("}", 3)];
     start.extend(stmt1.iter());
 
     test_equality(
@@ -145,11 +146,30 @@ fn fork_single() {
 #[test]
 fn fork_multi() {
     let program= "
-    begin 
+    begin
     fork { 
-        fork {5 == 5} -> { 5 + 5;}
-        fork {5 > 3} -> {6 * 7;}
-    };";
+        (5 == 5) -> { return 5 + 5;}
+        (5 > 3) -> { x: int = 6 * 7; return x;} 
+    }
+";
+    let mut start = vec![("program", 0), ("declS", 1), ("begin", 1), ("stmtS", 1)];
+    let stmt_depth = 2;
+    let stmt1 = vec![("stmt", stmt_depth), ("fork", stmt_depth+1), ("{", stmt_depth+1), 
+    ("forkS", stmt_depth+1), 
+    ("fork", stmt_depth+2), ("(", stmt_depth+3), ("==", stmt_depth+3), 
+    ("5", stmt_depth+4), ("5", stmt_depth+4), (")", stmt_depth+3), ("->", stmt_depth+3), ("{", stmt_depth+3),
+    ("stmtS", stmt_depth+3),("stmt", stmt_depth+4), ("return", stmt_depth+5), ("+", stmt_depth+5), ("5", stmt_depth+6),
+     ("5", stmt_depth+6), (";", stmt_depth+5), ("}", stmt_depth+3)
+    ];
+
+    let stmt2 = vec![("fork", stmt_depth+2), ("(", stmt_depth+3), (">", stmt_depth+3), 
+    ("5", stmt_depth+4), ("3", stmt_depth+4), (")", stmt_depth+3), ("->", stmt_depth+3), ("{", stmt_depth+3),
+    ("stmtS", stmt_depth+3), ("stmt", stmt_depth+4), ("x", stmt_depth+5), (""),("int", stmt_depth+5), ("=", stmt_depth+5), ("*", stmt_depth+5),
+    ("6", stmt_depth+6), ("7", stmt_depth+6), (";", stmt_depth+5), ("return", stmt_depth+5), ("x", stmt_depth+5),
+     (";", stmt_depth+5), ("}", stmt_depth+3)];
+
+    start.extend(stmt1.into_iter());
+    start.extend(stmt2.into_iter());
 
     test_equality(
         start, 
@@ -157,3 +177,61 @@ fn fork_multi() {
     );  
 }
 
+#[test]
+fn decl_ass_test() {
+    let program = "begin
+    x: int = 5 + 5;
+    x = 10 + 10;";
+    let stmt_depth = 2;
+    let mut start = vec![("program", 0), ("declS", 1), ("begin", 1), ("stmtS", 1)];
+    let stmts = vec![
+    ("stmt", stmt_depth), 
+    ("x", stmt_depth+1), (":", stmt_depth+1), ("int", stmt_depth+1), 
+    ("=", stmt_depth+1), ("+", stmt_depth+1), ("5", stmt_depth+2), ("5", stmt_depth+2),
+    (";", stmt_depth+1),
+    ("stmt", stmt_depth),
+    ("x", stmt_depth+1), 
+    ("=", stmt_depth+1), ("+", stmt_depth+1), ("10", stmt_depth+2), ("10", stmt_depth+2),
+    (";", stmt_depth+1)
+    ];
+    start.extend(stmts.into_iter());
+    test_equality(start, program);
+}
+
+#[test]
+fn for_loop() {
+    let program = 
+    "begin
+    sum: int = 0;
+    for val in 1..=20 {
+        sum = sum + val;
+    }
+    ";
+    let mut start = vec![("program", 0), ("declS", 1), ("begin", 1), ("stmtS", 1)];
+    let stmt1 = vec![("stmt", 2), ("sum", 3), (":", 3), ("int", 3), ("=", 3), ("0", 3), (";", 3)];
+    let for_stmt_depth = 4;
+    let for_stmt = vec![("stmt", for_stmt_depth), ("sum", for_stmt_depth + 1), 
+    ("=", for_stmt_depth+ 1), ("+", for_stmt_depth+1), ("sum", for_stmt_depth+2), ("val", for_stmt_depth+2), 
+    (";", for_stmt_depth+1)]; 
+    let mut for_loop = vec![("stmt", 2), ("for", 3), ("val", 3), ("in", 3), 
+    ("range", 3), ("1", 4), ("..=", 4), ("20", 4),
+    ("{", 3), ("stmtS", 3)];
+    for_loop.extend(for_stmt.into_iter());
+    for_loop.push(("}", 3));
+
+    start.extend(stmt1.into_iter());
+    start.extend(for_loop.into_iter());
+
+    test_equality(start, program);
+}
+
+#[test]
+fn draw_stmt() {
+    let program = "begin
+    draw rectangle(|width = 4, height = 4|);
+    ";
+    let start = vec![("program", 0), ("declS", 1), ("begin", 1), ("stmtS", 1)];
+    let draw = vec![("stmt", 2), ("draw", 3), ("SCALL",5)];
+    test_equality(start, program);
+
+}
