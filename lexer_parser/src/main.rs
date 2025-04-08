@@ -1,24 +1,20 @@
 use lexer_parser::{
-    utils::{
-        tree_converter::stringify_tree, 
-        tree_builder::TreeBuilderStr
-    }, 
-    grammar::cfg,
-    valid_programs::get_programs
+    grammar::cfg, types::types::Program, utils::{
+        tree_builder::TreeBuilderStr, tree_converter::stringify_tree
+    }, valid_programs::get_programs
 };
 
 fn main() {
     
 
     let program = "
-    import xy \"hello\";
-    y: int;
     begin
-    x: int[][][] = [];
-
+    x: bool = true;
     ";
 
-    println!("{}", stringify_tree(cfg::parse_str(program).get_ast().get_root()))
+    println!("{}", stringify_tree(cfg::parse_str(program).get_ast().get_root()));
+    let f = Program::new(cfg::parse_str(program).get_ast().get_root());
+    println!("{:?}", f);
     
 }
 
