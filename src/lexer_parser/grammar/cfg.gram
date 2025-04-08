@@ -67,8 +67,6 @@ grammar cfg
     //Also contains parenthesis, but this case is promoted
     point -> '('! (expr^ | (expr | FCall) ','! (expr | FCall)) ')'!;
 
-    //bool -> ('true' | 'false')^;
-
     member -> id '.'! id; 
     range -> exprFunc ('..' | '..=') exprFunc;
     color -> '('! (expr | FCall) ','! (expr | FCall) ','! (expr | FCall) ','! (expr | FCall)')'! ;

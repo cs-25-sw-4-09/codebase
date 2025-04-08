@@ -1,5 +1,5 @@
 [package]
-name = "lexer_parser"
+name = "codebase"
 version = "1.0.0"
 edition = "2021"
 
