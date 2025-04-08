@@ -61,7 +61,7 @@ fn multi_stmt() {
 }
 
 #[test]
-fn function_declaration() {
+fn function_declaration_and_call() {
     let program = 
     "begin
     x(y: int, z: int): int -> {
@@ -221,7 +221,7 @@ fn for_loop() {
 }
 
 #[test]
-fn draw_stmt() {
+fn draw_stmt_and_scall() {
     let program = "begin
     draw rectangle(|width = 4, height = 4|);
     ";
@@ -403,17 +403,13 @@ fn comment_stmt() {
     test_equality(start, program);
 }
 
-fn position_test() {
-    
-    
-}
 
 #[test]
 fn manipulation_place(){
     let program =  
     "begin
     x = place rec left x; 
-    x = place rec left 5 (10, 10); 
+    x = place rec right 5 (10, 10); 
     ";
     let manipulation_depth = 2;
     let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
@@ -425,7 +421,7 @@ fn manipulation_place(){
         ("assign", manipulation_depth),
         ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
         ("place", manipulation_depth+2), ("rec", manipulation_depth+3), ("pos", manipulation_depth+3),
-        ("left", manipulation_depth+4), ("5", manipulation_depth+4), ("point", manipulation_depth+4),
+        ("right", manipulation_depth+4), ("5", manipulation_depth+4), ("point", manipulation_depth+4),
         ("10", manipulation_depth+5), ("10", manipulation_depth+5)
     ];
     start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
@@ -467,11 +463,40 @@ fn manipulation_rotate(){
     test_equality(start, program);
 }
 
+#[test]
+fn properties() {
+    let program = "begin
+        p: point = (1,2); 
+        x: int = p.x;
+    ";
+    let start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt_depth = 2;
+    let stmt1 = vec![("varDecl", 2), ("p", 3), ("point", 3), ("point", 3), ("1", 4), ("2", 4)];
+    let stmt2 = vec![("varDecl", stmt_depth), ("x", stmt_depth + 1), ("int", stmt_depth + 1), 
+        ("member", stmt_depth+ 1),
+        ("p", stmt_depth+2), ("x", stmt_depth+2)
+    ];
+    
+
+    let nodes = start.into_iter().chain(stmt1.into_iter()).chain(stmt2.into_iter()).collect();
+    test_equality(nodes, program);
+}
 
 #[test]
-fn what(){
+fn indexing(){
     let program = 
     "begin
-
+    x : int[] = [1,2,3,4];
+    a = x[1]; 
     ";
+    let indexing_depth = 2; 
+    let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt1 = vec![("varDecl", indexing_depth), ("x", indexing_depth+1), ("int", indexing_depth+1),
+    ("[]", indexing_depth+2), ("array", indexing_depth+1), ("1", indexing_depth+2), ("2", indexing_depth+2), ("3", indexing_depth+2),
+    ("4", indexing_depth+2)];
+    let stmt2 = vec![("assign", indexing_depth), ("a", indexing_depth+1), ("arrayIdx", indexing_depth+1), ("x", indexing_depth+2), ("1", indexing_depth+2)];
+
+    start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
+
+    test_equality(start, program);
 }

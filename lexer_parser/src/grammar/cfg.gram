@@ -62,14 +62,14 @@ grammar cfg
     expr3 -> expr3 '+'^ expr4 | expr3 '-'^ expr4 | expr4^;
     expr4 -> expr4 '%'^ expr5 | expr4 '*'^ expr5 | expr4 '/'^ expr5 | expr5^; 
     expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
-    expr6 -> (point | FLOAT | INTEGER | id | properties | array | bool | arrayIdx)^;
+    expr6 -> (point | FLOAT | INTEGER | id | member | array | BOOL | arrayIdx)^;
         
     //Also contains parenthesis, but this case is promoted
     point -> '('! (expr^ | (expr | FCall) ','! (expr | FCall)) ')'!;
 
-    bool -> ('true' | 'false')^;
+    //bool -> ('true' | 'false')^;
 
-    properties -> id '.' id; 
+    member -> id '.'! id; 
     range -> exprFunc ('..' | '..=') exprFunc;
     color -> '('! (expr | FCall) ','! (expr | FCall) ','! (expr | FCall) ','! (expr | FCall)')'! ;
     path   -> exprFunc (('--' | '~~') exprFunc)+ (('--' | '~~')'*')?;
@@ -95,9 +95,8 @@ grammar cfg
 
     //Types
     types -> (('int' | 'float' | 'point' | 'color' 
-    | 'shape' | 'path' | 'polygon' | 'bool') arrayDimension?)^;
+    | 'shape' | 'path' | 'polygon' | 'bool') ('[]')*)^;
 
-    arrayDimension -> ('[]' | '[][]');
     
     //Simple things
     id -> IDENTIFIER^; 

@@ -12,6 +12,7 @@ fn main() {
     import xy \"hello\";
     y: int;
     begin
+    x: bool = true;
     x: int[][] = 5;
     x = place rec left x;
     ";
