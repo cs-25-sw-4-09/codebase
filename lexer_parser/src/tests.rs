@@ -61,7 +61,7 @@ fn multi_stmt() {
 }
 
 #[test]
-fn function_declaration() {
+fn function_declaration_and_call() {
     let program = 
     "begin
     x(y: int, z: int): int -> {
@@ -221,7 +221,7 @@ fn for_loop() {
 }
 
 #[test]
-fn draw_stmt() {
+fn draw_stmt_and_scall() {
     let program = "begin
     draw rectangle(|width = 4, height = 4|);
     ";
@@ -369,13 +369,134 @@ fn mixed_path_decl(){
 
 #[test]
 fn array_test(){
-let program = 
-"begin
-x: int[] = [5, 3, 5, 7];
-y: int[][] = [[1,2],[3,4]];
-";
-let array_depth = 2;
-let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
-let stmt1 = vec![("varDecl", array_depth), ("x", array_depth+1), ("int", array_depth+1), ("",0)];
+    let program = 
+    "begin
+    x: int[] = [5, 3, 5, 7];
+    y: int[][] = [[1,2],[3,4]];
+    z: int[] = [];
+    ";
+    let array_depth = 2;
+    let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt1 = vec![("varDecl", array_depth), ("x", array_depth+1), ("int", array_depth+1), ("[]",array_depth+2), ("array", array_depth+1),
+    ("5", array_depth+2), ("3", array_depth+2), ("5", array_depth+2), ("7", array_depth+2),];
+    
+    let stmt2 = vec![("varDecl", array_depth), ("y", array_depth+1), ("int", array_depth+1),
+    ("[]", array_depth+2), ("[]", array_depth+2), ("array", array_depth+1), ("array", array_depth+2), ("1",array_depth+3),
+    ("2", array_depth+3), ("array", array_depth+2), ("3", array_depth+3), ("4", array_depth+3)];
+
+    let stmt3 = vec![("varDecl" , array_depth), ("z", array_depth+1), ("int", array_depth+1), ("[]", array_depth+2), ("array", array_depth+1)];
+    start.extend(stmt1.into_iter().chain(stmt2.into_iter()).chain(stmt3.into_iter()));
+    test_equality(start, program);
+}
+
+#[test]
+fn comment_stmt() {
+    let program = "begin
+    // draw rectangle
+    draw rectangle(|width = 4, height = 4|);
+    /*This comment should be ignored*/
+    ";
+    let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let draw = vec![ ("draw", 2), ("SCall",3), ("rectangle", 4), ("attrS", 4), ("attr", 5), ("width", 6),
+    ("4", 6), ("attr",  5), ("height", 6), ("4", 6)];
+    start.extend(draw.iter());
+    test_equality(start, program);
+}
+
+
+#[test]
+fn manipulation_place(){
+    let program =  
+    "begin
+    x = place rec left x; 
+    x = place rec right 5 (10, 10); 
+    ";
+    let manipulation_depth = 2;
+    let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt1 = vec![("assign", manipulation_depth),
+    ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
+    ("place", manipulation_depth+2), ("rec", manipulation_depth+3), ("pos", manipulation_depth+3),
+    ("left", manipulation_depth+4), ("x", manipulation_depth+4)];
+    let stmt2 = vec![
+        ("assign", manipulation_depth),
+        ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
+        ("place", manipulation_depth+2), ("rec", manipulation_depth+3), ("pos", manipulation_depth+3),
+        ("right", manipulation_depth+4), ("5", manipulation_depth+4), ("point", manipulation_depth+4),
+        ("10", manipulation_depth+5), ("10", manipulation_depth+5)
+    ];
+    start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
+    test_equality(start, program);
+}
+
+#[test]
+fn manipulation_scale(){
+    let program =  
+    "begin
+    x = scale rec by 10; 
+    ";
+    let manipulation_depth = 2;
+    let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt1 = vec![("assign", manipulation_depth),
+    ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
+    ("scale", manipulation_depth+2), ("rec", manipulation_depth+3), ("10", manipulation_depth+3)
+    ];
+    start.extend(stmt1.into_iter());
+
+    test_equality(start, program);
+}
+
+#[test]
+fn manipulation_rotate(){
+    let program =  
+    "begin
+    x = rotate rec by 10; 
+    ";
+    let manipulation_depth = 2;
+    let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt1 = vec![("assign", manipulation_depth),
+    ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
+    ("rotate", manipulation_depth+2), ("rec", manipulation_depth+3), ("10", manipulation_depth+3)
+    ];
+
+    start.extend(stmt1.into_iter());
+
+    test_equality(start, program);
+}
+
+#[test]
+fn properties() {
+    let program = "begin
+        p: point = (1,2); 
+        x: int = p.x;
+    ";
+    let start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt_depth = 2;
+    let stmt1 = vec![("varDecl", 2), ("p", 3), ("point", 3), ("point", 3), ("1", 4), ("2", 4)];
+    let stmt2 = vec![("varDecl", stmt_depth), ("x", stmt_depth + 1), ("int", stmt_depth + 1), 
+        ("member", stmt_depth+ 1),
+        ("p", stmt_depth+2), ("x", stmt_depth+2)
+    ];
+    
+
+    let nodes = start.into_iter().chain(stmt1.into_iter()).chain(stmt2.into_iter()).collect();
+    test_equality(nodes, program);
+}
+
+#[test]
+fn indexing(){
+    let program = 
+    "begin
+    x : int[] = [1,2,3,4];
+    a = x[1]; 
+    ";
+    let indexing_depth = 2; 
+    let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt1 = vec![("varDecl", indexing_depth), ("x", indexing_depth+1), ("int", indexing_depth+1),
+    ("[]", indexing_depth+2), ("array", indexing_depth+1), ("1", indexing_depth+2), ("2", indexing_depth+2), ("3", indexing_depth+2),
+    ("4", indexing_depth+2)];
+    let stmt2 = vec![("assign", indexing_depth), ("a", indexing_depth+1), ("arrayIdx", indexing_depth+1), ("x", indexing_depth+2), ("1", indexing_depth+2)];
+
+    start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
+
     test_equality(start, program);
 }
