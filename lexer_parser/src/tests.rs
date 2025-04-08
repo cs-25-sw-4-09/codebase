@@ -369,13 +369,26 @@ fn mixed_path_decl(){
 
 #[test]
 fn array_test(){
-let program = 
-"begin
-x: int[] = [5, 3, 5, 7];
-y: int[][] = [[1,2],[3,4]];
-";
-let array_depth = 2;
-let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
-let stmt1 = vec![("varDecl", array_depth), ("x", array_depth+1), ("int", array_depth+1), ("",0)];
+    let program = 
+    "begin
+    x: int[] = [5, 3, 5, 7];
+    y: int[][] = [[1,2],[3,4]];
+    //z: int[] = [];
+    ";
+    let array_depth = 2;
+    let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt1 = vec![("varDecl", array_depth), ("x", array_depth+1), ("int", array_depth+1), ("[]",array_depth+2), ("array", array_depth+1),
+    ("5", array_depth+2), ("3", array_depth+2), ("5", array_depth+2), ("7", array_depth+2),];
+    
+    let stmt2 = vec![("varDecl", array_depth), ("y", array_depth+1), ("int", array_depth+1),
+    ("[]", array_depth+2), ("[]", array_depth+2), ("array", array_depth+1), ("array", array_depth+2), ("1",array_depth+3),
+    ("2", array_depth+3), ("array", array_depth+2), ("3", array_depth+3), ("4", array_depth+3)];
+
+
+    let stmt3 = vec![("varDecl" , array_depth), ("z", array_depth+1), ("int", array_depth+1), ("[]", array_depth+2), ("array", array_depth+1)];
+    start.extend(stmt1.into_iter());
+    start.extend(stmt2.into_iter());
+    //start.extend(stmt1.into_iter());
+
     test_equality(start, program);
 }

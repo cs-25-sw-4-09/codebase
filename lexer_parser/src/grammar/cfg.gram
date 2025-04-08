@@ -61,7 +61,7 @@ grammar cfg
     expr3 -> expr3 '+'^ expr4 | expr3 '-'^ expr4 | expr4^;
     expr4 -> expr4 '%'^ expr5 | expr4 '*'^ expr5 | expr4 '/'^ expr5 | expr5^; 
     expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
-    expr6 -> (point | FLOAT | INTEGER | id | properties | array | bool)^;
+    expr6 -> (point | FLOAT | INTEGER | id | properties | array | bool | arrayIdx)^;
         
     //Also contains parenthesis, but this case is promoted
     point -> '('! (expr^ | (expr | FCall) ','! (expr | FCall)) ')'!;
@@ -79,7 +79,9 @@ grammar cfg
     SCall -> (path | id) '(|'! attrS '|)'!;
     attrS -> (attr (','! attr)*)? ; 
     attr -> id '='! exprS;
-    array -> id? ('['! (exprS (','! exprS)*)? ']'!)+;
+
+    arrayIdx -> id ('['! exprS ']'!)+;
+    array -> '['! (exprS (','! exprS)*)? ']'!;
     
     pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr (id | point | FCall)?;
     manipulation -> 'place' exprFunc pos | 'scale' exprFunc 'by' exprFunc 
