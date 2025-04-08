@@ -29,7 +29,7 @@ fn example_program_parsing() {
 /* Expressions */
 #[test]
 fn test_multi_and_add_precedence() {
-    let part_program = vec![ ("program", 0), ("stmtS", 1), ("assign", 2), ("_", 3)].into_iter();
+    let part_program = vec![ ("program", 0), ("declS", 1), ("stmtS", 1), ("assign", 2), ("_", 3)].into_iter();
     
     let expr = vec![ ("+", 3), ("5", 4), ("*", 4), ("5", 5), ("6", 5)].into_iter();
     let nodes = part_program.clone().chain(expr).collect();
