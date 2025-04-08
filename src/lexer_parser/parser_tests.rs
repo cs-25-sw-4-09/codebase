@@ -1,4 +1,3 @@
-
 use super::{
     utils::{
         tree_converter::stringify_tree, 
@@ -477,7 +476,6 @@ fn properties() {
         ("p", stmt_depth+2), ("x", stmt_depth+2)
     ];
     
-
     let nodes = start.into_iter().chain(stmt1.into_iter()).chain(stmt2.into_iter()).collect();
     test_equality(nodes, program);
 }

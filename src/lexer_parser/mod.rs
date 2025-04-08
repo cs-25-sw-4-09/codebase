@@ -4,4 +4,4 @@ pub mod valid_programs;
 
 
 #[cfg(test)]
-pub mod tests;
+pub mod parser_tests;
