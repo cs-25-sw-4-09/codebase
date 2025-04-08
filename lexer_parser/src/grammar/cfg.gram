@@ -24,6 +24,7 @@ grammar cfg
      
     IDENTIFIER -> (LETTER | '_') (LETTER | CONST | '_')*;
     STRING -> '"'(LETTER | '\\' | '/' | CONST | '.')*'"';
+    BOOL -> 'true' | 'false';
 
   }
   
@@ -84,15 +85,19 @@ grammar cfg
     array -> ('['! ((exprS (','! exprS)*))? ']'! | '[]'!);
     
     pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr (id | point | FCall)?;
-    manipulation -> 'place' exprFunc pos | 'scale' exprFunc 'by' exprFunc 
-    | 'rotate' exprFunc 'by' exprFunc;
+    manipulation -> place | scale | rotate;
+    place -> 'place'! exprFunc pos; 
+    scale -> 'scale'! exprFunc 'by'! exprFunc;
+    rotate -> 'rotate'! exprFunc 'by'! exprFunc;
     
     params -> param (','! param)*;
     param -> id ':'! types;
 
     //Types
     types -> (('int' | 'float' | 'point' | 'color' 
-    | 'shape' | 'path' | 'polygon' | 'bool')('[]')*)^;
+    | 'shape' | 'path' | 'polygon' | 'bool') arrayDimension?)^;
+
+    arrayDimension -> ('[]' | '[][]');
     
     //Simple things
     id -> IDENTIFIER^; 
