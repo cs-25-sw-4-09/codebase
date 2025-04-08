@@ -30,6 +30,8 @@ pub const ID_TERMINAL_FLOAT: u32 = 0x0009;
 pub const ID_TERMINAL_IDENTIFIER: u32 = 0x000B;
 /// The unique identifier for terminal `STRING`
 pub const ID_TERMINAL_STRING: u32 = 0x000C;
+/// The unique identifier for terminal `BOOLEAN`
+pub const ID_TERMINAL_BOOLEAN: u32 = 0x000D;
 
 /// The unique identifier for the default context
 pub const CONTEXT_DEFAULT: u16 = 0;
@@ -65,6 +67,10 @@ pub const TERMINALS: &[Symbol] = &[
     Symbol {
         id: 0x000C,
         name: "STRING"
+    },
+    Symbol {
+        id: 0x000D,
+        name: "BOOLEAN"
     },
     Symbol {
         id: 0x0038,
@@ -192,118 +198,110 @@ pub const TERMINALS: &[Symbol] = &[
     },
     Symbol {
         id: 0x005A,
-        name: "true"
-    },
-    Symbol {
-        id: 0x005B,
-        name: "false"
-    },
-    Symbol {
-        id: 0x005C,
         name: "."
     },
     Symbol {
-        id: 0x005D,
+        id: 0x005B,
         name: ".."
     },
     Symbol {
-        id: 0x005E,
+        id: 0x005C,
         name: "..="
     },
     Symbol {
-        id: 0x005F,
+        id: 0x005D,
         name: "--"
     },
     Symbol {
-        id: 0x0060,
+        id: 0x005E,
         name: "~~"
     },
     Symbol {
-        id: 0x0063,
+        id: 0x0061,
         name: "(|"
     },
     Symbol {
-        id: 0x0064,
+        id: 0x0062,
         name: "|)"
     },
     Symbol {
-        id: 0x0066,
+        id: 0x0064,
         name: "["
     },
     Symbol {
-        id: 0x0068,
+        id: 0x0066,
         name: "]"
     },
     Symbol {
-        id: 0x006A,
+        id: 0x0068,
         name: "left"
     },
     Symbol {
-        id: 0x006B,
+        id: 0x0069,
         name: "right"
     },
     Symbol {
-        id: 0x006C,
+        id: 0x006A,
         name: "top"
     },
     Symbol {
-        id: 0x006D,
+        id: 0x006B,
         name: "bottom"
     },
     Symbol {
-        id: 0x006E,
+        id: 0x006C,
         name: "on"
     },
     Symbol {
-        id: 0x006F,
+        id: 0x006D,
         name: "place"
     },
     Symbol {
-        id: 0x0070,
+        id: 0x006E,
         name: "scale"
     },
     Symbol {
-        id: 0x0071,
+        id: 0x006F,
         name: "by"
     },
     Symbol {
-        id: 0x0072,
+        id: 0x0070,
         name: "rotate"
     },
     Symbol {
-        id: 0x0074,
+        id: 0x0072,
         name: "int"
     },
     Symbol {
-        id: 0x0075,
+        id: 0x0073,
         name: "float"
     },
     Symbol {
-        id: 0x0076,
+        id: 0x0074,
         name: "point"
     },
     Symbol {
-        id: 0x0077,
+        id: 0x0075,
         name: "color"
     },
     Symbol {
-        id: 0x0078,
+        id: 0x0076,
         name: "shape"
     },
     Symbol {
-        id: 0x0079,
+        id: 0x0077,
         name: "path"
     },
     Symbol {
-        id: 0x007A,
+        id: 0x0078,
         name: "polygon"
     },
     Symbol {
-        id: 0x007B,
+        id: 0x0079,
         name: "bool"
     },
     Symbol {
-        id: 0x007C,
+        id: 0x007A,
         name: "[]"
     }
 ];
@@ -321,57 +319,55 @@ fn new_lexer<'a: 'b, 'b, 'c>(
 static PARSER_AUTOMATON: &[u8] = include_bytes!("cfg_parser.bin");
 
 /// The unique identifier for variable `program`
-pub const ID_VARIABLE_PROGRAM: u32 = 0x000D;
+pub const ID_VARIABLE_PROGRAM: u32 = 0x000E;
 /// The unique identifier for variable `declS`
-pub const ID_VARIABLE_DECL_S: u32 = 0x000E;
+pub const ID_VARIABLE_DECL_S: u32 = 0x000F;
 /// The unique identifier for variable `import`
-pub const ID_VARIABLE_IMPORT: u32 = 0x000F;
+pub const ID_VARIABLE_IMPORT: u32 = 0x0010;
 /// The unique identifier for variable `decl`
-pub const ID_VARIABLE_DECL: u32 = 0x0010;
+pub const ID_VARIABLE_DECL: u32 = 0x0011;
 /// The unique identifier for variable `stmtS`
-pub const ID_VARIABLE_STMT_S: u32 = 0x0011;
+pub const ID_VARIABLE_STMT_S: u32 = 0x0012;
 /// The unique identifier for variable `forkS`
-pub const ID_VARIABLE_FORK_S: u32 = 0x0012;
+pub const ID_VARIABLE_FORK_S: u32 = 0x0013;
 /// The unique identifier for variable `for`
-pub const ID_VARIABLE_FOR: u32 = 0x0013;
+pub const ID_VARIABLE_FOR: u32 = 0x0014;
 /// The unique identifier for variable `draw`
-pub const ID_VARIABLE_DRAW: u32 = 0x0014;
+pub const ID_VARIABLE_DRAW: u32 = 0x0015;
 /// The unique identifier for variable `return`
-pub const ID_VARIABLE_RETURN: u32 = 0x0015;
+pub const ID_VARIABLE_RETURN: u32 = 0x0016;
 /// The unique identifier for variable `funcDecl`
-pub const ID_VARIABLE_FUNC_DECL: u32 = 0x0016;
+pub const ID_VARIABLE_FUNC_DECL: u32 = 0x0017;
 /// The unique identifier for variable `assign`
-pub const ID_VARIABLE_ASSIGN: u32 = 0x0017;
+pub const ID_VARIABLE_ASSIGN: u32 = 0x0018;
 /// The unique identifier for variable `varDecl`
-pub const ID_VARIABLE_VAR_DECL: u32 = 0x0018;
+pub const ID_VARIABLE_VAR_DECL: u32 = 0x0019;
 /// The unique identifier for variable `fork`
-pub const ID_VARIABLE_FORK: u32 = 0x0019;
+pub const ID_VARIABLE_FORK: u32 = 0x001A;
 /// The unique identifier for variable `forkExpr`
-pub const ID_VARIABLE_FORK_EXPR: u32 = 0x001A;
+pub const ID_VARIABLE_FORK_EXPR: u32 = 0x001B;
 /// The unique identifier for variable `otherwise`
-pub const ID_VARIABLE_OTHERWISE: u32 = 0x001B;
+pub const ID_VARIABLE_OTHERWISE: u32 = 0x001C;
 /// The unique identifier for variable `exprS`
-pub const ID_VARIABLE_EXPR_S: u32 = 0x001C;
+pub const ID_VARIABLE_EXPR_S: u32 = 0x001D;
 /// The unique identifier for variable `exprFunc`
-pub const ID_VARIABLE_EXPR_FUNC: u32 = 0x001D;
+pub const ID_VARIABLE_EXPR_FUNC: u32 = 0x001E;
 /// The unique identifier for variable `expr`
-pub const ID_VARIABLE_EXPR: u32 = 0x001E;
+pub const ID_VARIABLE_EXPR: u32 = 0x001F;
 /// The unique identifier for variable `expr1`
-pub const ID_VARIABLE_EXPR1: u32 = 0x001F;
+pub const ID_VARIABLE_EXPR1: u32 = 0x0020;
 /// The unique identifier for variable `expr2`
-pub const ID_VARIABLE_EXPR2: u32 = 0x0020;
+pub const ID_VARIABLE_EXPR2: u32 = 0x0021;
 /// The unique identifier for variable `expr3`
-pub const ID_VARIABLE_EXPR3: u32 = 0x0021;
+pub const ID_VARIABLE_EXPR3: u32 = 0x0022;
 /// The unique identifier for variable `expr4`
-pub const ID_VARIABLE_EXPR4: u32 = 0x0022;
+pub const ID_VARIABLE_EXPR4: u32 = 0x0023;
 /// The unique identifier for variable `expr5`
-pub const ID_VARIABLE_EXPR5: u32 = 0x0023;
+pub const ID_VARIABLE_EXPR5: u32 = 0x0024;
 /// The unique identifier for variable `expr6`
-pub const ID_VARIABLE_EXPR6: u32 = 0x0024;
+pub const ID_VARIABLE_EXPR6: u32 = 0x0025;
 /// The unique identifier for variable `point`
-pub const ID_VARIABLE_POINT: u32 = 0x0025;
-/// The unique identifier for variable `bool`
-pub const ID_VARIABLE_BOOL: u32 = 0x0026;
+pub const ID_VARIABLE_POINT: u32 = 0x0026;
 /// The unique identifier for variable `properties`
 pub const ID_VARIABLE_PROPERTIES: u32 = 0x0027;
 /// The unique identifier for variable `range`
@@ -413,108 +409,104 @@ pub const ID_VARIABLE_ID: u32 = 0x0037;
 /// so that variable indices in the automaton can be used to retrieve the variables in this table
 pub const VARIABLES: &[Symbol] = &[
     Symbol {
-        id: 0x000D,
+        id: 0x000E,
         name: "program"
     },
     Symbol {
-        id: 0x000E,
+        id: 0x000F,
         name: "declS"
     },
     Symbol {
-        id: 0x000F,
+        id: 0x0010,
         name: "import"
     },
     Symbol {
-        id: 0x0010,
+        id: 0x0011,
         name: "decl"
     },
     Symbol {
-        id: 0x0011,
+        id: 0x0012,
         name: "stmtS"
     },
     Symbol {
-        id: 0x0012,
+        id: 0x0013,
         name: "forkS"
     },
     Symbol {
-        id: 0x0013,
+        id: 0x0014,
         name: "for"
     },
     Symbol {
-        id: 0x0014,
+        id: 0x0015,
         name: "draw"
     },
     Symbol {
-        id: 0x0015,
+        id: 0x0016,
         name: "return"
     },
     Symbol {
-        id: 0x0016,
+        id: 0x0017,
         name: "funcDecl"
     },
     Symbol {
-        id: 0x0017,
+        id: 0x0018,
         name: "assign"
     },
     Symbol {
-        id: 0x0018,
+        id: 0x0019,
         name: "varDecl"
     },
     Symbol {
-        id: 0x0019,
+        id: 0x001A,
         name: "fork"
     },
     Symbol {
-        id: 0x001A,
+        id: 0x001B,
         name: "forkExpr"
     },
     Symbol {
-        id: 0x001B,
+        id: 0x001C,
         name: "otherwise"
     },
     Symbol {
-        id: 0x001C,
+        id: 0x001D,
         name: "exprS"
     },
     Symbol {
-        id: 0x001D,
+        id: 0x001E,
         name: "exprFunc"
     },
     Symbol {
-        id: 0x001E,
+        id: 0x001F,
         name: "expr"
     },
     Symbol {
-        id: 0x001F,
+        id: 0x0020,
         name: "expr1"
     },
     Symbol {
-        id: 0x0020,
+        id: 0x0021,
         name: "expr2"
     },
     Symbol {
-        id: 0x0021,
+        id: 0x0022,
         name: "expr3"
     },
     Symbol {
-        id: 0x0022,
+        id: 0x0023,
         name: "expr4"
     },
     Symbol {
-        id: 0x0023,
+        id: 0x0024,
         name: "expr5"
     },
     Symbol {
-        id: 0x0024,
+        id: 0x0025,
         name: "expr6"
     },
     Symbol {
-        id: 0x0025,
-        name: "point"
-    },
-    Symbol {
         id: 0x0026,
-        name: "bool"
+        name: "point"
     },
     Symbol {
         id: 0x0027,
@@ -597,12 +589,16 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V74"
     },
     Symbol {
-        id: 0x0061,
-        name: "__V97"
+        id: 0x005F,
+        name: "__V95"
     },
     Symbol {
-        id: 0x0062,
-        name: "__V98"
+        id: 0x0060,
+        name: "__V96"
+    },
+    Symbol {
+        id: 0x0063,
+        name: "__V99"
     },
     Symbol {
         id: 0x0065,
@@ -613,19 +609,15 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V103"
     },
     Symbol {
-        id: 0x0069,
-        name: "__V105"
+        id: 0x0071,
+        name: "__V113"
     },
     Symbol {
-        id: 0x0073,
-        name: "__V115"
+        id: 0x007B,
+        name: "__V123"
     },
     Symbol {
-        id: 0x007D,
-        name: "__V125"
-    },
-    Symbol {
-        id: 0x007E,
+        id: 0x007C,
         name: "__VAxiom"
     }
 ];
@@ -693,6 +685,7 @@ pub trait Visitor {
     fn on_terminal_float(&self, node: &AstNode) {}
     fn on_terminal_identifier(&self, node: &AstNode) {}
     fn on_terminal_string(&self, node: &AstNode) {}
+    fn on_terminal_boolean(&self, node: &AstNode) {}
     fn on_variable_program(&self, node: &AstNode) {}
     fn on_variable_decl_s(&self, node: &AstNode) {}
     fn on_variable_import(&self, node: &AstNode) {}
@@ -718,7 +711,6 @@ pub trait Visitor {
     fn on_variable_expr5(&self, node: &AstNode) {}
     fn on_variable_expr6(&self, node: &AstNode) {}
     fn on_variable_point(&self, node: &AstNode) {}
-    fn on_variable_bool(&self, node: &AstNode) {}
     fn on_variable_properties(&self, node: &AstNode) {}
     fn on_variable_range(&self, node: &AstNode) {}
     fn on_variable_color(&self, node: &AstNode) {}
@@ -757,32 +749,32 @@ pub fn visit_ast_node(node: AstNode, visitor: &dyn Visitor) {
         0x0009 => visitor.on_terminal_float(&node),
         0x000B => visitor.on_terminal_identifier(&node),
         0x000C => visitor.on_terminal_string(&node),
-        0x000D => visitor.on_variable_program(&node),
-        0x000E => visitor.on_variable_decl_s(&node),
-        0x000F => visitor.on_variable_import(&node),
-        0x0010 => visitor.on_variable_decl(&node),
-        0x0011 => visitor.on_variable_stmt_s(&node),
-        0x0012 => visitor.on_variable_fork_s(&node),
-        0x0013 => visitor.on_variable_for(&node),
-        0x0014 => visitor.on_variable_draw(&node),
-        0x0015 => visitor.on_variable_return(&node),
-        0x0016 => visitor.on_variable_func_decl(&node),
-        0x0017 => visitor.on_variable_assign(&node),
-        0x0018 => visitor.on_variable_var_decl(&node),
-        0x0019 => visitor.on_variable_fork(&node),
-        0x001A => visitor.on_variable_fork_expr(&node),
-        0x001B => visitor.on_variable_otherwise(&node),
-        0x001C => visitor.on_variable_expr_s(&node),
-        0x001D => visitor.on_variable_expr_func(&node),
-        0x001E => visitor.on_variable_expr(&node),
-        0x001F => visitor.on_variable_expr1(&node),
-        0x0020 => visitor.on_variable_expr2(&node),
-        0x0021 => visitor.on_variable_expr3(&node),
-        0x0022 => visitor.on_variable_expr4(&node),
-        0x0023 => visitor.on_variable_expr5(&node),
-        0x0024 => visitor.on_variable_expr6(&node),
-        0x0025 => visitor.on_variable_point(&node),
-        0x0026 => visitor.on_variable_bool(&node),
+        0x000D => visitor.on_terminal_boolean(&node),
+        0x000E => visitor.on_variable_program(&node),
+        0x000F => visitor.on_variable_decl_s(&node),
+        0x0010 => visitor.on_variable_import(&node),
+        0x0011 => visitor.on_variable_decl(&node),
+        0x0012 => visitor.on_variable_stmt_s(&node),
+        0x0013 => visitor.on_variable_fork_s(&node),
+        0x0014 => visitor.on_variable_for(&node),
+        0x0015 => visitor.on_variable_draw(&node),
+        0x0016 => visitor.on_variable_return(&node),
+        0x0017 => visitor.on_variable_func_decl(&node),
+        0x0018 => visitor.on_variable_assign(&node),
+        0x0019 => visitor.on_variable_var_decl(&node),
+        0x001A => visitor.on_variable_fork(&node),
+        0x001B => visitor.on_variable_fork_expr(&node),
+        0x001C => visitor.on_variable_otherwise(&node),
+        0x001D => visitor.on_variable_expr_s(&node),
+        0x001E => visitor.on_variable_expr_func(&node),
+        0x001F => visitor.on_variable_expr(&node),
+        0x0020 => visitor.on_variable_expr1(&node),
+        0x0021 => visitor.on_variable_expr2(&node),
+        0x0022 => visitor.on_variable_expr3(&node),
+        0x0023 => visitor.on_variable_expr4(&node),
+        0x0024 => visitor.on_variable_expr5(&node),
+        0x0025 => visitor.on_variable_expr6(&node),
+        0x0026 => visitor.on_variable_point(&node),
         0x0027 => visitor.on_variable_properties(&node),
         0x0028 => visitor.on_variable_range(&node),
         0x0029 => visitor.on_variable_color(&node),

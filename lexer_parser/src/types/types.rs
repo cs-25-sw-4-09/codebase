@@ -83,7 +83,6 @@ impl Expr {
     fn new(expr: AstNode) -> Self {
         match expr.get_symbol().name {
             "INTEGER" => Expr::Integer(expr.get_value().unwrap().parse().unwrap()),
-            "BOOLEAN" => Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),
             "+" | "-" | "*" | "/" => {
                 let lhs = Box::new(Expr::new(expr.child(0)));
                 let rhs = Box::new(Expr::new(expr.child(1)));
@@ -92,9 +91,19 @@ impl Expr {
                 Expr::BinaryOperation { lhs, rhs, operator }
             },
             "IDENTIFIER" => Expr::Variable(expr.get_value().unwrap().into()),
+            "BOOLEAN" =>  Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),
             _ => panic!("Expression type not found: {}", expr.get_symbol().name),
         }
     }
+
+    fn get_type(&self) -> Type {
+        match self {
+            Expr::Integer(_) => Type::Int,
+            Expr::Boolean(_) => Type::Bool,
+            _ => panic!()
+        }
+    }
+
 }
 
 #[derive(Debug)]
@@ -140,6 +149,7 @@ impl BinaryOperator {
 #[derive(Debug)]
 pub enum Type {
     Int,
+    Array,
     Bool,
 }
 

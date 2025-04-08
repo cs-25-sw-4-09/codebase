@@ -9,7 +9,8 @@ fn main() {
 
     let program = "
     begin
-    x: bool = true;
+    x: bool = false;
+    y: int = 3 + x;
     ";
 
     println!("{}", stringify_tree(cfg::parse_str(program).get_ast().get_root()));
