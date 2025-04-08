@@ -385,7 +385,7 @@ fn array_test(){
     ("2", array_depth+3), ("array", array_depth+2), ("3", array_depth+3), ("4", array_depth+3)];
 
 
-    let stmt3 = vec![("varDecl" , array_depth), ("z", array_depth+1), ("int", array_depth+1), ("[]", array_depth+2), ("array", array_depth+1)];
+    //let stmt3 = vec![("varDecl" , array_depth), ("z", array_depth+1), ("int", array_depth+1), ("[]", array_depth+2), ("array", array_depth+1)];
     start.extend(stmt1.into_iter());
     start.extend(stmt2.into_iter());
     //start.extend(stmt1.into_iter());

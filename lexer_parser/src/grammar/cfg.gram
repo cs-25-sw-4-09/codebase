@@ -81,7 +81,7 @@ grammar cfg
     attr -> id '='! exprS;
 
     arrayIdx -> id ('['! exprS ']'!)+;
-    array -> '['! (exprS (','! exprS)*)? ']'!;
+    array -> ('['! ((exprS (','! exprS)*))? ']'! | '[]'!);
     
     pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr (id | point | FCall)?;
     manipulation -> 'place' exprFunc pos | 'scale' exprFunc 'by' exprFunc 
