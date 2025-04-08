@@ -495,5 +495,6 @@ fn indexing(){
     let stmt2 = vec![("assign", indexing_depth), ("a", indexing_depth+1), ("arrayIdx", indexing_depth+1), ("x", indexing_depth+2), ("1", indexing_depth+2)];
 
     start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
+
     test_equality(start, program);
 }
