@@ -1,42 +1,24 @@
-#![forbid(unsafe_code)]
-#![warn(clippy::pedantic)]
-
-#[allow(dead_code)]
-
-use hime_redist::ast::AstNode;
-
-use lexer_parser::grammar::context_free_grammar;
-use lexer_parser::programs::{get_example, stringify_tree, print};
-
+use lexer_parser::{
+    utils::{
+        tree_converter::stringify_tree, 
+        tree_builder::TreeBuilderStr
+    }, 
+    grammar::cfg,
+    valid_programs::get_programs
+};
 
 fn main() {
-    let _string = get_example(0); 
-
-    let example = 
-    "
-    import func \"hello\";
-    import func2 \"world\";
-
-    x: int;
     
+
+    let program = "
+    import xy \"hello\";
+    y: int;
     begin
-    x = 5 * 5 + 6;
-    y = x + 7;
+    x: int[][][] = [];
 
-
-    draw x;
     ";
-    let example = 
-    "begin 
-    x = 5 +5 * 5;";
 
-    let result = context_free_grammar::parse_str(example);
-    let ast = result.get_ast();
-    let root = ast.get_root(); 
-    print(root, &[]);
-
-    let str = stringify_tree(root);
-    println!("{}", str);
-
+    println!("{}", stringify_tree(cfg::parse_str(program).get_ast().get_root()))
+    
 }
 
