@@ -30,7 +30,7 @@ grammar cfg
   rules
   {
     //Start place
-    program -> declS 'begin' stmtS; 
+    program -> declS 'begin'! stmtS; 
    
     //Declarations
     declS -> (import | decl)*;
@@ -38,55 +38,59 @@ grammar cfg
     decl -> id ':'! types ';'!;
 
     //Statements
-    stmtS -> stmt+;
+    stmtS -> (forkS | for | draw | return | funcDecl | assign | varDecl)+;
 
-    stmt -> ('fork' '{'! forkS '}'! | 'for' id 'in'! exprS '{'! stmtS '}'! 
-    | 'draw' exprS ('at'! exprS)? ';'! | id (':'! types)? '='! exprS ';'! 
-    | 'return' exprS ';'! | id '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!
-    );
+    forkS -> 'fork'! '{'! fork^ '}'!;
+    for -> 'for'! id 'in'! exprS '{'! stmtS '}'! ;
+    draw -> 'draw'! exprS ('at'! exprS)? ';'!;
+    return -> 'return'! exprS ';'!;
+    funcDecl -> id '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;
+    assign -> id '='! exprS ';'!;
+    varDecl -> id ':'! types '='! exprS ';'!;
 
-    forkS -> fork+ otherwise?;
-    fork -> '('! expr_func ')'! '->'! '{'! stmtS '}'!; 
-    otherwise -> '('! 'otherwise' ')'! '->'! '{'! stmtS '}'!;
+    fork -> forkExpr+ otherwise?;
+    forkExpr -> '('! exprFunc ')'! '->'! '{'! stmtS '}'!; 
+    otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
     
     //Expressions
-    exprS -> (manipulation | expr_func | SCall | color | path | range)^;
-    expr_func -> (expr | FCall )^;
+    exprS -> (manipulation | exprFunc | SCall | color | path | range)^;
+    exprFunc -> (expr | FCall )^;
     expr -> expr '||'^ expr1 | expr1^;
     expr1 -> expr1 '&&'^ expr2 | expr2^;
     expr2 -> expr3 ('==' | '<' | '>' | '>=' | '<=')^ expr3 | expr3^;
     expr3 -> expr3 '+'^ expr4 | expr3 '-'^ expr4 | expr4^;
     expr4 -> expr4 '%'^ expr5 | expr4 '*'^ expr5 | expr4 '/'^ expr5 | expr5^; 
     expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
-    expr6 -> (parenthesis | FLOAT | INTEGER | id | properties | array | bool)^;
+    expr6 -> (point | FLOAT | INTEGER | id | properties | array | bool)^;
         
-    parenthesis -> '(' (expr | (expr | FCall) ',' (expr | FCall)) ')';
+    //Also contains parenthesis, but this case is promoted
+    point -> '('! (expr^ | (expr | FCall) ','! (expr | FCall)) ')'!;
 
     bool -> ('true' | 'false')^;
 
     properties -> id '.' id; 
-    range -> expr_func ('..' | '..=') expr_func;
-    color -> '(' (expr | FCall) ',' (expr | FCall) ',' (expr | FCall) ',' (expr | FCall)')' ;
-    path   -> expr_func (('--' | '~~') expr_func)+ (('--' | '~~')'*')?;
+    range -> exprFunc ('..' | '..=') exprFunc;
+    color -> '('! (expr | FCall) ','! (expr | FCall) ','! (expr | FCall) ','! (expr | FCall)')'! ;
+    path   -> exprFunc (('--' | '~~') exprFunc)+ (('--' | '~~')'*')?;
     FCall -> id '('! args ')'!;
     args -> arg (','! arg)*; 
-    arg -> exprS;
+    arg -> exprS^;
 
     SCall -> (path | id) '(|'! attrS '|)'!;
     attrS -> (attr (','! attr)*)? ; 
     attr -> id '='! exprS;
-    array -> id? ('['! args ']'!)+;
+    array -> id? ('['! (exprS (','! exprS)*)? ']'!)+;
     
-    pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr (id | parenthesis | FCall)?;
-    manipulation -> 'place' expr_func pos | 'scale' expr_func 'by' expr_func 
-    | 'rotate' expr_func 'by' expr_func;
+    pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr (id | point | FCall)?;
+    manipulation -> 'place' exprFunc pos | 'scale' exprFunc 'by' exprFunc 
+    | 'rotate' exprFunc 'by' exprFunc;
     
     params -> param (','! param)*;
     param -> id ':'! types;
 
     //Types
-    types -> ('int' | 'float' | types'[]' | 'point' | 'color' 
-    | 'shape' | 'path' | 'polygon' | 'bool')^;
+    types -> (('int' | 'float' | 'point' | 'color' 
+    | 'shape' | 'path' | 'polygon' | 'bool')('[]')*)^;
     
     //Simple things
     id -> IDENTIFIER^; 

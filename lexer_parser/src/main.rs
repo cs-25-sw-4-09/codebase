@@ -14,8 +14,8 @@ fn main() {
     import xy \"hello\";
     y: int;
     begin
-    x: int = 10;
-    y = 15;
+    x: int[][][] = [];
+
     ";
 
     println!("{}", stringify_tree(cfg::parse_str(program).get_ast().get_root()))
