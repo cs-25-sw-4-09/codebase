@@ -34,6 +34,13 @@ impl Program {
 
         Program { decl_f, stmts }
     }
+
+    pub fn type_check(&self) {
+        let mut vtable: HashMap<String, Type> = HashMap::new();
+        self.stmts.iter().for_each(|stmt| {
+            println!("{}", if stmt.type_check(&mut vtable).is_ok() { "TRUE" } else { "FALSE" })
+        })
+    }
 }
 
 #[derive(Debug)]
@@ -65,6 +72,19 @@ impl Stmt {
             _ => panic!(),
         }
     }
+
+    fn type_check(&self, vtable: &mut HashMap<String, Type>) -> Result<Type, ()> {
+        match self {
+            Stmt::VarDecl { name, declared_type, value } => {
+                if vtable.contains_key(name) { return Err(()) };
+                if declared_type.eq(&value.type_check(vtable)?) {
+                    vtable.insert(name.clone(), declared_type.clone()); //måske fiks clone here
+                    return Ok(declared_type.clone());
+                }
+                Err(())
+            },
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -72,6 +92,7 @@ pub enum Expr {
     Integer(i64),
     Variable(String),
     Boolean(bool),
+    Float(f64),
     BinaryOperation {
         lhs: Box<Expr>,
         rhs: Box<Expr>,
@@ -92,6 +113,7 @@ impl Expr {
             },
             "IDENTIFIER" => Expr::Variable(expr.get_value().unwrap().into()),
             "BOOLEAN" =>  Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),
+            "FLOAT" =>  Expr::Float(expr.get_value().unwrap().parse().unwrap()),
             _ => panic!("Expression type not found: {}", expr.get_symbol().name),
         }
     }
@@ -100,10 +122,30 @@ impl Expr {
         match self {
             Expr::Integer(_) => Type::Int,
             Expr::Boolean(_) => Type::Bool,
-            _ => panic!()
+            Expr::Float(_)  => Type::Float,
+            christmas => panic!("{:?}", christmas)
         }
     }
 
+    fn type_check(&self, vtable: &HashMap<String, Type>) -> Result<Type, ()> {
+        match self {
+            Expr::Integer(_) => Ok(Type::Int),
+            Expr::Boolean(_) => Ok(Type::Bool),
+            Expr::Float(_) => Ok(Type::Float),
+            Expr::Variable(identifier) => vtable.get(identifier).cloned().ok_or(()),
+            Expr::BinaryOperation { lhs, rhs, operator: _ } => {
+                let t1 = lhs.type_check(vtable)?;
+                let t2 = rhs.type_check(vtable)?;
+                match (t1, t2) {
+                    (Type::Int, Type::Int) => Ok(Type::Int),
+                    (Type::Float, Type::Float) => Ok(Type::Float),
+                    (Type::Int, Type::Float) | (Type::Float, Type::Int) => Ok(Type::Float),
+                    _ => Err(())
+                }
+
+            },
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -146,11 +188,12 @@ impl BinaryOperator {
         }
     }
 }*/
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Type {
     Int,
     Array,
     Bool,
+    Float
 }
 
 impl Type {
@@ -158,6 +201,7 @@ impl Type {
         match type_str {
             "int" => Self::Int,
             "bool" => Self::Bool,
+            "float" => Self::Bool,
             _ => unreachable!(),
         }
     }

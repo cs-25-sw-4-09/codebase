@@ -9,13 +9,14 @@ fn main() {
 
     let program = "
     begin
-    x: bool = false;
-    y: int = 3 + x;
+    x: int = 10;
+    y: int = 3 + 5 * 3;
     ";
 
     println!("{}", stringify_tree(cfg::parse_str(program).get_ast().get_root()));
     let f = Program::new(cfg::parse_str(program).get_ast().get_root());
     println!("{:?}", f);
+    f.type_check();
     
 }
 
