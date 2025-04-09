@@ -1,7 +1,5 @@
 use lexer_parser::{
-    grammar::cfg, types::types::Program, utils::{
-        tree_builder::TreeBuilderStr, tree_converter::stringify_tree
-    }, valid_programs::get_programs
+    grammar::cfg, types::types::Program, utils::tree_converter::stringify_tree
 };
 
 fn main() {
@@ -9,14 +7,14 @@ fn main() {
 
     let program = "
     begin
-    x: int = 10;
-    y: int = 3 + 5 * 3;
+    x: int = 4;
+    y: int = 2 + x % 3;
     ";
 
     println!("{}", stringify_tree(cfg::parse_str(program).get_ast().get_root()));
-    let f = Program::new(cfg::parse_str(program).get_ast().get_root());
-    println!("{:?}", f);
+    let mut f = Program::new(cfg::parse_str(program).get_ast().get_root());
     f.type_check();
+    println!("{:?}", f);
     
 }
 

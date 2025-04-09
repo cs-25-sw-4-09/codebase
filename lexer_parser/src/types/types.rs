@@ -2,25 +2,96 @@ use std::collections::HashMap;
 
 use hime_redist::{
     ast::AstNode,
-    symbols::{SemanticElementTrait, Symbol, SymbolType},
+    symbols::{SemanticElementTrait, Symbol},
 };
 
 #[derive(Debug)]
 pub struct Program {
     pub decl_f: Vec<Decl>,
     pub stmts: Vec<Stmt>,
+    pub tenvironment: TEnvironment,
+}
+
+#[derive(Debug)]
+pub struct TEnvironment {
+    v_table: HashMap<String, EType>,
+    f_table: HashMap<String, Type>,
+    s_table: HashMap<String, Type>,
+    r_type: Option<Type>,
+}
+
+impl TEnvironment {
+    fn new() -> Self {
+        TEnvironment {
+            v_table: HashMap::new(),
+            f_table: HashMap::new(),
+            s_table: HashMap::new(),
+            r_type: None,
+        }
+    }
+
+    fn vtable_lookup(&self, identifier: &String) -> Option<&Type> {
+        if let Some(etype) = self.v_table.get(identifier) {
+            match etype {
+                EType::Normal(t) | EType::Decl(t) => Some(t),
+            }
+        } else {
+            None
+        }
+    }
+
+    fn vtable_set(&mut self, identifier: String, r#type: Type) {
+        self.v_table.insert(identifier, EType::Normal(r#type));
+    }
+
+    fn vdtable_lookup(&self, identifier: &String) -> Option<&Type> {
+        if let Some(etype) = self.v_table.get(identifier) {
+            match etype {
+                EType::Decl(t) => Some(t),
+                EType::Normal(_) => None,
+            }
+        } else {
+            None
+        }
+    }
+
+    fn vdtable_set(&mut self, identifier: String, r#type: Type) {
+        self.v_table.insert(identifier, EType::Decl(r#type));
+    }
+
+    fn vtable_contains(&self, identifier: &String) -> bool {
+        self.v_table.contains_key(identifier)
+    }
+
+    fn vdtable_contains(&self, identifier: &String) -> bool {
+        if let Some(etype) = self.v_table.get(identifier) {
+            match etype {
+                EType::Decl(_) => true,
+                EType::Normal(_) => false,
+            }
+        } else {
+            false
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum EType {
+    Normal(Type),
+    Decl(Type),
 }
 
 impl Program {
     pub fn new(root_node: AstNode) -> Self {
         let mut decl_f: Vec<Decl> = Vec::new();
         let mut stmts: Vec<Stmt> = Vec::new();
+        let mut tenvironment = TEnvironment::new();
 
         for node in root_node.children() {
             match node.get_symbol().name {
                 "declS" => {
                     for decl in node.children() {
-                        //TODO
+                        todo!()
                     }
                 }
                 "stmtS" => {
@@ -32,13 +103,23 @@ impl Program {
             }
         }
 
-        Program { decl_f, stmts }
+        Program {
+            decl_f,
+            stmts,
+            tenvironment,
+        }
     }
 
-    pub fn type_check(&self) {
-        let mut vtable: HashMap<String, Type> = HashMap::new();
+    pub fn type_check(&mut self) {
         self.stmts.iter().for_each(|stmt| {
-            println!("{}", if stmt.type_check(&mut vtable).is_ok() { "TRUE" } else { "FALSE" })
+            println!(
+                "{}",
+                if stmt.type_check(&mut self.tenvironment).is_ok() {
+                    "TRUE"
+                } else {
+                    "FALSE"
+                }
+            )
         })
     }
 }
@@ -73,16 +154,22 @@ impl Stmt {
         }
     }
 
-    fn type_check(&self, vtable: &mut HashMap<String, Type>) -> Result<Type, ()> {
+    fn type_check(&self, environment: &mut TEnvironment) -> Result<Type, ()> {
         match self {
-            Stmt::VarDecl { name, declared_type, value } => {
-                if vtable.contains_key(name) { return Err(()) };
-                if declared_type.eq(&value.type_check(vtable)?) {
-                    vtable.insert(name.clone(), declared_type.clone()); //måske fiks clone here
+            Stmt::VarDecl {
+                name,
+                declared_type,
+                value,
+            } => {
+                if environment.vtable_contains(name) {
+                    return Err(());
+                };
+                if declared_type.eq(&value.type_check(environment)?) {
+                    environment.vtable_set(name.clone(), declared_type.clone()); //måske fiks clone here
                     return Ok(declared_type.clone());
                 }
                 Err(())
-            },
+            }
         }
     }
 }
@@ -96,7 +183,11 @@ pub enum Expr {
     BinaryOperation {
         lhs: Box<Expr>,
         rhs: Box<Expr>,
-        operator: BinaryOperator
+        operator: BinaryOperator,
+    },
+    UnaryOperation {
+        operator: UnaryOperator,
+        expr: Box<Expr>
     }
 }
 
@@ -104,16 +195,22 @@ impl Expr {
     fn new(expr: AstNode) -> Self {
         match expr.get_symbol().name {
             "INTEGER" => Expr::Integer(expr.get_value().unwrap().parse().unwrap()),
-            "+" | "-" | "*" | "/" => {
+            "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=" | "!=" | "==" | "&&" | "||" => {
                 let lhs = Box::new(Expr::new(expr.child(0)));
                 let rhs = Box::new(Expr::new(expr.child(1)));
                 let operator = BinaryOperator::new(expr.get_symbol());
 
                 Expr::BinaryOperation { lhs, rhs, operator }
             },
+            "!" => {
+                let uexpr = Box::new(Expr::new(expr.child(0)));
+                let operator = UnaryOperator::new(expr.get_symbol());
+
+                Expr::UnaryOperation { operator, expr: uexpr }
+            },
             "IDENTIFIER" => Expr::Variable(expr.get_value().unwrap().into()),
-            "BOOLEAN" =>  Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),
-            "FLOAT" =>  Expr::Float(expr.get_value().unwrap().parse().unwrap()),
+            "BOOLEAN" => Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),
+            "FLOAT" => Expr::Float(expr.get_value().unwrap().parse().unwrap()),
             _ => panic!("Expression type not found: {}", expr.get_symbol().name),
         }
     }
@@ -122,28 +219,65 @@ impl Expr {
         match self {
             Expr::Integer(_) => Type::Int,
             Expr::Boolean(_) => Type::Bool,
-            Expr::Float(_)  => Type::Float,
-            christmas => panic!("{:?}", christmas)
+            Expr::Float(_) => Type::Float,
+            error => panic!("{:?}", error),
         }
     }
 
-    fn type_check(&self, vtable: &HashMap<String, Type>) -> Result<Type, ()> {
+    fn type_check(&self, environment: &mut TEnvironment) -> Result<Type, ()> {
         match self {
             Expr::Integer(_) => Ok(Type::Int),
             Expr::Boolean(_) => Ok(Type::Bool),
             Expr::Float(_) => Ok(Type::Float),
-            Expr::Variable(identifier) => vtable.get(identifier).cloned().ok_or(()),
-            Expr::BinaryOperation { lhs, rhs, operator: _ } => {
-                let t1 = lhs.type_check(vtable)?;
-                let t2 = rhs.type_check(vtable)?;
-                match (t1, t2) {
-                    (Type::Int, Type::Int) => Ok(Type::Int),
-                    (Type::Float, Type::Float) => Ok(Type::Float),
-                    (Type::Int, Type::Float) | (Type::Float, Type::Int) => Ok(Type::Float),
-                    _ => Err(())
+            Expr::Variable(identifier) => environment.vtable_lookup(identifier).cloned().ok_or(()),
+            Expr::BinaryOperation { lhs, rhs, operator } => {
+                let t1 = lhs.type_check(environment)?;
+                let t2 = rhs.type_check(environment)?;
+                match operator {
+                    BinaryOperator::Add
+                    | BinaryOperator::Subtract
+                    | BinaryOperator::Divide
+                    | BinaryOperator::Multiply
+                    | BinaryOperator::Modulus => match (t1, t2) {
+                        (Type::Int, Type::Int) => Ok(Type::Int),
+                        (Type::Float, Type::Float)
+                        | (Type::Int, Type::Float)
+                        | (Type::Float, Type::Int) => Ok(Type::Float),
+                        _ => Err(()),
+                    },
+                    BinaryOperator::LessThan
+                    | BinaryOperator::LessThanOrEquals
+                    | BinaryOperator::GreaterThan
+                    | BinaryOperator::GreaterThanOrEquals
+                    | BinaryOperator::NotEquals
+                    | BinaryOperator::Equals => match (t1, t2) {
+                        (Type::Int, Type::Int)
+                        | (Type::Float, Type::Int)
+                        | (Type::Int, Type::Float)
+                        | (Type::Float, Type::Float) => Ok(Type::Bool),
+                        _ => Err(()),
+                    },
+                    BinaryOperator::LogicalAnd | BinaryOperator::LogicalOr => {
+                        if t1.eq(&Type::Bool) && t2.eq(&Type::Bool) {
+                            Ok(Type::Bool)
+                        } else {
+                            Err(())
+                        }
+                    }
                 }
-
             },
+            Expr::UnaryOperation { operator, expr } => {
+                let t1 = expr.type_check(environment)?;
+                match operator {
+                    UnaryOperator::Negate => {
+                        if t1.ne(&Type::Bool) {
+                            Err(())
+                        } else {
+                            Ok(Type::Bool)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -153,7 +287,16 @@ pub enum BinaryOperator {
     Add,
     Subtract,
     Multiply,
-    Divide
+    Divide,
+    Modulus,
+    GreaterThanOrEquals,
+    LessThanOrEquals,
+    LessThan,
+    GreaterThan,
+    Equals,
+    NotEquals,
+    LogicalAnd,
+    LogicalOr,
 }
 
 impl BinaryOperator {
@@ -163,37 +306,40 @@ impl BinaryOperator {
             "-" => Self::Subtract,
             "*" => Self::Multiply,
             "/" => Self::Divide,
-            _ => panic!()
+            "%" => Self::Modulus,
+            "<" => Self::LessThan,
+            ">" => Self::GreaterThan,
+            "<=" => Self::LessThanOrEquals,
+            ">=" => Self::GreaterThan,
+            "!=" => Self::NotEquals,
+            "==" => Self::Equals,
+            "&&" => Self::LogicalAnd,
+            "||" => Self::LogicalOr,
+            _ => panic!(),
         }
     }
 }
 
-//type TypeEnv = HashMap<String, Type>;
-/*fn typecheck_expr(expr: &Expr, env: &TypeEnv) -> Result<Type, String> {
-    match expr {
-        Expr::Integer(_) => Ok(Type::Int),
-        Expr::Variable(name) => {
-            env.get(name)
-                .cloned()
-                .ok_or_else(|| format!("Undefined variable: {}", name))
-        }
-        Expr::BinaryOp { left, op: _, right } => {
-            let l_type = typecheck_expr(left, env)?;
-            let r_type = typecheck_expr(right, env)?;
-            if l_type == Type::Int && r_type == Type::Int {
-                Ok(Type::Int)
-            } else {
-                Err("Binary operations require integer operands".into())
-            }
+#[derive(Debug)]
+pub enum UnaryOperator {
+    Negate,
+}
+
+impl UnaryOperator {
+    fn new(operator: Symbol) -> Self {
+        match operator.name {
+            "!" => Self::Negate,
+            _ => panic!(),
         }
     }
-}*/
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum Type {
     Int,
     Array,
     Bool,
-    Float
+    Float,
 }
 
 impl Type {
