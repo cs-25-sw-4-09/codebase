@@ -16,10 +16,10 @@ pub enum Stmt {
     FuncDecl {
         name: String,
         return_type: Type,
-        parameters: HashMap<String, Type>,
+        parameters: Vec<(String, Type)>,
         statements: Vec<Stmt>,
     },
-    Return(Expr)
+    Return(Expr),
 }
 
 impl Stmt {
@@ -34,20 +34,19 @@ impl Stmt {
                 }
             }
             "funcDecl" => {
-                let mut parameters = HashMap::new();
+                let mut parameters = Vec::new();
                 let mut statements = Vec::new();
                 for param in stmt.child(1).children() {
+                    let parameter = (
+                        param.child(0).get_value().unwrap().into(),
+                        Type::new(param.child(1).get_value().unwrap()),
+                    );
 
-                    let parameter: String = param.child(0).get_value().unwrap().into();
-
-                    if parameters.contains_key(&parameter) {
+                    if parameters.contains(&parameter) {
                         panic!();
                     }
 
-                    parameters.insert(
-                        parameter,
-                        Type::new(param.child(1).get_value().unwrap()),
-                    );
+                    parameters.push(parameter);
                 }
 
                 for stmt in stmt.child(3).children() {
@@ -60,7 +59,7 @@ impl Stmt {
                     parameters,
                     statements,
                 }
-            },
+            }
             "return" => Stmt::Return(Expr::new(stmt.child(0))),
             stmt => panic!("{}", stmt),
         }

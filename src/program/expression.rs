@@ -2,10 +2,7 @@ use std::collections::HashMap;
 
 use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 
-use super::{
-    operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator},
-    r#type::Type,
-};
+use super::operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator};
 
 #[derive(Debug)]
 pub enum Expr {

@@ -5,7 +5,7 @@ use crate::program::r#type::Type;
 #[derive(Debug, Clone)]
 pub struct TEnvironment {
     v_table: HashMap<String, EType>,
-    f_table: HashMap<String, (HashMap<String, Type>, Type)>,
+    f_table: HashMap<String, (Vec<Type>, Type)>,
     s_table: HashMap<String, Type>,
     pub r_type: Option<Type>,
 }
@@ -68,11 +68,11 @@ impl TEnvironment {
         self.f_table.get(identifier).is_some()
     }
 
-    pub fn ftable_set(&mut self, identifier: String, parameters: HashMap<String, Type>, return_type: Type) {      
+    pub fn ftable_set(&mut self, identifier: String, parameters: Vec<Type>, return_type: Type) {      
         self.f_table.insert(identifier,(parameters, return_type));
     }
 
-    pub fn ftable_lookup(&self, identifier: &String) -> Option<&(HashMap<String, Type>, Type)> {
+    pub fn ftable_lookup(&self, identifier: &String) -> Option<&(Vec<Type>, Type)> {
         if let Some(lookup) = self.f_table.get(identifier) {
             Some(lookup)
         } else {

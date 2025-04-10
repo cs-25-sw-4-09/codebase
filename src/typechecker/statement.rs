@@ -1,4 +1,4 @@
-use crate::program::statement::Stmt;
+use crate::program::{statement::Stmt, r#type::Type};
 
 use super::{environment::TEnvironment, TypeCheckE, TypeCheckS};
 
@@ -28,7 +28,8 @@ impl TypeCheckS for Stmt {
                 if environment.ftable_contains(name) {
                     return Err(());
                 } else {
-                    environment.ftable_set(name.clone(), parameters.clone(), return_type.clone());
+                    let (_, parameter_types): (Vec<_>, Vec<Type>) = parameters.iter().cloned().unzip();
+                    environment.ftable_set(name.clone(), parameter_types, return_type.clone());
                 }
                 let mut new_environment = environment.clone();
                 new_environment.r_type = Some(return_type.clone());

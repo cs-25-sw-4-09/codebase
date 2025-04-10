@@ -68,7 +68,7 @@ impl TypeCheckE for Expr {
                 if environment.ftable_contains(name) {
                     let (parameters, return_type) = environment.ftable_lookup(name).ok_or(())?.clone();
                     
-                    if parameters.iter().zip(args).all(|((_, parameter_type), arg)| {
+                    if parameters.iter().zip(args).all(|(parameter_type, arg)| {
                         match arg.type_check(environment) {
                             Ok(t1) => t1.eq(parameter_type),
                             Err(_) => false,
