@@ -66,13 +66,12 @@ impl TypeCheckE for Expr {
             }
             Expr::FCall { name, args } => {
                 if environment.ftable_contains(name) {
-                    let (parameters, return_type) = environment.ftable_lookup(name).ok_or(())?;
+                    let (parameters, return_type) = environment.ftable_lookup(name).ok_or(())?.clone();
                     
                     if parameters.iter().zip(args).all(|((_, parameter_type), arg)| {
-                        if let Ok(t1) = arg.type_check(environment) {
-                            t1.eq(parameter_type)
-                        } else {
-                            false
+                        match arg.type_check(environment) {
+                            Ok(t1) => t1.eq(parameter_type),
+                            Err(_) => false,
                         }
                     }) {
                         Ok(return_type.clone())
