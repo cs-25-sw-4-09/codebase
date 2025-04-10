@@ -15,7 +15,7 @@ fn main() {
         f: bool = y && z;
         return f;
     }
-    x: bool = funktionsnavn(5 * (3 + 2), true && true); //Error:: du kan ikke skrive true == true e.g.
+    x: bool = funktionsnavn(5 * (3 + 2), true && false);
     ";
 
     println!(
