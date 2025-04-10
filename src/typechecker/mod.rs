@@ -11,7 +11,7 @@ pub trait TypeCheckE {
     fn type_check(&self, environment: &mut TEnvironment) -> Result<Type, ()>;
 }
 pub trait TypeCheckS {
-    fn type_check(&self, environment: &mut TEnvironment) -> Result<Type, ()>;
+    fn type_check(&self, environment: &mut TEnvironment) -> Result<(), ()>;
 }
 pub trait TypeCheckP {
     fn type_check(&mut self);

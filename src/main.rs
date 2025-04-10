@@ -10,8 +10,10 @@ use codebase::{
 fn main() {
     let program = "
     begin
-    x: int = 4;
-    y: int = 2 + x % 3;
+    funktionsnavn(x: int, y: bool): bool -> {
+        z: int = 5;
+        return z;
+    }
     ";
 
     println!(

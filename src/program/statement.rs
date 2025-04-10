@@ -1,8 +1,10 @@
+use std::collections::HashMap;
+
 use hime_redist::ast::AstNode;
 use hime_redist::symbols::SemanticElementTrait;
 
-use crate::program::r#type::Type;
 use super::expression::Expr;
+use crate::program::r#type::Type;
 
 #[derive(Debug)]
 pub enum Stmt {
@@ -11,6 +13,13 @@ pub enum Stmt {
         declared_type: Type,
         value: Expr,
     },
+    FuncDecl {
+        name: String,
+        return_type: Type,
+        parameters: HashMap<String, Type>,
+        statements: Vec<Stmt>,
+    },
+    Return(Expr)
 }
 
 impl Stmt {
@@ -24,7 +33,36 @@ impl Stmt {
                     value: Expr::new(stmt.child(2)),
                 }
             }
-            _ => panic!(),
+            "funcDecl" => {
+                let mut parameters = HashMap::new();
+                let mut statements = Vec::new();
+                for param in stmt.child(1).children() {
+
+                    let parameter: String = param.child(0).get_value().unwrap().into();
+
+                    if parameters.contains_key(&parameter) {
+                        panic!();
+                    }
+
+                    parameters.insert(
+                        parameter,
+                        Type::new(param.child(1).get_value().unwrap()),
+                    );
+                }
+
+                for stmt in stmt.child(3).children() {
+                    statements.push(Stmt::new(stmt));
+                }
+
+                Stmt::FuncDecl {
+                    name: stmt.child(0).get_value().unwrap().into(),
+                    return_type: Type::new(stmt.child(2).get_value().unwrap()),
+                    parameters,
+                    statements,
+                }
+            },
+            "return" => Stmt::Return(Expr::new(stmt.child(0))),
+            stmt => panic!("{}", stmt),
         }
     }
 }

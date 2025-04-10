@@ -2,12 +2,12 @@ use std::collections::HashMap;
 
 use crate::program::r#type::Type;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct TEnvironment {
     v_table: HashMap<String, EType>,
-    f_table: HashMap<String, Type>,
+    f_table: HashMap<String, (HashMap<String, Type>, Type)>,
     s_table: HashMap<String, Type>,
-    r_type: Option<Type>,
+    pub r_type: Option<Type>,
 }
 
 impl TEnvironment {
@@ -63,9 +63,24 @@ impl TEnvironment {
             false
         }
     }
+
+    pub fn ftable_contains(&self, identifier: &String) -> bool {
+        self.f_table.get(identifier).is_some()
+    }
+
+    pub fn ftable_set(&mut self, identifier: String, parameters: HashMap<String, Type>, return_type: Type) {      
+        self.f_table.insert(identifier,(parameters, return_type));
+    }
+
+    pub fn clone(&self) -> Self {
+        let mut new = self.clone();
+        new.r_type = None;
+        new.v_table.clear();
+        new
+    }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum EType {
     Normal(Type),
     Decl(Type),
