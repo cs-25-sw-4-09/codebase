@@ -4,7 +4,7 @@ use codebase::{
         //valid_programs::get_programs
         utils::tree_converter::stringify_tree,
     },
-    program::program::Program,
+    program::program::Program, typechecker::TypeCheckP,
 };
 
 fn main() {

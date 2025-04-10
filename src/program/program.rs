@@ -1,9 +1,11 @@
 use hime_redist::{
     ast::AstNode,
-    symbols::{SemanticElementTrait, Symbol},
+    symbols::SemanticElementTrait,
 };
 
-use super::{environment::TEnvironment, statement::Stmt};
+use crate::typechecker::environment::TEnvironment;
+
+use super::statement::Stmt;
 
 #[derive(Debug)]
 pub struct Program {
@@ -39,19 +41,6 @@ impl Program {
             stmts,
             tenvironment,
         }
-    }
-
-    pub fn type_check(&mut self) {
-        self.stmts.iter().for_each(|stmt| {
-            println!(
-                "{}",
-                if stmt.type_check(&mut self.tenvironment).is_ok() {
-                    "TRUE"
-                } else {
-                    "FALSE"
-                }
-            )
-        })
     }
 }
 

@@ -1,6 +1,6 @@
 use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 
-use super::{environment::TEnvironment, operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator}, r#type::Type};
+use super::operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator};
 
 #[derive(Debug)]
 pub enum Expr {
@@ -43,72 +43,6 @@ impl Expr {
             "BOOLEAN" => Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),
             "FLOAT" => Expr::Float(expr.get_value().unwrap().parse().unwrap()),
             _ => panic!("Expression type not found: {}", expr.get_symbol().name),
-        }
-    }
-
-    fn get_type(&self) -> Type {
-        match self {
-            Expr::Integer(_) => Type::Int,
-            Expr::Boolean(_) => Type::Bool,
-            Expr::Float(_) => Type::Float,
-            error => panic!("{:?}", error),
-        }
-    }
-
-    pub fn type_check(&self, environment: &mut TEnvironment) -> Result<Type, ()> {
-        match self {
-            Expr::Integer(_) => Ok(Type::Int),
-            Expr::Boolean(_) => Ok(Type::Bool),
-            Expr::Float(_) => Ok(Type::Float),
-            Expr::Variable(identifier) => environment.vtable_lookup(identifier).cloned().ok_or(()),
-            Expr::BinaryOperation { lhs, rhs, operator } => {
-                let t1 = lhs.type_check(environment)?;
-                let t2 = rhs.type_check(environment)?;
-                match operator {
-                    BinaryOperator::Add
-                    | BinaryOperator::Subtract
-                    | BinaryOperator::Divide
-                    | BinaryOperator::Multiply
-                    | BinaryOperator::Modulus => match (t1, t2) {
-                        (Type::Int, Type::Int) => Ok(Type::Int),
-                        (Type::Float, Type::Float)
-                        | (Type::Int, Type::Float)
-                        | (Type::Float, Type::Int) => Ok(Type::Float),
-                        _ => Err(()),
-                    },
-                    BinaryOperator::LessThan
-                    | BinaryOperator::LessThanOrEquals
-                    | BinaryOperator::GreaterThan
-                    | BinaryOperator::GreaterThanOrEquals
-                    | BinaryOperator::NotEquals
-                    | BinaryOperator::Equals => match (t1, t2) {
-                        (Type::Int, Type::Int)
-                        | (Type::Float, Type::Int)
-                        | (Type::Int, Type::Float)
-                        | (Type::Float, Type::Float) => Ok(Type::Bool),
-                        _ => Err(()),
-                    },
-                    BinaryOperator::LogicalAnd | BinaryOperator::LogicalOr => {
-                        if t1.eq(&Type::Bool) && t2.eq(&Type::Bool) {
-                            Ok(Type::Bool)
-                        } else {
-                            Err(())
-                        }
-                    }
-                }
-            }
-            Expr::UnaryOperation { operator, expr } => {
-                let t1 = expr.type_check(environment)?;
-                match operator {
-                    UnaryOperator::Negate => {
-                        if t1.ne(&Type::Bool) {
-                            Err(())
-                        } else {
-                            Ok(Type::Bool)
-                        }
-                    }
-                }
-            }
         }
     }
 }
