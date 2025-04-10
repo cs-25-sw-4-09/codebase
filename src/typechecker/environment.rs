@@ -73,7 +73,7 @@ impl TEnvironment {
     }
 
     pub fn clone(&self) -> Self {
-        let mut new = self.clone();
+        let mut new = Clone::clone(self);
         new.r_type = None;
         new.v_table.clear();
         new
