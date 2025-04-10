@@ -11,7 +11,7 @@ fn main() {
     let program = "
     begin
     funktionsnavn(x: int, y: bool): bool -> {
-        z: int = 5;
+        z: bool = true;
         return z;
     }
     ";
