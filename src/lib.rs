@@ -1,2 +1,2 @@
 pub mod lexer_parser;
-pub mod types;
+pub mod program;
