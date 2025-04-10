@@ -72,6 +72,14 @@ impl TEnvironment {
         self.f_table.insert(identifier,(parameters, return_type));
     }
 
+    pub fn ftable_lookup(&self, identifier: &String) -> Option<&(HashMap<String, Type>, Type)> {
+        if let Some(lookup) = self.f_table.get(identifier) {
+            Some(lookup)
+        } else {
+            None
+        }
+    }
+
     pub fn clone(&self) -> Self {
         let mut new = Clone::clone(self);
         new.r_type = None;

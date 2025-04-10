@@ -1,9 +1,16 @@
-use crate::program::{expression::Expr, operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator}, r#type::Type};
+use crate::program::{
+    expression::Expr,
+    operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator},
+    r#type::Type,
+};
 
 use super::{environment::TEnvironment, TypeCheckE};
 
 impl TypeCheckE for Expr {
-    fn type_check(&self, environment: &mut TEnvironment) -> Result<crate::program::r#type::Type, ()> {
+    fn type_check(
+        &self,
+        environment: &mut TEnvironment,
+    ) -> Result<crate::program::r#type::Type, ()> {
         match self {
             Expr::Integer(_) => Ok(Type::Int),
             Expr::Boolean(_) => Ok(Type::Bool),
@@ -57,6 +64,26 @@ impl TypeCheckE for Expr {
                     }
                 }
             }
+            Expr::FCall { name, args } => {
+                if environment.ftable_contains(name) {
+                    let (parameters, return_type) = environment.ftable_lookup(name).ok_or(())?;
+                    
+                    if parameters.iter().zip(args).all(|((_, parameter_type), arg)| {
+                        if let Ok(t1) = arg.type_check(environment) {
+                            t1.eq(parameter_type)
+                        } else {
+                            false
+                        }
+                    }) {
+                        Ok(return_type.clone())
+                    } else {
+                        Err(())
+                    }
+
+                } else {
+                    Err(())
+                }
+            },
         }
     }
 }

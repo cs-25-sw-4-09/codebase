@@ -1,6 +1,11 @@
+use std::collections::HashMap;
+
 use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 
-use super::operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator};
+use super::{
+    operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator},
+    r#type::Type,
+};
 
 #[derive(Debug)]
 pub enum Expr {
@@ -16,6 +21,10 @@ pub enum Expr {
     UnaryOperation {
         operator: UnaryOperator,
         expr: Box<Expr>,
+    },
+    FCall {
+        name: String,
+        args: Vec<Expr>,
     },
 }
 
@@ -42,6 +51,15 @@ impl Expr {
             "IDENTIFIER" => Expr::Variable(expr.get_value().unwrap().into()),
             "BOOLEAN" => Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),
             "FLOAT" => Expr::Float(expr.get_value().unwrap().parse().unwrap()),
+            "FCall" => Expr::FCall {
+                name: expr.child(0).get_value().unwrap().into(),
+                args: expr
+                    .child(1)
+                    .children()
+                    .iter()
+                    .map(|arg| Expr::new(arg))
+                    .collect(),
+            },
             _ => panic!("Expression type not found: {}", expr.get_symbol().name),
         }
     }
