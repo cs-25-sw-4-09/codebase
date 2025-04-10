@@ -273,6 +273,7 @@ fn precedence_bool() {
     "begin
     x: bool = (true || false) && (5 < 6) 
     || (((5 + 9) == 0) && (true)) || (false) || (4 <= 4) && (5 > 1) && (4 >= 7);
+    x = 5 != 4;
     ";
 
     let bool_level = 2;
@@ -283,7 +284,15 @@ fn precedence_bool() {
     ("&&", bool_level+4), ("==", bool_level+5), ("+", bool_level+6),("5", bool_level+7), ("9", bool_level+7), ("0", bool_level+6), ("true", bool_level+5),
     ("false", bool_level+3), ("&&", bool_level+2),("&&", bool_level+3), ("<=", bool_level+4),("4", bool_level+5),("4", bool_level+5),
     (">", bool_level+4),("5", bool_level+5),("1", bool_level+5),(">=", bool_level+3),("4", bool_level+4),("7", bool_level+4)];
-    start.extend(stmt1.into_iter());
+    let stmt2 = vec![
+        ("assign", bool_level),
+        ("x", bool_level + 1),
+        ("!=", bool_level + 1),
+        ("5", bool_level +2),
+        ("4", bool_level + 2)
+    ];
+    
+    start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
     test_equality(start, program);
 }
 

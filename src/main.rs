@@ -1,23 +1,24 @@
-use codebase::lexer_parser::{
-    utils::{
-        tree_converter::stringify_tree, 
-      //  tree_builder::TreeBuilderStr
-    }, 
-    grammar::cfg,
-    //valid_programs::get_programs
+use codebase::{
+    lexer_parser::{
+        grammar::cfg,
+        //valid_programs::get_programs
+        utils::tree_converter::stringify_tree,
+    },
+    program::program::Program, typechecker::TypeCheckP,
 };
 
 fn main() {
     let program = "
-    import xy \"hello\";
-    y: int;
     begin
-    x: bool = true;
-    x: int[][] = 5;
-    x = place rec left x;
+    x: int = 4;
+    y: int = 2 + x % 3;
     ";
 
-    println!("{}", stringify_tree(cfg::parse_str(program).get_ast().get_root()))
-    
+    println!(
+        "{}",
+        stringify_tree(cfg::parse_str(program).get_ast().get_root())
+    );
+    let mut f = Program::new(cfg::parse_str(program).get_ast().get_root());
+    f.type_check();
+    println!("{:?}", f);
 }
-
