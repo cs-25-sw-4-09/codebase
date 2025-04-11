@@ -31,7 +31,7 @@ window: shape = window(|width = width/8, fill = (0,255,255,255), border = (0,0,0
 door: shape = rectangle(|height=(height-width)*2, width=width/6, fill = (133,72,54,255)|);
 
 house: shape = place roof top base;
-house = place window on house (width/2- width/4, height-width + width/2- width/4);
+house = place window ontop house (width/2- width/4, height-width + width/2- width/4);
 house = place door bottom house (width/2, door.height);
 
 draw house;"; 
@@ -49,7 +49,7 @@ star: shape = rectangle(|height=square_size, width=square_size, fill=star_color|
 for i in 1..square_amount { 
     cur_square: shape = rectangle(|height=square_size, width=square_size, fill=star_color|);
     cur_square = rotate cur_square by (90 / square_amount) * i;
-    star = place cur_square on star;
+    star = place cur_square ontop star;
 }
 
 draw star;";
