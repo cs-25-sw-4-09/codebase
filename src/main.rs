@@ -17,10 +17,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     );
     
     let mut program = Program::new("main.extension")?;
-    println!("{:?}", program);
     match program.type_check() {
         Ok(_) => println!("[Typechecker] OK"),
-        Err(_) => println!("[Typechecker] ERROR"),
+        Err(err) => println!("[Typechecker] error: {}", err),
     }
+    println!("{:?}", program);
     Ok(())
 }
