@@ -3,28 +3,32 @@ use hime_redist::{
     symbols::SemanticElementTrait,
 };
 
-use crate::typechecker::environment::TEnvironment;
+use crate::{lexer_parser::grammar::cfg, typechecker::environment::TEnvironment};
 
 use super::statement::Stmt;
 
 #[derive(Debug)]
 pub struct Program {
-    pub decl_f: Vec<Decl>,
+    pub decl_f: Vec<Stmt>,
     pub stmts: Vec<Stmt>,
     pub tenvironment: TEnvironment,
 }
 
 impl Program {
-    pub fn new(root_node: AstNode) -> Self {
-        let mut decl_f: Vec<Decl> = Vec::new();
+    pub fn new(input: &str) -> Self {
+        let mut decl_f: Vec<Stmt> = Vec::new();
         let mut stmts: Vec<Stmt> = Vec::new();
         let tenvironment = TEnvironment::new();
+
+        let parsed = cfg::parse_str(input);
+        let ast = parsed.get_ast();
+        let root_node = ast.get_root();
 
         for node in root_node.children() {
             match node.get_symbol().name {
                 "declS" => {
                     for decl in node.children() {
-                        todo!()
+                        decl_f.push(Stmt::new(decl));
                     }
                 }
                 "stmtS" => {
@@ -42,11 +46,5 @@ impl Program {
             tenvironment,
         }
     }
-}
-
-#[derive(Debug)]
-pub enum Decl {
-    Import {},
-    Decl {},
 }
 

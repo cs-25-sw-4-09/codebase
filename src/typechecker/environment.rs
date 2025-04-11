@@ -6,7 +6,7 @@ use crate::program::r#type::Type;
 pub struct TEnvironment {
     v_table: HashMap<String, EType>,
     f_table: HashMap<String, (Vec<Type>, Type)>,
-    s_table: HashMap<String, Type>,
+    s_table: HashMap<String, HashMap<String, Type>>,
     pub r_type: Option<Type>,
 }
 
@@ -64,8 +64,17 @@ impl TEnvironment {
         }
     }
 
+    pub fn vdtable_get_hashmap(&self) -> HashMap<String, Type> {
+        self.v_table.iter().filter_map(|(param_name, param_type)| {
+            match param_type {
+                EType::Normal(_) => None,
+                EType::Decl(r#type) => Some((param_name.clone(), r#type.clone())),
+            }
+        }).collect()
+    }
+
     pub fn ftable_contains(&self, identifier: &String) -> bool {
-        self.f_table.get(identifier).is_some()
+        self.f_table.contains_key(identifier)
     }
 
     pub fn ftable_set(&mut self, identifier: String, parameters: Vec<Type>, return_type: Type) {      
@@ -79,6 +88,22 @@ impl TEnvironment {
             None
         }
     }
+
+    pub fn stable_contains(&self, identifier: &String) -> bool {
+        self.s_table.contains_key(identifier)
+    }
+    pub fn stable_lookup(&self, identifier: &String) -> Option<&HashMap<String, Type>> {
+        if let Some(lookup) = self.s_table.get(identifier) {
+            Some(lookup)
+        } else {
+            None
+        }
+    }
+
+    pub fn stable_set(&mut self, identifier: String, parameters: HashMap<String, Type>) {
+        self.s_table.insert(identifier,parameters);
+    }
+    
 
     pub fn clone(&self) -> Self {
         let mut new = Clone::clone(self);

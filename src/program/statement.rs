@@ -20,6 +20,15 @@ pub enum Stmt {
         statements: Vec<Stmt>,
     },
     Return(Expr),
+    Decl {
+        name: String,
+        declared_type: Type,
+        value: Option<Expr>,
+    },
+    Import {
+        name: String,
+        path: String,
+    },
 }
 
 impl Stmt {
@@ -60,7 +69,20 @@ impl Stmt {
                     statements,
                 }
             }
+            "decl" => Stmt::Decl {
+                name: stmt.child(0).get_value().unwrap().into(),
+                declared_type: Type::new(stmt.child(1).get_value().unwrap()),
+                value: if stmt.children_count() > 2 {
+                    Some(Expr::new(stmt.child(2)))
+                } else {
+                    None
+                },
+            },
             "return" => Stmt::Return(Expr::new(stmt.child(0))),
+            "import" => Stmt::Import {
+                name: stmt.child(0).get_value().unwrap().into(),
+                path: stmt.child(1).get_value().unwrap().replace('"', ""),
+            },
             stmt => panic!("{}", stmt),
         }
     }

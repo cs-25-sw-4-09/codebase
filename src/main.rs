@@ -9,20 +9,20 @@ use codebase::{
 
 fn main() {
     let program = "
+    import circle \"./circle.extension\";
     begin
-    funktionsnavn(x: int, y: bool): bool -> {
-        z: bool = x == 1;
-        f: bool = y && z;
-        return f;
-    }
-    x: bool = funktionsnavn(5 * (3 + 2), true && false);
+    x: int = 5;
+    //draw circle(|width = 5|);
+    //circle: shape = circle(|width = 4|);
     ";
+
+    println!("PROGRAM {}", program);
 
     println!(
         "{}",
         stringify_tree(cfg::parse_str(program).get_ast().get_root())
     );
-    let mut f = Program::new(cfg::parse_str(program).get_ast().get_root());
+    let mut f = Program::new(program);
     f.type_check();
     println!("{:?}", f);
 }
