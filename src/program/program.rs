@@ -1,7 +1,6 @@
-use hime_redist::{
-    ast::AstNode,
-    symbols::SemanticElementTrait,
-};
+use std::{error::Error, fs};
+
+use hime_redist::symbols::SemanticElementTrait;
 
 use crate::{lexer_parser::grammar::cfg, typechecker::environment::TEnvironment};
 
@@ -15,12 +14,14 @@ pub struct Program {
 }
 
 impl Program {
-    pub fn new(input: &str) -> Self {
+    pub fn new(path: &str) -> Result<Self, Box<dyn Error>> {
+        let programstr = fs::read_to_string(path)?;
+
         let mut decl_f: Vec<Stmt> = Vec::new();
         let mut stmts: Vec<Stmt> = Vec::new();
         let tenvironment = TEnvironment::new();
 
-        let parsed = cfg::parse_str(input);
+        let parsed = cfg::parse_string(programstr);
         let ast = parsed.get_ast();
         let root_node = ast.get_root();
 
@@ -28,23 +29,23 @@ impl Program {
             match node.get_symbol().name {
                 "declS" => {
                     for decl in node.children() {
-                        decl_f.push(Stmt::new(decl));
+                        decl_f.push(Stmt::new(decl)?);
                     }
                 }
                 "stmtS" => {
                     for stmt in node.children() {
-                        stmts.push(Stmt::new(stmt));
+                        stmts.push(Stmt::new(stmt)?);
                     }
                 }
                 _ => panic!(),
             }
         }
 
-        Program {
+        Ok(Program {
             decl_f,
             stmts,
             tenvironment,
-        }
+        })
     }
 }
 

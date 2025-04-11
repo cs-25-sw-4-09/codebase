@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use hime_redist::symbols::Symbol;
 
 #[derive(Debug)]
@@ -18,8 +20,8 @@ pub enum BinaryOperator {
 }
 
 impl BinaryOperator {
-    pub fn new(operator: Symbol) -> Self {
-        match operator.name {
+    pub fn new(operator: Symbol) -> Result<Self, Box<dyn Error>> {
+        let operator = match operator.name {
             "+" => Self::Add,
             "-" => Self::Subtract,
             "*" => Self::Multiply,
@@ -34,6 +36,7 @@ impl BinaryOperator {
             "&&" => Self::LogicalAnd,
             "||" => Self::LogicalOr,
             _ => panic!(),
-        }
+        };
+        Ok(operator)
     }
 }

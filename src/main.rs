@@ -8,23 +8,16 @@ use codebase::{
 };
 
 fn main() {
-    let program = "
-    import circle \"circle.extension\";
-    y: int;
-    begin
-    x: int = 5 + 7;
-    ";
-
-    println!("PROGRAM {}", program);
-
+    let program = include_str!("../main.extension");
     println!(
         "{}",
         stringify_tree(cfg::parse_str(program).get_ast().get_root())
     );
-    let mut f = Program::new(program);
-    match f.type_check() {
+    
+    let mut program = Program::new("main.extension");
+    match program.type_check() {
         Ok(_) => println!("[Typechecker] OK"),
         Err(_) => println!("[Typechecker] ERROR"),
     }
-    println!("{:?}", f);
+    println!("{:?}", program);
 }

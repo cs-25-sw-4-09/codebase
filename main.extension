@@ -1,0 +1,4 @@
+import circle "circle.extension";
+y: int;
+begin
+draw circle(|radius = 5|);

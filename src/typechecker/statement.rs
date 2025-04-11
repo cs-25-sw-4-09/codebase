@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs};
+use std::{collections::HashMap, error::Error};
 
 use crate::{
     program::{program::Program, r#type::Type, statement::Stmt},
@@ -8,7 +8,7 @@ use crate::{
 use super::{environment::TEnvironment, TypeCheckE, TypeCheckS};
 
 impl TypeCheckS for Stmt {
-    fn type_check(&self, environment: &mut TEnvironment) -> Result<(), ()> {
+    fn type_check(&self, environment: &mut TEnvironment) -> Result<(), Box<dyn Error>> {
         match self {
             Stmt::VarDecl {
                 name,
@@ -83,10 +83,9 @@ impl TypeCheckS for Stmt {
                     return Err(());
                 }
 
-                let subprogram = fs::read_to_string(path).unwrap();
-                let mut subprogram_tree = Program::new(&subprogram);
+                let mut subprogram = Program::new(path)?;
 
-                match subprogram_tree.type_check() {
+                match subprogram.type_check() {
                     Ok(subprogram_environment) => {
                         println!("[Typechecker] Path: {} - OK", path);
                         let parameters: HashMap<String, Type> =

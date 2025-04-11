@@ -1,9 +1,11 @@
+use std::error::Error;
+
 use crate::{program::{program::Program, r#type::Type}, typechecker::TypeCheckS};
 
 use super::{environment::TEnvironment, TypeCheckP};
 
 impl TypeCheckP for Program {
-    fn type_check(&mut self) -> Result<&TEnvironment, ()> {
+    fn type_check(&mut self) -> Result<&TEnvironment, Box<dyn Error>> {
         self.tenvironment.r_type = Some(Type::Int);
         for stmt in self.decl_f.iter().clone() {
             stmt.type_check(&mut self.tenvironment)?
