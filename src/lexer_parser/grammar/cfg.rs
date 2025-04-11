@@ -89,52 +89,52 @@ pub const TERMINALS: &[Symbol] = &[
         name: ":"
     },
     Symbol {
-        id: 0x0042,
-        name: "fork"
+        id: 0x0041,
+        name: "="
     },
     Symbol {
         id: 0x0043,
-        name: "{"
+        name: "fork"
     },
     Symbol {
         id: 0x0044,
-        name: "}"
+        name: "{"
     },
     Symbol {
         id: 0x0045,
-        name: "for"
+        name: "}"
     },
     Symbol {
         id: 0x0046,
-        name: "in"
+        name: "for"
     },
     Symbol {
         id: 0x0047,
-        name: "draw"
+        name: "in"
     },
     Symbol {
         id: 0x0048,
-        name: "at"
+        name: "draw"
     },
     Symbol {
         id: 0x0049,
-        name: "return"
+        name: "at"
     },
     Symbol {
         id: 0x004A,
-        name: "("
+        name: "return"
     },
     Symbol {
         id: 0x004B,
-        name: ")"
+        name: "("
     },
     Symbol {
         id: 0x004C,
-        name: "->"
+        name: ")"
     },
     Symbol {
         id: 0x004D,
-        name: "="
+        name: "->"
     },
     Symbol {
         id: 0x004F,
@@ -613,8 +613,8 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V61"
     },
     Symbol {
-        id: 0x0041,
-        name: "__V65"
+        id: 0x0042,
+        name: "__V66"
     },
     Symbol {
         id: 0x004E,
