@@ -1,6 +1,9 @@
 use std::{collections::HashMap, fs};
 
-use crate::{program::{program::Program, statement::Stmt, r#type::Type}, typechecker::TypeCheckP};
+use crate::{
+    program::{program::Program, r#type::Type, statement::Stmt},
+    typechecker::TypeCheckP,
+};
 
 use super::{environment::TEnvironment, TypeCheckE, TypeCheckS};
 
@@ -81,14 +84,23 @@ impl TypeCheckS for Stmt {
                 }
 
                 let subprogram = fs::read_to_string(path).unwrap();
-                let mut subprogram_tree= Program::new(&subprogram);
-                let subprogram_environment = subprogram_tree.type_check()?;
-                let parameters: HashMap<String,Type> = subprogram_environment.vdtable_get_hashmap();
-                
-                environment.stable_set(name.clone(), parameters);
-                
-                Err(())
-            },
+                let mut subprogram_tree = Program::new(&subprogram);
+
+                match subprogram_tree.type_check() {
+                    Ok(subprogram_environment) => {
+                        println!("[Typechecker] Path: {} - OK", path);
+                        let parameters: HashMap<String, Type> =
+                            subprogram_environment.vdtable_get_hashmap();
+
+                        environment.stable_set(name.clone(), parameters);
+                        Ok(())
+                    }
+                    Err(_) => {
+                        println!("[Typechecker] Path: {} - ERROR", path);
+                        Err(())
+                    }
+                }
+            }
         }
     }
 }

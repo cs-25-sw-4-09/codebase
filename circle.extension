@@ -1,2 +1,3 @@
+t: int;
 begin
 g: bool = true;
