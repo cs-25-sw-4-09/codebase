@@ -6,7 +6,7 @@ use crate::program::{
     r#type::Type,
 };
 
-use super::{environment::TEnvironment, errors::{self, IdentifierNotFound}, TypeCheckE};
+use super::{environment::TEnvironment, errors, TypeCheckE};
 
 impl TypeCheckE for Expr {
     fn type_check(
@@ -17,7 +17,7 @@ impl TypeCheckE for Expr {
             Expr::Integer(_) => Ok(Type::Int),
             Expr::Boolean(_) => Ok(Type::Bool),
             Expr::Float(_) => Ok(Type::Float),
-            Expr::Variable(identifier) => environment.vtable_lookup(identifier).cloned().ok_or(errors::IdentifierNotFound(identifier).into()),
+            Expr::Variable(identifier) => environment.vtable_lookup(identifier).cloned().ok_or(errors::IdentifierNotFound(identifier.to_owned()).into()),
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let t1 = lhs.type_check(environment)?;
                 let t2 = rhs.type_check(environment)?;
@@ -43,7 +43,7 @@ impl TypeCheckE for Expr {
                         | (Type::Float, Type::Int)
                         | (Type::Int, Type::Float)
                         | (Type::Float, Type::Float) => Ok(Type::Bool),
-                        (t1,t2) => Err(errors::BinaryOperationTypeNotCompatible(t1, t2).into()),
+                        (t1, t2) => Err(errors::BinaryOperationTypeNotCompatible(t1, t2).into()),
                     },
                     BinaryOperator::LogicalAnd | BinaryOperator::LogicalOr => {
                         if t1.eq(&Type::Bool) && t2.eq(&Type::Bool) {
@@ -69,7 +69,7 @@ impl TypeCheckE for Expr {
             Expr::FCall { name, args } => {
                 if environment.ftable_contains(name) {
                     let (parameters, return_type) =
-                        environment.ftable_lookup(name).ok_or::<IdentifierNotFound>(errors::IdentifierNotFound(name).into())?.clone();
+                        environment.ftable_lookup(name).ok_or_else(|| Box::new(errors::IdentifierNotFound(name.to_owned())))?.clone();
 
                     if parameters.iter().zip(args).all(|(parameter_type, arg)| {
                         match arg.type_check(environment) {
@@ -79,10 +79,10 @@ impl TypeCheckE for Expr {
                     }) {
                         Ok(return_type.clone())
                     } else {
-                        Err(errors::FCallParametersIncompatible(name).into())
+                        Err(errors::FCallParametersIncompatible(name.to_owned()).into())
                     }
                 } else {
-                    Err(errors::IdentifierNotFound(name).into())
+                    Err(errors::IdentifierNotFound(name.to_owned()).into())
                 }
             }
             Expr::SCall { name, args } => {
@@ -97,10 +97,10 @@ impl TypeCheckE for Expr {
                     }) {
                         Ok(Type::Shape)
                     } else {
-                        Err(errors::SCallParametersIncompatible(name).into())
+                        Err(errors::SCallParametersIncompatible(name.to_owned()).into())
                     }
                 } else {
-                    Err(errors::IdentifierNotFound(name).into())
+                    Err(errors::IdentifierNotFound(name.to_owned()).into())
                 }
             },
         }

@@ -5,7 +5,7 @@ use crate::{
     typechecker::TypeCheckP,
 };
 
-use super::{environment::TEnvironment, TypeCheckE, TypeCheckS};
+use super::{environment::TEnvironment, errors, TypeCheckE, TypeCheckS};
 
 impl TypeCheckS for Stmt {
     fn type_check(&self, environment: &mut TEnvironment) -> Result<(), Box<dyn Error>> {
@@ -16,13 +16,14 @@ impl TypeCheckS for Stmt {
                 value,
             } => {
                 if environment.vtable_contains(name) {
-                    return Err(());
+                    return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
                 };
-                if declared_type.eq(&value.type_check(environment)?) {
+                let t1 = value.type_check(environment)?;
+                if declared_type.eq(&t1) {
                     environment.vtable_set(name.clone(), declared_type.clone());
                     return Ok(());
                 }
-                Err(())
+                Err(errors::VariableExpressionTypeNotMatch(name.to_owned(), *declared_type, t1).into())
             }
             Stmt::FuncDecl {
                 name,
@@ -31,7 +32,7 @@ impl TypeCheckS for Stmt {
                 statements,
             } => {
                 if environment.ftable_contains(name) {
-                    return Err(());
+                    return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
                 } else {
                     let (_, parameter_types): (Vec<_>, Vec<Type>) =
                         parameters.iter().cloned().unzip();
@@ -55,7 +56,7 @@ impl TypeCheckS for Stmt {
                 if environment.r_type.eq(&Some(t1)) {
                     Ok(())
                 } else {
-                    Err(())
+                    Err(errors::ReturnTypeNotMatch(t1.clone(), environment.r_type.unwrap()).into())
                 }
             }
             Stmt::Decl {
@@ -64,14 +65,15 @@ impl TypeCheckS for Stmt {
                 value,
             } => {
                 if environment.vdtable_contains(name) {
-                    return Err(());
+                    return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
                 };
                 if let Some(set_value) = value {
-                    if declared_type.eq(&set_value.type_check(environment)?) {
+                    let t1 = set_value.type_check(environment)?;
+                    if declared_type.eq(&t1) {
                         environment.vdtable_set(name.clone(), declared_type.clone());
                         Ok(())
                     } else {
-                        Err(())
+                        Err(errors::VariableExpressionTypeNotMatch(name.to_owned(), declared_type.to_owned(), t1).into())
                     }
                 } else {
                     environment.vdtable_set(name.clone(), declared_type.clone());
@@ -80,7 +82,7 @@ impl TypeCheckS for Stmt {
             }
             Stmt::Import { name, path } => {
                 if environment.stable_contains(name) {
-                    return Err(());
+                    return Err(errors::ImportAlreadyDeclared(name.to_owned()).into());
                 }
 
                 let mut subprogram = Program::new(path)?;
@@ -94,9 +96,9 @@ impl TypeCheckS for Stmt {
                         environment.stable_set(name.clone(), parameters);
                         Ok(())
                     }
-                    Err(_) => {
+                    Err(err) => {
                         println!("[Typechecker] Path: {} - ERROR", path);
-                        Err(())
+                        Err(err)
                     }
                 }
             }

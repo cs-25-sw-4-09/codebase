@@ -1,4 +1,5 @@
 import circle "circle.extension";
 y: int;
 begin
-draw circle(|radius = 5|);
+x: int = 5;
+//draw circle(|radius = 5|);

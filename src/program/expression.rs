@@ -1,4 +1,4 @@
-use std::{collections::HashMap, error::{self, Error}};
+use std::{collections::HashMap, error::Error};
 
 use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 

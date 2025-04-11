@@ -1,7 +1,7 @@
 use std::error::Error;
 
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Type {
     Int,
     Bool,

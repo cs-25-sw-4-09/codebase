@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use codebase::{
     lexer_parser::{
         grammar::cfg,
@@ -7,17 +9,18 @@ use codebase::{
     program::program::Program, typechecker::TypeCheckP,
 };
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
     let program = include_str!("../main.extension");
     println!(
         "{}",
         stringify_tree(cfg::parse_str(program).get_ast().get_root())
     );
     
-    let mut program = Program::new("main.extension");
+    let mut program = Program::new("main.extension")?;
+    println!("{:?}", program);
     match program.type_check() {
         Ok(_) => println!("[Typechecker] OK"),
         Err(_) => println!("[Typechecker] ERROR"),
     }
-    println!("{:?}", program);
+    Ok(())
 }
