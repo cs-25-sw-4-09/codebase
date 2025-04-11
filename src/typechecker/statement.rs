@@ -84,8 +84,6 @@ impl TypeCheckS for Stmt {
                 let mut subprogram_tree= Program::new(&subprogram);
                 let subprogram_environment = subprogram_tree.type_check()?;
                 let parameters: HashMap<String,Type> = subprogram_environment.vdtable_get_hashmap();
-
-                println!("Whatup, {:?}", subprogram_tree);
                 
                 environment.stable_set(name.clone(), parameters);
                 
