@@ -2,4 +2,4 @@ import circle "circle.extension";
 y: int;
 begin
 x: int = 5;
-//draw circle(|radius = 5|);
+circle: shape = circle(|radiu = 5|);
