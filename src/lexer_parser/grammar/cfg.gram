@@ -55,23 +55,24 @@ grammar cfg
 
     //Expressions
     exprS -> (manipulation | exprFunc | SCall | color | path | range)^;
-    exprFunc -> (expr | FCall )^;
+    exprFunc -> (expr )^;
     expr -> expr '||'^ expr1 | expr1^;
     expr1 -> expr1 '&&'^ expr2 | expr2^;
     expr2 -> expr3 ('==' | '<' | '>' | '>=' | '<=' | '!=')^ expr3 | expr3^;
     expr3 -> expr3 '+'^ expr4 | expr3 '-'^ expr4 | expr4^;
     expr4 -> expr4 '%'^ expr5 | expr4 '*'^ expr5 | expr4 '/'^ expr5 | expr5^;
     expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
-    expr6 -> (point | FLOAT | INTEGER | id | member | array | BOOLEAN | arrayIdx)^;
+    expr6 -> (point | FCall | FLOAT | INTEGER | id | member | array | BOOLEAN | arrayIdx)^;
 
     //Also contains parenthesis, but this case is promoted
-    point -> '('! (expr^ | (expr | FCall) ','! (expr | FCall)) ')'!;
+    point -> '('! (expr^ | (expr) ','! (expr)) ')'!;
+    FCall -> id '('! args ')'!;
 
     member -> id '.'! id;
     range -> exprFunc ('..' | '..=') exprFunc;
-    color -> '('! (expr | FCall) ','! (expr | FCall) ','! (expr | FCall) ','! (expr | FCall)')'! ;
+    color -> '('! (expr) ','! (expr) ','! (expr) ','! (expr)')'! ;
     path   -> exprFunc (('--' | '~~') exprFunc)+ (('--' | '~~')'*')?;
-    FCall -> id '('! args ')'!;
+    
     args -> arg (','! arg)*;
     arg -> exprS^;
 
@@ -82,7 +83,7 @@ grammar cfg
     arrayIdx -> id ('['! exprS ']'!)+;
     array -> ('['! ((exprS (','! exprS)*))? ']'! | '[]'!);
 
-    pos -> ('left' | 'right' | 'top' | 'bottom' | 'on') expr (id | point | FCall)?;
+    pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop') expr ('on'! point)?; //expr ('at'! point)?;
     manipulation -> place | scale | rotate;
     place -> 'place'! exprFunc pos;
     scale -> 'scale'! exprFunc 'by'! exprFunc;

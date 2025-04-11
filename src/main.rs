@@ -11,7 +11,6 @@ fn main() {
     let program = "
     begin
     x: int = 4;
-    y: int = 2 + x % 3;
     ";
 
     println!(
