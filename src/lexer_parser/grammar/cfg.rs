@@ -89,52 +89,52 @@ pub const TERMINALS: &[Symbol] = &[
         name: ":"
     },
     Symbol {
-        id: 0x0042,
-        name: "fork"
+        id: 0x0041,
+        name: "="
     },
     Symbol {
         id: 0x0043,
-        name: "{"
+        name: "fork"
     },
     Symbol {
         id: 0x0044,
-        name: "}"
+        name: "{"
     },
     Symbol {
         id: 0x0045,
-        name: "for"
+        name: "}"
     },
     Symbol {
         id: 0x0046,
-        name: "in"
+        name: "for"
     },
     Symbol {
         id: 0x0047,
-        name: "draw"
+        name: "in"
     },
     Symbol {
         id: 0x0048,
-        name: "at"
+        name: "draw"
     },
     Symbol {
         id: 0x0049,
-        name: "return"
+        name: "at"
     },
     Symbol {
         id: 0x004A,
-        name: "("
+        name: "return"
     },
     Symbol {
         id: 0x004B,
-        name: ")"
+        name: "("
     },
     Symbol {
         id: 0x004C,
-        name: "->"
+        name: ")"
     },
     Symbol {
         id: 0x004D,
-        name: "="
+        name: "->"
     },
     Symbol {
         id: 0x004F,
@@ -258,54 +258,58 @@ pub const TERMINALS: &[Symbol] = &[
     },
     Symbol {
         id: 0x0072,
-        name: "on"
+        name: "ontop"
     },
     Symbol {
         id: 0x0073,
-        name: "place"
+        name: "on"
     },
     Symbol {
         id: 0x0074,
-        name: "scale"
+        name: "place"
     },
     Symbol {
         id: 0x0075,
-        name: "by"
+        name: "scale"
     },
     Symbol {
         id: 0x0076,
+        name: "by"
+    },
+    Symbol {
+        id: 0x0077,
         name: "rotate"
     },
     Symbol {
-        id: 0x0078,
+        id: 0x0079,
         name: "int"
     },
     Symbol {
-        id: 0x0079,
+        id: 0x007A,
         name: "float"
     },
     Symbol {
-        id: 0x007A,
+        id: 0x007B,
         name: "point"
     },
     Symbol {
-        id: 0x007B,
+        id: 0x007C,
         name: "color"
     },
     Symbol {
-        id: 0x007C,
+        id: 0x007D,
         name: "shape"
     },
     Symbol {
-        id: 0x007D,
+        id: 0x007E,
         name: "path"
     },
     Symbol {
-        id: 0x007E,
+        id: 0x007F,
         name: "polygon"
     },
     Symbol {
-        id: 0x007F,
+        id: 0x0080,
         name: "bool"
     }
 ];
@@ -372,16 +376,16 @@ pub const ID_VARIABLE_EXPR5: u32 = 0x0024;
 pub const ID_VARIABLE_EXPR6: u32 = 0x0025;
 /// The unique identifier for variable `point`
 pub const ID_VARIABLE_POINT: u32 = 0x0026;
-/// The unique identifier for variable `member`
-pub const ID_VARIABLE_MEMBER: u32 = 0x0027;
-/// The unique identifier for variable `range`
-pub const ID_VARIABLE_RANGE: u32 = 0x0028;
-/// The unique identifier for variable `color`
-pub const ID_VARIABLE_COLOR: u32 = 0x0029;
-/// The unique identifier for variable `path`
-pub const ID_VARIABLE_PATH: u32 = 0x002A;
 /// The unique identifier for variable `FCall`
-pub const ID_VARIABLE_FCALL: u32 = 0x002B;
+pub const ID_VARIABLE_FCALL: u32 = 0x0027;
+/// The unique identifier for variable `member`
+pub const ID_VARIABLE_MEMBER: u32 = 0x0028;
+/// The unique identifier for variable `range`
+pub const ID_VARIABLE_RANGE: u32 = 0x0029;
+/// The unique identifier for variable `color`
+pub const ID_VARIABLE_COLOR: u32 = 0x002A;
+/// The unique identifier for variable `path`
+pub const ID_VARIABLE_PATH: u32 = 0x002B;
 /// The unique identifier for variable `args`
 pub const ID_VARIABLE_ARGS: u32 = 0x002C;
 /// The unique identifier for variable `arg`
@@ -522,23 +526,23 @@ pub const VARIABLES: &[Symbol] = &[
     },
     Symbol {
         id: 0x0027,
-        name: "member"
+        name: "FCall"
     },
     Symbol {
         id: 0x0028,
-        name: "range"
+        name: "member"
     },
     Symbol {
         id: 0x0029,
-        name: "color"
+        name: "range"
     },
     Symbol {
         id: 0x002A,
-        name: "path"
+        name: "color"
     },
     Symbol {
         id: 0x002B,
-        name: "FCall"
+        name: "path"
     },
     Symbol {
         id: 0x002C,
@@ -609,8 +613,8 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V61"
     },
     Symbol {
-        id: 0x0041,
-        name: "__V65"
+        id: 0x0042,
+        name: "__V66"
     },
     Symbol {
         id: 0x004E,
@@ -637,15 +641,15 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V108"
     },
     Symbol {
-        id: 0x0077,
-        name: "__V119"
-    },
-    Symbol {
-        id: 0x0080,
-        name: "__V128"
+        id: 0x0078,
+        name: "__V120"
     },
     Symbol {
         id: 0x0081,
+        name: "__V129"
+    },
+    Symbol {
+        id: 0x0082,
         name: "__VAxiom"
     }
 ];
@@ -739,11 +743,11 @@ pub trait Visitor {
     fn on_variable_expr5(&self, node: &AstNode) {}
     fn on_variable_expr6(&self, node: &AstNode) {}
     fn on_variable_point(&self, node: &AstNode) {}
+    fn on_variable_fcall(&self, node: &AstNode) {}
     fn on_variable_member(&self, node: &AstNode) {}
     fn on_variable_range(&self, node: &AstNode) {}
     fn on_variable_color(&self, node: &AstNode) {}
     fn on_variable_path(&self, node: &AstNode) {}
-    fn on_variable_fcall(&self, node: &AstNode) {}
     fn on_variable_args(&self, node: &AstNode) {}
     fn on_variable_arg(&self, node: &AstNode) {}
     fn on_variable_scall(&self, node: &AstNode) {}
@@ -807,11 +811,11 @@ pub fn visit_ast_node(node: AstNode, visitor: &dyn Visitor) {
         0x0024 => visitor.on_variable_expr5(&node),
         0x0025 => visitor.on_variable_expr6(&node),
         0x0026 => visitor.on_variable_point(&node),
-        0x0027 => visitor.on_variable_member(&node),
-        0x0028 => visitor.on_variable_range(&node),
-        0x0029 => visitor.on_variable_color(&node),
-        0x002A => visitor.on_variable_path(&node),
-        0x002B => visitor.on_variable_fcall(&node),
+        0x0027 => visitor.on_variable_fcall(&node),
+        0x0028 => visitor.on_variable_member(&node),
+        0x0029 => visitor.on_variable_range(&node),
+        0x002A => visitor.on_variable_color(&node),
+        0x002B => visitor.on_variable_path(&node),
         0x002C => visitor.on_variable_args(&node),
         0x002D => visitor.on_variable_arg(&node),
         0x002E => visitor.on_variable_scall(&node),
