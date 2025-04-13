@@ -42,13 +42,33 @@ impl fmt::Display for FCallParametersIncompatible {
 }
 
 #[derive(Debug, Clone)]
-pub struct SCallParametersIncompatible(pub String);
+pub struct SCallParametersIncompatible(pub String, pub String, pub Type, pub Type);
 impl Error for SCallParametersIncompatible {}
 impl fmt::Display for SCallParametersIncompatible {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Shape constructor call identifier {}'s parameter types is incompatible", self.0)
+        write!(f, "{} shape constructor '{}', expected type {:?} - got type: {:?}", self.0, self.1, self.2, self.3)
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct SCallParameterNotFound(pub String, pub String);
+impl Error for SCallParameterNotFound {}
+impl fmt::Display for SCallParameterNotFound {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Shape constructor parameter {} not declared in {}", self.0, self.1)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct SCallExpressionTypeError(pub String, pub String);
+impl Error for SCallExpressionTypeError {}
+impl fmt::Display for SCallExpressionTypeError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Type error in expression for parameter: {} in {}", self.0, self.1)
+    }
+}
+
+
 
 #[derive(Debug, Clone)]
 pub struct IdentifierAlreadyDeclared(pub String);
@@ -67,6 +87,8 @@ impl fmt::Display for VariableExpressionTypeNotMatch {
         write!(f, "Variable {}’s expression type: {:?} doesn’t match type: {:?}", self.0, self.1, self.2)
     }
 }
+
+
 
 #[derive(Debug, Clone)]
 pub struct ImportAlreadyDeclared(pub String);

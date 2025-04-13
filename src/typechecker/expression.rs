@@ -6,7 +6,7 @@ use crate::program::{
     r#type::Type,
 };
 
-use super::{environment::TEnvironment, errors, TypeCheckE};
+use super::{environment::TEnvironment, errors::{self, SCallExpressionTypeError}, TypeCheckE};
 
 impl TypeCheckE for Expr {
     fn type_check(
@@ -86,19 +86,28 @@ impl TypeCheckE for Expr {
                 }
             }
             Expr::SCall { name, args } => {
+                //Type checks the Shape call
                 if environment.stable_contains(name) {
                     let expected_types = environment.stable_lookup(name).ok_or(()).unwrap().clone();
 
-                    if args.iter().all(|(key, value)| {
-                        match value.type_check(environment) {
-                            Ok(t1) => t1.eq(expected_types.get(key).unwrap()),
-                            Err(_) => false,
+                    for (key, value) in args.iter() {
+                        if !expected_types.contains_key(key) {
+                            return Err(errors::SCallParameterNotFound(key.to_owned().into(), name.to_owned().into()).into());
                         }
-                    }) {
-                        Ok(Type::Shape)
-                    } else {
-                        Err(errors::SCallParametersIncompatible(name.to_owned()).into())
+                    
+                        match value.type_check(environment) {
+                            Ok(t1) => {
+                                if t1 != *expected_types.get(key).unwrap() {
+                                    return Err(errors::SCallParametersIncompatible(name.to_owned(), key.clone(), expected_types.get(key).unwrap().clone(), t1).into());
+                                }
+                            }
+                            Err(_) => {
+                                return Err(SCallExpressionTypeError(key.clone(), name.clone()).into());
+                            }
+                        }
                     }
+                    
+                    Ok(Type::Shape)
                 } else {
                     Err(errors::IdentifierNotFound(name.to_owned()).into())
                 }

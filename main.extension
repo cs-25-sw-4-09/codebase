@@ -1,5 +1,3 @@
 import circle "circle.extension";
-y: int;
 begin
-x: int = 5;
-circle: shape = circle(|radiu = 5|);
+circle: shape = circle(|radius = 5 + true|);
