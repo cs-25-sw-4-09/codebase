@@ -1,4 +1,4 @@
-use std::{collections::HashMap, error::Error};
+use std::{collections::HashMap, error::Error, path::Path};
 
 use crate::{
     program::{program::Program, r#type::Type, statement::Stmt},
@@ -85,7 +85,7 @@ impl TypeCheckS for Stmt {
                     return Err(errors::ImportAlreadyDeclared(name.to_owned()).into());
                 }
 
-                let mut subprogram = Program::new(path)?;
+                let mut subprogram = Program::from_file(Path::new(path))?;
 
                 match subprogram.type_check() {
                     Ok(subprogram_environment) => {

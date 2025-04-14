@@ -1,4 +1,4 @@
-use std::error::Error;
+use std::{error::Error, path::Path};
 
 use codebase::{
     lexer_parser::{
@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         stringify_tree(cfg::parse_str(program).get_ast().get_root())
     );
     
-    let mut program = Program::new("main.extension")?;
+    let mut program = Program::from_file(Path::new("main.extension"))?;
     match program.type_check() {
         Ok(_) => println!("[Typechecker] OK"),
         Err(err) => println!("[Typechecker] error: {}", err),

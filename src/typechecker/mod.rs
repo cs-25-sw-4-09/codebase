@@ -9,6 +9,7 @@ pub mod program;
 pub mod statement;
 pub mod environment;
 pub mod errors;
+mod tests;
 
 pub trait TypeCheckE {
     fn type_check(&self, environment: &mut TEnvironment) -> Result<Type, Box<dyn Error>>;

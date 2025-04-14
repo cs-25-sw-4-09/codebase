@@ -1,4 +1,4 @@
-use std::{error::Error, fs};
+use std::{error::Error, fs, path::Path};
 
 use hime_redist::symbols::SemanticElementTrait;
 
@@ -14,14 +14,12 @@ pub struct Program {
 }
 
 impl Program {
-    pub fn new(path: &str) -> Result<Self, Box<dyn Error>> {
-        let programstr = fs::read_to_string(path)?;
-
+    pub fn new(programstr: &String) -> Result<Self, Box<dyn Error>> {
         let mut decl_f: Vec<Stmt> = Vec::new();
         let mut stmts: Vec<Stmt> = Vec::new();
         let tenvironment = TEnvironment::new();
 
-        let parsed = cfg::parse_string(programstr);
+        let parsed = cfg::parse_string(programstr.into());
         let ast = parsed.get_ast();
         let root_node = ast.get_root();
 
@@ -47,5 +45,10 @@ impl Program {
             tenvironment,
         })
     }
-}
 
+    pub fn from_file(path: &Path) -> Result<Self, Box<dyn Error>> {
+        let programstr = fs::read_to_string(path)?;
+
+        Self::new(&programstr)
+    }
+}
