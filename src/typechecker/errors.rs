@@ -59,15 +59,6 @@ impl fmt::Display for SCallParameterNotFound {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct SCallExpressionTypeError(pub String, pub String);
-impl Error for SCallExpressionTypeError {}
-impl fmt::Display for SCallExpressionTypeError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Type error in expression for parameter: {} in {}", self.0, self.1)
-    }
-}
-
 
 
 #[derive(Debug, Clone)]

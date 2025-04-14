@@ -14,7 +14,7 @@ impl Type {
         let r#type = match type_str {
             "int" => Self::Int,
             "bool" => Self::Bool,
-            "float" => Self::Bool,
+            "float" => Self::Float,
             "shape" => Self::Shape,
             _ => unreachable!(),
         };
