@@ -53,7 +53,11 @@ fn funcdecl() {
         name: "compare".into(),
         return_type: Type::Bool,
         parameters: vec![("x".into(), Type::Int), ("y".into(), Type::Int)],
-        statements: Vec::new(),
+        statements: vec![Stmt::VarDecl {
+            name: "z".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(2),
+        }],
     }
     .type_check(&mut env);
     assert!(t1.is_ok())
@@ -175,5 +179,19 @@ fn import_already_declared() {
     assert!(already_declared
         .unwrap_err()
         .downcast_ref::<errors::ImportAlreadyDeclared>()
+        .is_some());
+}
+
+#[test]
+fn import_typeerror() {
+    let mut env = TEnvironment::new();
+    let variable_type_mismatch = Stmt::Import {
+        name: "circle".into(),
+        path: "./src/typechecker/tests/circle_error.testfile".into(),
+    }
+    .type_check(&mut env);
+    assert!(variable_type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::VariableExpressionTypeNotMatch>()
         .is_some());
 }
