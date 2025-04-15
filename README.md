@@ -1,6 +1,6 @@
 # codebase
 
-## Generate Code Coverage
+## Generate Manual Code Coverage
 
 First some dependencies need to be installed
 
