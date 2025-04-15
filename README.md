@@ -1,5 +1,9 @@
 # codebase
 
+## Automatic Code coverage
+
+https://app.codecov.io/gh/cs-25-sw-4-09/codebase/
+
 ## Generate Manual Code Coverage
 
 First some dependencies need to be installed
