@@ -5,7 +5,7 @@ use crate::program::r#type::Type;
 
 //type Result<T> = std::result::Result<T, IdentifierNotFound>; //TODO: Finde ud af om den her linje vil have nogen effekt.
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct IdentifierNotFound(pub String);
 impl Error for IdentifierNotFound {}
 impl fmt::Display for IdentifierNotFound {
@@ -14,7 +14,7 @@ impl fmt::Display for IdentifierNotFound {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct BinaryOperationTypeNotCompatible(pub Type, pub Type);
 impl Error for BinaryOperationTypeNotCompatible {}
 impl fmt::Display for BinaryOperationTypeNotCompatible {
@@ -23,7 +23,7 @@ impl fmt::Display for BinaryOperationTypeNotCompatible {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct UnaryOperationTypeNotCompatible(pub Type);
 impl Error for UnaryOperationTypeNotCompatible {}
 impl fmt::Display for UnaryOperationTypeNotCompatible {
@@ -32,7 +32,7 @@ impl fmt::Display for UnaryOperationTypeNotCompatible {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct FCallParametersIncompatible(pub String);
 impl Error for FCallParametersIncompatible {}
 impl fmt::Display for FCallParametersIncompatible {
@@ -41,7 +41,7 @@ impl fmt::Display for FCallParametersIncompatible {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct SCallParametersIncompatible(pub String, pub String, pub Type, pub Type);
 impl Error for SCallParametersIncompatible {}
 impl fmt::Display for SCallParametersIncompatible {
@@ -50,7 +50,7 @@ impl fmt::Display for SCallParametersIncompatible {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct SCallParameterNotFound(pub String, pub String);
 impl Error for SCallParameterNotFound {}
 impl fmt::Display for SCallParameterNotFound {
@@ -61,7 +61,7 @@ impl fmt::Display for SCallParameterNotFound {
 
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct IdentifierAlreadyDeclared(pub String);
 impl Error for IdentifierAlreadyDeclared {}
 impl fmt::Display for IdentifierAlreadyDeclared {
@@ -70,7 +70,7 @@ impl fmt::Display for IdentifierAlreadyDeclared {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct VariableExpressionTypeNotMatch(pub String, pub Type, pub Type);
 impl Error for VariableExpressionTypeNotMatch {}
 impl fmt::Display for VariableExpressionTypeNotMatch {
@@ -81,7 +81,7 @@ impl fmt::Display for VariableExpressionTypeNotMatch {
 
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ImportAlreadyDeclared(pub String);
 impl Error for ImportAlreadyDeclared {}
 impl fmt::Display for ImportAlreadyDeclared {
@@ -90,7 +90,7 @@ impl fmt::Display for ImportAlreadyDeclared {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ReturnTypeNotMatch(pub Type, pub Type);
 impl Error for ReturnTypeNotMatch {}
 impl fmt::Display for ReturnTypeNotMatch {
