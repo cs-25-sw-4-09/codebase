@@ -98,3 +98,12 @@ impl fmt::Display for ReturnTypeNotMatch {
         write!(f, "The return type {:?} doesn’t match type: {:?}", self.0, self.1)
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct ColorTypeNotCompatible(pub Type, pub Type,pub Type, pub Type);
+impl Error for ColorTypeNotCompatible {}
+impl fmt::Display for ColorTypeNotCompatible {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "The values of color {:?},{:?},{:?},{:?} doesn’t match type: Int", self.0, self.1,self.2,self.3)
+    }
+}
