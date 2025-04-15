@@ -1,0 +1,3 @@
+radius: int;
+begin
+g: bool = true;
