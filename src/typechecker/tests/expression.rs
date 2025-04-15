@@ -37,7 +37,17 @@ fn variable() {
 }
 
 #[test]
-fn binary_operation_arithmetics() {
+fn variable_invalid_identifier() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier = Expr::Variable("x".into()).type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::IdentifierNotFound>()
+        .is_some());
+}
+
+#[test]
+fn binary_operation_arithmetic() {
     let mut env = TEnvironment::new();
     let tests: Vec<(Expr, Expr, Type)> = vec![
         (Expr::Integer(5), Expr::Integer(3), Type::Int),
@@ -55,7 +65,11 @@ fn binary_operation_arithmetics() {
         .unwrap();
         assert_eq!(t1, expected)
     }
+}
 
+#[test]
+fn binary_operation_arithmetic_noncompatible() {
+    let mut env = TEnvironment::new();
     let not_compatible = Expr::BinaryOperation {
         lhs: Expr::Integer(6).into(),
         rhs: Expr::Boolean(true).into(),
@@ -69,7 +83,7 @@ fn binary_operation_arithmetics() {
 }
 
 #[test]
-fn binary_operation_comparisons() {
+fn binary_operation_comparison() {
     let mut env = TEnvironment::new();
     let tests: Vec<(Expr, Expr, Type)> = vec![
         (Expr::Integer(5), Expr::Integer(3), Type::Bool),
@@ -87,6 +101,11 @@ fn binary_operation_comparisons() {
         .unwrap();
         assert_eq!(t1, expected)
     }
+}
+
+#[test]
+fn binary_operation_comparison_noncompatible() {
+    let mut env = TEnvironment::new();
 
     let not_compatible = Expr::BinaryOperation {
         lhs: Expr::Integer(6).into(),
@@ -111,6 +130,11 @@ fn binary_operation_logical() {
     .type_check(&mut env)
     .unwrap();
     assert_eq!(t1, Type::Bool);
+}
+
+#[test]
+fn binary_operation_logical_noncompatible() {
+    let mut env = TEnvironment::new();
 
     let not_compatible = Expr::BinaryOperation {
         lhs: Expr::Integer(6).into(),
@@ -134,6 +158,11 @@ fn unary_operation() {
     .type_check(&mut env)
     .unwrap();
     assert_eq!(t1, Type::Bool);
+}
+
+#[test]
+fn unary_operation_noncompatible() {
+    let mut env = TEnvironment::new();
 
     let not_compatible = Expr::UnaryOperation {
         expr: Expr::Integer(6).into(),
@@ -160,9 +189,41 @@ fn fcall() {
 }
 
 #[test]
+fn fcall_invalid_identifier() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier = Expr::FCall {
+        name: "x".into(),
+        args: vec![Expr::Integer(5)],
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::IdentifierNotFound>()
+        .is_some());
+}
+
+
+#[test]
+fn fcall_parameters_incompatible() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier = Expr::FCall {
+        name: "x".into(),
+        args: vec![Expr::Integer(5)],
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::IdentifierNotFound>()
+        .is_some());
+}
+
+#[test]
 fn scall() {
     let mut env = TEnvironment::new();
-    env.stable_set("circle".into(), [("radius".into(), Type::Float)].into_iter().collect());
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), Type::Float)].into_iter().collect(),
+    );
     let t1 = Expr::SCall {
         name: "circle".into(),
         args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
@@ -171,4 +232,3 @@ fn scall() {
     .unwrap();
     assert_eq!(t1, Type::Shape);
 }
-
