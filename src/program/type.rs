@@ -7,6 +7,7 @@ pub enum Type {
     Bool,
     Float,
     Shape,
+    Color
 }
 
 impl Type {
@@ -16,6 +17,7 @@ impl Type {
             "bool" => Self::Bool,
             "float" => Self::Float,
             "shape" => Self::Shape,
+            "color" => Self::Color,
             _ => unreachable!(),
         };
         Ok(r#type)
