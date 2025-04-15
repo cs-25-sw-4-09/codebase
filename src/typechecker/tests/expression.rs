@@ -206,14 +206,15 @@ fn fcall_invalid_identifier() {
 #[test]
 fn fcall_parameters_incompatible() {
     let mut env = TEnvironment::new();
-    let invalid_identifier = Expr::FCall {
+    env.ftable_set("x".into(), vec![Type::Int], Type::Bool);
+    let incompatible_parameter = Expr::FCall {
         name: "x".into(),
-        args: vec![Expr::Integer(5)],
+        args: vec![Expr::Float(5.0)],
     }
     .type_check(&mut env);
-    assert!(invalid_identifier
+    assert!(incompatible_parameter
         .unwrap_err()
-        .downcast_ref::<errors::IdentifierNotFound>()
+        .downcast_ref::<errors::FCallParametersIncompatible>()
         .is_some());
 }
 
@@ -231,4 +232,55 @@ fn scall() {
     .type_check(&mut env)
     .unwrap();
     assert_eq!(t1, Type::Shape);
+}
+
+#[test]
+fn scall_invalid_identifier() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier =  Expr::SCall {
+        name: "circle".into(),
+        args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::IdentifierNotFound>()
+        .is_some());
+}
+
+
+#[test]
+fn scall_parameters_notfound() {
+    let mut env = TEnvironment::new();
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), Type::Float)].into_iter().collect(),
+    );
+    let invalid_parameter =  Expr::SCall {
+        name: "circle".into(),
+        args: [("circumference".into(), Expr::Float(5.0))].into_iter().collect(),
+    }
+    .type_check(&mut env);
+    assert!(invalid_parameter
+        .unwrap_err()
+        .downcast_ref::<errors::SCallParameterNotFound>()
+        .is_some());
+}
+
+#[test]
+fn scall_parameters_incompatible() {
+    let mut env = TEnvironment::new();
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), Type::Float)].into_iter().collect(),
+    );
+    let incompatible_parameter =  Expr::SCall {
+        name: "circle".into(),
+        args: [("radius".into(), Expr::Boolean(true))].into_iter().collect(),
+    }
+    .type_check(&mut env);
+    assert!(incompatible_parameter
+        .unwrap_err()
+        .downcast_ref::<errors::SCallParametersIncompatible>()
+        .is_some());
 }
