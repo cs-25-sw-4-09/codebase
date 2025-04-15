@@ -144,3 +144,16 @@ impl fmt::Display for PointTypeNotCompatible {
         )
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct PathOperationTypeNotCompatible(pub Type, pub Type);
+impl Error for PathOperationTypeNotCompatible {}
+impl fmt::Display for PathOperationTypeNotCompatible {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "The values of path {:?},{:?} doesn't match type: Path or Point",
+            self.0, self.1
+        )
+    }
+}

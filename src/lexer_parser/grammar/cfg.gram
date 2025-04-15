@@ -71,7 +71,7 @@ grammar cfg
     member -> id '.'! id;
     range -> exprFunc ('..' | '..=') exprFunc;
     color -> '('! (expr) ','! (expr) ','! (expr) ','! (expr)')'! ;
-    path   -> exprFunc (('--' | '~~') exprFunc)+ (('--' | '~~')'*')?;
+    path   -> exprFunc (('--' | '~~')^ exprFunc)+ (('--' | '~~')'*')^?;
     
     args -> arg (','! arg)*;
     arg -> exprS^;

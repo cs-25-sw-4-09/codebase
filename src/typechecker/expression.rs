@@ -2,7 +2,9 @@ use std::error::Error;
 
 use crate::program::{
     expression::Expr,
-    operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator},
+    operators::{
+        binaryoperator::BinaryOperator, pathoperator::PathOperator, unaryoperator::UnaryOperator,
+    },
     r#type::Type,
 };
 
@@ -38,6 +40,20 @@ impl TypeCheckE for Expr {
                 match (t1, t2, t3, t4) {
                     (Type::Int, Type::Int, Type::Int, Type::Int) => Ok(Type::Color),
                     _ => Err(errors::ColorTypeNotCompatible(t1, t2, t3, t4).into()),
+                }
+            }
+            Expr::PathOperation { lhs, rhs, operator } => {
+                let t1 = lhs.type_check(environment)?;
+                let t2 = rhs.type_check(environment)?;
+
+                match operator {
+                    PathOperator::Line | PathOperator::Curve => match (t1, t2) {
+                        (Type::Point, Type::Point)
+                        | (Type::Path, Type::Path)
+                        | (Type::Point, Type::Path)
+                        | (Type::Path, Type::Point) => Ok(Type::Path),
+                        (t1, t2) => Err(errors::PathOperationTypeNotCompatible(t1, t2).into()),
+                    },
                 }
             }
             Expr::Variable(identifier) => environment

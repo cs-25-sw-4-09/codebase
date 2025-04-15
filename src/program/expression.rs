@@ -2,7 +2,9 @@ use std::{collections::HashMap, error::Error};
 
 use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 
-use super::operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator};
+use super::operators::{
+    binaryoperator::BinaryOperator, pathoperator::PathOperator, unaryoperator::UnaryOperator,
+};
 
 #[derive(Debug)]
 pub enum Expr {
@@ -12,6 +14,11 @@ pub enum Expr {
     Float(f64),
     Point(Box<Expr>, Box<Expr>),
     Color(Box<Expr>, Box<Expr>, Box<Expr>, Box<Expr>),
+    PathOperation {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        operator: PathOperator,
+    },
     BinaryOperation {
         lhs: Box<Expr>,
         rhs: Box<Expr>,
@@ -50,6 +57,13 @@ impl Expr {
                     operator,
                     expr: uexpr,
                 }
+            }
+            "--" | "~~" => {
+                let lhs = Box::new(Expr::new(expr.child(0))?);
+                let rhs = Box::new(Expr::new(expr.child(1))?);
+                let operator = PathOperator::new(expr.get_symbol())?;
+
+                Expr::PathOperation { lhs, rhs, operator }
             }
             "IDENTIFIER" => Expr::Variable(expr.get_value().unwrap().into()),
             "BOOLEAN" => Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),

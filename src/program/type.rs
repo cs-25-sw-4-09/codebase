@@ -1,6 +1,5 @@
 use std::error::Error;
 
-
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Type {
     Int,
@@ -9,6 +8,7 @@ pub enum Type {
     Shape,
     Point,
     Color,
+    Path,
 }
 
 impl Type {
@@ -20,6 +20,7 @@ impl Type {
             "shape" => Self::Shape,
             "point" => Self::Point,
             "color" => Self::Color,
+            "path" => Self::Path,
             _ => unreachable!(),
         };
         Ok(r#type)
