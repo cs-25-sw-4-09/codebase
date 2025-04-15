@@ -157,3 +157,16 @@ impl fmt::Display for PathOperationTypeNotCompatible {
         )
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct PolyOperationTypeNotCompatible(pub Type);
+impl Error for PolyOperationTypeNotCompatible {}
+impl fmt::Display for PolyOperationTypeNotCompatible {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "The values of polygon {:?} doesn't match type: Path \n A polygon must consitst of two points",
+            self.0
+        )
+    }
+}

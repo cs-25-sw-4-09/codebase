@@ -3,7 +3,7 @@ use std::{collections::HashMap, error::Error};
 use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 
 use super::operators::{
-    binaryoperator::BinaryOperator, pathoperator::PathOperator, unaryoperator::UnaryOperator,
+    binaryoperator::BinaryOperator, pathoperator::PathOperator, unaryoperator::UnaryOperator, polyoperator::PolyOperator
 };
 
 #[derive(Debug)]
@@ -18,6 +18,10 @@ pub enum Expr {
         lhs: Box<Expr>,
         rhs: Box<Expr>,
         operator: PathOperator,
+    },
+    PolygonOperation{
+        path: Box<Expr>,
+        operator: PolyOperator,
     },
     BinaryOperation {
         lhs: Box<Expr>,
@@ -64,6 +68,12 @@ impl Expr {
                 let operator = PathOperator::new(expr.get_symbol())?;
 
                 Expr::PathOperation { lhs, rhs, operator }
+            }
+            "--*" | "~~*" => {
+                let path = Box::new(Expr::new(expr.child(0))?);
+                let operator = PolyOperator::new(expr.get_symbol())?;
+
+                Expr::PolygonOperation { path, operator }
             }
             "IDENTIFIER" => Expr::Variable(expr.get_value().unwrap().into()),
             "BOOLEAN" => Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),

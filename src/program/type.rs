@@ -9,6 +9,7 @@ pub enum Type {
     Point,
     Color,
     Path,
+    Polygon,
 }
 
 impl Type {
@@ -21,6 +22,7 @@ impl Type {
             "point" => Self::Point,
             "color" => Self::Color,
             "path" => Self::Path,
+            "polygon" => Self::Polygon,
             _ => unreachable!(),
         };
         Ok(r#type)
