@@ -19,7 +19,11 @@ pub struct BinaryOperationTypeNotCompatible(pub Type, pub Type);
 impl Error for BinaryOperationTypeNotCompatible {}
 impl fmt::Display for BinaryOperationTypeNotCompatible {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Binary operation types not compatible: {:?} & {:?}", self.0, self.1)
+        write!(
+            f,
+            "Binary operation types not compatible: {:?} & {:?}",
+            self.0, self.1
+        )
     }
 }
 
@@ -37,7 +41,11 @@ pub struct FCallParametersIncompatible(pub String);
 impl Error for FCallParametersIncompatible {}
 impl fmt::Display for FCallParametersIncompatible {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Function call identifier {}'s parameter types is incompatible", self.0)
+        write!(
+            f,
+            "Function call identifier {}'s parameter types is incompatible",
+            self.0
+        )
     }
 }
 
@@ -46,7 +54,11 @@ pub struct SCallParametersIncompatible(pub String, pub String, pub Type, pub Typ
 impl Error for SCallParametersIncompatible {}
 impl fmt::Display for SCallParametersIncompatible {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{} shape constructor '{}', expected type {:?} - got type: {:?}", self.0, self.1, self.2, self.3)
+        write!(
+            f,
+            "{} shape constructor '{}', expected type {:?} - got type: {:?}",
+            self.0, self.1, self.2, self.3
+        )
     }
 }
 
@@ -55,11 +67,13 @@ pub struct SCallParameterNotFound(pub String, pub String);
 impl Error for SCallParameterNotFound {}
 impl fmt::Display for SCallParameterNotFound {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Shape constructor parameter {} not declared in {}", self.0, self.1)
+        write!(
+            f,
+            "Shape constructor parameter {} not declared in {}",
+            self.0, self.1
+        )
     }
 }
-
-
 
 #[derive(Debug, Clone)]
 pub struct IdentifierAlreadyDeclared(pub String);
@@ -75,11 +89,13 @@ pub struct VariableExpressionTypeNotMatch(pub String, pub Type, pub Type);
 impl Error for VariableExpressionTypeNotMatch {}
 impl fmt::Display for VariableExpressionTypeNotMatch {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Variable {}’s expression type: {:?} doesn’t match type: {:?}", self.0, self.1, self.2)
+        write!(
+            f,
+            "Variable {}’s expression type: {:?} doesn’t match type: {:?}",
+            self.0, self.1, self.2
+        )
     }
 }
-
-
 
 #[derive(Debug, Clone)]
 pub struct ImportAlreadyDeclared(pub String);
@@ -95,15 +111,36 @@ pub struct ReturnTypeNotMatch(pub Type, pub Type);
 impl Error for ReturnTypeNotMatch {}
 impl fmt::Display for ReturnTypeNotMatch {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "The return type {:?} doesn’t match type: {:?}", self.0, self.1)
+        write!(
+            f,
+            "The return type {:?} doesn’t match type: {:?}",
+            self.0, self.1
+        )
     }
 }
 
 #[derive(Debug, Clone)]
-pub struct ColorTypeNotCompatible(pub Type, pub Type,pub Type, pub Type);
+pub struct ColorTypeNotCompatible(pub Type, pub Type, pub Type, pub Type);
 impl Error for ColorTypeNotCompatible {}
 impl fmt::Display for ColorTypeNotCompatible {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "The values of color {:?},{:?},{:?},{:?} doesn’t match type: Int", self.0, self.1,self.2,self.3)
+        write!(
+            f,
+            "The values of color {:?},{:?},{:?},{:?} doesn't match type: Int",
+            self.0, self.1, self.2, self.3
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct PointTypeNotCompatible(pub Type, pub Type);
+impl Error for PointTypeNotCompatible {}
+impl fmt::Display for PointTypeNotCompatible {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "The values of point {:?},{:?} doesn't match type: Int or Float",
+            self.0, self.1
+        )
     }
 }

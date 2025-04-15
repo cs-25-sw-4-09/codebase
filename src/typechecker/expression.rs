@@ -17,6 +17,18 @@ impl TypeCheckE for Expr {
             Expr::Integer(_) => Ok(Type::Int),
             Expr::Boolean(_) => Ok(Type::Bool),
             Expr::Float(_) => Ok(Type::Float),
+            Expr::Point(x, y) => {
+                let t1 = x.type_check(environment)?;
+                let t2 = y.type_check(environment)?;
+
+                match (t1, t2) {
+                    (Type::Int, Type::Int)
+                    | (Type::Float, Type::Int)
+                    | (Type::Int, Type::Float)
+                    | (Type::Float, Type::Float) => Ok(Type::Point),
+                    _ => Err(errors::PointTypeNotCompatible(t1, t2).into()),
+                }
+            }
             Expr::Color(r, g, b, a) => {
                 let t1 = r.type_check(environment)?;
                 let t2 = g.type_check(environment)?;

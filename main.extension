@@ -1,3 +1,5 @@
 begin
-v: float = 5.0;
-c: color = (v,2,3,4);
+c: point = (4,2);
+c1: point = (4.0,2.0);
+c2: point = (4.2,2);
+c3: point = (true,2);
