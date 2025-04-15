@@ -170,3 +170,16 @@ impl fmt::Display for PolyOperationTypeNotCompatible {
         )
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct ArrayElementsTypeNotCompatible(pub Type);
+impl Error for ArrayElementsTypeNotCompatible {}
+impl fmt::Display for ArrayElementsTypeNotCompatible {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "The types in the array doesn't match, first element is {:?}",
+            self.0
+        )
+    }
+}

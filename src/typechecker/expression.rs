@@ -17,6 +17,10 @@ impl TypeCheckE for Expr {
         environment: &mut TEnvironment,
     ) -> Result<crate::program::r#type::Type, Box<dyn Error>> {
         match self {
+            Expr::Variable(identifier) => environment
+            .vtable_lookup(identifier)
+            .cloned()
+            .ok_or(errors::IdentifierNotFound(identifier.to_owned()).into()),
             Expr::Integer(_) => Ok(Type::Int),
             Expr::Boolean(_) => Ok(Type::Bool),
             Expr::Float(_) => Ok(Type::Float),
@@ -74,10 +78,30 @@ impl TypeCheckE for Expr {
                     },
                 }
             }
-            Expr::Variable(identifier) => environment
-                .vtable_lookup(identifier)
-                .cloned()
-                .ok_or(errors::IdentifierNotFound(identifier.to_owned()).into()),
+            Expr::Array(exprs) => {
+                //impl of typing rule "emptyArray"
+                if exprs.len() == 0{
+                    Ok(Type::Empty)
+                } else {
+                    //impl of typing rule "array"
+                    let t_for_array = exprs[0].type_check(environment)?;
+                    if exprs.iter().all(|expr| expr.type_check(environment).unwrap() == t_for_array) {
+                        match t_for_array {
+                            Type::Int => Ok(Type::IntArray),
+                            Type::Bool => Ok(Type::BoolArray),
+                            Type::Float => Ok(Type::FloatArray),
+                            Type::Shape => Ok(Type::ShapeArray),
+                            Type::Path => Ok(Type::PathArray),
+                            Type::Point => Ok(Type::PointArray),
+                            Type::Polygon => Ok(Type::PolygonArray),
+                            Type::Color => Ok(Type::ColorArray),
+                            _ => Err(errors::ArrayElementsTypeNotCompatible(t_for_array).into()),
+                        }
+                    } else {
+                        Err(errors::ArrayElementsTypeNotCompatible(t_for_array).into())
+                    }
+                }
+            },
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let t1 = lhs.type_check(environment)?;
                 let t2 = rhs.type_check(environment)?;
@@ -179,6 +203,7 @@ impl TypeCheckE for Expr {
                     Err(errors::IdentifierNotFound(name.to_owned()).into())
                 }
             }
+            
         }
     }
 }

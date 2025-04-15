@@ -319,6 +319,38 @@ pub const TERMINALS: &[Symbol] = &[
     Symbol {
         id: 0x0083,
         name: "bool"
+    },
+    Symbol {
+        id: 0x0084,
+        name: "int[]"
+    },
+    Symbol {
+        id: 0x0085,
+        name: "float[]"
+    },
+    Symbol {
+        id: 0x0086,
+        name: "point[]"
+    },
+    Symbol {
+        id: 0x0087,
+        name: "color[]"
+    },
+    Symbol {
+        id: 0x0088,
+        name: "shape[]"
+    },
+    Symbol {
+        id: 0x0089,
+        name: "path[]"
+    },
+    Symbol {
+        id: 0x008A,
+        name: "polygon[]"
+    },
+    Symbol {
+        id: 0x008B,
+        name: "bool[]"
     }
 ];
 
@@ -659,11 +691,7 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V123"
     },
     Symbol {
-        id: 0x0084,
-        name: "__V132"
-    },
-    Symbol {
-        id: 0x0085,
+        id: 0x008C,
         name: "__VAxiom"
     }
 ];

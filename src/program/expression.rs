@@ -3,7 +3,8 @@ use std::{collections::HashMap, error::Error};
 use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 
 use super::operators::{
-    binaryoperator::BinaryOperator, pathoperator::PathOperator, unaryoperator::UnaryOperator, polyoperator::PolyOperator
+    binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
+    unaryoperator::UnaryOperator,
 };
 
 #[derive(Debug)]
@@ -19,10 +20,11 @@ pub enum Expr {
         rhs: Box<Expr>,
         operator: PathOperator,
     },
-    PolygonOperation{
+    PolygonOperation {
         path: Box<Expr>,
         operator: PolyOperator,
     },
+    Array(Vec<Expr>),
     BinaryOperation {
         lhs: Box<Expr>,
         rhs: Box<Expr>,
@@ -87,6 +89,13 @@ impl Expr {
                 Box::new(Expr::new(expr.child(1))?),
                 Box::new(Expr::new(expr.child(2))?),
                 Box::new(Expr::new(expr.child(3))?),
+            ),
+            "array" => Expr::Array(   
+                expr
+                    .children()
+                    .iter()
+                    .map(|arg| Expr::new(arg))
+                    .collect::<Result<Vec<_>, _>>()?
             ),
             "FCall" => Expr::FCall {
                 name: expr.child(0).get_value().unwrap().into(),

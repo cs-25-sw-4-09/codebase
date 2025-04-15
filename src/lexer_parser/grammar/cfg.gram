@@ -94,8 +94,9 @@ grammar cfg
     param -> id ':'! types;
 
     //Types
-    types -> (('int' | 'float' | 'point' | 'color'
-    | 'shape' | 'path' | 'polygon' | 'bool') ('[]')*)^;
+    types -> ('int' | 'float' | 'point' | 'color'
+    | 'shape' | 'path' | 'polygon' | 'bool' | 'int[]' | 'float[]' | 'point[]' | 'color[]'
+    | 'shape[]' | 'path[]' | 'polygon[]' | 'bool[]')^;
 
 
     //Simple things

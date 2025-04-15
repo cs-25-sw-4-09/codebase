@@ -22,8 +22,14 @@ impl TypeCheckS for Stmt {
                 if declared_type.eq(&t1) {
                     environment.vtable_set(name.clone(), declared_type.clone());
                     return Ok(());
+                } else if checks_empty_array(*declared_type, t1){
+                    environment.vtable_set(name.clone(), declared_type.clone());
+                    return Ok(());
                 }
-                Err(errors::VariableExpressionTypeNotMatch(name.to_owned(), *declared_type, t1).into())
+                Err(
+                    errors::VariableExpressionTypeNotMatch(name.to_owned(), *declared_type, t1)
+                        .into(),
+                )
             }
             Stmt::FuncDecl {
                 name,
@@ -55,7 +61,9 @@ impl TypeCheckS for Stmt {
                 let t1 = expr.type_check(environment)?;
                 if environment.r_type.eq(&Some(t1)) {
                     Ok(())
-                } else {
+                } else if checks_empty_array(environment.r_type.unwrap(), t1){
+                    return Ok(());
+                }else {
                     Err(errors::ReturnTypeNotMatch(t1.clone(), environment.r_type.unwrap()).into())
                 }
             }
@@ -72,8 +80,16 @@ impl TypeCheckS for Stmt {
                     if declared_type.eq(&t1) {
                         environment.vdtable_set(name.clone(), declared_type.clone());
                         Ok(())
+                    } else if checks_empty_array(*declared_type, t1){
+                        environment.vtable_set(name.clone(), declared_type.clone());
+                        return Ok(());
                     } else {
-                        Err(errors::VariableExpressionTypeNotMatch(name.to_owned(), declared_type.to_owned(), t1).into())
+                        Err(errors::VariableExpressionTypeNotMatch(
+                            name.to_owned(),
+                            declared_type.to_owned(),
+                            t1,
+                        )
+                        .into())
                     }
                 } else {
                     environment.vdtable_set(name.clone(), declared_type.clone());
@@ -103,5 +119,24 @@ impl TypeCheckS for Stmt {
                 }
             }
         }
+    }
+}
+
+fn checks_empty_array(array: Type, empty: Type) -> bool {
+    if empty != Type::Empty {
+        return false;
+    }
+
+    match array {
+        Type::IntArray 
+        | Type::FloatArray 
+        | Type::BoolArray 
+        | Type::PathArray 
+        | Type::PointArray 
+        | Type::ShapeArray 
+        | Type::PolygonArray 
+        | Type::ColorArray =>
+        true,
+        _ => false
     }
 }
