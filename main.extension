@@ -1,10 +1,5 @@
+import polygonTest "polygon.extension";
+
 begin
-c: polygon = (1,2)--(3,4)--*;
+x:bool=true;
 
-c1: polygon = (1,2)--(3,4)~~*;
-
-c2: polygon = c1~~*;
-
-c3: path = (1,2)--(2,3)--(4,5);
-
-c4: polygon = c3--*;
