@@ -1,3 +1,2 @@
-import circle "circle.extension";
 begin
-circle: shape = circle(|radius = 5 + true|);
+x: bool = 1 >= 1;
