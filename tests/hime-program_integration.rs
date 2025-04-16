@@ -2,8 +2,7 @@ use std::collections::HashMap;
 
 use codebase::{
     program::{
-        expression::Expr, operators::binaryoperator::BinaryOperator, program, r#type::Type,
-        statement::Stmt,
+        expression::Expr, operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator}, program, statement::Stmt, r#type::Type
     },
     typechecker::TypeCheckP,
 };
@@ -1085,6 +1084,31 @@ fn test_program_new_converts_ast_to_program_log_or() {
                 rhs: Box::new(Expr::Boolean(false)),
                 operator: BinaryOperator::LogicalOr
             }
+        );
+    }
+}
+
+
+#[test]
+fn test_program_new_converts_ast_to_program_negate() {
+    let code = "begin
+    x: bool = !true;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Bool);
+        assert_eq!(
+            value,
+            &Expr::UnaryOperation { operator: UnaryOperator::Negate, expr: Box::new(Expr::Boolean(true)) }
         );
     }
 }
