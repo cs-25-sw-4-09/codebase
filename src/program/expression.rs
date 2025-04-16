@@ -10,6 +10,7 @@ pub enum Expr {
     Variable(String),
     Boolean(bool),
     Float(f64),
+    Color(Box<Expr>, Box<Expr>, Box<Expr>, Box<Expr>),
     BinaryOperation {
         lhs: Box<Expr>,
         rhs: Box<Expr>,
@@ -52,6 +53,12 @@ impl Expr {
             "IDENTIFIER" => Expr::Variable(expr.get_value().unwrap().into()),
             "BOOLEAN" => Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),
             "FLOAT" => Expr::Float(expr.get_value().unwrap().parse().unwrap()),
+            "color" => Expr::Color(
+                Box::new(Expr::new(expr.child(0))?),
+                Box::new(Expr::new(expr.child(1))?),
+                Box::new(Expr::new(expr.child(2))?),
+                Box::new(Expr::new(expr.child(3))?)
+            ),
             "FCall" => Expr::FCall {
                 name: expr.child(0).get_value().unwrap().into(),
                 args: expr
@@ -59,22 +66,21 @@ impl Expr {
                     .children()
                     .iter()
                     .map(|arg| Expr::new(arg))
-                    .collect::<Result<Vec<_>, _>>()?
+                    .collect::<Result<Vec<_>, _>>()?,
             },
-            "SCall" => {
-                Expr::SCall {                
+            "SCall" => Expr::SCall {
                 name: expr.child(0).get_value().unwrap().into(),
                 args: expr
-                .child(1)
-                .children()
-                .iter()
-                .map(|arg| {
-                    let key: String = arg.child(0).get_value().unwrap().into();
-                    let value = Expr::new(arg.child(1))?;
-                    Ok::<(String, Expr), Box<dyn Error>>((key, value))
-                })
-                .collect::<Result<HashMap<_, _>, _>>()?,
-            }},
+                    .child(1)
+                    .children()
+                    .iter()
+                    .map(|arg| {
+                        let key: String = arg.child(0).get_value().unwrap().into();
+                        let value = Expr::new(arg.child(1))?;
+                        Ok::<(String, Expr), Box<dyn Error>>((key, value))
+                    })
+                    .collect::<Result<HashMap<_, _>, _>>()?,
+            },
             _ => panic!("Expression type not found: {}", expr.get_symbol().name),
         };
 
