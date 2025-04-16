@@ -890,3 +890,201 @@ fn test_program_new_converts_ast_to_program_ge_int_float() {
         );
     }
 }
+
+
+#[test]
+fn test_program_new_converts_ast_to_program_great_int_int() {
+    let code = "begin
+    x: bool = 1 > 1;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Bool);
+        assert_eq!(
+            value,
+            &Expr::BinaryOperation {
+                lhs: Box::new(Expr::Integer(1)),
+                rhs: Box::new(Expr::Integer(1)),
+                operator: BinaryOperator::GreaterThan
+            }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_less_int_int() {
+    let code = "begin
+    x: bool = 1 < 1;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Bool);
+        assert_eq!(
+            value,
+            &Expr::BinaryOperation {
+                lhs: Box::new(Expr::Integer(1)),
+                rhs: Box::new(Expr::Integer(1)),
+                operator: BinaryOperator::LessThan
+            }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_le_int_int() {
+    let code = "begin
+    x: bool = 1 <= 1;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Bool);
+        assert_eq!(
+            value,
+            &Expr::BinaryOperation {
+                lhs: Box::new(Expr::Integer(1)),
+                rhs: Box::new(Expr::Integer(1)),
+                operator: BinaryOperator::LessThanOrEquals
+            }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_ne_int_int() {
+    let code = "begin
+    x: bool = 1 != 1;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Bool);
+        assert_eq!(
+            value,
+            &Expr::BinaryOperation {
+                lhs: Box::new(Expr::Integer(1)),
+                rhs: Box::new(Expr::Integer(1)),
+                operator: BinaryOperator::NotEquals
+            }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_equals_int_int() {
+    let code = "begin
+    x: bool = 1 == 1;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Bool);
+        assert_eq!(
+            value,
+            &Expr::BinaryOperation {
+                lhs: Box::new(Expr::Integer(1)),
+                rhs: Box::new(Expr::Integer(1)),
+                operator: BinaryOperator::Equals
+            }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_log_and() {
+    let code = "begin
+    x: bool = true && false;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Bool);
+        assert_eq!(
+            value,
+            &Expr::BinaryOperation {
+                lhs: Box::new(Expr::Boolean(true)),
+                rhs: Box::new(Expr::Boolean(false)),
+                operator: BinaryOperator::LogicalAnd
+            }
+        );
+    }
+}
+
+
+#[test]
+fn test_program_new_converts_ast_to_program_log_or() {
+    let code = "begin
+    x: bool = true || false;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Bool);
+        assert_eq!(
+            value,
+            &Expr::BinaryOperation {
+                lhs: Box::new(Expr::Boolean(true)),
+                rhs: Box::new(Expr::Boolean(false)),
+                operator: BinaryOperator::LogicalOr
+            }
+        );
+    }
+}
