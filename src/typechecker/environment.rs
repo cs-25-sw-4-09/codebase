@@ -51,21 +51,6 @@ impl TEnvironment {
         self.v_table.insert(identifier, EType::Decl(r#type));
     }
 
-    // pub fn vtable_contains(&self, identifier: &String) -> bool {
-    //     self.v_table.contains_key(identifier)
-    // }
-
-    // pub fn vdtable_contains(&self, identifier: &String) -> bool {
-    //     if let Some(etype) = self.v_table.get(identifier) {
-    //         match etype {
-    //             EType::Decl(_) => true,
-    //             EType::Normal(_) => false,
-    //         }
-    //     } else {
-    //         false
-    //     }
-    // }
-
     pub fn vdtable_get_hashmap(&self) -> HashMap<String, Type> {
         self.v_table
             .iter()
@@ -75,10 +60,6 @@ impl TEnvironment {
             })
             .collect()
     }
-
-    // pub fn ftable_contains(&self, identifier: &String) -> bool {
-    //     self.f_table.contains_key(identifier)
-    // }
 
     pub fn ftable_set(&mut self, identifier: String, parameters: Vec<Type>, return_type: Type) {
         self.f_table.insert(identifier, (parameters, return_type));
@@ -91,10 +72,6 @@ impl TEnvironment {
             Err(errors::IdentifierNotFound(identifier.to_owned()).into())
         }
     }
-
-    // pub fn stable_contains(&self, identifier: &String) -> bool {
-    //     self.s_table.contains_key(identifier)
-    // }
 
     pub fn stable_lookup(&self, identifier: &String) -> Result<&HashMap<String, Type>, Box<dyn Error>> {
         if let Some(lookup) = self.s_table.get(identifier) {
