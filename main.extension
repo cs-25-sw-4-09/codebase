@@ -1,2 +1,4 @@
 begin
-x: bool = 1 >= 1;
+func(x: int): int -> {
+    return 1;
+}

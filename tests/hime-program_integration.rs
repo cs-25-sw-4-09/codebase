@@ -108,6 +108,7 @@ fn test_program_new_converts_ast_to_program_var_decl_float() {
     }
 }
 
+
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_bool() {
     let code = "begin
@@ -364,7 +365,55 @@ fn test_program_new_converts_ast_to_program_decl_polygon() {}
 fn test_program_new_converts_ast_to_program_decl_string() {}
 
 #[test]
-fn test_program_new_converts_ast_to_program_decl_color() {}
+fn test_program_new_converts_ast_to_program_decl_color_without_default_value() {
+    let code = "x: color;
+    begin
+    y: int = 1;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.decl_f.len(), 1);
+
+    if let Stmt::Decl {
+        name,
+        declared_type,
+        value,
+    } = &program.decl_f[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Color);
+        assert!(value.is_none());
+    }
+}
+
+
+//Needs to be implemented first
+//#[test]
+//fn test_program_new_converts_ast_to_program_decl_color_with_default_value() {
+  //  let code = "x: color = (0,0,0,0);
+    //begin
+//    y: int = 1;";
+//
+ //   let program = program::Program::new(&code.to_string()).unwrap();
+//
+ //   assert_eq!(program.decl_f.len(), 1);
+
+    //if let Stmt::Decl {
+      //  name,
+        //declared_type,
+        //value,
+    //} = &program.decl_f[0]
+    //{
+      //  assert_eq!(name, "x");
+        //assert_eq!(declared_type, &Type::Color);
+        //assert_eq!(value.as_ref().unwrap(), &Expr::Color(
+          //  Box::new(Expr::Integer(0)),
+            //Box::new(Expr::Integer(0)),
+//            Box::new(Expr::Integer(0)),
+  //          Box::new(Expr::Integer(0))
+    //    ));
+    //}
+//}
 
 #[test]
 fn test_program_new_converts_ast_to_program_decl_point() {}
@@ -1142,8 +1191,9 @@ fn test_program_new_converts_ast_to_program_negate() {
 #[test]
 fn test_program_new_converts_ast_to_program_function_decl_with_return_type() {
     let code = "begin
-    func(x: int) -> int {
+    func(x: int): int -> {
         f: int = 1;
+        return f;
     }";
 
     let program = program::Program::new(&code.to_string()).unwrap();
@@ -1160,6 +1210,6 @@ fn test_program_new_converts_ast_to_program_function_decl_with_return_type() {
         assert_eq!(name, "func");
         assert_eq!(return_type, &Type::Int);
         assert_eq!(parameters, &vec![("x".into(), Type::Int)]);
-        assert_eq!(statements, &vec![Stmt::VarDecl { name: "f".into(), declared_type: Type::Int, value: Expr::Integer(1)}]);
+        assert_eq!(statements, &vec![Stmt::VarDecl { name: "f".into(), declared_type: Type::Int, value: Expr::Integer(1)}, Stmt::Return(Expr::Variable("f".into()))]);
     }
 }
