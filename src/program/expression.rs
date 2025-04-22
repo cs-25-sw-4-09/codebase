@@ -36,7 +36,11 @@ pub enum Expr {
 impl Expr {
     pub fn new(expr: AstNode) -> Result<Self, Box<dyn Error>> {
         let expr = match expr.get_symbol().name {
-            "INTEGER" => Expr::Integer(expr.get_value().unwrap().parse().unwrap()),
+            "INTEGER" => Expr::Integer(
+                expr.get_value()
+                    .ok_or_else(|| errors::ASTNodeValueInvalid(expr.get_symbol().name.to_owned()))?
+                    .parse()?,
+            ),
             "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=" | "!=" | "==" | "&&" | "||" => {
                 if expr.children_count() != 2 {
                     return Err(

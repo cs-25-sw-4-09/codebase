@@ -94,9 +94,12 @@ impl Stmt {
             }
             "decl" => {
                 if !(stmt.children_count() == 3 || stmt.children_count() == 2) {
-                    return Err(
-                        errors::ASTNodeChildrenCountInvalidEither(2, 3, stmt.children_count()).into(),
-                    );
+                    return Err(errors::ASTNodeChildrenCountInvalidEither(
+                        2,
+                        3,
+                        stmt.children_count(),
+                    )
+                    .into());
                 }
                 Stmt::Decl {
                     name: stmt.child(0).get_value().unwrap().into(),
