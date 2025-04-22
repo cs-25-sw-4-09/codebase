@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, vec};
 
 use codebase::{
     program::{
@@ -59,6 +59,33 @@ fn test_program_new_converts_ast_to_program_var_decl_int() {
         assert_eq!(value, &Expr::Integer(1));
     }
 }
+
+
+#[test]
+fn test_program_new_converts_ast_to_program_var_decl_color() {
+    let code = "begin
+    x: color = (0,0,0,0);";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Color);
+        assert_eq!(value, &Expr::Color(
+            Box::new(Expr::Integer(0)),
+            Box::new(Expr::Integer(0)),
+            Box::new(Expr::Integer(0)),
+            Box::new(Expr::Integer(0))));
+    }
+}
+
 
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_float() {
@@ -163,9 +190,6 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon() {}
 
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_string() {}
-
-#[test]
-fn test_program_new_converts_ast_to_program_var_decl_color() {}
 
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_point() {}
@@ -1110,5 +1134,32 @@ fn test_program_new_converts_ast_to_program_negate() {
             value,
             &Expr::UnaryOperation { operator: UnaryOperator::Negate, expr: Box::new(Expr::Boolean(true)) }
         );
+    }
+}
+
+
+
+#[test]
+fn test_program_new_converts_ast_to_program_function_decl_with_return_type() {
+    let code = "begin
+    func(x: int) -> int {
+        f: int = 1;
+    }";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::FuncDecl {
+        name,
+        return_type,
+        parameters,
+        statements,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "func");
+        assert_eq!(return_type, &Type::Int);
+        assert_eq!(parameters, &vec![("x".into(), Type::Int)]);
+        assert_eq!(statements, &vec![Stmt::VarDecl { name: "f".into(), declared_type: Type::Int, value: Expr::Integer(1)}]);
     }
 }

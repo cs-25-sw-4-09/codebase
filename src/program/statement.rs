@@ -6,7 +6,7 @@ use hime_redist::symbols::SemanticElementTrait;
 use super::expression::Expr;
 use crate::program::r#type::Type;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Stmt {
     VarDecl {
         name: String,
