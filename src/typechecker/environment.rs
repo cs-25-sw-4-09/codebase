@@ -7,7 +7,7 @@ pub struct TEnvironment {
     v_table: HashMap<String, EType>,
     f_table: HashMap<String, (Vec<Type>, Type)>,
     s_table: HashMap<String, HashMap<String, Type>>,
-    pub r_type: Option<Type>,
+    r_type: Type,
 }
 
 impl TEnvironment {
@@ -16,7 +16,7 @@ impl TEnvironment {
             v_table: HashMap::new(),
             f_table: HashMap::new(),
             s_table: HashMap::new(),
-            r_type: None,
+            r_type: Type::Int,
         }
     }
 
@@ -65,20 +65,21 @@ impl TEnvironment {
     }
 
     pub fn vdtable_get_hashmap(&self) -> HashMap<String, Type> {
-        self.v_table.iter().filter_map(|(param_name, param_type)| {
-            match param_type {
+        self.v_table
+            .iter()
+            .filter_map(|(param_name, param_type)| match param_type {
                 EType::Normal(_) => None,
                 EType::Decl(r#type) => Some((param_name.clone(), r#type.clone())),
-            }
-        }).collect()
+            })
+            .collect()
     }
 
     pub fn ftable_contains(&self, identifier: &String) -> bool {
         self.f_table.contains_key(identifier)
     }
 
-    pub fn ftable_set(&mut self, identifier: String, parameters: Vec<Type>, return_type: Type) {      
-        self.f_table.insert(identifier,(parameters, return_type));
+    pub fn ftable_set(&mut self, identifier: String, parameters: Vec<Type>, return_type: Type) {
+        self.f_table.insert(identifier, (parameters, return_type));
     }
 
     pub fn ftable_lookup(&self, identifier: &String) -> Option<&(Vec<Type>, Type)> {
@@ -101,15 +102,21 @@ impl TEnvironment {
     }
 
     pub fn stable_set(&mut self, identifier: String, parameters: HashMap<String, Type>) {
-        self.s_table.insert(identifier,parameters);
+        self.s_table.insert(identifier, parameters);
     }
-    
 
     pub fn clone(&self) -> Self {
         let mut new = Clone::clone(self);
-        new.r_type = None;
-        new.v_table.clear();
+        new.v_table.clear(); // TODO: Should this reset more? E.g. return type
         new
+    }
+
+    pub fn return_set(&mut self, r#type: Type) {
+        self.r_type = r#type;
+    }
+
+    pub fn return_lookup(&self) -> Type {
+        self.r_type
     }
 }
 

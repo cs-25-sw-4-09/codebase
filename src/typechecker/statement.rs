@@ -23,7 +23,10 @@ impl TypeCheckS for Stmt {
                     environment.vtable_set(name.clone(), declared_type.clone());
                     return Ok(());
                 }
-                Err(errors::VariableExpressionTypeNotMatch(name.to_owned(), *declared_type, t1).into())
+                Err(
+                    errors::VariableExpressionTypeNotMatch(name.to_owned(), *declared_type, t1)
+                        .into(),
+                )
             }
             Stmt::FuncDecl {
                 name,
@@ -39,7 +42,7 @@ impl TypeCheckS for Stmt {
                     environment.ftable_set(name.clone(), parameter_types, return_type.clone());
                 }
                 let mut new_environment = environment.clone();
-                new_environment.r_type = Some(return_type.clone());
+                new_environment.return_set(return_type.clone());
 
                 for (param_name, param_type) in parameters {
                     new_environment.vtable_set(param_name.clone(), param_type.clone());
@@ -53,10 +56,10 @@ impl TypeCheckS for Stmt {
             }
             Stmt::Return(expr) => {
                 let t1 = expr.type_check(environment)?;
-                if environment.r_type.eq(&Some(t1)) {
+                if environment.return_lookup().eq(&t1) {
                     Ok(())
                 } else {
-                    Err(errors::ReturnTypeNotMatch(t1.clone(), environment.r_type.unwrap()).into())
+                    Err(errors::ReturnTypeNotMatch(t1.clone(), environment.return_lookup()).into())
                 }
             }
             Stmt::Decl {
@@ -73,7 +76,12 @@ impl TypeCheckS for Stmt {
                         environment.vdtable_set(name.clone(), declared_type.clone());
                         Ok(())
                     } else {
-                        Err(errors::VariableExpressionTypeNotMatch(name.to_owned(), declared_type.to_owned(), t1).into())
+                        Err(errors::VariableExpressionTypeNotMatch(
+                            name.to_owned(),
+                            declared_type.to_owned(),
+                            t1,
+                        )
+                        .into())
                     }
                 } else {
                     environment.vdtable_set(name.clone(), declared_type.clone());
