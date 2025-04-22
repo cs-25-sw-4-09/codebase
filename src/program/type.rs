@@ -9,6 +9,16 @@ pub enum Type {
     Point,
     Color,
     Path,
+    Polygon,
+    IntArray,
+    BoolArray,
+    FloatArray,
+    ShapeArray,
+    PointArray,
+    ColorArray,
+    PathArray,
+    PolygonArray,
+    Empty,
 }
 
 impl Type {
@@ -21,6 +31,15 @@ impl Type {
             "point" => Self::Point,
             "color" => Self::Color,
             "path" => Self::Path,
+            "polygon" => Self::Polygon,
+            "int[]" => Self::IntArray,
+            "bool[]" => Self::BoolArray,
+            "float[]" => Self::FloatArray,
+            "shape[]" => Self::ShapeArray,
+            "point[]" => Self::PointArray,
+            "color[]" => Self::ColorArray,
+            "path[]" => Self::PathArray,
+            "polygon[]" => Self::PolygonArray,
             _ => unreachable!(),
         };
         Ok(r#type)
