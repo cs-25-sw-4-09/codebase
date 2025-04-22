@@ -15,7 +15,7 @@ impl TypeCheckS for Stmt {
                 declared_type,
                 value,
             } => {
-                if environment.vtable_contains(name) {
+                if environment.vtable_lookup(name).is_ok() {
                     return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
                 };
                 let t1 = value.type_check(environment)?;
@@ -34,7 +34,7 @@ impl TypeCheckS for Stmt {
                 parameters,
                 statements,
             } => {
-                if environment.ftable_contains(name) {
+                if environment.ftable_lookup(name).is_ok() {
                     return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
                 } else {
                     let (_, parameter_types): (Vec<_>, Vec<Type>) =
@@ -67,7 +67,7 @@ impl TypeCheckS for Stmt {
                 declared_type,
                 value,
             } => {
-                if environment.vdtable_contains(name) {
+                if environment.vdtable_lookup(name).is_ok() {
                     return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
                 };
                 if let Some(set_value) = value {
@@ -89,7 +89,7 @@ impl TypeCheckS for Stmt {
                 }
             }
             Stmt::Import { name, path } => {
-                if environment.stable_contains(name) {
+                if environment.stable_lookup(name).is_ok() {
                     return Err(errors::ImportAlreadyDeclared(name.to_owned()).into());
                 }
 
