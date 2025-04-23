@@ -88,7 +88,7 @@ impl TypeCheckE for Expr {
                         Err(_) => false,
                     }
                 }) {
-                    Ok(return_type.clone())
+                    Ok(return_type)
                 } else {
                     Err(errors::FCallParametersIncompatible(name.to_owned()).into())
                 }
@@ -108,7 +108,7 @@ impl TypeCheckE for Expr {
                         return Err(errors::SCallParametersIncompatible(
                             name.to_owned(),
                             key.clone(),
-                            expected_types.get(key).unwrap().clone(),
+                            *expected_types.get(key).unwrap(),
                             t1,
                         )
                         .into());
