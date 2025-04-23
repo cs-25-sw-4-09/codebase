@@ -5,7 +5,7 @@ use codebase::{
         expression::Expr,
         operators::{
             binaryoperator::BinaryOperator, pathoperator::PathOperator,
-            unaryoperator::UnaryOperator,
+            unaryoperator::UnaryOperator, polyoperator::PolyOperator
         },
         program,
         r#type::Type,
@@ -279,10 +279,54 @@ fn test_program_new_converts_ast_to_program_var_decl_path_curved() {
 }
 
 #[test]
-fn test_program_new_converts_ast_to_program_var_decl_polygon() {}
+fn test_program_new_converts_ast_to_program_var_decl_polygon_straight() {
+    let code = "begin
+    x: polygon = (1,2)--*;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Polygon);
+        assert_eq!(
+            value,
+            &Expr::PolygonOperation { path: Box::new(Expr::Point(
+                Box::new(Expr::Integer(1)),
+                Box::new(Expr::Integer(2))
+            )), operator: PolyOperator::Polygon } 
+        );
+    }
+}
 
 #[test]
-fn test_program_new_converts_ast_to_program_var_decl_string() {}
+fn test_program_new_converts_ast_to_program_var_decl_polygon_curve() {
+    let code = "begin
+    x: polygon = (1,2)~~*;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Polygon);
+        assert_eq!(
+            value,
+            &Expr::PolygonOperation { path: Box::new(Expr::Point(
+                Box::new(Expr::Integer(1)),
+                Box::new(Expr::Integer(2))
+            )), operator: PolyOperator::Polygon } 
+        );
+    }
+}
 
 //---------------------------------------------------
 //Tests for Declaration of types in Declaration Field
