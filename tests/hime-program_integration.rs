@@ -2,7 +2,14 @@ use std::{collections::HashMap, vec};
 
 use codebase::{
     program::{
-        expression::Expr, operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator}, program, statement::Stmt, r#type::Type
+        expression::Expr,
+        operators::{
+            binaryoperator::BinaryOperator, pathoperator::PathOperator,
+            unaryoperator::UnaryOperator,
+        },
+        program,
+        r#type::Type,
+        statement::Stmt,
     },
     typechecker::TypeCheckP,
 };
@@ -10,7 +17,6 @@ use codebase::{
 //----------------------------------------------------
 //Tests for Declaration of types in construction field
 //----------------------------------------------------
-
 
 #[test]
 fn test_program_new_converts_ast_to_program_fcall() {
@@ -60,7 +66,6 @@ fn test_program_new_converts_ast_to_program_var_decl_int() {
     }
 }
 
-
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_color() {
     let code = "begin
@@ -78,11 +83,15 @@ fn test_program_new_converts_ast_to_program_var_decl_color() {
     {
         assert_eq!(name, "x");
         assert_eq!(declared_type, &Type::Color);
-        assert_eq!(value, &Expr::Color(
-            Box::new(Expr::Integer(0)),
-            Box::new(Expr::Integer(0)),
-            Box::new(Expr::Integer(0)),
-            Box::new(Expr::Integer(0))));
+        assert_eq!(
+            value,
+            &Expr::Color(
+                Box::new(Expr::Integer(0)),
+                Box::new(Expr::Integer(0)),
+                Box::new(Expr::Integer(0)),
+                Box::new(Expr::Integer(0))
+            )
+        );
     }
 }
 
@@ -103,12 +112,12 @@ fn test_program_new_converts_ast_to_program_var_decl_point() {
     {
         assert_eq!(name, "x");
         assert_eq!(declared_type, &Type::Point);
-        assert_eq!(value, &Expr::Point(
-            Box::new(Expr::Integer(0)),
-            Box::new(Expr::Integer(0))));
+        assert_eq!(
+            value,
+            &Expr::Point(Box::new(Expr::Integer(0)), Box::new(Expr::Integer(0)))
+        );
     }
 }
-
 
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_float() {
@@ -130,7 +139,6 @@ fn test_program_new_converts_ast_to_program_var_decl_float() {
         assert_eq!(value, &Expr::Float(1.0));
     }
 }
-
 
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_bool() {
@@ -207,14 +215,74 @@ fn test_program_new_converts_ast_to_program_var_decl_scall_without_params() {
 }
 
 #[test]
-fn test_program_new_converts_ast_to_program_var_decl_path() {}
+fn test_program_new_converts_ast_to_program_var_decl_path_straight() {
+    let code = "begin
+    x: path = (1,2)--(3,4);";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Path);
+        assert_eq!(
+            value,
+            &Expr::PathOperation {
+                lhs: Box::new(Expr::Point(
+                    Box::new(Expr::Integer(1)),
+                    Box::new(Expr::Integer(2))
+                )),
+                rhs: Box::new(Expr::Point(
+                    Box::new(Expr::Integer(3)),
+                    Box::new(Expr::Integer(4))
+                )),
+                operator: PathOperator::Line
+            }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_var_decl_path_curved() {
+    let code = "begin
+    x: path = (1,2)~~(3,4);";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Path);
+        assert_eq!(
+            value,
+            &Expr::PathOperation {
+                lhs: Box::new(Expr::Point(
+                    Box::new(Expr::Integer(1)),
+                    Box::new(Expr::Integer(2))
+                )),
+                rhs: Box::new(Expr::Point(
+                    Box::new(Expr::Integer(3)),
+                    Box::new(Expr::Integer(4))
+                )),
+                operator: PathOperator::Curve
+            }
+        );
+    }
+}
 
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_polygon() {}
 
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_string() {}
-
 
 //---------------------------------------------------
 //Tests for Declaration of types in Declaration Field
@@ -407,33 +475,32 @@ fn test_program_new_converts_ast_to_program_decl_color_without_default_value() {
     }
 }
 
-
 //Needs to be implemented first
 //#[test]
 //fn test_program_new_converts_ast_to_program_decl_color_with_default_value() {
-  //  let code = "x: color = (0,0,0,0);
-    //begin
+//  let code = "x: color = (0,0,0,0);
+//begin
 //    y: int = 1;";
 //
- //   let program = program::Program::new(&code.to_string()).unwrap();
+//   let program = program::Program::new(&code.to_string()).unwrap();
 //
- //   assert_eq!(program.decl_f.len(), 1);
+//   assert_eq!(program.decl_f.len(), 1);
 
-    //if let Stmt::Decl {
-      //  name,
-        //declared_type,
-        //value,
-    //} = &program.decl_f[0]
-    //{
-      //  assert_eq!(name, "x");
-        //assert_eq!(declared_type, &Type::Color);
-        //assert_eq!(value.as_ref().unwrap(), &Expr::Color(
-          //  Box::new(Expr::Integer(0)),
-            //Box::new(Expr::Integer(0)),
+//if let Stmt::Decl {
+//  name,
+//declared_type,
+//value,
+//} = &program.decl_f[0]
+//{
+//  assert_eq!(name, "x");
+//assert_eq!(declared_type, &Type::Color);
+//assert_eq!(value.as_ref().unwrap(), &Expr::Color(
+//  Box::new(Expr::Integer(0)),
+//Box::new(Expr::Integer(0)),
 //            Box::new(Expr::Integer(0)),
-  //          Box::new(Expr::Integer(0))
-    //    ));
-    //}
+//          Box::new(Expr::Integer(0))
+//    ));
+//}
 //}
 
 #[test]
@@ -517,7 +584,6 @@ fn test_program_new_converts_ast_to_program_addition_float_float() {
         );
     }
 }
-
 
 #[test]
 fn test_program_new_converts_ast_to_program_addition_int_float() {
@@ -603,7 +669,6 @@ fn test_program_new_converts_ast_to_program_subtraction_float_float() {
     }
 }
 
-
 #[test]
 fn test_program_new_converts_ast_to_program_subtraction_int_float() {
     let code = "begin
@@ -688,8 +753,6 @@ fn test_program_new_converts_ast_to_program_multiplication_float_float() {
     }
 }
 
-
-
 #[test]
 fn test_program_new_converts_ast_to_program_multiplication_int_float() {
     let code = "begin
@@ -717,8 +780,6 @@ fn test_program_new_converts_ast_to_program_multiplication_int_float() {
         );
     }
 }
-
-
 
 #[test]
 fn test_program_new_converts_ast_to_program_modulus_int_int() {
@@ -748,7 +809,6 @@ fn test_program_new_converts_ast_to_program_modulus_int_int() {
     }
 }
 
-
 #[test]
 fn test_program_new_converts_ast_to_program_modulus_float_float() {
     let code = "begin
@@ -776,7 +836,6 @@ fn test_program_new_converts_ast_to_program_modulus_float_float() {
         );
     }
 }
-
 
 #[test]
 fn test_program_new_converts_ast_to_program_modulus_int_float() {
@@ -834,7 +893,6 @@ fn test_program_new_converts_ast_to_program_divide_int_int() {
     }
 }
 
-
 #[test]
 fn test_program_new_converts_ast_to_program_divide_float_float() {
     let code = "begin
@@ -862,8 +920,6 @@ fn test_program_new_converts_ast_to_program_divide_float_float() {
         );
     }
 }
-
-
 
 #[test]
 fn test_program_new_converts_ast_to_program_divide_int_float() {
@@ -925,7 +981,6 @@ fn test_program_new_converts_ast_to_program_ge_int_int() {
     }
 }
 
-
 #[test]
 fn test_program_new_converts_ast_to_program_ge_float_float() {
     let code = "begin
@@ -954,8 +1009,6 @@ fn test_program_new_converts_ast_to_program_ge_float_float() {
     }
 }
 
-
-
 #[test]
 fn test_program_new_converts_ast_to_program_ge_int_float() {
     let code = "begin
@@ -983,7 +1036,6 @@ fn test_program_new_converts_ast_to_program_ge_int_float() {
         );
     }
 }
-
 
 #[test]
 fn test_program_new_converts_ast_to_program_great_int_int() {
@@ -1153,7 +1205,6 @@ fn test_program_new_converts_ast_to_program_log_and() {
     }
 }
 
-
 #[test]
 fn test_program_new_converts_ast_to_program_log_or() {
     let code = "begin
@@ -1182,7 +1233,6 @@ fn test_program_new_converts_ast_to_program_log_or() {
     }
 }
 
-
 #[test]
 fn test_program_new_converts_ast_to_program_negate() {
     let code = "begin
@@ -1202,12 +1252,13 @@ fn test_program_new_converts_ast_to_program_negate() {
         assert_eq!(declared_type, &Type::Bool);
         assert_eq!(
             value,
-            &Expr::UnaryOperation { operator: UnaryOperator::Negate, expr: Box::new(Expr::Boolean(true)) }
+            &Expr::UnaryOperation {
+                operator: UnaryOperator::Negate,
+                expr: Box::new(Expr::Boolean(true))
+            }
         );
     }
 }
-
-
 
 #[test]
 fn test_program_new_converts_ast_to_program_function_decl_with_return_type() {
@@ -1231,6 +1282,16 @@ fn test_program_new_converts_ast_to_program_function_decl_with_return_type() {
         assert_eq!(name, "func");
         assert_eq!(return_type, &Type::Int);
         assert_eq!(parameters, &vec![("x".into(), Type::Int)]);
-        assert_eq!(statements, &vec![Stmt::VarDecl { name: "f".into(), declared_type: Type::Int, value: Expr::Integer(1)}, Stmt::Return(Expr::Variable("f".into()))]);
+        assert_eq!(
+            statements,
+            &vec![
+                Stmt::VarDecl {
+                    name: "f".into(),
+                    declared_type: Type::Int,
+                    value: Expr::Integer(1)
+                },
+                Stmt::Return(Expr::Variable("f".into()))
+            ]
+        );
     }
 }
