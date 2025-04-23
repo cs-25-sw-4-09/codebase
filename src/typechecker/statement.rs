@@ -15,7 +15,7 @@ impl TypeCheckS for Stmt {
                 declared_type,
                 value,
             } => {
-                if environment.vtable_contains(name) {
+                if environment.vtable_lookup(name).is_ok() {
                     return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
                 };
                 let t1 = value.type_check(environment)?;
@@ -37,7 +37,7 @@ impl TypeCheckS for Stmt {
                 parameters,
                 statements,
             } => {
-                if environment.ftable_contains(name) {
+                if environment.ftable_lookup(name).is_ok() {
                     return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
                 } else {
                     let (_, parameter_types): (Vec<_>, Vec<Type>) =
@@ -45,7 +45,7 @@ impl TypeCheckS for Stmt {
                     environment.ftable_set(name.clone(), parameter_types, return_type.clone());
                 }
                 let mut new_environment = environment.clone();
-                new_environment.r_type = Some(return_type.clone());
+                new_environment.return_set(return_type.clone());
 
                 for (param_name, param_type) in parameters {
                     new_environment.vtable_set(param_name.clone(), param_type.clone());
@@ -59,12 +59,12 @@ impl TypeCheckS for Stmt {
             }
             Stmt::Return(expr) => {
                 let t1 = expr.type_check(environment)?;
-                if environment.r_type.eq(&Some(t1)) {
+                if environment.return_lookup().eq(&t1) {
                     Ok(())
-                } else if checks_empty_array(environment.r_type.unwrap(), t1){
+                } else if checks_empty_array(environment.return_lookup(), t1){
                     return Ok(());
                 }else {
-                    Err(errors::ReturnTypeNotMatch(t1.clone(), environment.r_type.unwrap()).into())
+                    Err(errors::ReturnTypeNotMatch(t1.clone(), environment.return_lookup()).into())
                 }
             }
             Stmt::Decl {
@@ -72,7 +72,7 @@ impl TypeCheckS for Stmt {
                 declared_type,
                 value,
             } => {
-                if environment.vdtable_contains(name) {
+                if environment.vdtable_lookup(name).is_ok() {
                     return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
                 };
                 if let Some(set_value) = value {
@@ -97,7 +97,7 @@ impl TypeCheckS for Stmt {
                 }
             }
             Stmt::Import { name, path } => {
-                if environment.stable_contains(name) {
+                if environment.stable_lookup(name).is_ok() {
                     return Err(errors::ImportAlreadyDeclared(name.to_owned()).into());
                 }
 

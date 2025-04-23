@@ -17,10 +17,6 @@ impl TypeCheckE for Expr {
         environment: &mut TEnvironment,
     ) -> Result<crate::program::r#type::Type, Box<dyn Error>> {
         match self {
-            Expr::Variable(identifier) => environment
-            .vtable_lookup(identifier)
-            .cloned()
-            .ok_or(errors::IdentifierNotFound(identifier.to_owned()).into()),
             Expr::Integer(_) => Ok(Type::Int),
             Expr::Boolean(_) => Ok(Type::Bool),
             Expr::Float(_) => Ok(Type::Float),
@@ -47,6 +43,9 @@ impl TypeCheckE for Expr {
                     _ => Err(errors::ColorTypeNotCompatible(t1, t2, t3, t4).into()),
                 }
             }
+            Expr::Variable(identifier) => environment
+                .vtable_lookup(identifier)
+                .cloned(),
             Expr::PathOperation { lhs, rhs, operator } => {
                 let t1 = lhs.type_check(environment)?;
                 let t2 = rhs.type_check(environment)?;
@@ -151,57 +150,42 @@ impl TypeCheckE for Expr {
                 }
             }
             Expr::FCall { name, args } => {
-                if environment.ftable_contains(name) {
-                    let (parameters, return_type) = environment
-                        .ftable_lookup(name)
-                        .ok_or_else(|| Box::new(errors::IdentifierNotFound(name.to_owned())))?
-                        .clone();
+                let (parameters, return_type) = environment.ftable_lookup(name)?.clone();
 
-                    if parameters.iter().zip(args).all(|(parameter_type, arg)| {
-                        match arg.type_check(environment) {
-                            Ok(t1) => t1.eq(parameter_type),
-                            Err(_) => false,
-                        }
-                    }) {
-                        Ok(return_type.clone())
-                    } else {
-                        Err(errors::FCallParametersIncompatible(name.to_owned()).into())
+                if parameters.iter().zip(args).all(|(parameter_type, arg)| {
+                    match arg.type_check(environment) {
+                        Ok(t1) => t1.eq(parameter_type),
+                        Err(_) => false,
                     }
+                }) {
+                    Ok(return_type.clone())
                 } else {
-                    Err(errors::IdentifierNotFound(name.to_owned()).into())
+                    Err(errors::FCallParametersIncompatible(name.to_owned()).into())
                 }
             }
             Expr::SCall { name, args } => {
                 //Type checks the Shape call
-                if environment.stable_contains(name) {
-                    let expected_types = environment.stable_lookup(name).ok_or(()).unwrap().clone();
+                let expected_types = environment.stable_lookup(name)?.clone();
 
-                    for (key, value) in args.iter() {
-                        if !expected_types.contains_key(key) {
-                            return Err(errors::SCallParameterNotFound(
-                                key.to_owned().into(),
-                                name.to_owned().into(),
-                            )
-                            .into());
-                        }
-
-                        let t1 = value.type_check(environment)?;
-
-                        if t1 != *expected_types.get(key).unwrap() {
-                            return Err(errors::SCallParametersIncompatible(
-                                name.to_owned(),
-                                key.clone(),
-                                expected_types.get(key).unwrap().clone(),
-                                t1,
-                            )
-                            .into());
-                        }
+                for (key, value) in args.iter() {
+                    if !expected_types.contains_key(key) {
+                        return Err(errors::SCallParameterNotFound(key.into(), name.into()).into());
                     }
 
-                    Ok(Type::Shape)
-                } else {
-                    Err(errors::IdentifierNotFound(name.to_owned()).into())
+                    let t1 = value.type_check(environment)?;
+
+                    if t1 != *expected_types.get(key).unwrap() {
+                        return Err(errors::SCallParametersIncompatible(
+                            name.to_owned(),
+                            key.clone(),
+                            expected_types.get(key).unwrap().clone(),
+                            t1,
+                        )
+                        .into());
+                    }
                 }
+
+                Ok(Type::Shape)
             }
             
         }

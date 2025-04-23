@@ -77,7 +77,7 @@ grammar cfg
     args -> arg (','! arg)*;
     arg -> exprS^;
 
-    SCall -> (path | id) '(|'! attrS '|)'!;
+    SCall -> (path | id | polygon) '(|'! attrS '|)'!;
     attrS -> (attr (','! attr)*)? ;
     attr -> id '='! exprS;
 
