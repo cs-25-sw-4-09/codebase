@@ -124,7 +124,7 @@ impl Expr {
                     );
                 }
                 Expr::SCall {
-                    name: expr.child(0).get_value().unwrap().into(),
+                    name: expr.child(0).get_value().ok_or_else(|| errors::ASTNodeValueInvalid(expr.child(0).get_symbol().name.to_owned()))?.into(),
                     args: expr
                         .child(1)
                         .children()
