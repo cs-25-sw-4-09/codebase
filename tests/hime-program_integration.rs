@@ -530,18 +530,6 @@ fn test_program_new_converts_ast_to_program_decl_bool_without_default_value() {
 }
 
 #[test]
-fn test_program_new_converts_ast_to_program_decl_shape_without_default_value() {}
-
-#[test]
-fn test_program_new_converts_ast_to_program_decl_path() {}
-
-#[test]
-fn test_program_new_converts_ast_to_program_decl_polygon() {}
-
-#[test]
-fn test_program_new_converts_ast_to_program_decl_string() {}
-
-#[test]
 fn test_program_new_converts_ast_to_program_decl_color_without_default_value() {
     let code = "x: color;
     begin

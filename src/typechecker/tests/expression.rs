@@ -29,6 +29,41 @@ fn float() {
 }
 
 #[test]
+fn color() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::Color(Box::new(Expr::Integer(1)), Box::new(Expr::Integer(2)),Box::new(Expr::Integer(3)), Box::new(Expr::Integer(4))).type_check(&mut env).unwrap();
+    assert_eq!(t1, Type::Color)
+}
+
+#[test]
+fn color_invalid() {
+    let mut env = TEnvironment::new();
+    let invalid = Expr::Color(Box::new(Expr::Integer(1)), Box::new(Expr::Integer(2)),Box::new(Expr::Integer(3)), Box::new(Expr::Float(4.2))).type_check(&mut env);
+    assert!(invalid
+        .unwrap_err()
+        .downcast_ref::<errors::ColorTypeNotCompatible>()
+        .is_some());
+}
+
+#[test]
+fn point() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::Point(Box::new(Expr::Integer(1)), Box::new(Expr::Integer(2))).type_check(&mut env).unwrap();
+    assert_eq!(t1, Type::Point)
+}
+
+#[test]
+fn point_invalid() {
+    let mut env = TEnvironment::new();
+    let invalid = Expr::Point(Box::new(Expr::Integer(1)), Box::new(Expr::Boolean(true))).type_check(&mut env);
+    assert!(invalid
+        .unwrap_err()
+        .downcast_ref::<errors::PointTypeNotCompatible>()
+        .is_some());
+}
+
+
+#[test]
 fn variable() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".into(), Type::Int);
