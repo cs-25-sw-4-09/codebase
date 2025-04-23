@@ -56,7 +56,7 @@ impl TEnvironment {
             .iter()
             .filter_map(|(param_name, param_type)| match param_type {
                 EType::Normal(_) => None,
-                EType::Decl(r#type) => Some((param_name.clone(), r#type.clone())),
+                EType::Decl(r#type) => Some((param_name.clone(), *r#type)),
             })
             .collect()
     }
@@ -104,4 +104,10 @@ impl TEnvironment {
 pub enum EType {
     Normal(Type),
     Decl(Type),
+}
+
+impl Default for TEnvironment {
+    fn default() -> Self {
+        TEnvironment::new()
+    }
 }

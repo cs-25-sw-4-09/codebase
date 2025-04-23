@@ -11,7 +11,7 @@ impl UnaryOperator {
     pub fn new(operator: Symbol) -> Result<Self, Box<dyn Error>> {
         let operator = match operator.name {
             "!" => Self::Negate,
-            _ => panic!(),
+            _ => unreachable!(),
         };
 
         Ok(operator)

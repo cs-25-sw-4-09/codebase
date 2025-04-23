@@ -69,13 +69,23 @@ impl Stmt {
                             errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
                         );
                     }
-                    let parameter = (
-                        param.child(0).get_value().unwrap().into(),
-                        Type::new(param.child(1).get_value().unwrap())?,
+                    let parameter: (String, Type) = (
+                        param
+                            .child(0)
+                            .get_value()
+                            .ok_or_else(|| {
+                                errors::ASTNodeValueInvalid(
+                                    param.child(0).get_symbol().name.to_owned(),
+                                )
+                            })?
+                            .into(),
+                        Type::new(param.child(1).get_value().ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(param.child(0).get_symbol().name.to_owned())
+                        })?)?,
                     );
 
                     if parameters.contains(&parameter) {
-                        panic!();
+                        return Err(errors::ParemeterAlreadyDefined(parameter.0.to_owned()).into());
                     }
 
                     parameters.push(parameter);
@@ -86,21 +96,40 @@ impl Stmt {
                 }
 
                 Stmt::FuncDecl {
-                    name: stmt.child(0).get_value().unwrap().into(),
-                    return_type: Type::new(stmt.child(2).get_value().unwrap())?,
+                    name: stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    return_type: Type::new(stmt.child(2).get_value().ok_or_else(|| {
+                        errors::ASTNodeValueInvalid(stmt.child(2).get_symbol().name.to_owned())
+                    })?)?,
                     parameters,
                     statements,
                 }
             }
             "decl" => {
                 if !(stmt.children_count() == 3 || stmt.children_count() == 2) {
-                    return Err(
-                        errors::ASTNodeChildrenCountInvalidEither(2, 3, stmt.children_count()).into(),
-                    );
+                    return Err(errors::ASTNodeChildrenCountInvalidEither(
+                        2,
+                        3,
+                        stmt.children_count(),
+                    )
+                    .into());
                 }
                 Stmt::Decl {
-                    name: stmt.child(0).get_value().unwrap().into(),
-                    declared_type: Type::new(stmt.child(1).get_value().unwrap())?,
+                    name: stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    declared_type: Type::new(stmt.child(1).get_value().ok_or_else(|| {
+                        errors::ASTNodeValueInvalid(stmt.child(1).get_symbol().name.to_owned())
+                    })?)?,
                     value: if stmt.children_count() > 2 {
                         Some(Expr::new(stmt.child(2))?)
                     } else {
@@ -123,11 +152,23 @@ impl Stmt {
                     );
                 }
                 Stmt::Import {
-                    name: stmt.child(0).get_value().unwrap().into(),
-                    path: stmt.child(1).get_value().unwrap().replace('"', ""),
+                    name: stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    path: stmt
+                        .child(1)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(1).get_symbol().name.to_owned())
+                        })?
+                        .replace('"', ""),
                 }
             }
-            stmt => panic!("{}", stmt),
+            _ => unreachable!(),
         };
 
         Ok(stmt)

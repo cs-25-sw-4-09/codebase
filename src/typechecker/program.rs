@@ -12,6 +12,6 @@ impl TypeCheckP for Program {
         for stmt in self.stmts.iter().clone() {
             stmt.type_check(&mut self.tenvironment)?
         }
-        return Ok(&self.tenvironment);
+        Ok(&self.tenvironment)
     }
 }

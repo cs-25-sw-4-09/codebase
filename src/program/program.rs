@@ -35,7 +35,7 @@ impl Program {
                         stmts.push(Stmt::new(stmt)?);
                     }
                 }
-                _ => panic!(),
+                _ => unreachable!(),
             }
         }
 
