@@ -20,10 +20,10 @@ impl TypeCheckS for Stmt {
                 };
                 let t1 = value.type_check(environment)?;
                 if declared_type.eq(&t1) {
-                    environment.vtable_set(name.clone(), declared_type.clone());
+                    environment.vtable_set(name.clone(), *declared_type);
                     return Ok(());
                 } else if checks_empty_array(*declared_type, t1){
-                    environment.vtable_set(name.clone(), declared_type.clone());
+                    environment.vtable_set(name.clone(), *declared_type);
                     return Ok(());
                 }
                 Err(
@@ -42,13 +42,13 @@ impl TypeCheckS for Stmt {
                 } else {
                     let (_, parameter_types): (Vec<_>, Vec<Type>) =
                         parameters.iter().cloned().unzip();
-                    environment.ftable_set(name.clone(), parameter_types, return_type.clone());
+                    environment.ftable_set(name.clone(), parameter_types, *return_type);
                 }
                 let mut new_environment = environment.clone();
-                new_environment.return_set(return_type.clone());
+                new_environment.return_set(*return_type);
 
                 for (param_name, param_type) in parameters {
-                    new_environment.vtable_set(param_name.clone(), param_type.clone());
+                    new_environment.vtable_set(param_name.clone(), *param_type);
                 }
 
                 for stmt in statements {
@@ -64,7 +64,7 @@ impl TypeCheckS for Stmt {
                 } else if checks_empty_array(environment.return_lookup(), t1){
                     return Ok(());
                 }else {
-                    Err(errors::ReturnTypeNotMatch(t1.clone(), environment.return_lookup()).into())
+                    Err(errors::ReturnTypeNotMatch(t1, environment.return_lookup()).into())
                 }
             }
             Stmt::Decl {
@@ -78,7 +78,7 @@ impl TypeCheckS for Stmt {
                 if let Some(set_value) = value {
                     let t1 = set_value.type_check(environment)?;
                     if declared_type.eq(&t1) {
-                        environment.vdtable_set(name.clone(), declared_type.clone());
+                        environment.vdtable_set(name.clone(), *declared_type);
                         Ok(())
                     } else if checks_empty_array(*declared_type, t1){
                         environment.vtable_set(name.clone(), declared_type.clone());
@@ -92,7 +92,7 @@ impl TypeCheckS for Stmt {
                         .into())
                     }
                 } else {
-                    environment.vdtable_set(name.clone(), declared_type.clone());
+                    environment.vdtable_set(name.clone(), *declared_type);
                     Ok(())
                 }
             }

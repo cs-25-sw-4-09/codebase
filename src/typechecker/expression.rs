@@ -84,7 +84,7 @@ impl TypeCheckE for Expr {
                 } else {
                     //impl of typing rule "array"
                     let t_for_array = exprs[0].type_check(environment)?;
-                    if exprs.iter().all(|expr| expr.type_check(environment).unwrap() == t_for_array) {
+                    if exprs.iter().all(|expr| (expr.type_check(environment).unwrap().eq(&t_for_array))) {
                         match t_for_array {
                             Type::Int => Ok(Type::IntArray),
                             Type::Bool => Ok(Type::BoolArray),

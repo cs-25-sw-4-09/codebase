@@ -1,8 +1,8 @@
 use super::{
     utils::{
-        tree_converter::stringify_tree, 
+        tree_converter::stringify_tree,
         tree_builder::TreeBuilderStr
-    }, 
+    },
     grammar::cfg,
     valid_programs::get_programs
 };
@@ -21,8 +21,8 @@ fn example_program_parsing() {
     //A program is succesfully parsed if get_root() does not panic.
     get_programs()
     .into_iter()
-    .for_each(|el| { 
-        let _ = cfg::parse_str(el).get_ast().get_root(); 
+    .for_each(|el| {
+        let _ = cfg::parse_str(el).get_ast().get_root();
     });
 }
 
@@ -30,19 +30,19 @@ fn example_program_parsing() {
 #[test]
 fn test_multi_and_add_precedence() {
     let part_program = vec![ ("program", 0), ("declS", 1), ("stmtS", 1), ("assign", 2), ("_", 3)].into_iter();
-    
+
     let expr = vec![ ("+", 3), ("5", 4), ("*", 4), ("5", 5), ("6", 5)].into_iter();
     let nodes = part_program.clone().chain(expr).collect();
 
     test_equality(
-        nodes, 
+        nodes,
         "begin _ = 5 + 5 * 6;"
     );
 
     let expr = vec![ ("+", 3), ("*", 4), ("1", 5), ("2", 5), ("3", 4)].into_iter();
     let nodes = part_program.chain(expr).collect();
     test_equality(
-        nodes, 
+        nodes,
         "begin _ = 1 * 2 + 3;"
     );
 }
@@ -54,26 +54,26 @@ fn multi_stmt() {
     let stmt = stmt.iter().cycle().take(stmt.len() * 6).cloned();
 
     test_equality(
-        vec![("program", 0),("declS", 1),("stmtS", 1)].into_iter().chain(stmt).collect::<Vec<_>>(), 
+        vec![("program", 0),("declS", 1),("stmtS", 1)].into_iter().chain(stmt).collect::<Vec<_>>(),
         program
     );
 }
 
 #[test]
 fn function_declaration_and_call() {
-    let program = 
+    let program =
     "begin
     x(y: int, z: int): int -> {
         return y+z;
-    } 
+    }
     a: int = x(5, 6);
     ";
     let mut start = vec![
         ("program",0), ("declS",1), ("stmtS", 1),
     ];
-    let stmt1 = vec![("funcDecl", 2), 
-    ("x", 3), ("params", 3), 
-    ("param", 4), ("y", 5), ("int", 5), 
+    let stmt1 = vec![("funcDecl", 2),
+    ("x", 3), ("params", 3),
+    ("param", 4), ("y", 5), ("int", 5),
     ("param", 4), ("z", 5), ("int", 5), ("int",3),
     ];
     let func_stmt = vec![
@@ -89,7 +89,7 @@ fn function_declaration_and_call() {
     start.extend(func_stmt.iter());
     start.extend(stmt2.iter());
     test_equality(
-        start, 
+        start,
         program
     );
 }
@@ -118,20 +118,20 @@ fn stmt_decl_assign() {
 #[test]
 fn fork_single() {
     let program= "
-    begin 
+    begin
     fork {
         (5 > 4) -> { return 10; }
     }";
 
     let mut start = vec![("program", 0), ("declS",1), ("stmtS", 1)];
-    let stmt1 = vec![ 
+    let stmt1 = vec![
         ("fork", 2), ("forkExpr", 3), (">",4),
         ("5", 5), ("4", 5), ("stmtS", 4), ("return", 5),
         ("10", 6)];
     start.extend(stmt1.iter());
 
     test_equality(
-        start, 
+        start,
         program
     );
 }
@@ -140,22 +140,22 @@ fn fork_single() {
 fn fork_multi() {
     let program= "
     begin
-    fork { 
+    fork {
         (5 == 5) -> { return 5 + 5;}
-        (5 > 3) -> { x: int = 6 * 7; return x;} 
+        (5 > 3) -> { x: int = 6 * 7; return x;}
     }
 ";
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     let stmt_depth = 1;
-    let stmt1 = vec![("fork", stmt_depth+1), 
-    ("forkExpr", stmt_depth+2), 
-    ("==", stmt_depth+3), 
+    let stmt1 = vec![("fork", stmt_depth+1),
+    ("forkExpr", stmt_depth+2),
+    ("==", stmt_depth+3),
     ("5", stmt_depth+4), ("5", stmt_depth+4),
     ("stmtS", stmt_depth+3), ("return", stmt_depth+4), ("+", stmt_depth+5), ("5", stmt_depth+6),
      ("5", stmt_depth+6)
     ];
 
-    let stmt2 = vec![("forkExpr", stmt_depth+2), (">", stmt_depth+3), 
+    let stmt2 = vec![("forkExpr", stmt_depth+2), (">", stmt_depth+3),
     ("5", stmt_depth+4), ("3", stmt_depth+4),
     ("stmtS", stmt_depth+3), ("varDecl", stmt_depth+4), ("x", stmt_depth+5), ("int", stmt_depth+5), ("*", stmt_depth+5),
     ("6", stmt_depth+6), ("7", stmt_depth+6), ("return", stmt_depth+4), ("x", stmt_depth+5),
@@ -165,14 +165,14 @@ fn fork_multi() {
     start.extend(stmt2.into_iter());
 
     test_equality(
-        start, 
+        start,
         program
-    );  
+    );
 }
 
 #[test]
 fn otherwise_fork(){
-    let program = 
+    let program =
     "begin
     fork {
     (10 == 10) -> {return 1;}
@@ -181,20 +181,20 @@ fn otherwise_fork(){
     ";
     let stmt_depth = 1;
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
-    let stmt1 = vec![("fork", stmt_depth+1), ("forkExpr", stmt_depth+2), 
+    let stmt1 = vec![("fork", stmt_depth+1), ("forkExpr", stmt_depth+2),
     ("==", stmt_depth+3), ("10", stmt_depth+4), ("10", stmt_depth+4), ("stmtS", stmt_depth+3),
     ("return", stmt_depth+4), ("1", stmt_depth+5)];
     let stmt2 = vec![("otherwise", stmt_depth+2), ("stmtS", stmt_depth+3), ("return", stmt_depth+4), ("0", stmt_depth+5)];
 
     start.extend(stmt1.into_iter());
     start.extend(stmt2.into_iter());
-    
+
     test_equality(start, program);
 }
 
 #[test]
 fn for_loop() {
-    let program = 
+    let program =
     "begin
     sum: int = 0;
     for val in 1..=20 {
@@ -204,13 +204,13 @@ fn for_loop() {
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     let stmt1 = vec![("varDecl", 2), ("sum", 3), ("int", 3), ("0", 3)];
     let for_stmt_depth = 4;
-    
+
     let mut for_loop = vec![("for", 2), ("val", 3),
     ("range", 3), ("1", 4), ("..=", 4), ("20", 4),
    ("stmtS", 3)];
-    let for_stmt = vec![("assign", for_stmt_depth), ("sum", for_stmt_depth + 1), 
-    ("+", for_stmt_depth+1), ("sum", for_stmt_depth+2), ("val", for_stmt_depth+2), 
-    ]; 
+    let for_stmt = vec![("assign", for_stmt_depth), ("sum", for_stmt_depth + 1),
+    ("+", for_stmt_depth+1), ("sum", for_stmt_depth+2), ("val", for_stmt_depth+2),
+    ];
     for_loop.extend(for_stmt.into_iter());
 
     start.extend(stmt1.into_iter());
@@ -239,7 +239,7 @@ fn precedence_int() {
         _ = (5 + 5) * 6 / 7 % 20 + 7 - 8;
         _ = 6 * (5 % 20 + 10) / 7;
     ";
-    
+
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     let assign_level = 2;
     let assign1 = vec![("assign", assign_level), ("_", assign_level + 1),
@@ -253,7 +253,7 @@ fn precedence_int() {
         ("8", assign_level + 2)
     ];
     let assign2 = vec![("assign", assign_level), ("_", assign_level + 1),
-    ("/", assign_level+1), 
+    ("/", assign_level+1),
     ("*", assign_level + 2), ("6", assign_level + 3),
     ("+", assign_level + 3), ("%", assign_level + 4), ("5", assign_level + 5), ("20", assign_level + 5),
     ("10", assign_level + 4),
@@ -262,16 +262,16 @@ fn precedence_int() {
 
     start.extend(assign1.iter());
     start.extend(assign2.iter());
-    
+
     test_equality(start, program);
 
 }
 
 #[test]
 fn precedence_bool() {
-    let program = 
+    let program =
     "begin
-    x: bool = (true || false) && (5 < 6) 
+    x: bool = (true || false) && (5 < 6)
     || (((5 + 9) == 0) && (true)) || (false) || (4 <= 4) && (5 > 1) && (4 >= 7);
     x = 5 != 4;
     ";
@@ -291,7 +291,7 @@ fn precedence_bool() {
         ("5", bool_level +2),
         ("4", bool_level + 2)
     ];
-    
+
     start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
     test_equality(start, program);
 }
@@ -376,7 +376,7 @@ fn mixed_path_decl(){
 
 #[test]
 fn array_test(){
-    let program = 
+    let program =
     "begin
     x: int[] = [5, 3, 5, 7];
     z: int[] = [];
@@ -408,10 +408,10 @@ fn comment_stmt() {
 
 #[test]
 fn manipulation_place(){
-    let program =  
+    let program =
     "begin
-    x = place rec left x; 
-    x = place rec right 5 on (10, 10); 
+    x = place rec left x;
+    x = place rec right 5 on (10, 10);
     ";
     let manipulation_depth = 2;
     let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
@@ -432,9 +432,9 @@ fn manipulation_place(){
 
 #[test]
 fn manipulation_scale(){
-    let program =  
+    let program =
     "begin
-    x = scale rec by 10; 
+    x = scale rec by 10;
     ";
     let manipulation_depth = 2;
     let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
@@ -449,9 +449,9 @@ fn manipulation_scale(){
 
 #[test]
 fn manipulation_rotate(){
-    let program =  
+    let program =
     "begin
-    x = rotate rec by 10; 
+    x = rotate rec by 10;
     ";
     let manipulation_depth = 2;
     let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
@@ -468,29 +468,29 @@ fn manipulation_rotate(){
 #[test]
 fn properties() {
     let program = "begin
-        p: point = (1,2); 
+        p: point = (1,2);
         x: int = p.x;
     ";
     let start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     let stmt_depth = 2;
     let stmt1 = vec![("varDecl", 2), ("p", 3), ("point", 3), ("point", 3), ("1", 4), ("2", 4)];
-    let stmt2 = vec![("varDecl", stmt_depth), ("x", stmt_depth + 1), ("int", stmt_depth + 1), 
+    let stmt2 = vec![("varDecl", stmt_depth), ("x", stmt_depth + 1), ("int", stmt_depth + 1),
         ("member", stmt_depth+ 1),
         ("p", stmt_depth+2), ("x", stmt_depth+2)
     ];
-    
+
     let nodes = start.into_iter().chain(stmt1.into_iter()).chain(stmt2.into_iter()).collect();
     test_equality(nodes, program);
 }
 
 #[test]
 fn indexing(){
-    let program = 
+    let program =
     "begin
     x : int[] = [1,2,3,4];
-    a = x[1]; 
+    a = x[1];
     ";
-    let indexing_depth = 2; 
+    let indexing_depth = 2;
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     let stmt1 = vec![("varDecl", indexing_depth), ("x", indexing_depth+1), ("int[]", indexing_depth+1), ("array", indexing_depth+1), ("1", indexing_depth+2), ("2", indexing_depth+2), ("3", indexing_depth+2),
     ("4", indexing_depth+2)];

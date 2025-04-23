@@ -49,7 +49,11 @@ pub enum Expr {
 impl Expr {
     pub fn new(expr: AstNode) -> Result<Self, Box<dyn Error>> {
         let expr = match expr.get_symbol().name {
-            "INTEGER" => Expr::Integer(expr.get_value().unwrap().parse().unwrap()),
+            "INTEGER" => Expr::Integer(
+                expr.get_value()
+                    .ok_or_else(|| errors::ASTNodeValueInvalid(expr.get_symbol().name.to_owned()))?
+                    .parse()?,
+            ),
             "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=" | "!=" | "==" | "&&" | "||" => {
                 if expr.children_count() != 2 {
                     return Err(
@@ -89,9 +93,21 @@ impl Expr {
 
                 Expr::PolygonOperation { path, operator }
             }
-            "IDENTIFIER" => Expr::Variable(expr.get_value().unwrap().into()),
-            "BOOLEAN" => Expr::Boolean(expr.get_value().unwrap().parse().unwrap()),
-            "FLOAT" => Expr::Float(expr.get_value().unwrap().parse().unwrap()),
+            "IDENTIFIER" => Expr::Variable(
+                expr.get_value()
+                    .ok_or_else(|| errors::ASTNodeValueInvalid(expr.get_symbol().name.to_owned()))?
+                    .into(),
+            ),
+            "BOOLEAN" => Expr::Boolean(
+                expr.get_value()
+                    .ok_or_else(|| errors::ASTNodeValueInvalid(expr.get_symbol().name.to_owned()))?
+                    .parse()?,
+            ),
+            "FLOAT" => Expr::Float(
+                expr.get_value()
+                    .ok_or_else(|| errors::ASTNodeValueInvalid(expr.get_symbol().name.to_owned()))?
+                    .parse()?,
+            ),
             "point" => Expr::Point(
                 Box::new(Expr::new(expr.child(0))?),
                 Box::new(Expr::new(expr.child(1))?),
@@ -123,7 +139,13 @@ impl Expr {
                     );
                 }
                 Expr::FCall {
-                    name: expr.child(0).get_value().unwrap().into(),
+                    name: expr
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(expr.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
                     args: expr
                         .child(1)
                         .children()
@@ -139,20 +161,28 @@ impl Expr {
                     );
                 }
                 Expr::SCall {
-                    name: expr.child(0).get_value().unwrap().into(),
+                    name: expr.child(0).get_value().ok_or_else(|| errors::ASTNodeValueInvalid(expr.child(0).get_symbol().name.to_owned()))?.into(),
                     args: expr
                         .child(1)
                         .children()
                         .iter()
                         .map(|arg| {
-                            let key: String = arg.child(0).get_value().unwrap().into();
+                            let key: String = arg
+                                .child(0)
+                                .get_value()
+                                .ok_or_else(|| {
+                                    errors::ASTNodeValueInvalid(
+                                        arg.child(0).get_symbol().name.to_owned(),
+                                    )
+                                })?
+                                .into();
                             let value = Expr::new(arg.child(1))?;
                             Ok::<(String, Expr), Box<dyn Error>>((key, value))
                         })
                         .collect::<Result<HashMap<_, _>, _>>()?,
                 }
             }
-            _ => panic!("Expression type not found: {}", expr.get_symbol().name),
+            _ => unreachable!(),
         };
 
         Ok(expr)

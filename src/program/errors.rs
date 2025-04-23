@@ -1,8 +1,6 @@
 use core::fmt;
 use std::error::Error;
 
-use crate::program::r#type::Type;
-
 #[derive(Debug, Clone)]
 pub struct ASTNodeValueInvalid(pub String);
 impl Error for ASTNodeValueInvalid {}
@@ -27,5 +25,14 @@ impl Error for ASTNodeChildrenCountInvalidEither {}
 impl fmt::Display for ASTNodeChildrenCountInvalidEither {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "AST Node children expected: {} or {}, got: {}", self.0, self.1, self.2)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ParemeterAlreadyDefined(pub String);
+impl Error for ParemeterAlreadyDefined {}
+impl fmt::Display for ParemeterAlreadyDefined {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Parameter already defined: {}", self.0)
     }
 }
