@@ -69,7 +69,7 @@ impl Stmt {
                             errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
                         );
                     }
-                    let parameter = (
+                    let parameter: (String, Type) = (
                         param
                             .child(0)
                             .get_value()
@@ -85,7 +85,7 @@ impl Stmt {
                     );
 
                     if parameters.contains(&parameter) {
-                        panic!();
+                        return Err(errors::ParemeterAlreadyDefined(parameter.0.to_owned()).into());
                     }
 
                     parameters.push(parameter);
@@ -168,7 +168,7 @@ impl Stmt {
                         .replace('"', ""),
                 }
             }
-            stmt => panic!("{}", stmt),
+            _ => unreachable!(),
         };
 
         Ok(stmt)

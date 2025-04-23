@@ -35,7 +35,7 @@ impl BinaryOperator {
             "==" => Self::Equals,
             "&&" => Self::LogicalAnd,
             "||" => Self::LogicalOr,
-            _ => panic!(),
+            _ => unreachable!(),
         };
         Ok(operator)
     }

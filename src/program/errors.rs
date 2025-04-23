@@ -29,10 +29,10 @@ impl fmt::Display for ASTNodeChildrenCountInvalidEither {
 }
 
 #[derive(Debug, Clone)]
-pub struct ASTNodeIntegerValueInvalid(pub String);
-impl Error for ASTNodeIntegerValueInvalid {}
-impl fmt::Display for ASTNodeIntegerValueInvalid {
+pub struct ParemeterAlreadyDefined(pub String);
+impl Error for ParemeterAlreadyDefined {}
+impl fmt::Display for ParemeterAlreadyDefined {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "AST Node integer value invalid: {}", self.0)
+        write!(f, "Parameter already defined: {}", self.0)
     }
 }
