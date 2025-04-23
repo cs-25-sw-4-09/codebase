@@ -86,6 +86,29 @@ fn test_program_new_converts_ast_to_program_var_decl_color() {
     }
 }
 
+#[test]
+fn test_program_new_converts_ast_to_program_var_decl_point() {
+    let code = "begin
+    x: point = (0,0);";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Point);
+        assert_eq!(value, &Expr::Point(
+            Box::new(Expr::Integer(0)),
+            Box::new(Expr::Integer(0))));
+    }
+}
+
 
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_float() {
@@ -192,8 +215,6 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon() {}
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_string() {}
 
-#[test]
-fn test_program_new_converts_ast_to_program_var_decl_point() {}
 
 //---------------------------------------------------
 //Tests for Declaration of types in Declaration Field
