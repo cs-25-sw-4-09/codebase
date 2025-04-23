@@ -77,27 +77,33 @@ impl TypeCheckE for Expr {
                     },
                 }
             }
+            
             Expr::Array(exprs) => {
-                //impl of typing rule "emptyArray"
-                if exprs.len() == 0{
+                //implements typing rule for empty arrays
+                if exprs.len() == 0 {
                     Ok(Type::Empty)
                 } else {
-                    //impl of typing rule "array"
+                    //implements typing rule for nonempty arrays
                     let t_for_array = exprs[0].type_check(environment)?;
-                    if exprs.iter().all(|expr| (expr.type_check(environment).unwrap().eq(&t_for_array))) {
-                        match t_for_array {
-                            Type::Int => Ok(Type::IntArray),
-                            Type::Bool => Ok(Type::BoolArray),
-                            Type::Float => Ok(Type::FloatArray),
-                            Type::Shape => Ok(Type::ShapeArray),
-                            Type::Path => Ok(Type::PathArray),
-                            Type::Point => Ok(Type::PointArray),
-                            Type::Polygon => Ok(Type::PolygonArray),
-                            Type::Color => Ok(Type::ColorArray),
-                            _ => Err(errors::ArrayElementsTypeNotCompatible(t_for_array).into()),
+                    exprs.iter().try_for_each(|expr| {
+                        let t = expr.type_check(environment)?;
+                        if t == t_for_array {
+                            Ok::<(), Box<dyn std::error::Error>>(())
+                        } else {
+                            Err(errors::ArrayElementsTypeNotCompatible(t_for_array.clone()).into())
                         }
-                    } else {
-                        Err(errors::ArrayElementsTypeNotCompatible(t_for_array).into())
+                    })?;
+                    // If we get here, all elements' types matched
+                    match t_for_array {
+                        Type::Int => Ok(Type::IntArray),
+                        Type::Bool => Ok(Type::BoolArray),
+                        Type::Float => Ok(Type::FloatArray),
+                        Type::Shape => Ok(Type::ShapeArray),
+                        Type::Path => Ok(Type::PathArray),
+                        Type::Point => Ok(Type::PointArray),
+                        Type::Polygon => Ok(Type::PolygonArray),
+                        Type::Color => Ok(Type::ColorArray),
+                        _ => Err(errors::ArrayElementsTypeNotCompatible(t_for_array).into()),
                     }
                 }
             },
