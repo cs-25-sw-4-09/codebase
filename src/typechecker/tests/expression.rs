@@ -117,6 +117,33 @@ fn path_invalid() {
 }
 
 #[test]
+fn polygon() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::PolygonOperation { path: Box::new(Expr::PathOperation {
+        lhs: Box::new(Expr::Point(
+            Box::new(Expr::Integer(1)),
+            Box::new(Expr::Integer(2))
+        )),
+        rhs: Box::new(Expr::Point(
+            Box::new(Expr::Integer(3)),
+            Box::new(Expr::Integer(4))
+        )),
+        operator: PathOperator::Line}), operator: PolyOperator::Polygon }.type_check(&mut env).unwrap();
+    assert_eq!(t1, Type::Polygon)
+}
+
+
+#[test]
+fn polygon_invalid() {
+    let mut env = TEnvironment::new();
+    let invalid = Expr::PolygonOperation { path: Box::new(Expr::Integer(1)), operator: PolyOperator::Polygon }.type_check(&mut env);
+    assert!(invalid
+        .unwrap_err()
+        .downcast_ref::<errors::PolyOperationTypeNotCompatible>()
+        .is_some());
+}
+
+#[test]
 fn variable() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".into(), Type::Int);
