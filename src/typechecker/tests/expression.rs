@@ -1,7 +1,7 @@
 use crate::{
     program::{
         expression::Expr,
-        operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator},
+        operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator},
         r#type::Type,
     },
     typechecker::{environment::TEnvironment, errors, TypeCheckE},
@@ -62,6 +62,59 @@ fn point_invalid() {
         .is_some());
 }
 
+#[test]
+fn path_with_points() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::PathOperation {
+        lhs: Box::new(Expr::Point(
+            Box::new(Expr::Integer(1)),
+            Box::new(Expr::Integer(2))
+        )),
+        rhs: Box::new(Expr::Point(
+            Box::new(Expr::Integer(3)),
+            Box::new(Expr::Integer(4))
+        )),
+        operator: PathOperator::Line}.type_check(&mut env).unwrap();
+    assert_eq!(t1, Type::Path)
+}
+
+#[test]
+fn path_with_path_and_point() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::PathOperation {
+        lhs: Box::new(Expr::PathOperation {
+            lhs: Box::new(Expr::Point(
+                Box::new(Expr::Integer(1)),
+                Box::new(Expr::Integer(2))
+            )),
+            rhs: Box::new(Expr::Point(
+                Box::new(Expr::Integer(3)),
+                Box::new(Expr::Integer(4))
+            )),
+            operator: PathOperator::Line}),
+        rhs: Box::new(Expr::Point(
+            Box::new(Expr::Integer(3)),
+            Box::new(Expr::Integer(4))
+        )),
+        operator: PathOperator::Line}.type_check(&mut env).unwrap();
+    assert_eq!(t1, Type::Path)
+}
+
+#[test]
+fn path_invalid() {
+    let mut env = TEnvironment::new();
+    let invalid = Expr::PathOperation {
+        lhs: Box::new(Expr::Integer(1)),
+        rhs: Box::new(Expr::Point(
+            Box::new(Expr::Integer(3)),
+            Box::new(Expr::Integer(4))
+        )),
+        operator: PathOperator::Line}.type_check(&mut env);
+    assert!(invalid
+        .unwrap_err()
+        .downcast_ref::<errors::PathOperationTypeNotCompatible>()
+        .is_some());
+}
 
 #[test]
 fn variable() {
