@@ -328,6 +328,50 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_curve() {
     }
 }
 
+#[test]
+fn test_program_new_converts_ast_to_program_var_decl_array_empty() {
+    let code = "begin
+    x: int[] = [];";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::IntArray);
+        assert_eq!(
+            value,
+            &Expr::Array(vec![])
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_var_decl_array_not_empty() {
+    let code = "begin
+    x: int[] = [1];";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::IntArray);
+        assert_eq!(
+            value,
+            &Expr::Array(vec![Expr::Integer(1)])
+        );
+    }
+}
+
 //---------------------------------------------------
 //Tests for Declaration of types in Declaration Field
 //---------------------------------------------------
