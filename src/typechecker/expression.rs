@@ -195,9 +195,8 @@ impl TypeCheckE for Expr {
                         .into());
                     }
                 }
-
                 // non default params are only checked on name, since type was chekced above. 
-                let non_def = environment.vdtable_get_hashmap_non_default();
+                let non_def = environment.stable_get_hashmap_non_default(name)?;
                 non_def.iter().try_for_each(|(key, _)| {
                     if !args.contains_key(key) {
                         Err(errors::SCallParameterNotFound(key.into(), name.into()))

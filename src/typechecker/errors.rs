@@ -14,6 +14,8 @@ impl fmt::Display for IdentifierNotFound {
     }
 }
 
+
+
 #[derive(Debug, Clone)]
 pub struct BinaryOperationTypeNotCompatible(pub Type, pub Type);
 impl Error for BinaryOperationTypeNotCompatible {}

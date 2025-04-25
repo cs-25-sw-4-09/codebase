@@ -66,14 +66,19 @@ impl TEnvironment {
             .collect()
     }
 
-    pub fn vdtable_get_hashmap_non_default(&self) -> HashMap<String, EType> {
-        self.v_table
+    pub fn stable_get_hashmap_non_default(&self, identifier: &String) -> Result<HashMap<String, EType>, Box<dyn Error>> {
+        if let Some(lookup) = self.s_table.get(identifier) {
+            Ok(lookup
             .iter()
             .filter_map(|(param_name, param_type)| match param_type {
                 EType::Normal(_) | EType::DeclDefault(_) => None,
                 EType::DeclNonDefault(r#type) => Some((param_name.clone(), EType::DeclNonDefault(*r#type))),
             })
-            .collect()
+            .collect())
+        } else {
+            Err(errors::IdentifierNotFound(identifier.to_owned()).into())
+        }
+        
     }
 
     pub fn ftable_set(&mut self, identifier: String, parameters: Vec<Type>, return_type: Type) {

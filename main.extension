@@ -1,4 +1,4 @@
 import circle "./circle.extension";
 
 begin
-x:shape = circle(|z = 5|);
+x:shape = circle(|r=5|);
