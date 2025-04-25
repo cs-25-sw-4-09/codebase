@@ -475,7 +475,7 @@ fn scall_parameters_incompatible_identifier() {
     );
     let incompatible_parameter = Expr::SCall {
         name: "circle".into(),
-        args: [("r".into(), Expr::Float(1.2))]
+        args: []
             .into_iter()
             .collect(),
     }
