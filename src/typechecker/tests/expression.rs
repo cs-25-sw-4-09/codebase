@@ -7,7 +7,10 @@ use crate::{
         },
         r#type::Type,
     },
-    typechecker::{environment::{EType, TEnvironment}, errors, TypeCheckE},
+    typechecker::{
+        environment::{EType, TEnvironment},
+        errors, TypeCheckE,
+    },
 };
 
 #[test]
@@ -401,7 +404,9 @@ fn scall() {
     let mut env = TEnvironment::new();
     env.stable_set(
         "circle".into(),
-        [("radius".into(), EType::DeclNonDefault(Type::Float))].into_iter().collect(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
     );
     let t1 = Expr::SCall {
         name: "circle".into(),
@@ -431,7 +436,9 @@ fn scall_parameters_notfound() {
     let mut env = TEnvironment::new();
     env.stable_set(
         "circle".into(),
-        [("radius".into(), EType::DeclNonDefault(Type::Float))].into_iter().collect(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
     );
     let invalid_parameter = Expr::SCall {
         name: "circle".into(),
@@ -451,7 +458,9 @@ fn scall_parameters_incompatible() {
     let mut env = TEnvironment::new();
     env.stable_set(
         "circle".into(),
-        [("radius".into(), EType::DeclNonDefault(Type::Float))].into_iter().collect(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
     );
     let incompatible_parameter = Expr::SCall {
         name: "circle".into(),
@@ -471,13 +480,13 @@ fn scall_parameters_incompatible_identifier() {
     let mut env = TEnvironment::new();
     env.stable_set(
         "circle".into(),
-        [("radius".into(), EType::DeclNonDefault(Type::Float))].into_iter().collect(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
     );
     let incompatible_parameter = Expr::SCall {
         name: "circle".into(),
-        args: []
-            .into_iter()
-            .collect(),
+        args: [].into_iter().collect(),
     }
     .type_check(&mut env);
     assert!(incompatible_parameter
@@ -489,17 +498,23 @@ fn scall_parameters_incompatible_identifier() {
 fn member_color() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::Color);
-    let t1 = Expr::Member{identifier : "x".to_string(), member_access : "r".to_string()}
-        .type_check(&mut env)
-        .unwrap();
+    let t1 = Expr::Member {
+        identifier: "x".to_string(),
+        member_access: "r".to_string(),
+    }
+    .type_check(&mut env)
+    .unwrap();
     assert_eq!(t1, Type::Int)
 }
 #[test]
 fn member_color_invalid() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::Color);
-    let t1 = Expr::Member{identifier : "x".to_string(), member_access : "p".to_string()}
-        .type_check(&mut env);
+    let t1 = Expr::Member {
+        identifier: "x".to_string(),
+        member_access: "p".to_string(),
+    }
+    .type_check(&mut env);
     assert!(t1
         .unwrap_err()
         .downcast_ref::<errors::MemberAccessColor>()
@@ -509,57 +524,75 @@ fn member_color_invalid() {
 fn member_point() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::Point);
-    let t1 = Expr::Member{identifier : "x".to_string(), member_access : "x".to_string()}
-        .type_check(&mut env)
-        .unwrap();
+    let t1 = Expr::Member {
+        identifier: "x".to_string(),
+        member_access: "x".to_string(),
+    }
+    .type_check(&mut env)
+    .unwrap();
     assert_eq!(t1, Type::Float)
 }
 #[test]
 fn member_point_invalid() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::Point);
-    let t1 = Expr::Member{identifier : "x".to_string(), member_access : "z".to_string()}
-        .type_check(&mut env);
-        assert!(t1
-            .unwrap_err()
-            .downcast_ref::<errors::MemberAccessPoint>()
-            .is_some());
+    let t1 = Expr::Member {
+        identifier: "x".to_string(),
+        member_access: "z".to_string(),
+    }
+    .type_check(&mut env);
+    assert!(t1
+        .unwrap_err()
+        .downcast_ref::<errors::MemberAccessPoint>()
+        .is_some());
 }
 #[test]
 fn member_shape() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::Shape);
-    let t1 = Expr::Member{identifier : "x".to_string(), member_access : "width".to_string()}
-        .type_check(&mut env)
-        .unwrap();
+    let t1 = Expr::Member {
+        identifier: "x".to_string(),
+        member_access: "width".to_string(),
+    }
+    .type_check(&mut env)
+    .unwrap();
     assert_eq!(t1, Type::Float)
 }
 #[test]
 fn member_shape_invalid() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::Shape);
-    let t1 = Expr::Member{identifier : "x".to_string(), member_access : "length".to_string()}
-        .type_check(&mut env);
-        assert!(t1
-            .unwrap_err()
-            .downcast_ref::<errors::MemberAccessShape>()
-            .is_some());
+    let t1 = Expr::Member {
+        identifier: "x".to_string(),
+        member_access: "length".to_string(),
+    }
+    .type_check(&mut env);
+    assert!(t1
+        .unwrap_err()
+        .downcast_ref::<errors::MemberAccessShape>()
+        .is_some());
 }
 #[test]
 fn member_array() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::IntArray);
-    let t1 = Expr::Member{identifier : "x".to_string(), member_access : "size".to_string()}
-        .type_check(&mut env)
-        .unwrap();
+    let t1 = Expr::Member {
+        identifier: "x".to_string(),
+        member_access: "size".to_string(),
+    }
+    .type_check(&mut env)
+    .unwrap();
     assert_eq!(t1, Type::Int)
 }
 #[test]
 fn member_array_invalid() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::IntArray);
-    let t1 = Expr::Member{identifier : "x".to_string(), member_access : "lenght".to_string()}
-        .type_check(&mut env);
+    let t1 = Expr::Member {
+        identifier: "x".to_string(),
+        member_access: "lenght".to_string(),
+    }
+    .type_check(&mut env);
     assert!(t1
         .unwrap_err()
         .downcast_ref::<errors::MemberAccessArray>()
@@ -569,10 +602,108 @@ fn member_array_invalid() {
 fn member_invalid() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::Path);
-    let t1 = Expr::Member{identifier : "x".to_string(), member_access : "size".to_string()}
-        .type_check(&mut env);
+    let t1 = Expr::Member {
+        identifier: "x".to_string(),
+        member_access: "size".to_string(),
+    }
+    .type_check(&mut env);
     assert!(t1
         .unwrap_err()
         .downcast_ref::<errors::NotAMemberType>()
+        .is_some());
+}
+
+#[test]
+fn scale() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".to_string(), Type::Shape);
+    env.vtable_set("p".to_string(), Type::Int);
+    let t1 = Expr::Scale {
+        base_shape: Expr::Variable("x".into()).into(),
+        factor: Expr::Variable("p".into()).into(),
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::Shape)
+}
+#[test]
+fn scale_invalid() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".to_string(), Type::Shape);
+    env.vtable_set("p".to_string(), Type::Point);
+    let t1 = Expr::Scale {
+        base_shape: Expr::Variable("x".into()).into(),
+        factor: Expr::Variable("p".into()).into(),
+    }
+    .type_check(&mut env);
+    assert!(t1
+        .unwrap_err()
+        .downcast_ref::<errors::ManipulationScaleTypeFault>()
+        .is_some());
+}
+
+#[test]
+fn rotate() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".to_string(), Type::Shape);
+    env.vtable_set("p".to_string(), Type::Int);
+    let t1 = Expr::Rotate {
+        base_shape: Expr::Variable("x".into()).into(),
+        factor: Expr::Variable("p".into()).into(),
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::Shape)
+}
+
+#[test]
+fn rotate_invalid() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".to_string(), Type::Shape);
+    env.vtable_set("p".to_string(), Type::Point);
+    let t1 = Expr::Rotate {
+        base_shape: Expr::Variable("x".into()).into(),
+        factor: Expr::Variable("p".into()).into(),
+    }
+    .type_check(&mut env);
+    assert!(t1
+        .unwrap_err()
+        .downcast_ref::<errors::ManipulationRotateTypeFault>()
+        .is_some());
+}
+
+#[test]
+fn place() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".to_string(), Type::Shape);
+    env.vtable_set("y".to_string(), Type::Shape);
+    env.vtable_set("p".to_string(), Type::Point);
+    let t1 = Expr::Place {
+        base_shape: Expr::Variable("x".into()).into(),
+        second_shape: Expr::Variable("y".into()).into(),
+        point: Some(Expr::Variable("p".into()).into()),
+        place_at: "right".to_string(),
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::Shape)
+}
+
+#[test]
+fn place_invalid() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".to_string(), Type::Shape);
+    env.vtable_set("y".to_string(), Type::Int);
+    env.vtable_set("p".to_string(), Type::Point);
+    let t1 = Expr::Place {
+        base_shape: Expr::Variable("x".into()).into(),
+        second_shape: Expr::Variable("y".into()).into(),
+        place_at: "right".to_string(),
+        point: Some(Expr::Variable("p".into()).into()),
+    }
+    .type_check(&mut env);
+    assert!(t1
+        .unwrap_err()
+        .downcast_ref::<errors::ManipulationPlaceTypeFault>()
         .is_some());
 }

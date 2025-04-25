@@ -260,6 +260,19 @@ impl fmt::Display for ManipulationScaleTypeFault {
 }
 
 #[derive(Debug, Clone)]
+pub struct ManipulationRotateTypeFault(pub Type, pub Type);
+impl Error for ManipulationRotateTypeFault {}
+impl fmt::Display for ManipulationRotateTypeFault {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Was unable to rotate: \nExpected type Shape got {:?}\nExpected type Int or Float got {:?}", 
+            self.0, self.1
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct ManipulationPlaceTypeFault(pub Type, pub Type);
 impl Error for ManipulationPlaceTypeFault {}
 impl fmt::Display for ManipulationPlaceTypeFault {

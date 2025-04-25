@@ -288,7 +288,7 @@ impl TypeCheckE for Expr {
                 if t1 == Type::Shape && (t2 == Type::Int || t2 == Type::Float) {
                     Ok(Type::Shape)
                 } else {
-                    Err(errors::ManipulationScaleTypeFault(t1, t2).into())
+                    Err(errors::ManipulationRotateTypeFault(t1, t2).into())
                 }
             }
         }
