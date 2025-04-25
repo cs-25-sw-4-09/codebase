@@ -4,8 +4,8 @@ use codebase::{
     program::{
         expression::Expr,
         operators::{
-            binaryoperator::BinaryOperator, pathoperator::PathOperator,
-            unaryoperator::UnaryOperator, polyoperator::PolyOperator
+            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
+            unaryoperator::UnaryOperator,
         },
         program,
         r#type::Type,
@@ -295,10 +295,13 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_straight() {
         assert_eq!(declared_type, &Type::Polygon);
         assert_eq!(
             value,
-            &Expr::PolygonOperation { path: Box::new(Expr::Point(
-                Box::new(Expr::Integer(1)),
-                Box::new(Expr::Integer(2))
-            )), operator: PolyOperator::Polygon } 
+            &Expr::PolygonOperation {
+                path: Box::new(Expr::Point(
+                    Box::new(Expr::Integer(1)),
+                    Box::new(Expr::Integer(2))
+                )),
+                operator: PolyOperator::Polygon
+            }
         );
     }
 }
@@ -320,10 +323,13 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_curve() {
         assert_eq!(declared_type, &Type::Polygon);
         assert_eq!(
             value,
-            &Expr::PolygonOperation { path: Box::new(Expr::Point(
-                Box::new(Expr::Integer(1)),
-                Box::new(Expr::Integer(2))
-            )), operator: PolyOperator::Polygon } 
+            &Expr::PolygonOperation {
+                path: Box::new(Expr::Point(
+                    Box::new(Expr::Integer(1)),
+                    Box::new(Expr::Integer(2))
+                )),
+                operator: PolyOperator::Polygon
+            }
         );
     }
 }
@@ -343,10 +349,7 @@ fn test_program_new_converts_ast_to_program_var_decl_array_empty() {
     {
         assert_eq!(name, "x");
         assert_eq!(declared_type, &Type::IntArray);
-        assert_eq!(
-            value,
-            &Expr::Array(vec![])
-        );
+        assert_eq!(value, &Expr::Array(vec![]));
     }
 }
 
@@ -365,15 +368,12 @@ fn test_program_new_converts_ast_to_program_var_decl_array_not_empty() {
     {
         assert_eq!(name, "x");
         assert_eq!(declared_type, &Type::IntArray);
-        assert_eq!(
-            value,
-            &Expr::Array(vec![Expr::Integer(1)])
-        );
+        assert_eq!(value, &Expr::Array(vec![Expr::Integer(1)]));
     }
 }
 
 #[test]
-fn test_program_new_converts_ast_to_program_var_decl_member_access_color() {
+fn test_program_new_converts_ast_to_program_member_access_color() {
     let code = "begin
     y:int = x.r;
     ";
@@ -388,13 +388,17 @@ fn test_program_new_converts_ast_to_program_var_decl_member_access_color() {
         assert_eq!(name, "y");
         assert_eq!(declared_type, &Type::Int);
         assert_eq!(
-            value, &Expr::Member { identifier: "x".to_string(), member_access: "r".to_string() }
+            value,
+            &Expr::Member {
+                identifier: "x".to_string(),
+                member_access: "r".to_string()
+            }
         );
     }
 }
 
 #[test]
-fn test_program_new_converts_ast_to_program_var_decl_member_access_shape() {
+fn test_program_new_converts_ast_to_program_member_access_shape() {
     let code = "begin
     y:shape = x.width;
     ";
@@ -409,13 +413,17 @@ fn test_program_new_converts_ast_to_program_var_decl_member_access_shape() {
         assert_eq!(name, "y");
         assert_eq!(declared_type, &Type::Shape);
         assert_eq!(
-            value, &Expr::Member { identifier: "x".to_string(), member_access: "width".to_string() }
+            value,
+            &Expr::Member {
+                identifier: "x".to_string(),
+                member_access: "width".to_string()
+            }
         );
     }
 }
 
 #[test]
-fn test_program_new_converts_ast_to_program_var_decl_member_access_point() {
+fn test_program_new_converts_ast_to_program_member_access_point() {
     let code = "begin
     y:float = x.x;
     ";
@@ -430,13 +438,17 @@ fn test_program_new_converts_ast_to_program_var_decl_member_access_point() {
         assert_eq!(name, "y");
         assert_eq!(declared_type, &Type::Float);
         assert_eq!(
-            value, &Expr::Member { identifier: "x".to_string(), member_access: "x".to_string() }
+            value,
+            &Expr::Member {
+                identifier: "x".to_string(),
+                member_access: "x".to_string()
+            }
         );
     }
 }
 
 #[test]
-fn test_program_new_converts_ast_to_program_var_decl_member_access_array() {
+fn test_program_new_converts_ast_to_program_member_access_array() {
     let code = "begin
     y:int = x.size;
     ";
@@ -451,11 +463,87 @@ fn test_program_new_converts_ast_to_program_var_decl_member_access_array() {
         assert_eq!(name, "y");
         assert_eq!(declared_type, &Type::Int);
         assert_eq!(
-            value, &Expr::Member { identifier: "x".to_string(), member_access: "size".to_string() }
+            value,
+            &Expr::Member {
+                identifier: "x".to_string(),
+                member_access: "size".to_string()
+            }
         );
     }
 }
 
+#[test]
+fn test_program_new_converts_ast_to_program_place() {
+    let code = "begin
+    z:shape = place x ontop y on (1,2);
+    ";
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "z");
+        assert_eq!(declared_type, &Type::Shape);
+        assert_eq!(
+            value,
+            &Expr::Place {
+                base_shape: Expr::Variable("x".to_string()).into(),
+                second_shape: Expr::Variable("y".to_string()).into(),
+                place_at: "ontop".to_string(),
+                point: Some(
+                    Expr::Point(Box::new(Expr::Integer(1)), Box::new(Expr::Integer(2))).into()
+                )
+            }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_rotate() {
+    let code = "begin
+    z:shape = rotate x by 5;
+    ";
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "z");
+        assert_eq!(declared_type, &Type::Shape);
+        assert_eq!(
+            value,
+            &Expr::Rotate { base_shape: Expr::Variable("x".to_string()).into(), factor: Expr::Integer(5).into() }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_scale() {
+    let code = "begin
+    z:shape = scale x by 5;
+    ";
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "z");
+        assert_eq!(declared_type, &Type::Shape);
+        assert_eq!(
+            value,
+            &Expr::Scale { base_shape: Expr::Variable("x".to_string()).into(), factor: Expr::Integer(5).into() }
+        );
+    }
+}
 //---------------------------------------------------
 //Tests for Declaration of types in Declaration Field
 //---------------------------------------------------

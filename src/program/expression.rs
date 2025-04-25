@@ -241,7 +241,7 @@ impl Expr {
                     "place" => {
                         let first_shape = Box::new(Expr::new(expr.child(0).child(0))?);
                         let second_shape = Box::new(Expr::new(expr.child(0).child(1).child(1))?);
-                        let placement = expr.child(0).child(1).child(0).to_string();
+                        let placement = expr.child(0).child(1).child(0).get_symbol().to_string();
                         if expr.child(0).child(1).children_count() == 3 {
                             let point = Box::new(Expr::new(expr.child(0).child(1).child(2))?);
                             Expr::Place { base_shape: first_shape, second_shape: second_shape, place_at: placement, point: Some(point) }
