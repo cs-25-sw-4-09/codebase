@@ -10,7 +10,7 @@ fill: color;
 
 begin
 
-draw (0,0)--(width,0)--(width,height)--(0,height)--* (| fill = fill|);";
+draw (0,0)--(width,0)--(width,height)--(0,height)--* (|fill = fill|);";
 
 const PROGRAM2: &str = 
 "import triangle \"./triangle.EXTENSION\";

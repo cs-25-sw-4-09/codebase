@@ -2,7 +2,7 @@ use std::error::Error;
 
 use hime_redist::symbols::Symbol;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum UnaryOperator {
     Negate,
 }
@@ -11,7 +11,7 @@ impl UnaryOperator {
     pub fn new(operator: Symbol) -> Result<Self, Box<dyn Error>> {
         let operator = match operator.name {
             "!" => Self::Negate,
-            _ => panic!(),
+            _ => unreachable!(),
         };
 
         Ok(operator)

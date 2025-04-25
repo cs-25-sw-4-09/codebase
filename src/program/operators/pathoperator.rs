@@ -2,7 +2,7 @@ use std::error::Error;
 
 use hime_redist::symbols::Symbol;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum PathOperator {
     Line,
     Curve,

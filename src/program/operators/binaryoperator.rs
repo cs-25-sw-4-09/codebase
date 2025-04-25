@@ -2,7 +2,7 @@ use std::error::Error;
 
 use hime_redist::symbols::Symbol;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum BinaryOperator {
     Add,
     Subtract,
@@ -30,12 +30,12 @@ impl BinaryOperator {
             "<" => Self::LessThan,
             ">" => Self::GreaterThan,
             "<=" => Self::LessThanOrEquals,
-            ">=" => Self::GreaterThan,
+            ">=" => Self::GreaterThanOrEquals,
             "!=" => Self::NotEquals,
             "==" => Self::Equals,
             "&&" => Self::LogicalAnd,
             "||" => Self::LogicalOr,
-            _ => panic!(),
+            _ => unreachable!(),
         };
         Ok(operator)
     }
