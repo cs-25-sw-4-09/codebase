@@ -1,4 +1,4 @@
-use std::error::Error;
+use std::error::{self, Error};
 
 use crate::program::{
     expression::Expr,
@@ -169,28 +169,43 @@ impl TypeCheckE for Expr {
                     Err(errors::FCallParametersIncompatible(name.to_owned()).into())
                 }
             }
+            
             Expr::SCall { name, args } => {
                 //Type checks the Shape call
                 let expected_types = environment.stable_lookup(name)?.clone();
-
+                
                 for (key, value) in args.iter() {
                     if !expected_types.contains_key(key) {
                         return Err(errors::SCallParameterNotFound(key.into(), name.into()).into());
                     }
 
                     let t1 = value.type_check(environment)?;
-
-                    if t1 != *expected_types.get(key).unwrap() {
+                    
+                    let shape_t = match *expected_types.get(key).unwrap() {
+                        super::environment::EType::Normal(x) | super::environment::EType::DeclNonDefault(x) | super::environment::EType::DeclDefault(x) => x,
+                    };
+                    
+                    if t1 != shape_t {
                         return Err(errors::SCallParametersIncompatible(
                             name.to_owned(),
                             key.clone(),
-                            expected_types.get(key).unwrap().clone(),
+                            shape_t,
                             t1,
                         )
                         .into());
                     }
                 }
 
+                // non default params are only checked on name, since type was chekced above. 
+                let non_def = environment.vdtable_get_hashmap_non_default();
+                non_def.iter().try_for_each(|(key, _)| {
+                    if !args.contains_key(key) {
+                        Err(errors::SCallParameterNotFound(key.into(), name.into()))
+                    } else {
+                        Ok(())
+                    }
+                })?;
+                
                 Ok(Type::Shape)
             }
             

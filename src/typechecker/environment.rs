@@ -8,7 +8,7 @@ use super::errors;
 pub struct TEnvironment {
     v_table: HashMap<String, EType>,
     f_table: HashMap<String, (Vec<Type>, Type)>,
-    s_table: HashMap<String, HashMap<String, Type>>,
+    s_table: HashMap<String, HashMap<String, EType>>,
     r_type: Type,
 }
 
@@ -25,7 +25,7 @@ impl TEnvironment {
     pub fn vtable_lookup(&self, identifier: &String) -> Result<&Type, Box<dyn Error>> {
         if let Some(etype) = self.v_table.get(identifier) {
             match etype {
-                EType::Normal(t) | EType::Decl(t) => Ok(t),
+                EType::Normal(t) | EType::DeclNonDefault(t) | EType::DeclDefault(t) => Ok(t),
             }
         } else {
             Err(errors::IdentifierNotFound(identifier.to_owned()).into())
@@ -39,7 +39,7 @@ impl TEnvironment {
     pub fn vdtable_lookup(&self, identifier: &String) -> Result<&Type, Box<dyn Error>> {
         if let Some(etype) = self.v_table.get(identifier) {
             match etype {
-                EType::Decl(t) => Ok(t),
+                EType::DeclNonDefault(t) | EType::DeclDefault(t) => Ok(t),
                 EType::Normal(_) => Err(errors::IdentifierNotFound(identifier.to_owned()).into()),
             }
         } else {
@@ -47,16 +47,31 @@ impl TEnvironment {
         }
     }
 
-    pub fn vdtable_set(&mut self, identifier: String, r#type: Type) {
-        self.v_table.insert(identifier, EType::Decl(r#type));
+    pub fn vdtable_set_non_default(&mut self, identifier: String, r#type: Type) {
+        self.v_table.insert(identifier, EType::DeclNonDefault(r#type));
     }
 
-    pub fn vdtable_get_hashmap(&self) -> HashMap<String, Type> {
+    pub fn vdtable_set_default(&mut self, identifier: String, r#type: Type) {
+        self.v_table.insert(identifier, EType::DeclDefault(r#type));
+    }
+
+    pub fn vdtable_get_hashmap(&self) -> HashMap<String, EType> {
         self.v_table
             .iter()
             .filter_map(|(param_name, param_type)| match param_type {
                 EType::Normal(_) => None,
-                EType::Decl(r#type) => Some((param_name.clone(), *r#type)),
+                EType::DeclNonDefault(r#type) => Some((param_name.clone(), EType::DeclNonDefault(*r#type))),
+                EType::DeclDefault(r#type)  => Some((param_name.clone(), EType::DeclDefault(*r#type))),
+            })
+            .collect()
+    }
+
+    pub fn vdtable_get_hashmap_non_default(&self) -> HashMap<String, EType> {
+        self.v_table
+            .iter()
+            .filter_map(|(param_name, param_type)| match param_type {
+                EType::Normal(_) | EType::DeclDefault(_) => None,
+                EType::DeclNonDefault(r#type) => Some((param_name.clone(), EType::DeclNonDefault(*r#type))),
             })
             .collect()
     }
@@ -73,7 +88,7 @@ impl TEnvironment {
         }
     }
 
-    pub fn stable_lookup(&self, identifier: &String) -> Result<&HashMap<String, Type>, Box<dyn Error>> {
+    pub fn stable_lookup(&self, identifier: &String) -> Result<&HashMap<String, EType>, Box<dyn Error>> {
         if let Some(lookup) = self.s_table.get(identifier) {
             Ok(lookup)
         } else {
@@ -81,7 +96,7 @@ impl TEnvironment {
         }
     }
 
-    pub fn stable_set(&mut self, identifier: String, parameters: HashMap<String, Type>) {
+    pub fn stable_set(&mut self, identifier: String, parameters: HashMap<String, EType>) {
         self.s_table.insert(identifier, parameters);
     }
 
@@ -103,7 +118,8 @@ impl TEnvironment {
 #[derive(Debug, Clone)]
 pub enum EType {
     Normal(Type),
-    Decl(Type),
+    DeclNonDefault(Type),
+    DeclDefault(Type),
 }
 
 impl Default for TEnvironment {

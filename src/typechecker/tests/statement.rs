@@ -127,7 +127,7 @@ fn decl_optional() {
 #[test]
 fn decl_identifier_already_declared() {
     let mut env = TEnvironment::new();
-    env.vdtable_set("x".into(), Type::Int);
+    env.vdtable_set_non_default("x".into(), Type::Int);
     let already_declared = Stmt::Decl {
         name: "x".into(),
         declared_type: Type::Int,

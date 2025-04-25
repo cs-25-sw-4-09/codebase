@@ -7,7 +7,7 @@ use crate::{
         },
         r#type::Type,
     },
-    typechecker::{environment::TEnvironment, errors, TypeCheckE},
+    typechecker::{environment::{EType, TEnvironment}, errors, TypeCheckE},
 };
 
 #[test]
@@ -401,7 +401,7 @@ fn scall() {
     let mut env = TEnvironment::new();
     env.stable_set(
         "circle".into(),
-        [("radius".into(), Type::Float)].into_iter().collect(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))].into_iter().collect(),
     );
     let t1 = Expr::SCall {
         name: "circle".into(),
@@ -431,7 +431,7 @@ fn scall_parameters_notfound() {
     let mut env = TEnvironment::new();
     env.stable_set(
         "circle".into(),
-        [("radius".into(), Type::Float)].into_iter().collect(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))].into_iter().collect(),
     );
     let invalid_parameter = Expr::SCall {
         name: "circle".into(),
@@ -451,7 +451,7 @@ fn scall_parameters_incompatible() {
     let mut env = TEnvironment::new();
     env.stable_set(
         "circle".into(),
-        [("radius".into(), Type::Float)].into_iter().collect(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))].into_iter().collect(),
     );
     let incompatible_parameter = Expr::SCall {
         name: "circle".into(),

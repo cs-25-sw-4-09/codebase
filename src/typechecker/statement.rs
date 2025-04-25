@@ -1,8 +1,8 @@
 use std::{collections::HashMap, error::Error, path::Path};
 
 use crate::{
-    program::{program::Program, r#type::Type, statement::Stmt},
-    typechecker::TypeCheckP,
+    program::{program::Program, statement::Stmt, r#type::Type},
+    typechecker::{environment::EType, TypeCheckP},
 };
 
 use super::{environment::TEnvironment, errors, TypeCheckE, TypeCheckS};
@@ -78,10 +78,10 @@ impl TypeCheckS for Stmt {
                 if let Some(set_value) = value {
                     let t1 = set_value.type_check(environment)?;
                     if declared_type.eq(&t1) {
-                        environment.vdtable_set(name.clone(), *declared_type);
+                        environment.vdtable_set_default(name.clone(), *declared_type);
                         Ok(())
                     } else if checks_empty_array(*declared_type, t1){
-                        environment.vtable_set(name.clone(), declared_type.clone());
+                        environment.vdtable_set_default(name.clone(), declared_type.clone());
                         return Ok(());
                     } else {
                         Err(errors::VariableExpressionTypeNotMatch(
@@ -92,7 +92,7 @@ impl TypeCheckS for Stmt {
                         .into())
                     }
                 } else {
-                    environment.vdtable_set(name.clone(), *declared_type);
+                    environment.vdtable_set_non_default(name.clone(), *declared_type);
                     Ok(())
                 }
             }
@@ -106,7 +106,7 @@ impl TypeCheckS for Stmt {
                 match subprogram.type_check() {
                     Ok(subprogram_environment) => {
                         println!("[Typechecker] Path: {} - OK", path);
-                        let parameters: HashMap<String, Type> =
+                        let parameters: HashMap<String, EType> =
                             subprogram_environment.vdtable_get_hashmap();
 
                         environment.stable_set(name.clone(), parameters);
