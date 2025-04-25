@@ -373,10 +373,9 @@ fn test_program_new_converts_ast_to_program_var_decl_array_not_empty() {
 }
 
 #[test]
-fn test_program_new_converts_ast_to_program_var_decl_member_access() {
+fn test_program_new_converts_ast_to_program_var_decl_member_access_color() {
     let code = "begin
-    x: int[] = [1];
-    y: int = x.size;
+    y:int = x.r;
     ";
     let program = program::Program::new(&code.to_string()).unwrap();
 
@@ -386,15 +385,76 @@ fn test_program_new_converts_ast_to_program_var_decl_member_access() {
         value,
     } = &program.stmts[0]
     {
-        assert_eq!(name, "x");
-        assert_eq!(declared_type, &Type::IntArray);
+        assert_eq!(name, "y");
+        assert_eq!(declared_type, &Type::Int);
         assert_eq!(
-            value,
-            &Expr::Array(vec![Expr::Integer(1)])
+            value, &Expr::Member { identifier: "x".to_string(), member_access: "r".to_string() }
         );
     }
 }
 
+#[test]
+fn test_program_new_converts_ast_to_program_var_decl_member_access_shape() {
+    let code = "begin
+    y:shape = x.width;
+    ";
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "y");
+        assert_eq!(declared_type, &Type::Shape);
+        assert_eq!(
+            value, &Expr::Member { identifier: "x".to_string(), member_access: "width".to_string() }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_var_decl_member_access_point() {
+    let code = "begin
+    y:float = x.x;
+    ";
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "y");
+        assert_eq!(declared_type, &Type::Float);
+        assert_eq!(
+            value, &Expr::Member { identifier: "x".to_string(), member_access: "x".to_string() }
+        );
+    }
+}
+
+#[test]
+fn test_program_new_converts_ast_to_program_var_decl_member_access_array() {
+    let code = "begin
+    y:int = x.size;
+    ";
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "y");
+        assert_eq!(declared_type, &Type::Int);
+        assert_eq!(
+            value, &Expr::Member { identifier: "x".to_string(), member_access: "size".to_string() }
+        );
+    }
+}
 
 //---------------------------------------------------
 //Tests for Declaration of types in Declaration Field
