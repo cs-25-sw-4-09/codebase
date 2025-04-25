@@ -246,3 +246,16 @@ impl fmt::Display for MemberAccessArray {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct ManipulationScaleTypeFault(pub Type, pub Type);
+impl Error for ManipulationScaleTypeFault {}
+impl fmt::Display for ManipulationScaleTypeFault {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Was unable to scale: \nExpected type Shape got {:?}\nExpected type Int or Float got {:?}", 
+            self.0, self.1
+        )
+    }
+}
+

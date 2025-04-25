@@ -1,5 +1,6 @@
+import circle "./circle.extension";
 
 begin
-x: int[] = [1,2];
+x: shape = circle(|r=5|);
 
-y:int = x.size;
+y:shape = rotate x by 5.2;

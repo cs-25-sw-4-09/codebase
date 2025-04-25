@@ -49,6 +49,20 @@ pub enum Expr {
         identifier: String,
         member_access: String,
     },
+    Place {
+        base_shape: Box<Expr>,
+        second_shape: Box<Expr>,
+        place_at: String,
+        point: Option<Box<Expr>>,
+    },
+    Scale {
+        base_shape: Box<Expr>,
+        factor: Box<Expr>,
+    },
+    Rotate {
+        base_shape: Box<Expr>,
+        factor: Box<Expr>,
+    },
 }
 
 impl Expr {
@@ -198,6 +212,7 @@ impl Expr {
                         errors::ASTNodeChildrenCountInvalid(2, expr.children_count()).into(),
                     );
                 }
+
                 Expr::Member {
                     identifier: expr
                         .child(0)
@@ -213,6 +228,34 @@ impl Expr {
                             errors::ASTNodeValueInvalid(expr.child(1).get_symbol().name.to_owned())
                         })?
                         .into(),
+                }
+            }
+            "manipulation" => {
+                if expr.children_count() != 1 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(1, expr.children_count()).into(),
+                    );
+                }
+                let to_match = expr.child(0).to_string();
+                match to_match.as_str() {
+                    "place" => todo!(),
+                    "rotate" => {
+                        let shape = Box::new(Expr::new(expr.child(0).child(0))?);
+                        let factor = Box::new(Expr::new(expr.child(0).child(1))?);
+                        Expr::Rotate {
+                            base_shape: shape,
+                            factor: factor,
+                        }
+                    }
+                    "scale" => {
+                        let shape = Box::new(Expr::new(expr.child(0).child(0))?);
+                        let factor = Box::new(Expr::new(expr.child(0).child(1))?);
+                        Expr::Scale {
+                            base_shape: shape,
+                            factor: factor,
+                        }
+                    }
+                    _ => todo!(),
                 }
             }
             _ => unreachable!(),
