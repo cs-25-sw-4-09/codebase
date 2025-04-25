@@ -185,3 +185,64 @@ impl fmt::Display for ArrayElementsTypeNotCompatible {
         )
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct NotAMemberType(pub Type);
+impl Error for NotAMemberType {}
+impl fmt::Display for NotAMemberType {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "It is not possible to make member access on the type {:?}",
+            self.0
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MemberAccessPoint();
+impl Error for MemberAccessPoint {}
+impl fmt::Display for MemberAccessPoint {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "You can use \"x\" or \"y\" as member access on a point")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MemberAccessShape();
+impl Error for MemberAccessShape {}
+impl fmt::Display for MemberAccessShape {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "You can use \"width\" or \"height\" as member access on a shape"
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MemberAccessColor();
+impl Error for MemberAccessColor {}
+impl fmt::Display for MemberAccessColor {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "You can use \"r\", \"g\", \"b\", or \"a\" as member access on a color"
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MemberAccessArray();
+impl Error for MemberAccessArray {}
+impl fmt::Display for MemberAccessArray {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "You can use \"size\" as member access on a array type"
+        )
+    }
+}
+

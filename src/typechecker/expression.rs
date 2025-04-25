@@ -1,4 +1,7 @@
-use std::error::{self, Error};
+use std::{
+    error::{self, Error},
+    process::id,
+};
 
 use crate::program::{
     expression::Expr,
@@ -43,9 +46,7 @@ impl TypeCheckE for Expr {
                     _ => Err(errors::ColorTypeNotCompatible(t1, t2, t3, t4).into()),
                 }
             }
-            Expr::Variable(identifier) => environment
-                .vtable_lookup(identifier)
-                .cloned(),
+            Expr::Variable(identifier) => environment.vtable_lookup(identifier).cloned(),
             Expr::PathOperation { lhs, rhs, operator } => {
                 let t1 = lhs.type_check(environment)?;
                 let t2 = rhs.type_check(environment)?;
@@ -77,7 +78,6 @@ impl TypeCheckE for Expr {
                     },
                 }
             }
-            
             Expr::Array(exprs) => {
                 //implements typing rule for empty arrays
                 if exprs.len() == 0 {
@@ -106,7 +106,7 @@ impl TypeCheckE for Expr {
                         _ => Err(errors::ArrayElementsTypeNotCompatible(t_for_array).into()),
                     }
                 }
-            },
+            }
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let t1 = lhs.type_check(environment)?;
                 let t2 = rhs.type_check(environment)?;
@@ -169,22 +169,23 @@ impl TypeCheckE for Expr {
                     Err(errors::FCallParametersIncompatible(name.to_owned()).into())
                 }
             }
-            
             Expr::SCall { name, args } => {
                 //Type checks the Shape call
                 let expected_types = environment.stable_lookup(name)?.clone();
-                
+
                 for (key, value) in args.iter() {
                     if !expected_types.contains_key(key) {
                         return Err(errors::SCallParameterNotFound(key.into(), name.into()).into());
                     }
 
                     let t1 = value.type_check(environment)?;
-                    
+
                     let shape_t = match *expected_types.get(key).unwrap() {
-                        super::environment::EType::Normal(x) | super::environment::EType::DeclNonDefault(x) | super::environment::EType::DeclDefault(x) => x,
+                        super::environment::EType::Normal(x)
+                        | super::environment::EType::DeclNonDefault(x)
+                        | super::environment::EType::DeclDefault(x) => x,
                     };
-                    
+
                     if t1 != shape_t {
                         return Err(errors::SCallParametersIncompatible(
                             name.to_owned(),
@@ -195,7 +196,7 @@ impl TypeCheckE for Expr {
                         .into());
                     }
                 }
-                // non default params are only checked on name, since type was chekced above. 
+                // non default params are only checked on name, since type was chekced above.
                 let non_def = environment.stable_get_hashmap_non_default(name)?;
                 non_def.iter().try_for_each(|(key, _)| {
                     if !args.contains_key(key) {
@@ -204,10 +205,40 @@ impl TypeCheckE for Expr {
                         Ok(())
                     }
                 })?;
-                
+
                 Ok(Type::Shape)
             }
-            
+            Expr::Member {
+                identifier,
+                member_access,
+            } => {
+                let t1 = environment.vtable_lookup(identifier)?.clone();
+                match t1 {
+                    Type::Color => match member_access.as_str() {
+                        "r" => Ok(Type::Int),
+                        "g" => Ok(Type::Int),
+                        "b" => Ok(Type::Int),
+                        "a" => Ok(Type::Int),
+                        _ => Err(errors::MemberAccessColor().into()),
+                    },
+                    Type::Shape => match member_access.as_str() {
+                        "width" => Ok(Type::Float),
+                        "height" => Ok(Type::Float),
+                        _ => Err(errors::MemberAccessShape().into()),
+                    },
+                    Type::Point => match member_access.as_str() {
+                        "x" => Ok(Type::Float),
+                        "y" => Ok(Type::Float),
+                        _ => Err(errors::MemberAccessPoint().into()),
+                    },
+                    Type::BoolArray | Type::FloatArray | Type::IntArray | Type::ColorArray 
+                    | Type::PathArray | Type::PointArray |Type::PolygonArray | Type::ShapeArray => match member_access.as_str() {
+                        "size" => Ok(Type::Int),
+                        _ =>  Err(errors::MemberAccessArray().into()),
+                    } 
+                    _ => Err(errors::NotAMemberType(t1).into()),
+                }
+            }
         }
     }
 }

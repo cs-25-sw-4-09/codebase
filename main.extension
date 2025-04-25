@@ -1,4 +1,5 @@
-import circle "./circle.extension";
 
 begin
-x:shape = circle(|r=5|);
+x: int[] = [1,2];
+
+y:int = x.size;

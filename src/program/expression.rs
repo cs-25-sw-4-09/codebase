@@ -5,8 +5,9 @@ use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 use super::{
     errors,
     operators::{
-    binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
-    unaryoperator::UnaryOperator},
+        binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
+        unaryoperator::UnaryOperator,
+    },
 };
 
 #[derive(Debug, PartialEq)]
@@ -43,6 +44,10 @@ pub enum Expr {
     SCall {
         name: String,
         args: HashMap<String, Expr>,
+    },
+    Member {
+        identifier: String,
+        member_access: String,
     },
 }
 
@@ -112,12 +117,11 @@ impl Expr {
                 Box::new(Expr::new(expr.child(0))?),
                 Box::new(Expr::new(expr.child(1))?),
             ),
-            "array" => Expr::Array(   
-                expr
-                    .children()
+            "array" => Expr::Array(
+                expr.children()
                     .iter()
                     .map(|arg| Expr::new(arg))
-                    .collect::<Result<Vec<_>, _>>()?
+                    .collect::<Result<Vec<_>, _>>()?,
             ),
             "color" => {
                 if expr.children_count() != 4 {
@@ -161,7 +165,13 @@ impl Expr {
                     );
                 }
                 Expr::SCall {
-                    name: expr.child(0).get_value().ok_or_else(|| errors::ASTNodeValueInvalid(expr.child(0).get_symbol().name.to_owned()))?.into(),
+                    name: expr
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(expr.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
                     args: expr
                         .child(1)
                         .children()
@@ -180,6 +190,29 @@ impl Expr {
                             Ok::<(String, Expr), Box<dyn Error>>((key, value))
                         })
                         .collect::<Result<HashMap<_, _>, _>>()?,
+                }
+            }
+            "member" => {
+                if expr.children_count() != 2 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(2, expr.children_count()).into(),
+                    );
+                }
+                Expr::Member {
+                    identifier: expr
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(expr.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    member_access: expr
+                        .child(1)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(expr.child(1).get_symbol().name.to_owned())
+                        })?
+                        .into(),
                 }
             }
             _ => unreachable!(),
