@@ -259,3 +259,16 @@ impl fmt::Display for ManipulationScaleTypeFault {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct ManipulationPlaceTypeFault(pub Type, pub Type);
+impl Error for ManipulationPlaceTypeFault {}
+impl fmt::Display for ManipulationPlaceTypeFault {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Was unable to Place shapes: Expected type {:?} got {:?}", 
+            self.0, self.1
+        )
+    }
+}
+

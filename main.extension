@@ -2,5 +2,8 @@ import circle "./circle.extension";
 
 begin
 x: shape = circle(|r=5|);
+y: shape = circle(|r=5|);
 
-y:shape = rotate x by 5.2;
+a: int = 2;
+
+z: shape = place x right y;

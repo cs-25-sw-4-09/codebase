@@ -1,16 +1,6 @@
+r: int;
 begin
-c1: polygon = (1,2)--(3,4)--*;
-
-c2: polygon = (1,2)--(3,4)~~*;
-
-c3: polygon = c1;
-c31: polygon = c2 -- c1;
-
-c4: path = (1,2)--(2,3)--(4,5);
-
-c5: polygon = c4--*;
-
-c6: polygon = c4--c2;
+x:int=3;
 
 
 
