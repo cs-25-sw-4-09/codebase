@@ -465,3 +465,23 @@ fn scall_parameters_incompatible() {
         .downcast_ref::<errors::SCallParametersIncompatible>()
         .is_some());
 }
+
+#[test]
+fn scall_parameters_incompatible_identifier() {
+    let mut env = TEnvironment::new();
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))].into_iter().collect(),
+    );
+    let incompatible_parameter = Expr::SCall {
+        name: "circle".into(),
+        args: [("r".into(), Expr::Float(1.2))]
+            .into_iter()
+            .collect(),
+    }
+    .type_check(&mut env);
+    assert!(incompatible_parameter
+        .unwrap_err()
+        .downcast_ref::<errors::SCallParameterNotFound>()
+        .is_some());
+}
