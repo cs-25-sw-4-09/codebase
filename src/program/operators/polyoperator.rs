@@ -2,7 +2,7 @@ use std::error::Error;
 
 use hime_redist::symbols::Symbol;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum PolyOperator {
     Polygon,
 }

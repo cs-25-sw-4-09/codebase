@@ -219,8 +219,8 @@ impl TypeCheckE for Expr {
                         Ok(Type::Shape)
                     }
                     None => {
-                        let args2 = *args.clone();
-                        let t1 = path_poly.unwrap().type_check(environment)?;
+                        let args2 = args.clone();
+                        let t1 = path_poly.as_ref().unwrap().type_check(environment)?;
                         match t1 {
                             Type::Path => {
                                 let scall = Expr::SCall { name: Some("Path".to_string()), args: args2, path_poly: None };

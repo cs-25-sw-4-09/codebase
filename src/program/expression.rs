@@ -1,4 +1,4 @@
-use std::{collections::HashMap, error::Error, option};
+use std::{collections::HashMap, error::Error};
 
 use hime_redist::{ast::AstNode, symbols::SemanticElementTrait};
 
@@ -10,7 +10,7 @@ use super::{
     },
 };
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Expr {
     Integer(i64),
     Variable(String),
