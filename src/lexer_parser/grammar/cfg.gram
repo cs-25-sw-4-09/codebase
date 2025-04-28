@@ -36,7 +36,7 @@ grammar cfg
     //Declarations
     declS -> (import | decl)*;
     import -> 'import'! id STRING ';'!;
-    decl -> id ':'! types ('='! expr)?';'!;
+    decl -> id ':'! types ('='! exprS)?';'!;
 
     //Statements
     stmtS -> (forkS | for | draw | return | funcDecl | assign | varDecl)+;
