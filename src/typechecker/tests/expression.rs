@@ -729,7 +729,7 @@ fn rotate_invalid() {
 }
 
 #[test]
-fn place() {
+fn place_with_point() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".to_string(), Type::Shape);
     env.vtable_set("y".to_string(), Type::Shape);
@@ -738,6 +738,23 @@ fn place() {
         base_shape: Expr::Variable("x".into()).into(),
         second_shape: Expr::Variable("y".into()).into(),
         point: Some(Expr::Variable("p".into()).into()),
+        place_at: "right".to_string(),
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::Shape)
+}
+
+#[test]
+fn place_without_point() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".to_string(), Type::Shape);
+    env.vtable_set("y".to_string(), Type::Shape);
+    env.vtable_set("p".to_string(), Type::Point);
+    let t1 = Expr::Place {
+        base_shape: Expr::Variable("x".into()).into(),
+        second_shape: Expr::Variable("y".into()).into(),
+        point: None,
         place_at: "right".to_string(),
     }
     .type_check(&mut env)
