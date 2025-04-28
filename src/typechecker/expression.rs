@@ -219,18 +219,17 @@ impl TypeCheckE for Expr {
                         Ok(Type::Shape)
                     }
                     None => {
-                        let args2 = args.clone();
-                        let t1 = path_poly.as_ref().unwrap().type_check(environment)?;
+                        let t1 = path_poly.as_ref().ok_or_else(|| errors::PolyPathNotFound())?.type_check(environment)?;
                         match t1 {
                             Type::Path => {
-                                let scall = Expr::SCall { name: Some("Path".to_string()), args: args2, path_poly: None };
+                                let scall = Expr::SCall { name: Some("Path".to_string()), args: args.clone(), path_poly: None };
                                 scall.type_check(environment)
                             }
                             Type::Polygon =>{
-                                let scall = Expr::SCall { name: Some("Path".to_string()), args: args2, path_poly: None };
+                                let scall = Expr::SCall { name: Some("Path".to_string()), args: args.clone(), path_poly: None };
                                 scall.type_check(environment)
                             }
-                            _ => { todo!("ERROR skal komme med en fejlbesked")}
+                            _ => Err(errors::PolyPathNotFound().into())
                         }
                         
                     }

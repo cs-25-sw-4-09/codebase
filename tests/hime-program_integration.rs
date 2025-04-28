@@ -179,11 +179,12 @@ fn test_program_new_converts_ast_to_program_var_decl_scall_with_params() {
         assert_eq!(
             value,
             &Expr::SCall {
-                name: "dummy".into(),
+                name: Some("dummy".into()),
                 args: HashMap::from([
                     ("x".to_string(), Expr::Integer(1)),
                     ("b".to_string(), Expr::Boolean(true))
-                ])
+                ]),
+                path_poly: None
             }
         );
     }
@@ -207,8 +208,9 @@ fn test_program_new_converts_ast_to_program_var_decl_scall_without_params() {
         assert_eq!(
             value,
             &Expr::SCall {
-                name: "dummy".into(),
-                args: HashMap::from([])
+                name: Some("dummy".into()),
+                args: HashMap::from([]),
+                path_poly: None
             }
         );
     }
@@ -518,7 +520,10 @@ fn test_program_new_converts_ast_to_program_rotate() {
         assert_eq!(declared_type, &Type::Shape);
         assert_eq!(
             value,
-            &Expr::Rotate { base_shape: Expr::Variable("x".to_string()).into(), factor: Expr::Integer(5).into() }
+            &Expr::Rotate {
+                base_shape: Expr::Variable("x".to_string()).into(),
+                factor: Expr::Integer(5).into()
+            }
         );
     }
 }
@@ -540,7 +545,10 @@ fn test_program_new_converts_ast_to_program_scale() {
         assert_eq!(declared_type, &Type::Shape);
         assert_eq!(
             value,
-            &Expr::Scale { base_shape: Expr::Variable("x".to_string()).into(), factor: Expr::Integer(5).into() }
+            &Expr::Scale {
+                base_shape: Expr::Variable("x".to_string()).into(),
+                factor: Expr::Integer(5).into()
+            }
         );
     }
 }

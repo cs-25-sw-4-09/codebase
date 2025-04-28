@@ -409,8 +409,9 @@ fn scall() {
             .collect(),
     );
     let t1 = Expr::SCall {
-        name: "circle".into(),
+        name: Some("circle".into()),
         args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
+        path_poly: None,
     }
     .type_check(&mut env)
     .unwrap();
@@ -421,8 +422,9 @@ fn scall() {
 fn scall_invalid_identifier() {
     let mut env = TEnvironment::new();
     let invalid_identifier = Expr::SCall {
-        name: "circle".into(),
+        name: Some("circle".into()),
         args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
+        path_poly: None,
     }
     .type_check(&mut env);
     assert!(invalid_identifier
@@ -441,10 +443,11 @@ fn scall_parameters_notfound() {
             .collect(),
     );
     let invalid_parameter = Expr::SCall {
-        name: "circle".into(),
+        name: Some("circle".into()),
         args: [("circumference".into(), Expr::Float(5.0))]
             .into_iter()
             .collect(),
+        path_poly: None,
     }
     .type_check(&mut env);
     assert!(invalid_parameter
@@ -463,10 +466,11 @@ fn scall_parameters_incompatible() {
             .collect(),
     );
     let incompatible_parameter = Expr::SCall {
-        name: "circle".into(),
+        name: Some("circle".into()),
         args: [("radius".into(), Expr::Boolean(true))]
             .into_iter()
             .collect(),
+        path_poly: None,
     }
     .type_check(&mut env);
     assert!(incompatible_parameter
@@ -485,8 +489,9 @@ fn scall_parameters_incompatible_identifier() {
             .collect(),
     );
     let incompatible_parameter = Expr::SCall {
-        name: "circle".into(),
+        name: Some("circle".into()),
         args: [].into_iter().collect(),
+        path_poly: None,
     }
     .type_check(&mut env);
     assert!(incompatible_parameter

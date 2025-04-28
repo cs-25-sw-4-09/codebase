@@ -1,8 +1,7 @@
 //import circle "./circle.extension";
-p: shape = (1,2)--(3,4)--(5,6)(|fill=(1,2,3,4)|);
+p: shape = (1,2)--(3,4)--(5,6)--*(|fill=(1,2,3,4)|);
 
 begin
 a: int = 2;
 
-p2: shape = circle(|fill=(1,2,3,4), h=5|);
 

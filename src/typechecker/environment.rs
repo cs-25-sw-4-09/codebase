@@ -14,14 +14,29 @@ pub struct TEnvironment {
 
 impl TEnvironment {
     pub fn new() -> Self {
-        TEnvironment {
+
+        let mut env = TEnvironment {
             v_table: HashMap::new(),
             f_table: HashMap::new(),
             s_table: HashMap::new(),
             r_type: Type::Int,
-        }
+        };
+
+        env.stable_init();
+
+        env
     }
 
+    pub fn stable_init(&mut self){
+        let mut path_param = HashMap::new();
+        path_param.insert("fill".to_string(), EType::DeclNonDefault(Type::Color));
+        self.stable_set("Path".to_string(), path_param);
+
+        let mut poly_param = HashMap::new();
+        poly_param.insert("fill".to_string(), EType::DeclNonDefault(Type::Color));
+        self.stable_set("Polygon".to_string(), poly_param);
+    }
+    
     pub fn vtable_lookup(&self, identifier: &String) -> Result<&Type, Box<dyn Error>> {
         if let Some(etype) = self.v_table.get(identifier) {
             match etype {
