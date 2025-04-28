@@ -1,4 +1,6 @@
 begin
+
+s: int = 2;
 func(x: int): int -> {
-    return 1;
+    y: int = x + s;
 }
