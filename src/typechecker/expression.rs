@@ -169,44 +169,72 @@ impl TypeCheckE for Expr {
                     Err(errors::FCallParametersIncompatible(name.to_owned()).into())
                 }
             }
-            Expr::SCall { name, args } => {
-                //Type checks the Shape call
-                let expected_types = environment.stable_lookup(name)?.clone();
+            Expr::SCall {
+                name,
+                args,
+                path_poly,
+            } => {
+                match name {
+                    Some(name) => {
+                        //Type checks the Shape call
+                        let expected_types = environment.stable_lookup(name)?.clone();
 
-                for (key, value) in args.iter() {
-                    if !expected_types.contains_key(key) {
-                        return Err(errors::SCallParameterNotFound(key.into(), name.into()).into());
+                        for (key, value) in args.iter() {
+                            if !expected_types.contains_key(key) {
+                                return Err(errors::SCallParameterNotFound(
+                                    key.into(),
+                                    name.into(),
+                                )
+                                .into());
+                            }
+
+                            let t1 = value.type_check(environment)?;
+
+                            let shape_t = match *expected_types.get(key).unwrap() {
+                                super::environment::EType::Normal(x)
+                                | super::environment::EType::DeclNonDefault(x)
+                                | super::environment::EType::DeclDefault(x) => x,
+                            };
+
+                            if t1 != shape_t {
+                                return Err(errors::SCallParametersIncompatible(
+                                    name.to_owned(),
+                                    key.clone(),
+                                    shape_t,
+                                    t1,
+                                )
+                                .into());
+                            }
+                        }
+                        // non default params are only checked on name, since type was chekced above.
+                        let non_def = environment.stable_get_hashmap_non_default(name)?;
+                        non_def.iter().try_for_each(|(key, _)| {
+                            if !args.contains_key(key) {
+                                Err(errors::SCallParameterNotFound(key.into(), name.into()))
+                            } else {
+                                Ok(())
+                            }
+                        })?;
+
+                        Ok(Type::Shape)
                     }
-
-                    let t1 = value.type_check(environment)?;
-
-                    let shape_t = match *expected_types.get(key).unwrap() {
-                        super::environment::EType::Normal(x)
-                        | super::environment::EType::DeclNonDefault(x)
-                        | super::environment::EType::DeclDefault(x) => x,
-                    };
-
-                    if t1 != shape_t {
-                        return Err(errors::SCallParametersIncompatible(
-                            name.to_owned(),
-                            key.clone(),
-                            shape_t,
-                            t1,
-                        )
-                        .into());
+                    None => {
+                        let args2 = *args.clone();
+                        let t1 = path_poly.unwrap().type_check(environment)?;
+                        match t1 {
+                            Type::Path => {
+                                let scall = Expr::SCall { name: Some("Path".to_string()), args: args2, path_poly: None };
+                                scall.type_check(environment)
+                            }
+                            Type::Polygon =>{
+                                let scall = Expr::SCall { name: Some("Path".to_string()), args: args2, path_poly: None };
+                                scall.type_check(environment)
+                            }
+                            _ => { todo!("ERROR skal komme med en fejlbesked")}
+                        }
+                        
                     }
                 }
-                // non default params are only checked on name, since type was chekced above.
-                let non_def = environment.stable_get_hashmap_non_default(name)?;
-                non_def.iter().try_for_each(|(key, _)| {
-                    if !args.contains_key(key) {
-                        Err(errors::SCallParameterNotFound(key.into(), name.into()))
-                    } else {
-                        Ok(())
-                    }
-                })?;
-
-                Ok(Type::Shape)
             }
             Expr::Member {
                 identifier,

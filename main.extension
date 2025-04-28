@@ -1,11 +1,8 @@
 //import circle "./circle.extension";
-p: point = (1,2);
-c:color = (1,2,3,4);
+p: shape = (1,2)--(3,4)--(5,6)(|fill=(1,2,3,4)|);
 
 begin
-//x: shape = circle(|r=5|);
-//y: shape = circle(|r=5|);
-
 a: int = 2;
 
-//z: shape = place x right y;
+p2: shape = circle(|fill=(1,2,3,4), h=5|);
+

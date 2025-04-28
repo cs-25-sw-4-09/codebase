@@ -475,7 +475,7 @@ fn test_program_new_converts_ast_to_program_member_access_array() {
 #[test]
 fn test_program_new_converts_ast_to_program_place() {
     let code = "begin
-    z:shape = place x ontop y on (1,2);
+    z:shape = place x ontop y by (1,2);
     ";
     let program = program::Program::new(&code.to_string()).unwrap();
 

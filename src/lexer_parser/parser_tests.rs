@@ -411,7 +411,7 @@ fn manipulation_place(){
     let program =
     "begin
     x = place rec left x;
-    x = place rec right 5 on (10, 10);
+    x = place rec right 5 by (10, 10);
     ";
     let manipulation_depth = 2;
     let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
