@@ -191,6 +191,89 @@ fn test_program_new_converts_ast_to_program_var_decl_scall_with_params() {
 }
 
 #[test]
+fn test_program_new_converts_ast_to_program_scall_path_with_params() {
+    let code = "begin
+    myShape: shape = (1,2)--(2,3)(|fill = (1,1,1,1)|);";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "myShape");
+        assert_eq!(declared_type, &Type::Shape);
+        assert_eq!(
+            value,
+            &Expr::SCall {
+                name: None,
+                args: HashMap::from([(
+                    "fill".to_string(),
+                    Expr::Color(
+                        Expr::Integer(1).into(),
+                        Expr::Integer(1).into(),
+                        Expr::Integer(1).into(),
+                        Expr::Integer(1).into()
+                    )
+                ),]),
+                path_poly: Some(
+                    Expr::PathOperation {
+                        lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                        rhs: Expr::Point(Expr::Integer(2).into(), Expr::Integer(3).into()).into(),
+                        operator: PathOperator::Line
+                    }
+                    .into()
+                )
+            }
+        );
+    }
+}
+#[test]
+fn test_program_new_converts_ast_to_program_scall_polygon_with_params() {
+    let code = "begin
+    myShape: shape = (1,2)--*(|fill = (1,1,1,1)|);";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "myShape");
+        assert_eq!(declared_type, &Type::Shape);
+        assert_eq!(
+            value,
+            &Expr::SCall {
+                name: None,
+                args: HashMap::from([(
+                    "fill".to_string(),
+                    Expr::Color(
+                        Expr::Integer(1).into(),
+                        Expr::Integer(1).into(),
+                        Expr::Integer(1).into(),
+                        Expr::Integer(1).into()
+                    )
+                ),]),
+                path_poly: Some(
+                    Expr::PolygonOperation {
+                        path: Box::new(Expr::Point(
+                            Box::new(Expr::Integer(1)),
+                            Box::new(Expr::Integer(2))
+                        )),
+                        operator: PolyOperator::Polygon
+                    }
+                    .into()
+                )
+            }
+        );
+    }
+}
+
+#[test]
 fn test_program_new_converts_ast_to_program_var_decl_scall_without_params() {
     let code = "begin
     myShape: shape = dummy(||);";

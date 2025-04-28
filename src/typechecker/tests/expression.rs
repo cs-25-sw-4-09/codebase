@@ -419,6 +419,57 @@ fn scall() {
 }
 
 #[test]
+fn scall_default_path() {
+    let mut env = TEnvironment::new();
+
+    let t1 = Expr::SCall {
+        name: None,
+        args: [("fill".into(), Expr::Color(
+            Expr::Integer(1).into(),
+            Expr::Integer(1).into(),
+            Expr::Integer(1).into(),
+            Expr::Integer(1).into()
+        ))].into_iter().collect(),
+        path_poly: Some(Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(2).into(), Expr::Integer(3).into()).into(),
+            operator: PathOperator::Line
+        }.into()),
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::Shape);
+}
+
+#[test]
+fn scall_default_polygon() {
+    let mut env = TEnvironment::new();
+
+    let t1 = Expr::SCall {
+        name: None,
+        args: [("fill".into(), Expr::Color(
+            Expr::Integer(1).into(),
+            Expr::Integer(1).into(),
+            Expr::Integer(1).into(),
+            Expr::Integer(1).into()
+        ))].into_iter().collect(),
+        path_poly : Some(
+            Expr::PolygonOperation {
+                path: Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(2).into(), Expr::Integer(3).into()).into(),
+                    operator: PathOperator::Line
+                }.into(),
+                operator: PolyOperator::Polygon
+            }.into()
+        )
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::Shape);
+}
+
+#[test]
 fn scall_invalid_identifier() {
     let mut env = TEnvironment::new();
     let invalid_identifier = Expr::SCall {
