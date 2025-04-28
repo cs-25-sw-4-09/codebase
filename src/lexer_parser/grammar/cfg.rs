@@ -270,7 +270,7 @@ pub const TERMINALS: &[Symbol] = &[
     },
     Symbol {
         id: 0x0076,
-        name: "on"
+        name: "by"
     },
     Symbol {
         id: 0x0077,
@@ -282,74 +282,70 @@ pub const TERMINALS: &[Symbol] = &[
     },
     Symbol {
         id: 0x0079,
-        name: "by"
-    },
-    Symbol {
-        id: 0x007A,
         name: "rotate"
     },
     Symbol {
-        id: 0x007C,
+        id: 0x007B,
         name: "int"
     },
     Symbol {
-        id: 0x007D,
+        id: 0x007C,
         name: "float"
     },
     Symbol {
-        id: 0x007E,
+        id: 0x007D,
         name: "point"
     },
     Symbol {
-        id: 0x007F,
+        id: 0x007E,
         name: "color"
     },
     Symbol {
-        id: 0x0080,
+        id: 0x007F,
         name: "shape"
     },
     Symbol {
-        id: 0x0081,
+        id: 0x0080,
         name: "path"
     },
     Symbol {
-        id: 0x0082,
+        id: 0x0081,
         name: "polygon"
     },
     Symbol {
-        id: 0x0083,
+        id: 0x0082,
         name: "bool"
     },
     Symbol {
-        id: 0x0084,
+        id: 0x0083,
         name: "int[]"
     },
     Symbol {
-        id: 0x0085,
+        id: 0x0084,
         name: "float[]"
     },
     Symbol {
-        id: 0x0086,
+        id: 0x0085,
         name: "point[]"
     },
     Symbol {
-        id: 0x0087,
+        id: 0x0086,
         name: "color[]"
     },
     Symbol {
-        id: 0x0088,
+        id: 0x0087,
         name: "shape[]"
     },
     Symbol {
-        id: 0x0089,
+        id: 0x0088,
         name: "path[]"
     },
     Symbol {
-        id: 0x008A,
+        id: 0x0089,
         name: "polygon[]"
     },
     Symbol {
-        id: 0x008B,
+        id: 0x008A,
         name: "bool[]"
     }
 ];
@@ -687,11 +683,11 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V111"
     },
     Symbol {
-        id: 0x007B,
-        name: "__V123"
+        id: 0x007A,
+        name: "__V122"
     },
     Symbol {
-        id: 0x008C,
+        id: 0x008B,
         name: "__VAxiom"
     }
 ];

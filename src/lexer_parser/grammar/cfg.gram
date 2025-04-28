@@ -84,7 +84,7 @@ grammar cfg
     arrayIdx -> id ('['! exprS ']'!)+;
     array -> ('['! ((exprS (','! exprS)*))? ']'! | '[]'!);
 
-    pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop') expr ('on'! point)?; //expr ('at'! point)?;
+    pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop') expr ('by'! point)?;
     manipulation -> place | scale | rotate;
     place -> 'place'! exprFunc pos;
     scale -> 'scale'! exprFunc 'by'! exprFunc;
