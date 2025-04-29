@@ -587,6 +587,33 @@ fn test_program_new_converts_ast_to_program_place() {
 }
 
 #[test]
+fn test_program_new_converts_ast_to_program_place_without_point() {
+    let code = "begin
+    z:shape = place x ontop y;
+    ";
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "z");
+        assert_eq!(declared_type, &Type::Shape);
+        assert_eq!(
+            value,
+            &Expr::Place {
+                base_shape: Expr::Variable("x".to_string()).into(),
+                second_shape: Expr::Variable("y".to_string()).into(),
+                place_at: "ontop".to_string(),
+                point: None
+            }
+        );
+    }
+}
+
+#[test]
 fn test_program_new_converts_ast_to_program_rotate() {
     let code = "begin
     z:shape = rotate x by 5;

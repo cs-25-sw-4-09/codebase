@@ -1,2 +1,4 @@
 begin
-    myShape: shape = (1,2)--(2,3)--*(|fill = (1,1,1,1)|);
+    p1: shape= (1,2)--(2,3)--*(|fill=(1,2,3,4)|);
+
+    myShape: shape = place p1 right p1;
