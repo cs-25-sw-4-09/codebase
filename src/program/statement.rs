@@ -30,6 +30,10 @@ pub enum Stmt {
         name: String,
         path: String,
     },
+    Draw {
+        shape: Expr,
+        point: Option<Expr>,
+    }
 }
 
 impl Stmt {
@@ -166,6 +170,21 @@ impl Stmt {
                             errors::ASTNodeValueInvalid(stmt.child(1).get_symbol().name.to_owned())
                         })?
                         .replace('"', ""),
+                }
+            },
+            "draw" => {
+                //println!("{}",stmt.child(0));
+                if stmt.children_count() == 1 {
+                    Stmt::Draw { shape: Expr::new(stmt.child(0))?
+                    , point: None }
+
+                } else if stmt.children_count() == 2{
+                    Stmt::Draw { shape: Expr::new(stmt.child(0))?
+                        , point: Some(Expr::new(stmt.child(1))?) }
+                } else{
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(0, stmt.children_count()).into(),
+                    );
                 }
             }
             _ => unreachable!(),

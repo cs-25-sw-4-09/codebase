@@ -1661,3 +1661,45 @@ fn test_program_new_converts_ast_to_program_function_decl_with_return_type() {
         );
     }
 }
+
+
+//-----------------------------------
+//Tests of draw in construction field
+//-----------------------------------
+#[test]
+fn test_program_draw_without_point() {
+    let code = "begin
+    draw x;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::Draw {
+        shape,
+        point,
+    } = &program.stmts[0]
+    {
+        assert_eq!(shape, &Expr::Variable("x".to_string()));
+        assert_eq!(point, &None);
+    }
+}
+
+#[test]
+fn test_program_draw_with_point() {
+    let code = "begin
+    draw x at (0,0);";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::Draw {
+        shape,
+        point,
+    } = &program.stmts[0]
+    {
+        assert_eq!(shape, &Expr::Variable("x".to_string()));
+        assert_eq!(point, &Some(Expr::Point(Expr::Integer(0).into(), Expr::Integer(0).into()).into()));
+    }
+}

@@ -1,6 +1,6 @@
 use crate::{
-    program::{expression::Expr, r#type::Type, statement::Stmt},
-    typechecker::{environment::TEnvironment, errors, TypeCheckS},
+    program::{expression::Expr, statement::Stmt, r#type::Type},
+    typechecker::{environment::{EType, TEnvironment}, errors, TypeCheckS},
 };
 
 #[test]
@@ -43,6 +43,80 @@ fn vardecl_expression_types_mismatch() {
     assert!(type_mismatch
         .unwrap_err()
         .downcast_ref::<errors::VariableExpressionTypeNotMatch>()
+        .is_some());
+}
+
+#[test]
+fn draw_with_point() {
+    let mut env = TEnvironment::new();
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
+    );
+    let t1 = Stmt::Draw { shape:  Expr::SCall {
+        name: Some("circle".into()),
+        args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
+        path_poly: None,
+    },
+         point: Some(Expr::Point(Expr::Integer(1).into(), Expr::Integer(1).into()).into()) }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn draw_without_point() {
+    let mut env = TEnvironment::new();
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
+    );
+    let t1 = Stmt::Draw { shape:  Expr::SCall {
+        name: Some("circle".into()),
+        args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
+        path_poly: None,
+    },
+         point: None }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn draw_with_point_shape_error() {
+    let mut env = TEnvironment::new();
+    let type_mismatch = Stmt::Draw { shape:  Expr::Integer(1),
+         point: Some(Expr::Point(Expr::Integer(1).into(), Expr::Integer(1).into()).into()) }
+    .type_check(&mut env);
+    
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::DrawTypeFault>()
+        .is_some());
+}
+
+#[test]
+fn draw_with_point_point_error() {
+    let mut env = TEnvironment::new();
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
+    );
+    let type_mismatch = Stmt::Draw { shape:   Expr::SCall {
+        name: Some("circle".into()),
+        args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
+        path_poly: None,
+    },
+         point: Some(Expr::Integer(1)) }
+    .type_check(&mut env);
+    
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::DrawTypeFault>()
         .is_some());
 }
 
@@ -195,3 +269,4 @@ fn import_typeerror() {
         .downcast_ref::<errors::VariableExpressionTypeNotMatch>()
         .is_some());
 }
+

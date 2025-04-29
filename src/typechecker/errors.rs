@@ -298,3 +298,16 @@ impl fmt::Display for PolyPathNotFound {
 }
 
 
+#[derive(Debug, Clone)]
+pub struct DrawTypeFault(pub Type, pub Type);
+impl Error for DrawTypeFault {}
+impl fmt::Display for DrawTypeFault {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Was unable to Draw: Expected type {:?} got {:?}", 
+            self.0, self.1
+        )
+    }
+}
+

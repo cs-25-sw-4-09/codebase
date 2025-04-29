@@ -1,7 +1,7 @@
 use std::{collections::HashMap, error::Error, path::Path};
 
 use crate::{
-    program::{program::Program, statement::Stmt, r#type::Type},
+    program::{program::Program, r#type::Type, statement::Stmt},
     typechecker::{environment::EType, TypeCheckP},
 };
 
@@ -22,7 +22,7 @@ impl TypeCheckS for Stmt {
                 if declared_type.eq(&t1) {
                     environment.vtable_set(name.clone(), *declared_type);
                     return Ok(());
-                } else if checks_empty_array(*declared_type, t1){
+                } else if checks_empty_array(*declared_type, t1) {
                     environment.vtable_set(name.clone(), *declared_type);
                     return Ok(());
                 }
@@ -61,9 +61,9 @@ impl TypeCheckS for Stmt {
                 let t1 = expr.type_check(environment)?;
                 if environment.return_lookup().eq(&t1) {
                     Ok(())
-                } else if checks_empty_array(environment.return_lookup(), t1){
+                } else if checks_empty_array(environment.return_lookup(), t1) {
                     return Ok(());
-                }else {
+                } else {
                     Err(errors::ReturnTypeNotMatch(t1, environment.return_lookup()).into())
                 }
             }
@@ -80,7 +80,7 @@ impl TypeCheckS for Stmt {
                     if declared_type.eq(&t1) {
                         environment.vdtable_set_default(name.clone(), *declared_type);
                         Ok(())
-                    } else if checks_empty_array(*declared_type, t1){
+                    } else if checks_empty_array(*declared_type, t1) {
                         environment.vdtable_set_default(name.clone(), declared_type.clone());
                         return Ok(());
                     } else {
@@ -118,6 +118,27 @@ impl TypeCheckS for Stmt {
                     }
                 }
             }
+            Stmt::Draw { shape, point } => match point {
+                Some(p) => {
+                    let t1 = shape.type_check(environment)?;
+                    let t2 = p.type_check(environment)?;
+                    if t1 == Type::Shape && t2 == Type::Point {
+                        Ok(())
+                    } else if t1 == Type::Shape {
+                        Err(errors::DrawTypeFault(Type::Point,t2).into())
+                    } else {
+                        Err(errors::DrawTypeFault(Type::Shape,t1).into())
+                    }
+                },
+                None => {
+                    let t1 = shape.type_check(environment)?;
+                    if t1 == Type::Shape {
+                        Ok(())
+                    } else {
+                        Err(errors::DrawTypeFault(Type::Shape,t1).into())
+                    }
+                },
+            },
         }
     }
 }
@@ -128,15 +149,14 @@ fn checks_empty_array(array: Type, empty: Type) -> bool {
     }
 
     match array {
-        Type::IntArray 
-        | Type::FloatArray 
-        | Type::BoolArray 
-        | Type::PathArray 
-        | Type::PointArray 
-        | Type::ShapeArray 
-        | Type::PolygonArray 
-        | Type::ColorArray =>
-        true,
-        _ => false
+        Type::IntArray
+        | Type::FloatArray
+        | Type::BoolArray
+        | Type::PathArray
+        | Type::PointArray
+        | Type::ShapeArray
+        | Type::PolygonArray
+        | Type::ColorArray => true,
+        _ => false,
     }
 }
