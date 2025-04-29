@@ -197,7 +197,7 @@ fn for_loop() {
     let program =
     "begin
     sum: int = 0;
-    for val in 1..=20 {
+    for val in 1 to 20 {
         sum = sum + val;
     }
     ";
@@ -205,8 +205,7 @@ fn for_loop() {
     let stmt1 = vec![("varDecl", 2), ("sum", 3), ("int", 3), ("0", 3)];
     let for_stmt_depth = 4;
 
-    let mut for_loop = vec![("for", 2), ("val", 3),
-    ("range", 3), ("1", 4), ("..=", 4), ("20", 4),
+    let mut for_loop = vec![("for", 2), ("val", 3), ("1", 3), ("20", 3),
    ("stmtS", 3)];
     let for_stmt = vec![("assign", for_stmt_depth), ("sum", for_stmt_depth + 1),
     ("+", for_stmt_depth+1), ("sum", for_stmt_depth+2), ("val", for_stmt_depth+2),

@@ -42,7 +42,7 @@ grammar cfg
     stmtS -> (forkS | for | draw | return | funcDecl | assign | varDecl)+;
 
     forkS -> 'fork'! '{'! fork^ '}'!;
-    for -> 'for'! id 'in'! exprS '{'! stmtS '}'! ;
+    for -> 'for'! id 'in'! exprS 'to'! exprS '{'! stmtS '}'! ;
     draw -> 'draw'! exprS ('at'! exprS)? ';'!;
     return -> 'return'! exprS ';'!;
     funcDecl -> id '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;

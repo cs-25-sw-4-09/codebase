@@ -46,7 +46,7 @@ begin
 
 star: shape = rectangle(|height=square_size, width=square_size, fill=star_color|);
 
-for i in 1..square_amount { 
+for i in 1 to square_amount { 
     cur_square: shape = rectangle(|height=square_size, width=square_size, fill=star_color|);
     cur_square = rotate cur_square by (90 / square_amount) * i;
     star = place cur_square ontop star;
@@ -67,7 +67,7 @@ spiral: shape = square(|size=1, border_color=border_color|);
 fib_1: int = 1;
 fib_2: int = 1;
 
-for i in 1..square_count {
+for i in 1 to square_count {
     next_fib: int = fib_1 + fib_2;
     fib_1 = fib_2;
     fib_2 = next_fib;

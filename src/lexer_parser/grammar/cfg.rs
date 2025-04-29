@@ -114,238 +114,242 @@ pub const TERMINALS: &[Symbol] = &[
     },
     Symbol {
         id: 0x0049,
-        name: "draw"
+        name: "to"
     },
     Symbol {
         id: 0x004A,
-        name: "at"
+        name: "draw"
     },
     Symbol {
         id: 0x004B,
-        name: "return"
+        name: "at"
     },
     Symbol {
         id: 0x004C,
-        name: "("
+        name: "return"
     },
     Symbol {
         id: 0x004D,
-        name: ")"
+        name: "("
     },
     Symbol {
         id: 0x004E,
+        name: ")"
+    },
+    Symbol {
+        id: 0x004F,
         name: "->"
     },
     Symbol {
-        id: 0x0050,
+        id: 0x0051,
         name: "otherwise"
     },
     Symbol {
-        id: 0x0051,
+        id: 0x0052,
         name: "||"
     },
     Symbol {
-        id: 0x0052,
+        id: 0x0053,
         name: "&&"
     },
     Symbol {
-        id: 0x0053,
+        id: 0x0054,
         name: "=="
     },
     Symbol {
-        id: 0x0054,
+        id: 0x0055,
         name: "<"
     },
     Symbol {
-        id: 0x0055,
+        id: 0x0056,
         name: ">"
     },
     Symbol {
-        id: 0x0056,
+        id: 0x0057,
         name: ">="
     },
     Symbol {
-        id: 0x0057,
+        id: 0x0058,
         name: "<="
     },
     Symbol {
-        id: 0x0058,
+        id: 0x0059,
         name: "!="
     },
     Symbol {
-        id: 0x0059,
+        id: 0x005A,
         name: "+"
     },
     Symbol {
-        id: 0x005A,
+        id: 0x005B,
         name: "-"
     },
     Symbol {
-        id: 0x005B,
+        id: 0x005C,
         name: "%"
     },
     Symbol {
-        id: 0x005C,
+        id: 0x005D,
         name: "*"
     },
     Symbol {
-        id: 0x005D,
+        id: 0x005E,
         name: "/"
     },
     Symbol {
-        id: 0x005E,
+        id: 0x005F,
         name: "!"
     },
     Symbol {
-        id: 0x005F,
+        id: 0x0060,
         name: ","
     },
     Symbol {
-        id: 0x0060,
+        id: 0x0061,
         name: "."
     },
     Symbol {
-        id: 0x0061,
+        id: 0x0062,
         name: ".."
     },
     Symbol {
-        id: 0x0062,
+        id: 0x0063,
         name: "..="
     },
     Symbol {
-        id: 0x0063,
+        id: 0x0064,
         name: "--"
     },
     Symbol {
-        id: 0x0064,
+        id: 0x0065,
         name: "~~"
     },
     Symbol {
-        id: 0x0066,
+        id: 0x0067,
         name: "--*"
     },
     Symbol {
-        id: 0x0067,
+        id: 0x0068,
         name: "~~*"
     },
     Symbol {
-        id: 0x0069,
+        id: 0x006A,
         name: "(|"
     },
     Symbol {
-        id: 0x006A,
+        id: 0x006B,
         name: "|)"
     },
     Symbol {
-        id: 0x006C,
+        id: 0x006D,
         name: "["
     },
     Symbol {
-        id: 0x006D,
+        id: 0x006E,
         name: "]"
     },
     Symbol {
-        id: 0x0070,
+        id: 0x0071,
         name: "[]"
     },
     Symbol {
-        id: 0x0071,
+        id: 0x0072,
         name: "left"
     },
     Symbol {
-        id: 0x0072,
+        id: 0x0073,
         name: "right"
     },
     Symbol {
-        id: 0x0073,
+        id: 0x0074,
         name: "top"
     },
     Symbol {
-        id: 0x0074,
+        id: 0x0075,
         name: "bottom"
     },
     Symbol {
-        id: 0x0075,
+        id: 0x0076,
         name: "ontop"
     },
     Symbol {
-        id: 0x0076,
+        id: 0x0077,
         name: "by"
     },
     Symbol {
-        id: 0x0077,
+        id: 0x0078,
         name: "place"
     },
     Symbol {
-        id: 0x0078,
+        id: 0x0079,
         name: "scale"
     },
     Symbol {
-        id: 0x0079,
+        id: 0x007A,
         name: "rotate"
     },
     Symbol {
-        id: 0x007B,
+        id: 0x007C,
         name: "int"
     },
     Symbol {
-        id: 0x007C,
+        id: 0x007D,
         name: "float"
     },
     Symbol {
-        id: 0x007D,
+        id: 0x007E,
         name: "point"
     },
     Symbol {
-        id: 0x007E,
+        id: 0x007F,
         name: "color"
     },
     Symbol {
-        id: 0x007F,
+        id: 0x0080,
         name: "shape"
     },
     Symbol {
-        id: 0x0080,
+        id: 0x0081,
         name: "path"
     },
     Symbol {
-        id: 0x0081,
+        id: 0x0082,
         name: "polygon"
     },
     Symbol {
-        id: 0x0082,
+        id: 0x0083,
         name: "bool"
     },
     Symbol {
-        id: 0x0083,
+        id: 0x0084,
         name: "int[]"
     },
     Symbol {
-        id: 0x0084,
+        id: 0x0085,
         name: "float[]"
     },
     Symbol {
-        id: 0x0085,
+        id: 0x0086,
         name: "point[]"
     },
     Symbol {
-        id: 0x0086,
+        id: 0x0087,
         name: "color[]"
     },
     Symbol {
-        id: 0x0087,
+        id: 0x0088,
         name: "shape[]"
     },
     Symbol {
-        id: 0x0088,
+        id: 0x0089,
         name: "path[]"
     },
     Symbol {
-        id: 0x0089,
+        id: 0x008A,
         name: "polygon[]"
     },
     Symbol {
-        id: 0x008A,
+        id: 0x008B,
         name: "bool[]"
     }
 ];
@@ -659,35 +663,35 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V67"
     },
     Symbol {
-        id: 0x004F,
-        name: "__V79"
+        id: 0x0050,
+        name: "__V80"
     },
     Symbol {
-        id: 0x0065,
-        name: "__V101"
+        id: 0x0066,
+        name: "__V102"
     },
     Symbol {
-        id: 0x0068,
-        name: "__V104"
+        id: 0x0069,
+        name: "__V105"
     },
     Symbol {
-        id: 0x006B,
-        name: "__V107"
-    },
-    Symbol {
-        id: 0x006E,
-        name: "__V110"
+        id: 0x006C,
+        name: "__V108"
     },
     Symbol {
         id: 0x006F,
         name: "__V111"
     },
     Symbol {
-        id: 0x007A,
-        name: "__V122"
+        id: 0x0070,
+        name: "__V112"
     },
     Symbol {
-        id: 0x008B,
+        id: 0x007B,
+        name: "__V123"
+    },
+    Symbol {
+        id: 0x008C,
         name: "__VAxiom"
     }
 ];
