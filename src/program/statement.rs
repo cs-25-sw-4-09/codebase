@@ -173,7 +173,6 @@ impl Stmt {
                 }
             },
             "draw" => {
-                //println!("{}",stmt.child(0));
                 if stmt.children_count() == 1 {
                     Stmt::Draw { shape: Expr::new(stmt.child(0))?
                     , point: None }
