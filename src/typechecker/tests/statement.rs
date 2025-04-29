@@ -62,6 +62,18 @@ fn assign() {
 }
 
 #[test]
+fn assign_empty() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::ShapeArray);
+    let t1 = Stmt::Assign {
+        name: "x".into(),
+        value: Expr::Array(vec![])
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
 fn assign_error() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".into(), Type::Float);
