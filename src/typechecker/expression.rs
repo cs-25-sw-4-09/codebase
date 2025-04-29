@@ -153,6 +153,15 @@ impl TypeCheckE for Expr {
                             Ok(Type::Bool)
                         }
                     }
+                    UnaryOperator::Negative => {
+                        if t1.eq(&Type::Int) {
+                            Ok(Type::Int)
+                        } else if t1.eq(&Type::Float) {
+                            Ok(Type::Float)
+                        } else {
+                            Err(errors::UnaryOperationTypeNotCompatible(t1).into())
+                        }
+                    }
                 }
             }
             Expr::FCall { name, args } => {
@@ -219,19 +228,29 @@ impl TypeCheckE for Expr {
                         Ok(Type::Shape)
                     }
                     None => {
-                        let t1 = path_poly.as_ref().ok_or_else(|| errors::PolyPathNotFound())?.type_check(environment)?;
+                        let t1 = path_poly
+                            .as_ref()
+                            .ok_or_else(|| errors::PolyPathNotFound())?
+                            .type_check(environment)?;
                         match t1 {
                             Type::Path => {
-                                let scall = Expr::SCall { name: Some("Path".to_string()), args: args.clone(), path_poly: None };
+                                let scall = Expr::SCall {
+                                    name: Some("Path".to_string()),
+                                    args: args.clone(),
+                                    path_poly: None,
+                                };
                                 scall.type_check(environment)
                             }
-                            Type::Polygon =>{
-                                let scall = Expr::SCall { name: Some("Path".to_string()), args: args.clone(), path_poly: None };
+                            Type::Polygon => {
+                                let scall = Expr::SCall {
+                                    name: Some("Path".to_string()),
+                                    args: args.clone(),
+                                    path_poly: None,
+                                };
                                 scall.type_check(environment)
                             }
-                            _ => Err(errors::PolyPathNotFound().into())
+                            _ => Err(errors::PolyPathNotFound().into()),
                         }
-                        
                     }
                 }
             }

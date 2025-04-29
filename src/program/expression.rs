@@ -74,31 +74,29 @@ impl Expr {
                     .ok_or_else(|| errors::ASTNodeValueInvalid(expr.get_symbol().name.to_owned()))?
                     .parse()?,
             ),
-            "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=" | "!=" | "==" | "&&" | "||" => {
-                if expr.children_count() != 2 {
+            // Need to make unary and binary together, as "-" is both of them
+            "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=" | "!=" | "==" | "&&" | "||" | "!" =>{
+                if expr.children_count() == 2 {
+                    let lhs = Box::new(Expr::new(expr.child(0))?);
+                    let rhs = Box::new(Expr::new(expr.child(1))?);
+                    let operator = BinaryOperator::new(expr.get_symbol())?;
+
+                    Expr::BinaryOperation { lhs, rhs, operator }
+                    
+                } else if expr.children_count() == 1 {
+                    let uexpr = Box::new(Expr::new(expr.child(0))?);
+                    let operator = UnaryOperator::new(expr.get_symbol())?;
+    
+                    Expr::UnaryOperation {
+                        operator,
+                        expr: uexpr,
+                    }
+                } else {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(2, expr.children_count()).into(),
                     );
                 }
-                let lhs = Box::new(Expr::new(expr.child(0))?);
-                let rhs = Box::new(Expr::new(expr.child(1))?);
-                let operator = BinaryOperator::new(expr.get_symbol())?;
-
-                Expr::BinaryOperation { lhs, rhs, operator }
-            }
-            "!" => {
-                if expr.children_count() != 1 {
-                    return Err(
-                        errors::ASTNodeChildrenCountInvalid(1, expr.children_count()).into(),
-                    );
-                }
-                let uexpr = Box::new(Expr::new(expr.child(0))?);
-                let operator = UnaryOperator::new(expr.get_symbol())?;
-
-                Expr::UnaryOperation {
-                    operator,
-                    expr: uexpr,
-                }
+                
             }
             "--" | "~~" => {
                 let lhs = Box::new(Expr::new(expr.child(0))?);
