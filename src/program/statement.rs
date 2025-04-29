@@ -33,7 +33,11 @@ pub enum Stmt {
     Draw {
         shape: Expr,
         point: Option<Expr>,
-    }
+    },
+    Assign {
+        name: String,
+        value: Expr,
+    },
 }
 
 impl Stmt {
@@ -58,7 +62,21 @@ impl Stmt {
                     })?)?,
                     value: Expr::new(stmt.child(2))?,
                 }
-            }
+            },
+            "assign" => {
+                if stmt.children_count() != 2 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
+                    );
+                }
+                Stmt::Assign { name: stmt
+                    .child(0)
+                    .get_value()
+                    .ok_or_else(|| {
+                        errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                    })?
+                    .into(), value: Expr::new(stmt.child(1))? }
+            },
             "funcDecl" => {
                 if stmt.children_count() != 4 {
                     return Err(

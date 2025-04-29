@@ -311,3 +311,17 @@ impl fmt::Display for DrawTypeFault {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct AssignTypesNoMatch(pub Type, pub Type);
+impl Error for AssignTypesNoMatch {}
+impl fmt::Display for AssignTypesNoMatch {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Was unable to assign Expected type {:?} got {:?}", 
+            self.0, self.1
+        )
+    }
+}
+
+

@@ -1,7 +1,7 @@
 use std::{collections::HashMap, error::Error, path::Path};
 
 use crate::{
-    program::{program::Program, r#type::Type, statement::Stmt},
+    program::{expression::Expr, program::Program, statement::Stmt, r#type::Type},
     typechecker::{environment::EType, TypeCheckP},
 };
 
@@ -31,6 +31,18 @@ impl TypeCheckS for Stmt {
                         .into(),
                 )
             }
+            Stmt::Assign { name, value } => {
+                let t1 = Expr::Variable(name.into()).type_check(environment)?;
+                let t2 = value.type_check(environment)?;
+                
+                if t1 == t2 {
+                    Ok(())
+                } else if checks_empty_array(t1, t2) {
+                    Ok(())
+                } else {
+                    Err(errors::AssignTypesNoMatch(t1,t2).into())                    
+                }
+            },
             Stmt::FuncDecl {
                 name,
                 return_type,
@@ -125,19 +137,19 @@ impl TypeCheckS for Stmt {
                     if t1 == Type::Shape && t2 == Type::Point {
                         Ok(())
                     } else if t1 == Type::Shape {
-                        Err(errors::DrawTypeFault(Type::Point,t2).into())
+                        Err(errors::DrawTypeFault(Type::Point, t2).into())
                     } else {
-                        Err(errors::DrawTypeFault(Type::Shape,t1).into())
+                        Err(errors::DrawTypeFault(Type::Shape, t1).into())
                     }
-                },
+                }
                 None => {
                     let t1 = shape.type_check(environment)?;
                     if t1 == Type::Shape {
                         Ok(())
                     } else {
-                        Err(errors::DrawTypeFault(Type::Shape,t1).into())
+                        Err(errors::DrawTypeFault(Type::Shape, t1).into())
                     }
-                },
+                }
             },
         }
     }

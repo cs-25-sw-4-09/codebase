@@ -1703,3 +1703,25 @@ fn test_program_draw_with_point() {
         assert_eq!(point, &Some(Expr::Point(Expr::Integer(0).into(), Expr::Integer(0).into()).into()));
     }
 }
+
+//-----------------------------------
+//Tests of assign in construction field
+//-----------------------------------
+#[test]
+fn test_program_assign() {
+    let code = "begin
+    x = 10;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::Assign {
+        name,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, &"x".to_string());
+        assert_eq!(value, &Expr::Integer(10));
+    }
+}

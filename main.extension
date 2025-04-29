@@ -1,6 +1,2 @@
 begin
-s: shape = (1,2)--(3,4)(|fill=(1,2,3,4)|);
-p: int =4;
-draw s;
-
-draw s at p;
+x = 10;

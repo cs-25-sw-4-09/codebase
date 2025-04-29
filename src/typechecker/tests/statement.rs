@@ -50,6 +50,33 @@ fn vardecl_expression_types_mismatch() {
 }
 
 #[test]
+fn assign() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::Int);
+    let t1 = Stmt::Assign {
+        name: "x".into(),
+        value: Expr::Integer(1),
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn assign_error() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::Float);
+    let t1 = Stmt::Assign {
+        name: "x".into(),
+        value: Expr::Integer(1),
+    }
+    .type_check(&mut env);
+    assert!(t1
+        .unwrap_err()
+        .downcast_ref::<errors::AssignTypesNoMatch>()
+        .is_some());
+}
+
+#[test]
 fn draw_with_point() {
     let mut env = TEnvironment::new();
     env.stable_set(
