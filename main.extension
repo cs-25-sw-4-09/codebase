@@ -1,9 +1,9 @@
 begin
 
-funcA(x:int ): int -> {
+funcA(): int -> {
     return 5;
 }
 
-funcB(x:int ): int -> {
-    return funcB(5);
+funcB(): int -> {
+    return funcA(5);
 }
