@@ -324,4 +324,27 @@ impl fmt::Display for AssignTypesNoMatch {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct ForLoopCounterDeclared();
+impl Error for ForLoopCounterDeclared {}
+impl fmt::Display for ForLoopCounterDeclared {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Was unable make for loop as the counter is already declared"
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ForLoopTypeError(pub Type, pub Type);
+impl Error for ForLoopTypeError {}
+impl fmt::Display for ForLoopTypeError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Was unable make for loop as the range was not of type Int, Int but {:?}, {:?}", self.0,self.1
+        )
+    }
+}
 

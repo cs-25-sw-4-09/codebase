@@ -93,7 +93,7 @@ impl Expr {
                     }
                 } else {
                     return Err(
-                        errors::ASTNodeChildrenCountInvalid(2, expr.children_count()).into(),
+                        errors::ASTNodeChildrenCountInvalidEither(1,2, expr.children_count()).into(),
                     );
                 }
                 

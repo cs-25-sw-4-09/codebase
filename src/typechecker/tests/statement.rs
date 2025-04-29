@@ -67,7 +67,7 @@ fn assign_empty() {
     env.vtable_set("x".into(), Type::ShapeArray);
     let t1 = Stmt::Assign {
         name: "x".into(),
-        value: Expr::Array(vec![])
+        value: Expr::Array(vec![]),
     }
     .type_check(&mut env);
     assert!(t1.is_ok())
@@ -182,6 +182,63 @@ fn draw_without_point_shape_error() {
     assert!(type_mismatch
         .unwrap_err()
         .downcast_ref::<errors::DrawTypeFault>()
+        .is_some());
+}
+
+#[test]
+fn for_loop() {
+    let mut env = TEnvironment::new();
+    let t1 = Stmt::For {
+        counter: "x".into(),
+        from: Expr::Integer(1),
+        to: Expr::Integer(10),
+        body: vec![Stmt::VarDecl {
+            name: "z".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(2),
+        }],
+    }.type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn for_loop_counter_error() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::Int);
+    let type_mismatch = Stmt::For {
+        counter: "x".into(),
+        from: Expr::Integer(1),
+        to: Expr::Integer(10),
+        body: vec![Stmt::VarDecl {
+            name: "z".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(2),
+        }],
+    }.type_check(&mut env);
+    
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::ForLoopCounterDeclared>()
+        .is_some());
+}
+
+#[test]
+fn for_loop_range_error() {
+    let mut env = TEnvironment::new();
+    let type_mismatch = Stmt::For {
+        counter: "x".into(),
+        from: Expr::Float(1.2),
+        to: Expr::Integer(10),
+        body: vec![Stmt::VarDecl {
+            name: "z".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(2),
+        }],
+    }.type_check(&mut env);
+    
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::ForLoopTypeError>()
         .is_some());
 }
 

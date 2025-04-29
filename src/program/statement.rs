@@ -38,11 +38,73 @@ pub enum Stmt {
         name: String,
         value: Expr,
     },
+    For {
+        counter: String,
+        from: Expr,
+        to: Expr,
+        body: Vec<Stmt>,
+    },
 }
 
 impl Stmt {
     pub fn new(stmt: AstNode) -> Result<Self, Box<dyn Error>> {
         let stmt = match stmt.get_symbol().name {
+            //-----
+            // Decl
+            //-----
+            "decl" => {
+                if !(stmt.children_count() == 3 || stmt.children_count() == 2) {
+                    return Err(errors::ASTNodeChildrenCountInvalidEither(
+                        2,
+                        3,
+                        stmt.children_count(),
+                    )
+                    .into());
+                }
+                Stmt::Decl {
+                    name: stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    declared_type: Type::new(stmt.child(1).get_value().ok_or_else(|| {
+                        errors::ASTNodeValueInvalid(stmt.child(1).get_symbol().name.to_owned())
+                    })?)?,
+                    value: if stmt.children_count() > 2 {
+                        Some(Expr::new(stmt.child(2))?)
+                    } else {
+                        None
+                    },
+                }
+            }
+            "import" => {
+                if stmt.children_count() != 2 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
+                    );
+                }
+                Stmt::Import {
+                    name: stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    path: stmt
+                        .child(1)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(1).get_symbol().name.to_owned())
+                        })?
+                        .replace('"', ""),
+                }
+            }
+            //-----
+            // Stmt
+            //-----
             "varDecl" => {
                 if stmt.children_count() != 3 {
                     return Err(
@@ -62,21 +124,24 @@ impl Stmt {
                     })?)?,
                     value: Expr::new(stmt.child(2))?,
                 }
-            },
+            }
             "assign" => {
                 if stmt.children_count() != 2 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
                     );
                 }
-                Stmt::Assign { name: stmt
-                    .child(0)
-                    .get_value()
-                    .ok_or_else(|| {
-                        errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
-                    })?
-                    .into(), value: Expr::new(stmt.child(1))? }
-            },
+                Stmt::Assign {
+                    name: stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    value: Expr::new(stmt.child(1))?,
+                }
+            }
             "funcDecl" => {
                 if stmt.children_count() != 4 {
                     return Err(
@@ -132,33 +197,7 @@ impl Stmt {
                     statements,
                 }
             }
-            "decl" => {
-                if !(stmt.children_count() == 3 || stmt.children_count() == 2) {
-                    return Err(errors::ASTNodeChildrenCountInvalidEither(
-                        2,
-                        3,
-                        stmt.children_count(),
-                    )
-                    .into());
-                }
-                Stmt::Decl {
-                    name: stmt
-                        .child(0)
-                        .get_value()
-                        .ok_or_else(|| {
-                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
-                        })?
-                        .into(),
-                    declared_type: Type::new(stmt.child(1).get_value().ok_or_else(|| {
-                        errors::ASTNodeValueInvalid(stmt.child(1).get_symbol().name.to_owned())
-                    })?)?,
-                    value: if stmt.children_count() > 2 {
-                        Some(Expr::new(stmt.child(2))?)
-                    } else {
-                        None
-                    },
-                }
-            }
+
             "return" => {
                 if stmt.children_count() != 1 {
                     return Err(
@@ -167,41 +206,49 @@ impl Stmt {
                 }
                 Stmt::Return(Expr::new(stmt.child(0))?)
             }
-            "import" => {
-                if stmt.children_count() != 2 {
+
+            "draw" => {
+                if stmt.children_count() == 1 {
+                    Stmt::Draw {
+                        shape: Expr::new(stmt.child(0))?,
+                        point: None,
+                    }
+                } else if stmt.children_count() == 2 {
+                    Stmt::Draw {
+                        shape: Expr::new(stmt.child(0))?,
+                        point: Some(Expr::new(stmt.child(1))?),
+                    }
+                } else {
+                    return Err(errors::ASTNodeChildrenCountInvalidEither(
+                        0,
+                        1,
+                        stmt.children_count(),
+                    )
+                    .into());
+                }
+            }
+            "for" => {
+                if stmt.children_count() != 4 {
                     return Err(
-                        errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
+                        errors::ASTNodeChildrenCountInvalid(4, stmt.children_count()).into(),
                     );
                 }
-                Stmt::Import {
-                    name: stmt
+                let mut statements = vec![];
+                for stmt in stmt.child(3).children() {
+                    statements.push(Stmt::new(stmt)?);
+                }
+
+                Stmt::For {
+                    counter: stmt
                         .child(0)
                         .get_value()
                         .ok_or_else(|| {
                             errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
                         })?
                         .into(),
-                    path: stmt
-                        .child(1)
-                        .get_value()
-                        .ok_or_else(|| {
-                            errors::ASTNodeValueInvalid(stmt.child(1).get_symbol().name.to_owned())
-                        })?
-                        .replace('"', ""),
-                }
-            },
-            "draw" => {
-                if stmt.children_count() == 1 {
-                    Stmt::Draw { shape: Expr::new(stmt.child(0))?
-                    , point: None }
-
-                } else if stmt.children_count() == 2{
-                    Stmt::Draw { shape: Expr::new(stmt.child(0))?
-                        , point: Some(Expr::new(stmt.child(1))?) }
-                } else{
-                    return Err(
-                        errors::ASTNodeChildrenCountInvalid(0, stmt.children_count()).into(),
-                    );
+                    from: Expr::new(stmt.child(1))?,
+                    to: Expr::new(stmt.child(2))?,
+                    body: statements,
                 }
             }
             _ => unreachable!(),

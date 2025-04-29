@@ -1662,7 +1662,6 @@ fn test_program_new_converts_ast_to_program_function_decl_with_return_type() {
     }
 }
 
-
 //-----------------------------------
 //Tests of draw in construction field
 //-----------------------------------
@@ -1675,11 +1674,7 @@ fn test_program_draw_without_point() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::Draw {
-        shape,
-        point,
-    } = &program.stmts[0]
-    {
+    if let Stmt::Draw { shape, point } = &program.stmts[0] {
         assert_eq!(shape, &Expr::Variable("x".to_string()));
         assert_eq!(point, &None);
     }
@@ -1694,13 +1689,12 @@ fn test_program_draw_with_point() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::Draw {
-        shape,
-        point,
-    } = &program.stmts[0]
-    {
+    if let Stmt::Draw { shape, point } = &program.stmts[0] {
         assert_eq!(shape, &Expr::Variable("x".to_string()));
-        assert_eq!(point, &Some(Expr::Point(Expr::Integer(0).into(), Expr::Integer(0).into()).into()));
+        assert_eq!(
+            point,
+            &Some(Expr::Point(Expr::Integer(0).into(), Expr::Integer(0).into()).into())
+        );
     }
 }
 
@@ -1716,12 +1710,35 @@ fn test_program_assign() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::Assign {
-        name,
-        value,
-    } = &program.stmts[0]
-    {
+    if let Stmt::Assign { name, value } = &program.stmts[0] {
         assert_eq!(name, &"x".to_string());
         assert_eq!(value, &Expr::Integer(10));
+    }
+}
+
+//-----------------------------------
+//Tests of for in construction field
+//-----------------------------------
+#[test]
+fn test_program_for_loop() {
+    let code = "begin
+    for i in 1 to 10 {
+        x = i;
+    }";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::For { counter, from, to, body } = &program.stmts[0] {
+        assert_eq!(counter, &"i".to_string());
+        assert_eq!(from, &Expr::Integer(1));
+        assert_eq!(to, &Expr::Integer(10));
+        assert_eq!(
+            body,
+            &vec![
+                Stmt::Assign { name: "x".to_string(), value: Expr::Variable("i".to_string())}
+            ]
+        );
     }
 }
