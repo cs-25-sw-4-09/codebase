@@ -197,7 +197,8 @@ fn for_loop() {
             declared_type: Type::Int,
             value: Expr::Integer(2),
         }],
-    }.type_check(&mut env);
+    }
+    .type_check(&mut env);
     assert!(t1.is_ok())
 }
 
@@ -214,8 +215,9 @@ fn for_loop_counter_error() {
             declared_type: Type::Int,
             value: Expr::Integer(2),
         }],
-    }.type_check(&mut env);
-    
+    }
+    .type_check(&mut env);
+
     assert!(type_mismatch
         .unwrap_err()
         .downcast_ref::<errors::ForLoopCounterDeclared>()
@@ -234,11 +236,75 @@ fn for_loop_range_error() {
             declared_type: Type::Int,
             value: Expr::Integer(2),
         }],
-    }.type_check(&mut env);
-    
+    }
+    .type_check(&mut env);
+
     assert!(type_mismatch
         .unwrap_err()
         .downcast_ref::<errors::ForLoopTypeError>()
+        .is_some());
+}
+
+#[test]
+fn fork() {
+    let mut env = TEnvironment::new();
+    let t1 = Stmt::Fork {
+        branch: vec![(
+            Expr::Boolean(true),
+            vec![Stmt::VarDecl {
+                name: "z".into(),
+                declared_type: Type::Int,
+                value: Expr::Integer(2),
+            }],
+        )],
+        otherwise: None,
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn fork_with_otherwise() {
+    let mut env = TEnvironment::new();
+    let t1 = Stmt::Fork {
+        branch: vec![(
+            Expr::Boolean(true),
+            vec![Stmt::VarDecl {
+                name: "z".into(),
+                declared_type: Type::Int,
+                value: Expr::Integer(2),
+            }],
+        )],
+        otherwise: Some(vec![Stmt::VarDecl {
+            name: "z".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(2),
+        }]),
+    }
+    .type_check(&mut env);
+
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn fork_error() {
+    let mut env = TEnvironment::new();
+    let type_mismatch = Stmt::Fork {
+        branch: vec![(
+            Expr::Integer(2),
+            vec![Stmt::VarDecl {
+                name: "z".into(),
+                declared_type: Type::Int,
+                value: Expr::Integer(2),
+            }],
+        )],
+        otherwise: None,
+    }
+    .type_check(&mut env);
+
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::ForkNotBooltypeError>()
         .is_some());
 }
 

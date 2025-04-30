@@ -1730,15 +1730,87 @@ fn test_program_for_loop() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::For { counter, from, to, body } = &program.stmts[0] {
+    if let Stmt::For {
+        counter,
+        from,
+        to,
+        body,
+    } = &program.stmts[0]
+    {
         assert_eq!(counter, &"i".to_string());
         assert_eq!(from, &Expr::Integer(1));
         assert_eq!(to, &Expr::Integer(10));
         assert_eq!(
             body,
-            &vec![
-                Stmt::Assign { name: "x".to_string(), value: Expr::Variable("i".to_string())}
-            ]
+            &vec![Stmt::Assign {
+                name: "x".to_string(),
+                value: Expr::Variable("i".to_string())
+            }]
+        );
+    }
+}
+
+//-----------------------------------
+//Tests of fork in construction field
+//-----------------------------------
+#[test]
+fn test_program_fork() {
+    let code = "begin
+    fork{
+        (true) -> {x:int = 2;}
+    }";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::Fork { branch, otherwise } = &program.stmts[0] {
+        assert_eq!(otherwise, &None);
+        assert_eq!(
+            branch,
+            &vec![(
+                Expr::Boolean(true),
+                vec![Stmt::VarDecl {
+                    name: "x".to_string(),
+                    declared_type: Type::Int,
+                    value: Expr::Integer(2)
+                }]
+            )]
+        );
+    }
+}
+
+#[test]
+fn test_program_fork_otherwise() {
+    let code = "begin
+    fork{
+        (true) -> {x:int = 2;}
+        (otherwise) -> {y:int = 3;}
+    }";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::Fork { branch, otherwise } = &program.stmts[0] {
+        assert_eq!(
+            otherwise,
+            &Some(vec![Stmt::VarDecl {
+                name: "y".to_string(),
+                declared_type: Type::Int,
+                value: Expr::Integer(3)
+            }])
+        );
+        assert_eq!(
+            branch,
+            &vec![(
+                Expr::Boolean(true),
+                vec![Stmt::VarDecl {
+                    name: "x".to_string(),
+                    declared_type: Type::Int,
+                    value: Expr::Integer(2)
+                }]
+            )]
         );
     }
 }

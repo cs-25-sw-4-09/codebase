@@ -10,6 +10,9 @@ use super::{environment::TEnvironment, errors, TypeCheckE, TypeCheckS};
 impl TypeCheckS for Stmt {
     fn type_check(&self, environment: &mut TEnvironment) -> Result<(), Box<dyn Error>> {
         match self {
+            //-----
+            // Decl
+            //-----
             Stmt::Import { name, path } => {
                                     if environment.stable_lookup(name).is_ok() {
                                         return Err(errors::ImportAlreadyDeclared(name.to_owned()).into());
@@ -32,6 +35,38 @@ impl TypeCheckS for Stmt {
                             }
                         }
                     }
+                    Stmt::Decl {
+                        name,
+                        declared_type,
+                        value,
+                    } => {
+                        if environment.vdtable_lookup(name).is_ok() {
+                            return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
+                        };
+                        if let Some(set_value) = value {
+                            let t1 = set_value.type_check(environment)?;
+                            if declared_type.eq(&t1) {
+                                environment.vdtable_set_default(name.clone(), *declared_type);
+                                Ok(())
+                            } else if checks_empty_array(*declared_type, t1) {
+                                environment.vdtable_set_default(name.clone(), declared_type.clone());
+                                return Ok(());
+                            } else {
+                                Err(errors::VariableExpressionTypeNotMatch(
+                                    name.to_owned(),
+                                    declared_type.to_owned(),
+                                    t1,
+                                )
+                                .into())
+                            }
+                        } else {
+                            environment.vdtable_set_non_default(name.clone(), *declared_type);
+                            Ok(())
+                        }
+                    }
+            //-----
+            // Stmt
+            //-----
             Stmt::VarDecl {
                                 name,
                                 declared_type,
@@ -99,35 +134,6 @@ impl TypeCheckS for Stmt {
                                     return Ok(());
                                 } else {
                                     Err(errors::ReturnTypeNotMatch(t1, environment.return_lookup()).into())
-                                }
-                            }
-            Stmt::Decl {
-                                name,
-                                declared_type,
-                                value,
-                            } => {
-                                if environment.vdtable_lookup(name).is_ok() {
-                                    return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
-                                };
-                                if let Some(set_value) = value {
-                                    let t1 = set_value.type_check(environment)?;
-                                    if declared_type.eq(&t1) {
-                                        environment.vdtable_set_default(name.clone(), *declared_type);
-                                        Ok(())
-                                    } else if checks_empty_array(*declared_type, t1) {
-                                        environment.vdtable_set_default(name.clone(), declared_type.clone());
-                                        return Ok(());
-                                    } else {
-                                        Err(errors::VariableExpressionTypeNotMatch(
-                                            name.to_owned(),
-                                            declared_type.to_owned(),
-                                            t1,
-                                        )
-                                        .into())
-                                    }
-                                } else {
-                                    environment.vdtable_set_non_default(name.clone(), *declared_type);
-                                    Ok(())
                                 }
                             }
             Stmt::Draw { shape, point } => match point {
