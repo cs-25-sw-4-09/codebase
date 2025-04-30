@@ -44,6 +44,10 @@ pub enum Stmt {
         to: Expr,
         body: Vec<Stmt>,
     },
+    Fork {
+        branch: Vec<(Expr, Vec<Stmt>)>,
+        otherwise: Option<Vec<Stmt>>,
+    },
 }
 
 impl Stmt {
@@ -146,18 +150,19 @@ impl Stmt {
                 if stmt.children_count() == 3 {
                     let parameters = Vec::new();
                     let mut statements = Vec::new();
-                    
-    
+
                     for stmt in stmt.child(2).children() {
                         statements.push(Stmt::new(stmt)?);
                     }
-    
+
                     Stmt::FuncDecl {
                         name: stmt
                             .child(0)
                             .get_value()
                             .ok_or_else(|| {
-                                errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                                errors::ASTNodeValueInvalid(
+                                    stmt.child(0).get_symbol().name.to_owned(),
+                                )
                             })?
                             .into(),
                         return_type: Type::new(stmt.child(1).get_value().ok_or_else(|| {
@@ -171,9 +176,11 @@ impl Stmt {
                     let mut statements = Vec::new();
                     for param in stmt.child(1).children() {
                         if param.children_count() != 2 {
-                            return Err(
-                                errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
-                            );
+                            return Err(errors::ASTNodeChildrenCountInvalid(
+                                2,
+                                stmt.children_count(),
+                            )
+                            .into());
                         }
                         let parameter: (String, Type) = (
                             param
@@ -186,27 +193,33 @@ impl Stmt {
                                 })?
                                 .into(),
                             Type::new(param.child(1).get_value().ok_or_else(|| {
-                                errors::ASTNodeValueInvalid(param.child(0).get_symbol().name.to_owned())
+                                errors::ASTNodeValueInvalid(
+                                    param.child(0).get_symbol().name.to_owned(),
+                                )
                             })?)?,
                         );
-    
+
                         if parameters.contains(&parameter) {
-                            return Err(errors::ParemeterAlreadyDefined(parameter.0.to_owned()).into());
+                            return Err(
+                                errors::ParemeterAlreadyDefined(parameter.0.to_owned()).into()
+                            );
                         }
-    
+
                         parameters.push(parameter);
                     }
-    
+
                     for stmt in stmt.child(3).children() {
                         statements.push(Stmt::new(stmt)?);
                     }
-    
+
                     Stmt::FuncDecl {
                         name: stmt
                             .child(0)
                             .get_value()
                             .ok_or_else(|| {
-                                errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                                errors::ASTNodeValueInvalid(
+                                    stmt.child(0).get_symbol().name.to_owned(),
+                                )
                             })?
                             .into(),
                         return_type: Type::new(stmt.child(2).get_value().ok_or_else(|| {
@@ -220,8 +233,6 @@ impl Stmt {
                         errors::ASTNodeChildrenCountInvalid(4, stmt.children_count()).into(),
                     );
                 }
-
-                
             }
 
             "return" => {
@@ -275,6 +286,35 @@ impl Stmt {
                     from: Expr::new(stmt.child(1))?,
                     to: Expr::new(stmt.child(2))?,
                     body: statements,
+                }
+            }
+            "fork" => {
+                let mut branchs = vec![];
+                let mut otherwise = None;
+                let mut statements: Vec<Stmt>;
+                for forkexpr in stmt.children() {
+                    match forkexpr.to_string().as_str() {
+                        "forkExpr" => {
+                            statements = vec![];
+                            for stmt in forkexpr.child(1).children() {
+                                statements.push(Stmt::new(stmt)?);
+                            }
+                            branchs.push((Expr::new(forkexpr.child(0))?,statements));
+                        },
+                        "otherwise" => {
+                            statements = vec![];
+                            for stmt in forkexpr.child(0).children() {
+                                statements.push(Stmt::new(stmt)?);
+                            }
+                            otherwise = Some(statements);
+                        }
+                        _ => unreachable!(),
+                    }
+                }
+
+                Stmt::Fork {
+                    branch: branchs,
+                    otherwise: otherwise,
                 }
             }
             _ => unreachable!(),

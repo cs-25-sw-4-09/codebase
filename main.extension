@@ -1,4 +1,4 @@
-begin
+/*begin
 
 funcA(): int -> {
     return 5;
@@ -6,4 +6,11 @@ funcA(): int -> {
 
 funcB(): int -> {
     return funcA(5);
+}*/
+begin
+y:int = 0;
+
+fork{
+    (true) -> {x:int = 2;}
+    (2) -> {x:int  = 3;}
 }

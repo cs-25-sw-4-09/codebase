@@ -348,3 +348,15 @@ impl fmt::Display for ForLoopTypeError {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct ForkNotBooltypeError(pub Type);
+impl Error for ForkNotBooltypeError {}
+impl fmt::Display for ForkNotBooltypeError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "One condition in the fork was not a Bool, found: {:?}", self.0
+        )
+    }
+}
+
