@@ -1,3 +1,2 @@
 begin
 v: int = 5;
-c: color = (v,2,3,4);

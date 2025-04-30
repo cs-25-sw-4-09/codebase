@@ -1,12 +1,11 @@
 use std::{error::Error, path::Path};
 
 use codebase::{
-    lexer_parser::{
+    interpreter::InterpretP, lexer_parser::{
         grammar::cfg,
         //valid_programs::get_programs
         utils::tree_converter::stringify_tree,
-    },
-    program::program::Program, typechecker::TypeCheckP,
+    }, program::program::Program, typechecker::TypeCheckP
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -21,6 +20,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         Ok(_) => println!("[Typechecker] OK"),
         Err(err) => println!("[Typechecker] error: {}", err),
     }
+
+    match program.interpret() {
+        Ok(_) => println!("[Interpreter] OK"),
+        Err(err) => println!("[Interpreter] error: {}", err),
+    }
+
     println!("{:?}", program);
     Ok(())
 }

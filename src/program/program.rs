@@ -2,7 +2,7 @@ use std::{error::Error, fs, path::Path};
 
 use hime_redist::symbols::SemanticElementTrait;
 
-use crate::{lexer_parser::grammar::cfg, typechecker::environment::TEnvironment};
+use crate::{interpreter::environment::IEnvironment, lexer_parser::grammar::cfg, typechecker::environment::TEnvironment};
 
 use super::statement::Stmt;
 
@@ -11,6 +11,7 @@ pub struct Program {
     pub decl_f: Vec<Stmt>,
     pub stmts: Vec<Stmt>,
     pub tenvironment: TEnvironment,
+    pub ienvironment: IEnvironment,
 }
 
 impl Program {
@@ -18,6 +19,7 @@ impl Program {
         let mut decl_f: Vec<Stmt> = Vec::new();
         let mut stmts: Vec<Stmt> = Vec::new();
         let tenvironment = TEnvironment::new();
+        let ienvironment = IEnvironment::new();
 
         let parsed = cfg::parse_string(programstr.into());
         let ast = parsed.get_ast();
@@ -43,6 +45,7 @@ impl Program {
             decl_f,
             stmts,
             tenvironment,
+            ienvironment
         })
     }
 
