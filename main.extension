@@ -1,13 +1,4 @@
 begin
 
-funcA(): int -> {
-    return 5;
-}
-
-funcB(): int -> {
-    return funcA();
-}
-
-funcC(): int -> {
-    return funcA(2);
-}
+house = place window ontop house (width/2- width/4, height-width + width/2- width/4);
+house = place door bottom house (width/2, door.height);
