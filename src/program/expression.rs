@@ -75,28 +75,30 @@ impl Expr {
                     .parse()?,
             ),
             // Need to make unary and binary together, as "-" is both of them
-            "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=" | "!=" | "==" | "&&" | "||" | "!" =>{
+            "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=" | "!=" | "==" | "&&" | "||"
+            | "!" => {
                 if expr.children_count() == 2 {
                     let lhs = Box::new(Expr::new(expr.child(0))?);
                     let rhs = Box::new(Expr::new(expr.child(1))?);
                     let operator = BinaryOperator::new(expr.get_symbol())?;
 
                     Expr::BinaryOperation { lhs, rhs, operator }
-                    
                 } else if expr.children_count() == 1 {
                     let uexpr = Box::new(Expr::new(expr.child(0))?);
                     let operator = UnaryOperator::new(expr.get_symbol())?;
-    
+
                     Expr::UnaryOperation {
                         operator,
                         expr: uexpr,
                     }
                 } else {
-                    return Err(
-                        errors::ASTNodeChildrenCountInvalidEither(1,2, expr.children_count()).into(),
-                    );
+                    return Err(errors::ASTNodeChildrenCountInvalidEither(
+                        1,
+                        2,
+                        expr.children_count(),
+                    )
+                    .into());
                 }
-                
             }
             "--" | "~~" => {
                 let lhs = Box::new(Expr::new(expr.child(0))?);
@@ -150,25 +152,46 @@ impl Expr {
                 )
             }
             "FCall" => {
-                if expr.children_count() != 2 {
-                    return Err(
-                        errors::ASTNodeChildrenCountInvalid(2, expr.children_count()).into(),
-                    );
-                }
-                Expr::FCall {
-                    name: expr
-                        .child(0)
-                        .get_value()
-                        .ok_or_else(|| {
-                            errors::ASTNodeValueInvalid(expr.child(0).get_symbol().name.to_owned())
-                        })?
-                        .into(),
-                    args: expr
-                        .child(1)
-                        .children()
-                        .iter()
-                        .map(|arg| Expr::new(arg))
-                        .collect::<Result<Vec<_>, _>>()?,
+                //case: function has params
+                if expr.children_count() == 2 {
+                    Expr::FCall {
+                        name: expr
+                            .child(0)
+                            .get_value()
+                            .ok_or_else(|| {
+                                errors::ASTNodeValueInvalid(
+                                    expr.child(0).get_symbol().name.to_owned(),
+                                )
+                            })?
+                            .into(),
+                        args: expr
+                            .child(1)
+                            .children()
+                            .iter()
+                            .map(|arg| Expr::new(arg))
+                            .collect::<Result<Vec<_>, _>>()?,
+                    }
+                // case: if function does not have params
+                } else if expr.children_count() == 1 {
+                    Expr::FCall {
+                        name: expr
+                            .child(0)
+                            .get_value()
+                            .ok_or_else(|| {
+                                errors::ASTNodeValueInvalid(
+                                    expr.child(0).get_symbol().name.to_owned(),
+                                )
+                            })?
+                            .into(),
+                        args: vec![],
+                    }
+                } else {
+                    return Err(errors::ASTNodeChildrenCountInvalidEither(
+                        1,
+                        2,
+                        expr.children_count(),
+                    )
+                    .into());
                 }
             }
             "SCall" => {
@@ -180,15 +203,16 @@ impl Expr {
                 //if-else to determine if the shape constructor is called on an imported shape or path/polygon
                 if expr.child(0).children_count() == 0 {
                     Expr::SCall {
-                        name: Some(expr
-                            .child(0)
-                            .get_value()
-                            .ok_or_else(|| {
-                                errors::ASTNodeValueInvalid(
-                                    expr.child(0).get_symbol().name.to_owned(),
-                                )
-                            })?
-                            .into()),
+                        name: Some(
+                            expr.child(0)
+                                .get_value()
+                                .ok_or_else(|| {
+                                    errors::ASTNodeValueInvalid(
+                                        expr.child(0).get_symbol().name.to_owned(),
+                                    )
+                                })?
+                                .into(),
+                        ),
                         args: expr
                             .child(1)
                             .children()

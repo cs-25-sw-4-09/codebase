@@ -370,6 +370,8 @@ fn fcall() {
     assert_eq!(t1, Type::Bool);
 }
 
+
+
 #[test]
 fn fcall_invalid_identifier() {
     let mut env = TEnvironment::new();
@@ -381,6 +383,21 @@ fn fcall_invalid_identifier() {
     assert!(invalid_identifier
         .unwrap_err()
         .downcast_ref::<errors::IdentifierNotFound>()
+        .is_some());
+}
+
+#[test]
+fn fcall_invalid_param_amount() {
+    let mut env = TEnvironment::new();
+    env.ftable_set("x".into(), vec![Type::Int], Type::Bool);
+    let invalid_identifier = Expr::FCall {
+        name: "x".into(),
+        args: vec![],
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::FCallParametersCountError>()
         .is_some());
 }
 

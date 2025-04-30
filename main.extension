@@ -1,16 +1,13 @@
-/*begin
+begin
 
 funcA(): int -> {
     return 5;
 }
 
 funcB(): int -> {
-    return funcA(5);
-}*/
-begin
-y:int = 0;
+    return funcA();
+}
 
-fork{
-    (true) -> {x:int = 2;}
-    (2) -> {x:int  = 3;}
+funcC(): int -> {
+    return funcA(2);
 }

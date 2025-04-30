@@ -52,6 +52,20 @@ impl fmt::Display for FCallParametersIncompatible {
 }
 
 #[derive(Debug, Clone)]
+pub struct FCallParametersCountError(pub String);
+impl Error for FCallParametersCountError {}
+impl fmt::Display for FCallParametersCountError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Function call with identifier {}'s do not have the same amount of params as declaration",
+            self.0
+        )
+    }
+}
+
+
+#[derive(Debug, Clone)]
 pub struct SCallParametersIncompatible(pub String, pub String, pub Type, pub Type);
 impl Error for SCallParametersIncompatible {}
 impl fmt::Display for SCallParametersIncompatible {

@@ -167,6 +167,12 @@ impl TypeCheckE for Expr {
             Expr::FCall { name, args } => {
                 let (parameters, return_type) = environment.ftable_lookup(name)?.clone();
 
+                // Checks that the right amount of params is passed
+                if parameters.len() != args.len() {
+                    return Err(errors::FCallParametersCountError(name.to_owned()).into());
+                }
+                
+
                 if parameters.iter().zip(args).all(|(parameter_type, arg)| {
                     match arg.type_check(environment) {
                         Ok(t1) => t1.eq(parameter_type),
