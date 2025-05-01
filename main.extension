@@ -1,2 +1,2 @@
 begin
-v: int = 5;
+v: int = 2.2 + 2;

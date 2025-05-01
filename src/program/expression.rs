@@ -7,7 +7,7 @@ use super::{
     operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator},
 };
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Expr {
     Integer(i64),
     Variable(String),

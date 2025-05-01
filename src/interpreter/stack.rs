@@ -5,7 +5,7 @@ pub struct Stack<T> {
 }
 
 #[derive(Debug)]
-enum StackElement<T> {
+pub enum StackElement<T> {
     Value(String, T),
     Scope,
 }
@@ -14,5 +14,17 @@ enum StackElement<T> {
 impl<T> Stack<T> {
     pub fn new() -> Self {
        Stack { elements: Vec::new() }
+    }
+
+    pub fn push(&mut self, identifier: String, element: T) {
+        self.elements.push(StackElement::Value(identifier, element))
+    }
+
+    pub fn pop(&mut self) -> Option<StackElement<T>> {
+        self.elements.pop()
+    }
+
+    pub fn push_scope(&mut self) {
+        self.elements.push(StackElement::Scope)
     }
 }
