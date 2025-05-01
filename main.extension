@@ -1,4 +1,12 @@
 begin
 
 
-x(f: int)
+
+h(f: int): int -> {
+    return 4+ f;
+}
+
+
+
+i: int = h(2);
+

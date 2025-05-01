@@ -41,6 +41,11 @@ impl IEnvironment {
         self.f_table.push_fscope();
     }
 
+    pub fn pop_scope(&mut self) {
+        self.v_table.pop_scope();
+        self.f_table.pop_scope();
+    }
+
     pub fn rvalue_set(&mut self, value: Expr) {
         self.r_value = value;
     }
@@ -48,6 +53,12 @@ impl IEnvironment {
     pub fn rvalue_get(&self) -> Expr {
         self.r_value.clone()
     }
+    
+    pub fn vtable_find(&mut self, identifier: String) -> Option<Expr> {
+        self.v_table.find(identifier)
+    }
+    
+   
     
 
 }

@@ -16,7 +16,7 @@ impl InterpretE for Expr {
     ) -> Result<Expr, Box<dyn std::error::Error>> {
         let expr = match self {
             Expr::Integer(_) | Expr::Boolean(_) | Expr::Float(_) | Expr::Color(_, _, _, _) => self,
-            Expr::Variable(_) => todo!(),
+            Expr::Variable(identifier) => &environment.vtable_find(identifier.to_owned()).unwrap(),
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let i1 = lhs.interpret(environment)?;
                 let i2 = rhs.interpret(environment)?;
@@ -81,6 +81,8 @@ impl InterpretE for Expr {
                 for f in function.0 {
                     f.interpret(environment)?;
                 }
+
+                environment.pop_scope();
 
                 &environment.rvalue_get()
             }
