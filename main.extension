@@ -1,3 +1,5 @@
+
+
 begin
-v: int = 5;
-c: color = (v,2,3,4);
+
+x:shape = place x ontop func on (1,2);

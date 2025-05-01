@@ -1,3 +1,5 @@
-radius: int;
+r: int;
+z: int =56;
+
 begin
-g: bool = true;
+x:int = 5;

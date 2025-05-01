@@ -1,6 +1,9 @@
 use crate::{
     program::{expression::Expr, r#type::Type, statement::Stmt},
-    typechecker::{environment::TEnvironment, errors, TypeCheckS},
+    typechecker::{
+        environment::{EType, TEnvironment},
+        errors, TypeCheckS,
+    },
 };
 
 #[test]
@@ -43,6 +46,265 @@ fn vardecl_expression_types_mismatch() {
     assert!(type_mismatch
         .unwrap_err()
         .downcast_ref::<errors::VariableExpressionTypeNotMatch>()
+        .is_some());
+}
+
+#[test]
+fn assign() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::Int);
+    let t1 = Stmt::Assign {
+        name: "x".into(),
+        value: Expr::Integer(1),
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn assign_empty() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::ShapeArray);
+    let t1 = Stmt::Assign {
+        name: "x".into(),
+        value: Expr::Array(vec![]),
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn assign_error() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::Float);
+    let t1 = Stmt::Assign {
+        name: "x".into(),
+        value: Expr::Integer(1),
+    }
+    .type_check(&mut env);
+    assert!(t1
+        .unwrap_err()
+        .downcast_ref::<errors::AssignTypesNoMatch>()
+        .is_some());
+}
+
+#[test]
+fn draw_with_point() {
+    let mut env = TEnvironment::new();
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
+    );
+    let t1 = Stmt::Draw {
+        shape: Expr::SCall {
+            name: Some("circle".into()),
+            args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
+            path_poly: None,
+        },
+        point: Some(Expr::Point(Expr::Integer(1).into(), Expr::Integer(1).into()).into()),
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn draw_without_point() {
+    let mut env = TEnvironment::new();
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
+    );
+    let t1 = Stmt::Draw {
+        shape: Expr::SCall {
+            name: Some("circle".into()),
+            args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
+            path_poly: None,
+        },
+        point: None,
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn draw_with_point_shape_error() {
+    let mut env = TEnvironment::new();
+    let type_mismatch = Stmt::Draw {
+        shape: Expr::Integer(1),
+        point: Some(Expr::Point(Expr::Integer(1).into(), Expr::Integer(1).into()).into()),
+    }
+    .type_check(&mut env);
+
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::DrawTypeFault>()
+        .is_some());
+}
+
+#[test]
+fn draw_with_point_point_error() {
+    let mut env = TEnvironment::new();
+    env.stable_set(
+        "circle".into(),
+        [("radius".into(), EType::DeclNonDefault(Type::Float))]
+            .into_iter()
+            .collect(),
+    );
+    let type_mismatch = Stmt::Draw {
+        shape: Expr::SCall {
+            name: Some("circle".into()),
+            args: [("radius".into(), Expr::Float(5.0))].into_iter().collect(),
+            path_poly: None,
+        },
+        point: Some(Expr::Integer(1)),
+    }
+    .type_check(&mut env);
+
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::DrawTypeFault>()
+        .is_some());
+}
+
+#[test]
+fn draw_without_point_shape_error() {
+    let mut env = TEnvironment::new();
+    let type_mismatch = Stmt::Draw {
+        shape: Expr::Integer(1),
+        point: None,
+    }
+    .type_check(&mut env);
+
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::DrawTypeFault>()
+        .is_some());
+}
+
+#[test]
+fn for_loop() {
+    let mut env = TEnvironment::new();
+    let t1 = Stmt::For {
+        counter: "x".into(),
+        from: Expr::Integer(1),
+        to: Expr::Integer(10),
+        body: vec![Stmt::VarDecl {
+            name: "z".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(2),
+        }],
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn for_loop_counter_error() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::Int);
+    let type_mismatch = Stmt::For {
+        counter: "x".into(),
+        from: Expr::Integer(1),
+        to: Expr::Integer(10),
+        body: vec![Stmt::VarDecl {
+            name: "z".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(2),
+        }],
+    }
+    .type_check(&mut env);
+
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::ForLoopCounterDeclared>()
+        .is_some());
+}
+
+#[test]
+fn for_loop_range_error() {
+    let mut env = TEnvironment::new();
+    let type_mismatch = Stmt::For {
+        counter: "x".into(),
+        from: Expr::Float(1.2),
+        to: Expr::Integer(10),
+        body: vec![Stmt::VarDecl {
+            name: "z".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(2),
+        }],
+    }
+    .type_check(&mut env);
+
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::ForLoopTypeError>()
+        .is_some());
+}
+
+#[test]
+fn fork() {
+    let mut env = TEnvironment::new();
+    let t1 = Stmt::Fork {
+        branch: vec![(
+            Expr::Boolean(true),
+            vec![Stmt::VarDecl {
+                name: "z".into(),
+                declared_type: Type::Int,
+                value: Expr::Integer(2),
+            }],
+        )],
+        otherwise: None,
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn fork_with_otherwise() {
+    let mut env = TEnvironment::new();
+    let t1 = Stmt::Fork {
+        branch: vec![(
+            Expr::Boolean(true),
+            vec![Stmt::VarDecl {
+                name: "z".into(),
+                declared_type: Type::Int,
+                value: Expr::Integer(2),
+            }],
+        )],
+        otherwise: Some(vec![Stmt::VarDecl {
+            name: "z".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(2),
+        }]),
+    }
+    .type_check(&mut env);
+
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn fork_error() {
+    let mut env = TEnvironment::new();
+    let type_mismatch = Stmt::Fork {
+        branch: vec![(
+            Expr::Integer(2),
+            vec![Stmt::VarDecl {
+                name: "z".into(),
+                declared_type: Type::Int,
+                value: Expr::Integer(2),
+            }],
+        )],
+        otherwise: None,
+    }
+    .type_check(&mut env);
+
+    assert!(type_mismatch
+        .unwrap_err()
+        .downcast_ref::<errors::ForkNotBooltypeError>()
         .is_some());
 }
 
@@ -127,7 +389,7 @@ fn decl_optional() {
 #[test]
 fn decl_identifier_already_declared() {
     let mut env = TEnvironment::new();
-    env.vdtable_set("x".into(), Type::Int);
+    env.vdtable_set_non_default("x".into(), Type::Int);
     let already_declared = Stmt::Decl {
         name: "x".into(),
         declared_type: Type::Int,

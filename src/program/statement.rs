@@ -30,86 +30,32 @@ pub enum Stmt {
         name: String,
         path: String,
     },
+    Draw {
+        shape: Expr,
+        point: Option<Expr>,
+    },
+    Assign {
+        name: String,
+        value: Expr,
+    },
+    For {
+        counter: String,
+        from: Expr,
+        to: Expr,
+        body: Vec<Stmt>,
+    },
+    Fork {
+        branch: Vec<(Expr, Vec<Stmt>)>,
+        otherwise: Option<Vec<Stmt>>,
+    },
 }
 
 impl Stmt {
     pub fn new(stmt: AstNode) -> Result<Self, Box<dyn Error>> {
         let stmt = match stmt.get_symbol().name {
-            "varDecl" => {
-                if stmt.children_count() != 3 {
-                    return Err(
-                        errors::ASTNodeChildrenCountInvalid(3, stmt.children_count()).into(),
-                    );
-                }
-                Stmt::VarDecl {
-                    name: stmt
-                        .child(0)
-                        .get_value()
-                        .ok_or_else(|| {
-                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
-                        })?
-                        .into(),
-                    declared_type: Type::new(stmt.child(1).get_value().ok_or_else(|| {
-                        errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
-                    })?)?,
-                    value: Expr::new(stmt.child(2))?,
-                }
-            }
-            "funcDecl" => {
-                if stmt.children_count() != 4 {
-                    return Err(
-                        errors::ASTNodeChildrenCountInvalid(4, stmt.children_count()).into(),
-                    );
-                }
-                let mut parameters = Vec::new();
-                let mut statements = Vec::new();
-                for param in stmt.child(1).children() {
-                    if param.children_count() != 2 {
-                        return Err(
-                            errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
-                        );
-                    }
-                    let parameter: (String, Type) = (
-                        param
-                            .child(0)
-                            .get_value()
-                            .ok_or_else(|| {
-                                errors::ASTNodeValueInvalid(
-                                    param.child(0).get_symbol().name.to_owned(),
-                                )
-                            })?
-                            .into(),
-                        Type::new(param.child(1).get_value().ok_or_else(|| {
-                            errors::ASTNodeValueInvalid(param.child(0).get_symbol().name.to_owned())
-                        })?)?,
-                    );
-
-                    if parameters.contains(&parameter) {
-                        return Err(errors::ParemeterAlreadyDefined(parameter.0.to_owned()).into());
-                    }
-
-                    parameters.push(parameter);
-                }
-
-                for stmt in stmt.child(3).children() {
-                    statements.push(Stmt::new(stmt)?);
-                }
-
-                Stmt::FuncDecl {
-                    name: stmt
-                        .child(0)
-                        .get_value()
-                        .ok_or_else(|| {
-                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
-                        })?
-                        .into(),
-                    return_type: Type::new(stmt.child(2).get_value().ok_or_else(|| {
-                        errors::ASTNodeValueInvalid(stmt.child(2).get_symbol().name.to_owned())
-                    })?)?,
-                    parameters,
-                    statements,
-                }
-            }
+            //-----
+            // Decl
+            //-----
             "decl" => {
                 if !(stmt.children_count() == 3 || stmt.children_count() == 2) {
                     return Err(errors::ASTNodeChildrenCountInvalidEither(
@@ -137,14 +83,6 @@ impl Stmt {
                     },
                 }
             }
-            "return" => {
-                if stmt.children_count() != 1 {
-                    return Err(
-                        errors::ASTNodeChildrenCountInvalid(1, stmt.children_count()).into(),
-                    );
-                }
-                Stmt::Return(Expr::new(stmt.child(0))?)
-            }
             "import" => {
                 if stmt.children_count() != 2 {
                     return Err(
@@ -166,6 +104,217 @@ impl Stmt {
                             errors::ASTNodeValueInvalid(stmt.child(1).get_symbol().name.to_owned())
                         })?
                         .replace('"', ""),
+                }
+            }
+            //-----
+            // Stmt
+            //-----
+            "varDecl" => {
+                if stmt.children_count() != 3 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(3, stmt.children_count()).into(),
+                    );
+                }
+                Stmt::VarDecl {
+                    name: stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    declared_type: Type::new(stmt.child(1).get_value().ok_or_else(|| {
+                        errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                    })?)?,
+                    value: Expr::new(stmt.child(2))?,
+                }
+            }
+            "assign" => {
+                if stmt.children_count() != 2 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
+                    );
+                }
+                Stmt::Assign {
+                    name: stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    value: Expr::new(stmt.child(1))?,
+                }
+            }
+            "funcDecl" => {
+                if stmt.children_count() == 3 {
+                    let parameters = Vec::new();
+                    let mut statements = Vec::new();
+
+                    for stmt in stmt.child(2).children() {
+                        statements.push(Stmt::new(stmt)?);
+                    }
+
+                    Stmt::FuncDecl {
+                        name: stmt
+                            .child(0)
+                            .get_value()
+                            .ok_or_else(|| {
+                                errors::ASTNodeValueInvalid(
+                                    stmt.child(0).get_symbol().name.to_owned(),
+                                )
+                            })?
+                            .into(),
+                        return_type: Type::new(stmt.child(1).get_value().ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(1).get_symbol().name.to_owned())
+                        })?)?,
+                        parameters,
+                        statements,
+                    }
+                } else if stmt.children_count() == 4 {
+                    let mut parameters = Vec::new();
+                    let mut statements = Vec::new();
+                    for param in stmt.child(1).children() {
+                        if param.children_count() != 2 {
+                            return Err(errors::ASTNodeChildrenCountInvalid(
+                                2,
+                                stmt.children_count(),
+                            )
+                            .into());
+                        }
+                        let parameter: (String, Type) = (
+                            param
+                                .child(0)
+                                .get_value()
+                                .ok_or_else(|| {
+                                    errors::ASTNodeValueInvalid(
+                                        param.child(0).get_symbol().name.to_owned(),
+                                    )
+                                })?
+                                .into(),
+                            Type::new(param.child(1).get_value().ok_or_else(|| {
+                                errors::ASTNodeValueInvalid(
+                                    param.child(0).get_symbol().name.to_owned(),
+                                )
+                            })?)?,
+                        );
+
+                        if parameters.contains(&parameter) {
+                            return Err(
+                                errors::ParemeterAlreadyDefined(parameter.0.to_owned()).into()
+                            );
+                        }
+
+                        parameters.push(parameter);
+                    }
+
+                    for stmt in stmt.child(3).children() {
+                        statements.push(Stmt::new(stmt)?);
+                    }
+
+                    Stmt::FuncDecl {
+                        name: stmt
+                            .child(0)
+                            .get_value()
+                            .ok_or_else(|| {
+                                errors::ASTNodeValueInvalid(
+                                    stmt.child(0).get_symbol().name.to_owned(),
+                                )
+                            })?
+                            .into(),
+                        return_type: Type::new(stmt.child(2).get_value().ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(2).get_symbol().name.to_owned())
+                        })?)?,
+                        parameters,
+                        statements,
+                    }
+                } else {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(4, stmt.children_count()).into(),
+                    );
+                }
+            }
+
+            "return" => {
+                if stmt.children_count() != 1 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(1, stmt.children_count()).into(),
+                    );
+                }
+                Stmt::Return(Expr::new(stmt.child(0))?)
+            }
+
+            "draw" => {
+                if stmt.children_count() == 1 {
+                    Stmt::Draw {
+                        shape: Expr::new(stmt.child(0))?,
+                        point: None,
+                    }
+                } else if stmt.children_count() == 2 {
+                    Stmt::Draw {
+                        shape: Expr::new(stmt.child(0))?,
+                        point: Some(Expr::new(stmt.child(1))?),
+                    }
+                } else {
+                    return Err(errors::ASTNodeChildrenCountInvalidEither(
+                        0,
+                        1,
+                        stmt.children_count(),
+                    )
+                    .into());
+                }
+            }
+            "for" => {
+                if stmt.children_count() != 4 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(4, stmt.children_count()).into(),
+                    );
+                }
+                let mut statements = vec![];
+                for stmt in stmt.child(3).children() {
+                    statements.push(Stmt::new(stmt)?);
+                }
+
+                Stmt::For {
+                    counter: stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into(),
+                    from: Expr::new(stmt.child(1))?,
+                    to: Expr::new(stmt.child(2))?,
+                    body: statements,
+                }
+            }
+            "fork" => {
+                let mut branchs = vec![];
+                let mut otherwise = None;
+                let mut statements: Vec<Stmt>;
+                for forkexpr in stmt.children() {
+                    match forkexpr.to_string().as_str() {
+                        "forkExpr" => {
+                            statements = vec![];
+                            for stmt in forkexpr.child(1).children() {
+                                statements.push(Stmt::new(stmt)?);
+                            }
+                            branchs.push((Expr::new(forkexpr.child(0))?,statements));
+                        },
+                        "otherwise" => {
+                            statements = vec![];
+                            for stmt in forkexpr.child(0).children() {
+                                statements.push(Stmt::new(stmt)?);
+                            }
+                            otherwise = Some(statements);
+                        }
+                        _ => unreachable!(),
+                    }
+                }
+
+                Stmt::Fork {
+                    branch: branchs,
+                    otherwise: otherwise,
                 }
             }
             _ => unreachable!(),

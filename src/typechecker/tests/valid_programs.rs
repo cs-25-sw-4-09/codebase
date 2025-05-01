@@ -1,6 +1,11 @@
 
 pub fn get_programs() -> Vec<&'static str> {
-    vec![PROGRAM1, PROGRAM2, PROGRAM3, PROGRAM4]
+    vec![
+        PROGRAM1 , 
+        PROGRAM2, 
+        PROGRAM3 , 
+        PROGRAM4
+        ]
 }
 
 const PROGRAM1: &str = 
@@ -13,9 +18,9 @@ begin
 draw (0,0)--(width,0)--(width,height)--(0,height)--* (|fill = fill|);";
 
 const PROGRAM2: &str = 
-"import triangle \"./triangle.EXTENSION\";
-import rectangle \"./rectangle.EXTENSION\";
-import window \"./window.EXTENSION\";
+"import triangle \"./src/typechecker/tests/test_imports/triangle.extension\";
+import rectangle \"./src/typechecker/tests/test_imports/rectangle.extension\";
+import window \"./src/typechecker/tests/test_imports/window.extension\";
 
 width: int;
 height: int;
@@ -36,7 +41,7 @@ house = place door bottom house by (width/2, door.height);
 
 draw house;"; 
 
-const PROGRAM3: &str = "import rectangle \"./rectangle.EXTENSION\";
+const PROGRAM3: &str = "import rectangle \"./src/typechecker/tests/test_imports/rectangle.extension\";
 
 square_size: int;
 star_color: color;
@@ -54,7 +59,7 @@ for i in 1 to square_amount {
 
 draw star;";
 
-const PROGRAM4: &str = "import square \"./square.EXTENSION\";
+const PROGRAM4: &str = "import square \"./src/typechecker/tests/test_imports/square.extension\";
 
 scale_size: int; 
 border_color: color; 

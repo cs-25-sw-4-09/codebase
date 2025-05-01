@@ -3,19 +3,18 @@ use std::error::Error;
 use hime_redist::symbols::Symbol;
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum UnaryOperator {
-    Negate,
-    Negative,
+pub enum PathOperator {
+    Line,
+    Curve,
 }
 
-impl UnaryOperator {
+impl PathOperator {
     pub fn new(operator: Symbol) -> Result<Self, Box<dyn Error>> {
         let operator = match operator.name {
-            "!" => Self::Negate,
-            "-" => Self::Negative,
-            _ => unreachable!(),
+            "--" => Self::Line,
+            "~~" => Self::Curve,
+            _ => panic!(),
         };
-
         Ok(operator)
     }
 }

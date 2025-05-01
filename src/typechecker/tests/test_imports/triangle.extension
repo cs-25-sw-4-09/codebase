@@ -1,0 +1,6 @@
+width: int;
+height: int;
+fill: color;
+
+begin
+x: int = 2;
