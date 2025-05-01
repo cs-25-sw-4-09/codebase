@@ -16,11 +16,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     );
     
     let mut program = Program::from_file(Path::new("main.extension"))?;
-    match program.type_check() {
-        Ok(_) => println!("[Typechecker] OK"),
-        Err(err) => println!("[Typechecker] error: {}", err),
+    if let Err(err) = program.type_check() {
+        println!("[Typechecker] error: {}", err);
+        return Err(err)
     }
-
+    println!("[Typechecker] OK");
     match program.interpret() {
         Ok(_) => println!("[Interpreter] OK"),
         Err(err) => println!("[Interpreter] error: {}", err),

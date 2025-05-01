@@ -1,4 +1,6 @@
-use crate::program::expression::Expr;
+use std::collections::btree_map::Range;
+
+use crate::{interpreter::InterpretS, program::{expression::Expr, statement::Stmt}};
 
 use super::InterpretE;
 
@@ -29,10 +31,42 @@ impl InterpretE for Expr {
                             _ => unreachable!()
                         }
                     },
-                    BinaryOperator::Subtract => todo!(),
-                    BinaryOperator::Multiply => todo!(),
-                    BinaryOperator::Divide => todo!(),
-                    BinaryOperator::Modulus => todo!(),
+                    BinaryOperator::Subtract =>  {
+                        match (i1, i2) {
+                            (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Integer(v1 - v2),
+                            (Expr::Float(v1), Expr::Float(v2)) => &Expr::Float(v1 - v2),
+                            (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Float(v1 - v2 as f64),
+                            (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Float(v1 as f64 - v2),
+                            _ => unreachable!()
+                        }
+                    },
+                    BinaryOperator::Multiply => {
+                        match (i1, i2) {
+                            (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Integer(v1 * v2),
+                            (Expr::Float(v1), Expr::Float(v2)) => &Expr::Float(v1 * v2),
+                            (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Float(v1 * v2 as f64),
+                            (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Float(v1 as f64 * v2),
+                            _ => unreachable!()
+                        }
+                    },
+                    BinaryOperator::Divide => {
+                        match (i1, i2) {
+                            (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Integer(v1 / v2),
+                            (Expr::Float(v1), Expr::Float(v2)) => &Expr::Float(v1 / v2),
+                            (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Float(v1 / v2 as f64),
+                            (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Float(v1 as f64 / v2),
+                            _ => unreachable!()
+                        }
+                    },
+                    BinaryOperator::Modulus => {
+                        match (i1, i2) {
+                            (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Integer(v1 % v2),
+                            (Expr::Float(v1), Expr::Float(v2)) => &Expr::Float(v1 % v2),
+                            (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Float(v1 % v2 as f64),
+                            (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Float(v1 as f64 % v2),
+                            _ => unreachable!()
+                        }
+                    },
                     BinaryOperator::GreaterThanOrEquals => todo!(),
                     BinaryOperator::LessThanOrEquals => todo!(),
                     BinaryOperator::LessThan => todo!(),
@@ -44,7 +78,23 @@ impl InterpretE for Expr {
                 }
             },
             Expr::UnaryOperation { operator, expr } => todo!(),
-            Expr::FCall { name, args } => todo!(),
+            Expr::FCall { name, args } => {
+                //Make new scope
+                environment.push_scope();
+
+                let function = environment.ftable_find(name.into()).unwrap();
+
+                for i in 0..function.1.len() {
+                    environment.vtable_push(function.1[i].clone(), args[i].clone());
+                }
+                
+                for f in function.0 {
+                    f.interpret(environment)?;
+                }
+
+                &environment.rvalue_get()
+
+            },
             Expr::SCall { name, args } => todo!(),
         };
         Ok(expr.clone())

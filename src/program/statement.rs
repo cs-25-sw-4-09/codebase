@@ -7,7 +7,7 @@ use super::expression::Expr;
 use crate::program::errors;
 use crate::program::r#type::Type;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Stmt {
     VarDecl {
         name: String,
