@@ -206,9 +206,9 @@ impl TypeCheckE for Expr {
                             let t1 = value.type_check(environment)?;
 
                             let shape_t = match *expected_types.get(key).unwrap() {
-                                super::environment::EType::Normal(x)
-                                | super::environment::EType::DeclNonDefault(x)
+                                super::environment::EType::DeclNonDefault(x)
                                 | super::environment::EType::DeclDefault(x) => x,
+                                super::environment::EType::Normal(_)=> unreachable!()
                             };
 
                             if t1 != shape_t {
@@ -249,7 +249,7 @@ impl TypeCheckE for Expr {
                             }
                             Type::Polygon => {
                                 let scall = Expr::SCall {
-                                    name: Some("Path".to_string()),
+                                    name: Some("Polygon".to_string()),
                                     args: args.clone(),
                                     path_poly: None,
                                 };

@@ -1,4 +1,5 @@
+
+
 begin
 
-house = place window ontop house (width/2- width/4, height-width + width/2- width/4);
-house = place door bottom house (width/2, door.height);
+x:shape = place x ontop func on (1,2);
