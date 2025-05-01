@@ -1,8 +1,8 @@
 use std::{collections::HashMap, error::Error, path::Path};
 
 use crate::{
-    program::{program::Program, r#type::Type, statement::Stmt},
-    typechecker::TypeCheckP,
+    program::{expression::Expr, program::Program, r#type::Type, statement::Stmt},
+    typechecker::{environment::EType, TypeCheckP},
 };
 
 use super::{environment::TEnvironment, errors, TypeCheckE, TypeCheckS};
@@ -10,6 +10,63 @@ use super::{environment::TEnvironment, errors, TypeCheckE, TypeCheckS};
 impl TypeCheckS for Stmt {
     fn type_check(&self, environment: &mut TEnvironment) -> Result<(), Box<dyn Error>> {
         match self {
+            //-----
+            // Decl
+            //-----
+            Stmt::Import { name, path } => {
+                if environment.stable_lookup(name).is_ok() {
+                    return Err(errors::ImportAlreadyDeclared(name.to_owned()).into());
+                }
+
+                let mut subprogram = Program::from_file(Path::new(path))?;
+
+                match subprogram.type_check() {
+                    Ok(subprogram_environment) => {
+                        println!("[Typechecker] Path: {} - OK", path);
+                        let parameters: HashMap<String, EType> =
+                            subprogram_environment.vdtable_get_hashmap();
+
+                        environment.stable_set(name.clone(), parameters);
+                        Ok(())
+                    }
+                    Err(err) => {
+                        println!("[Typechecker] Path: {} - ERROR", path);
+                        Err(err)
+                    }
+                }
+            }
+            Stmt::Decl {
+                name,
+                declared_type,
+                value,
+            } => {
+                if environment.vdtable_lookup(name).is_ok() {
+                    return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
+                };
+                if let Some(set_value) = value {
+                    let t1 = set_value.type_check(environment)?;
+                    if declared_type.eq(&t1) {
+                        environment.vdtable_set_default(name.clone(), *declared_type);
+                        Ok(())
+                    } else if checks_empty_array(*declared_type, t1) {
+                        environment.vdtable_set_default(name.clone(), declared_type.clone());
+                        return Ok(());
+                    } else {
+                        Err(errors::VariableExpressionTypeNotMatch(
+                            name.to_owned(),
+                            declared_type.to_owned(),
+                            t1,
+                        )
+                        .into())
+                    }
+                } else {
+                    environment.vdtable_set_non_default(name.clone(), *declared_type);
+                    Ok(())
+                }
+            }
+            //-----
+            // Stmt
+            //-----
             Stmt::VarDecl {
                 name,
                 declared_type,
@@ -22,11 +79,26 @@ impl TypeCheckS for Stmt {
                 if declared_type.eq(&t1) {
                     environment.vtable_set(name.clone(), *declared_type);
                     return Ok(());
+                } else if checks_empty_array(*declared_type, t1) {
+                    environment.vtable_set(name.clone(), *declared_type);
+                    return Ok(());
                 }
                 Err(
                     errors::VariableExpressionTypeNotMatch(name.to_owned(), *declared_type, t1)
                         .into(),
                 )
+            }
+            Stmt::Assign { name, value } => {
+                let t1 = Expr::Variable(name.into()).type_check(environment)?;
+                let t2 = value.type_check(environment)?;
+
+                if t1 == t2 {
+                    Ok(())
+                } else if checks_empty_array(t1, t2) {
+                    Ok(())
+                } else {
+                    Err(errors::AssignTypesNoMatch(t1, t2).into())
+                }
             }
             Stmt::FuncDecl {
                 name,
@@ -58,58 +130,106 @@ impl TypeCheckS for Stmt {
                 let t1 = expr.type_check(environment)?;
                 if environment.return_lookup().eq(&t1) {
                     Ok(())
+                } else if checks_empty_array(environment.return_lookup(), t1) {
+                    return Ok(());
                 } else {
                     Err(errors::ReturnTypeNotMatch(t1, environment.return_lookup()).into())
                 }
             }
-            Stmt::Decl {
-                name,
-                declared_type,
-                value,
-            } => {
-                if environment.vdtable_lookup(name).is_ok() {
-                    return Err(errors::IdentifierAlreadyDeclared(name.to_owned()).into());
-                };
-                if let Some(set_value) = value {
-                    let t1 = set_value.type_check(environment)?;
-                    if declared_type.eq(&t1) {
-                        environment.vdtable_set(name.clone(), *declared_type);
+            Stmt::Draw { shape, point } => match point {
+                Some(p) => {
+                    let t1 = shape.type_check(environment)?;
+                    let t2 = p.type_check(environment)?;
+                    if t1 == Type::Shape && t2 == Type::Point {
+                        Ok(())
+                    } else if t1 == Type::Shape {
+                        Err(errors::DrawTypeFault(Type::Point, t2).into())
+                    } else {
+                        Err(errors::DrawTypeFault(Type::Shape, t1).into())
+                    }
+                }
+                None => {
+                    let t1 = shape.type_check(environment)?;
+                    if t1 == Type::Shape {
                         Ok(())
                     } else {
-                        Err(errors::VariableExpressionTypeNotMatch(
-                            name.to_owned(),
-                            declared_type.to_owned(),
-                            t1,
-                        )
-                        .into())
+                        Err(errors::DrawTypeFault(Type::Shape, t1).into())
                     }
-                } else {
-                    environment.vdtable_set(name.clone(), *declared_type);
-                    Ok(())
                 }
+            },
+            Stmt::For {
+                counter,
+                from,
+                to,
+                body,
+            } => {
+                if environment.vtable_lookup(counter).is_ok() {
+                    return Err(errors::ForLoopCounterDeclared().into());
+                }
+
+                let t1 = from.type_check(environment)?;
+                let t2 = to.type_check(environment)?;
+
+                if !(t1 == Type::Int && t2 == Type::Int) {
+                    return Err(errors::ForLoopTypeError(t1, t2).into());
+                }
+                // Both lines are needed as the first clone does not clone over the environment
+                let mut new_environment = environment.clone();
+                new_environment.clone_from(&environment);
+
+                new_environment.vtable_set(counter.to_string(), Type::Int);
+
+                for stmt in body {
+                    stmt.type_check(&mut new_environment)?;
+                }
+
+                Ok(())
             }
-            Stmt::Import { name, path } => {
-                if environment.stable_lookup(name).is_ok() {
-                    return Err(errors::ImportAlreadyDeclared(name.to_owned()).into());
+            Stmt::Fork { branch, otherwise } => {
+                for (bool_expr, body) in branch {
+                    let t1 = bool_expr.type_check(environment)?;
+                    if bool_expr.type_check(environment)? != Type::Bool {
+                        return Err(errors::ForkNotBooltypeError(t1).into());
+                    }
+                    let mut new_environment = environment.clone();
+                    new_environment.clone_from(&environment);
+
+                    for stmt in body {
+                        stmt.type_check(&mut new_environment)?;
+                    }
                 }
 
-                let mut subprogram = Program::from_file(Path::new(path))?;
+                match otherwise {
+                    Some(otherwise) => {
+                        let mut new_environment = environment.clone();
+                        new_environment.clone_from(&environment);
+                        for stmt in otherwise {
+                            stmt.type_check(&mut new_environment)?;
+                        }
 
-                match subprogram.type_check() {
-                    Ok(subprogram_environment) => {
-                        println!("[Typechecker] Path: {} - OK", path);
-                        let parameters: HashMap<String, Type> =
-                            subprogram_environment.vdtable_get_hashmap();
-
-                        environment.stable_set(name.clone(), parameters);
                         Ok(())
                     }
-                    Err(err) => {
-                        println!("[Typechecker] Path: {} - ERROR", path);
-                        Err(err)
-                    }
+                    None => Ok(()),
                 }
             }
         }
+    }
+}
+
+fn checks_empty_array(array: Type, empty: Type) -> bool {
+    if empty != Type::Empty {
+        return false;
+    }
+
+    match array {
+        Type::IntArray
+        | Type::FloatArray
+        | Type::BoolArray
+        | Type::PathArray
+        | Type::PointArray
+        | Type::ShapeArray
+        | Type::PolygonArray
+        | Type::ColorArray => true,
+        _ => false,
     }
 }

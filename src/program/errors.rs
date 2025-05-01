@@ -36,3 +36,4 @@ impl fmt::Display for ParemeterAlreadyDefined {
         write!(f, "Parameter already defined: {}", self.0)
     }
 }
+

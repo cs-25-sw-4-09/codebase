@@ -36,13 +36,13 @@ grammar cfg
     //Declarations
     declS -> (import | decl)*;
     import -> 'import'! id STRING ';'!;
-    decl -> id ':'! types ('='! expr)?';'!;
+    decl -> id ':'! types ('='! exprS)?';'!;
 
     //Statements
     stmtS -> (forkS | for | draw | return | funcDecl | assign | varDecl)+;
 
     forkS -> 'fork'! '{'! fork^ '}'!;
-    for -> 'for'! id 'in'! exprS '{'! stmtS '}'! ;
+    for -> 'for'! id 'in'! exprS 'to'! exprS '{'! stmtS '}'! ;
     draw -> 'draw'! exprS ('at'! exprS)? ';'!;
     return -> 'return'! exprS ';'!;
     funcDecl -> id '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;
@@ -50,11 +50,11 @@ grammar cfg
     varDecl -> id ':'! types '='! exprS ';'!;
 
     fork -> forkExpr+ otherwise?;
-    forkExpr -> '('! exprFunc ')'! '->'! '{'! stmtS '}'!;
+    forkExpr -> '('! exprFunc? ')'! '->'! '{'! stmtS '}'!;
     otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
 
     //Expressions
-    exprS -> (manipulation | exprFunc | SCall | color | path | range)^;
+    exprS -> (manipulation | exprFunc | SCall | color | path | range | polygon)^;
     exprFunc -> (expr )^;
     expr -> expr '||'^ expr1 | expr1^;
     expr1 -> expr1 '&&'^ expr2 | expr2^;
@@ -66,24 +66,25 @@ grammar cfg
 
     //Also contains parenthesis, but this case is promoted
     point -> '('! (expr^ | (expr) ','! (expr)) ')'!;
-    FCall -> id '('! args ')'!;
+    FCall -> id '('! args? ')'!;
 
     member -> id '.'! id;
     range -> exprFunc ('..' | '..=') exprFunc;
     color -> '('! (expr) ','! (expr) ','! (expr) ','! (expr)')'! ;
-    path   -> exprFunc (('--' | '~~') exprFunc)+ (('--' | '~~')'*')?;
-    
+    path   -> exprFunc (('--' | '~~')^ exprFunc)+;
+    polygon -> exprS(('--*' | '~~*')^);
+
     args -> arg (','! arg)*;
     arg -> exprS^;
 
-    SCall -> (path | id) '(|'! attrS '|)'!;
+    SCall -> (path | id | polygon) '(|'! attrS '|)'!;
     attrS -> (attr (','! attr)*)? ;
     attr -> id '='! exprS;
 
     arrayIdx -> id ('['! exprS ']'!)+;
     array -> ('['! ((exprS (','! exprS)*))? ']'! | '[]'!);
 
-    pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop') expr ('on'! point)?; //expr ('at'! point)?;
+    pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop') expr ('by'! point)?;
     manipulation -> place | scale | rotate;
     place -> 'place'! exprFunc pos;
     scale -> 'scale'! exprFunc 'by'! exprFunc;
@@ -93,8 +94,9 @@ grammar cfg
     param -> id ':'! types;
 
     //Types
-    types -> (('int' | 'float' | 'point' | 'color'
-    | 'shape' | 'path' | 'polygon' | 'bool') ('[]')*)^;
+    types -> ('int' | 'float' | 'point' | 'color'
+    | 'shape' | 'path' | 'polygon' | 'bool' | 'int[]' | 'float[]' | 'point[]' | 'color[]'
+    | 'shape[]' | 'path[]' | 'polygon[]' | 'bool[]')^;
 
 
     //Simple things

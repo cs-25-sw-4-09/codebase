@@ -197,7 +197,7 @@ fn for_loop() {
     let program =
     "begin
     sum: int = 0;
-    for val in 1..=20 {
+    for val in 1 to 20 {
         sum = sum + val;
     }
     ";
@@ -205,8 +205,7 @@ fn for_loop() {
     let stmt1 = vec![("varDecl", 2), ("sum", 3), ("int", 3), ("0", 3)];
     let for_stmt_depth = 4;
 
-    let mut for_loop = vec![("for", 2), ("val", 3),
-    ("range", 3), ("1", 4), ("..=", 4), ("20", 4),
+    let mut for_loop = vec![("for", 2), ("val", 3), ("1", 3), ("20", 3),
    ("stmtS", 3)];
     let for_stmt = vec![("assign", for_stmt_depth), ("sum", for_stmt_depth + 1),
     ("+", for_stmt_depth+1), ("sum", for_stmt_depth+2), ("val", for_stmt_depth+2),
@@ -329,15 +328,14 @@ fn color_decl(){
 }
 
 #[test]
-fn straight_path_decl(){
+fn straight_polygon_decl(){
     let straight_path = "begin
-    x: path = p1--(2,4)--*;
+    x: polygon = p1--(2,4)--*;
     ";
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     start.extend(
         vec![
-            ("varDecl", 2), ("x", 3), ("path", 3), ("path", 3), ("p1", 4), ("--", 4), ("point", 4), ("2", 5), ("4", 5),
-            ("--", 4), ("*", 4)
+            ("varDecl", 2), ("x", 3), ("polygon", 3), ("--*", 3), ("--", 4), ("p1", 5), ("point", 5), ("2", 6), ("4", 6)
         ].into_iter()
     );
     test_equality(start, straight_path);
@@ -352,8 +350,8 @@ fn curved_path_decl(){
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     start.extend(
         vec![
-            ("varDecl", 2), ("x", 3), ("path", 3), ("path", 3), ("p1", 4), ("~~", 4), ("point", 4), ("2", 5), ("4", 5),
-            ("~~", 4), ("p3", 4)
+            ("varDecl", 2), ("x", 3), ("path", 3), ("~~", 3), ("~~",4), ("p1", 5), ("point", 5), ("2", 6), ("4", 6),
+            ("p3", 4)
         ].into_iter()
     );
     test_equality(start, curved_path);
@@ -368,8 +366,8 @@ fn mixed_path_decl(){
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     start.extend(
         vec![
-            ("varDecl", 2), ("x", 3), ("path", 3), ("path", 3), ("p1", 4), ("--", 4), ("point", 4), ("2", 5), ("4", 5),
-            ("~~", 4), ("p3", 4)
+            ("varDecl", 2), ("x", 3), ("path", 3), ("~~", 3), ("--",4), ("p1", 5), ("point", 5), ("2", 6), ("4", 6),
+            ("p3", 4)
         ].into_iter()
     );
     test_equality(start, mixed_path);
@@ -380,20 +378,15 @@ fn array_test(){
     let program =
     "begin
     x: int[] = [5, 3, 5, 7];
-    y: int[][] = [[1,2],[3,4]];
     z: int[] = [];
     ";
     let array_depth = 2;
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
-    let stmt1 = vec![("varDecl", array_depth), ("x", array_depth+1), ("int", array_depth+1), ("[]",array_depth+2), ("array", array_depth+1),
+    let stmt1 = vec![("varDecl", array_depth), ("x", array_depth+1), ("int[]", array_depth+1), ("array", array_depth+1),
     ("5", array_depth+2), ("3", array_depth+2), ("5", array_depth+2), ("7", array_depth+2),];
 
-    let stmt2 = vec![("varDecl", array_depth), ("y", array_depth+1), ("int", array_depth+1),
-    ("[]", array_depth+2), ("[]", array_depth+2), ("array", array_depth+1), ("array", array_depth+2), ("1",array_depth+3),
-    ("2", array_depth+3), ("array", array_depth+2), ("3", array_depth+3), ("4", array_depth+3)];
-
-    let stmt3 = vec![("varDecl" , array_depth), ("z", array_depth+1), ("int", array_depth+1), ("[]", array_depth+2), ("array", array_depth+1)];
-    start.extend(stmt1.into_iter().chain(stmt2.into_iter()).chain(stmt3.into_iter()));
+    let stmt3 = vec![("varDecl" , array_depth), ("z", array_depth+1), ("int[]", array_depth+1), ("array", array_depth+1)];
+    start.extend(stmt1.into_iter().chain(stmt3.into_iter()));
     test_equality(start, program);
 }
 
@@ -417,7 +410,7 @@ fn manipulation_place(){
     let program =
     "begin
     x = place rec left x;
-    x = place rec right 5 on (10, 10);
+    x = place rec right 5 by (10, 10);
     ";
     let manipulation_depth = 2;
     let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
@@ -498,8 +491,7 @@ fn indexing(){
     ";
     let indexing_depth = 2;
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
-    let stmt1 = vec![("varDecl", indexing_depth), ("x", indexing_depth+1), ("int", indexing_depth+1),
-    ("[]", indexing_depth+2), ("array", indexing_depth+1), ("1", indexing_depth+2), ("2", indexing_depth+2), ("3", indexing_depth+2),
+    let stmt1 = vec![("varDecl", indexing_depth), ("x", indexing_depth+1), ("int[]", indexing_depth+1), ("array", indexing_depth+1), ("1", indexing_depth+2), ("2", indexing_depth+2), ("3", indexing_depth+2),
     ("4", indexing_depth+2)];
     let stmt2 = vec![("assign", indexing_depth), ("a", indexing_depth+1), ("arrayIdx", indexing_depth+1), ("x", indexing_depth+2), ("1", indexing_depth+2)];
 
