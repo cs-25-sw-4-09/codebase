@@ -10,7 +10,7 @@ impl InterpretS for Stmt {
         match self {
             Stmt::VarDecl {
                 name,
-                declared_type:_,
+                declared_type: _,
                 value,
             } => {
                 let i1 = value.interpret(environment)?;
@@ -19,22 +19,35 @@ impl InterpretS for Stmt {
             }
             Stmt::FuncDecl {
                 name,
-                return_type:_,
+                return_type: _,
                 parameters,
                 statements,
             } => {
-                environment.ftable_push(name.into(), statements.clone(), parameters.iter().map(|p| p.0.clone()).collect());
+                environment.ftable_push(
+                    name.into(),
+                    statements.clone(),
+                    parameters.iter().map(|p| p.0.clone()).collect(),
+                );
             }
             Stmt::Return(expr) => {
                 let i1 = expr.interpret(environment)?;
                 environment.rvalue_set(i1);
-            },
+            }
             Stmt::Decl {
                 name,
                 declared_type,
                 value,
             } => todo!(),
             Stmt::Import { name, path } => todo!(),
+            Stmt::Draw { shape, point } => todo!(),
+            Stmt::Assign { name, value } => todo!(),
+            Stmt::For {
+                counter,
+                from,
+                to,
+                body,
+            } => todo!(),
+            Stmt::Fork { branch, otherwise } => todo!(),
         }
 
         Ok(())
