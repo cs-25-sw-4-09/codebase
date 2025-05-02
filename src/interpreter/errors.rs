@@ -9,3 +9,12 @@ impl fmt::Display for FunctionNotReturning {
         write!(f, "Function {} did not return", self.0)
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct DeclValueNotSpecified(pub String);
+impl Error for DeclValueNotSpecified {}
+impl fmt::Display for DeclValueNotSpecified {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Decl {}'s value is not specified", self.0)
+    }
+}

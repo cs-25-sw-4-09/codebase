@@ -1764,7 +1764,7 @@ fn test_program_fork() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::Fork { branch, otherwise } = &program.stmts[0] {
+    if let Stmt::Fork { branches: branch, otherwise } = &program.stmts[0] {
         assert_eq!(otherwise, &None);
         assert_eq!(
             branch,
@@ -1792,7 +1792,7 @@ fn test_program_fork_otherwise() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::Fork { branch, otherwise } = &program.stmts[0] {
+    if let Stmt::Fork { branches: branch, otherwise } = &program.stmts[0] {
         assert_eq!(
             otherwise,
             &Some(vec![Stmt::VarDecl {

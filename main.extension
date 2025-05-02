@@ -1,10 +1,8 @@
 begin
-x: int = 18 / 6;
 
-func(vAr: int): int -> {
-    x: int = 5 * vAr;
-    return vAr + x * 2;
-}
+othdderwise: bool = false && true || true;
 
-y: int = func(x * 2);
+
+
+
 

@@ -48,3 +48,13 @@ impl fmt::Display for ExprParseAsIntegerError {
     }
 }
 
+
+#[derive(Debug, Clone)]
+pub struct ExprParseAsBooleanError;
+impl Error for ExprParseAsBooleanError {}
+impl fmt::Display for ExprParseAsBooleanError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Expression could not be parsed as boolean")
+    }
+}
+

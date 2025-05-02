@@ -249,7 +249,7 @@ fn for_loop_range_error() {
 fn fork() {
     let mut env = TEnvironment::new();
     let t1 = Stmt::Fork {
-        branch: vec![(
+        branches: vec![(
             Expr::Boolean(true),
             vec![Stmt::VarDecl {
                 name: "z".into(),
@@ -267,7 +267,7 @@ fn fork() {
 fn fork_with_otherwise() {
     let mut env = TEnvironment::new();
     let t1 = Stmt::Fork {
-        branch: vec![(
+        branches: vec![(
             Expr::Boolean(true),
             vec![Stmt::VarDecl {
                 name: "z".into(),
@@ -290,7 +290,7 @@ fn fork_with_otherwise() {
 fn fork_error() {
     let mut env = TEnvironment::new();
     let type_mismatch = Stmt::Fork {
-        branch: vec![(
+        branches: vec![(
             Expr::Integer(2),
             vec![Stmt::VarDecl {
                 name: "z".into(),

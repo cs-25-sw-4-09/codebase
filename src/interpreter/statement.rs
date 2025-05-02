@@ -1,6 +1,6 @@
 use crate::program::{expression::Expr, statement::Stmt};
 
-use super::{InterpretE, InterpretS};
+use super::{errors, InterpretE, InterpretS};
 
 impl InterpretS for Stmt {
     fn interpret(
@@ -38,34 +38,70 @@ impl InterpretS for Stmt {
             }
             Stmt::Decl {
                 name,
-                declared_type,
+                declared_type:_,
                 value,
-            } => todo!(),
+            } => {
+                if let Some(value) = value {
+                    match environment.vtable_find(name.to_owned()) {
+                        Some(_) => (),
+                        None => {
+                            let i1 = value.interpret(environment)?;
+                            environment.vtable_push(name.to_owned(), i1);
+                        }
+                    }
+                } else {
+                    match environment.vtable_find(name.to_owned()) {
+                        Some(_) => (),
+                        None => return Err(errors::DeclValueNotSpecified(name.to_owned()).into()),
+                    }
+                }
+            }
             Stmt::Import { name, path } => todo!(),
             Stmt::Draw { shape, point } => todo!(),
             Stmt::Assign { name, value } => {
                 *environment.vtable_find(name.into()).unwrap() = value.interpret(environment)?;
-            },
+            }
             Stmt::For {
                 counter,
                 from,
                 to,
                 body,
             } => {
-                for i in from.interpret(environment)?.get_int()?..to.interpret(environment)?.get_int()? {
+                for i in
+                    from.interpret(environment)?.get_int()?..to.interpret(environment)?.get_int()?
+                {
                     environment.push_scope();
                     environment.vtable_push(counter.into(), Expr::Integer(i));
                     for stmt in body.iter() {
                         stmt.interpret(environment)?;
                     }
-                   
+
                     environment.pop_scope();
                     if environment.rvalue_get().is_some() {
                         break;
                     }
                 }
             }
-            Stmt::Fork { branch, otherwise } => todo!(),
+            Stmt::Fork { branches, otherwise } => {
+                for (expr, stmts) in branches {
+                    if expr.interpret(environment)? == Expr::Boolean(true) {
+                        environment.push_scope();
+                        for stmt in stmts {
+                            stmt.interpret(environment)?;
+                        }
+                        environment.pop_scope();
+                        return Ok(());
+                    }
+                }
+
+                if let Some(otherwise) = otherwise {
+                    environment.push_scope();
+                    for stmt in otherwise {
+                        stmt.interpret(environment)?;
+                    }
+                    environment.pop_scope();
+                }
+            },
         }
 
         Ok(())

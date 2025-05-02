@@ -45,7 +45,7 @@ pub enum Stmt {
         body: Vec<Stmt>,
     },
     Fork {
-        branch: Vec<(Expr, Vec<Stmt>)>,
+        branches: Vec<(Expr, Vec<Stmt>)>,
         otherwise: Option<Vec<Stmt>>,
     },
 }
@@ -313,7 +313,7 @@ impl Stmt {
                 }
 
                 Stmt::Fork {
-                    branch: branchs,
+                    branches: branchs,
                     otherwise: otherwise,
                 }
             }

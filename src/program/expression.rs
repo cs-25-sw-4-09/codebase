@@ -342,4 +342,11 @@ impl Expr {
             _ => Err(errors::ExprParseAsIntegerError.into())
         }
     }
+
+    pub fn get_bool(&self) -> Result<bool, Box<dyn Error>> {
+        match self {
+            Expr::Boolean(i) => Ok(*i),
+            _ => Err(errors::ExprParseAsBooleanError.into())
+        }
+    }
 }
