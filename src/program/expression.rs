@@ -335,4 +335,11 @@ impl Expr {
 
         Ok(expr)
     }
+
+    pub fn get_int(&self) -> Result<i64, Box<dyn Error>> {
+        match self {
+            Expr::Integer(i) => Ok(*i),
+            _ => Err(errors::ExprParseAsIntegerError.into())
+        }
+    }
 }

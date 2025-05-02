@@ -16,10 +16,13 @@ impl InterpretE for Expr {
     ) -> Result<Expr, Box<dyn std::error::Error>> {
         let expr = match self {
             Expr::Integer(_) | Expr::Boolean(_) | Expr::Float(_) | Expr::Color(_, _, _, _) => self,
-            Expr::Variable(identifier) => &environment.vtable_find(identifier.to_owned()).unwrap(),
+            Expr::Variable(identifier) => environment.vtable_find(identifier.to_owned()).unwrap(),
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let i1 = lhs.interpret(environment)?;
                 let i2 = rhs.interpret(environment)?;
+
+                println!("i1 {:?}",i1);
+                println!("i2 {:?}",i2);
 
                 match operator {
                     BinaryOperator::Add => match (i1, i2) {
@@ -41,7 +44,7 @@ impl InterpretE for Expr {
                         (Expr::Float(v1), Expr::Float(v2)) => &Expr::Float(v1 * v2),
                         (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Float(v1 * v2 as f64),
                         (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Float(v1 as f64 * v2),
-                        _ => unreachable!(),
+                        p => unreachable!("{:?}", p),
                     },
                     BinaryOperator::Divide => match (i1, i2) {
                         (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Integer(v1 / v2),
@@ -69,13 +72,19 @@ impl InterpretE for Expr {
             }
             Expr::UnaryOperation { operator, expr } => todo!(),
             Expr::FCall { name, args } => {
+                let mut params = Vec::new();
+                let function = environment.ftable_find(name.into()).unwrap().clone();
+
+                for i in 0..function.1.len() {
+                    let i1 = args[i].clone().interpret(environment)?;
+                    params.push((function.1[i].clone(), i1));
+                }
+
                 //Make new scope
                 let previous_stack = environment.vtable_clear();
 
-                let function = environment.ftable_find(name.into()).unwrap();
-
-                for i in 0..function.1.len() {
-                    environment.vtable_push(function.1[i].clone(), args[i].clone());
+                for (param_identifier, param_elem) in params {
+                    environment.vtable_push(param_identifier, param_elem);
                 }
 
                 for f in function.0 {

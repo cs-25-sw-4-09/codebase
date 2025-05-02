@@ -20,7 +20,7 @@ impl IEnvironment {
         self.v_table.push(identifier, element);
     }
     
-    pub fn vtable_find(&mut self, identifier: String) -> Option<Expr> {
+    pub fn vtable_find(&mut self, identifier: String) -> Option<&mut Expr> {
         self.v_table.find(identifier)
     }
     
@@ -38,7 +38,7 @@ impl IEnvironment {
         self.f_table.push(identifier, (statements, parameters));
     }
 
-    pub fn ftable_find(&mut self, identifier: String) -> Option<(Vec<Stmt>, Vec<String>)> {
+    pub fn ftable_find(&mut self, identifier: String) -> Option<&mut (Vec<Stmt>, Vec<String>)> {
         self.f_table.find(identifier)
     }
 

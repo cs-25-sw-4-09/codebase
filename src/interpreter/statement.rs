@@ -1,4 +1,4 @@
-use crate::program::statement::Stmt;
+use crate::program::{expression::Expr, statement::Stmt};
 
 use super::{InterpretE, InterpretS};
 
@@ -7,6 +7,9 @@ impl InterpretS for Stmt {
         &self,
         environment: &mut super::environment::IEnvironment,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        if environment.rvalue_get().is_some() {
+            return Ok(());
+        }
         match self {
             Stmt::VarDecl {
                 name,
@@ -40,13 +43,28 @@ impl InterpretS for Stmt {
             } => todo!(),
             Stmt::Import { name, path } => todo!(),
             Stmt::Draw { shape, point } => todo!(),
-            Stmt::Assign { name, value } => todo!(),
+            Stmt::Assign { name, value } => {
+                *environment.vtable_find(name.into()).unwrap() = value.interpret(environment)?;
+            },
             Stmt::For {
                 counter,
                 from,
                 to,
                 body,
-            } => todo!(),
+            } => {
+                for i in from.interpret(environment)?.get_int()?..to.interpret(environment)?.get_int()? {
+                    environment.push_scope();
+                    environment.vtable_push(counter.into(), Expr::Integer(i));
+                    for stmt in body.iter() {
+                        stmt.interpret(environment)?;
+                    }
+                   
+                    environment.pop_scope();
+                    if environment.rvalue_get().is_some() {
+                        break;
+                    }
+                }
+            }
             Stmt::Fork { branch, otherwise } => todo!(),
         }
 

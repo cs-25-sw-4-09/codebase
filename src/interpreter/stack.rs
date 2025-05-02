@@ -35,13 +35,10 @@ impl<T> Stack<T> {
         self.elements.push(HashMap::new());
     }
 
-    pub fn find(&mut self, identifier: String) -> Option<T>
-    where
-        T: Clone,
-    {
-        for map in self.elements.iter().rev() {
-            if let Some(value) = map.get(&identifier) {
-                return Some(value.clone());
+    pub fn find(&mut self, identifier: String) -> Option<&mut T> {
+        for map in self.elements.iter_mut().rev() {
+            if let Some(value) = map.get_mut(&identifier) {
+                return Some(value);
             }
         }
         None

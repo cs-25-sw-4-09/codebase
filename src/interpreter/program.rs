@@ -1,4 +1,4 @@
-use crate::program::{program::Program, statement::Stmt};
+use crate::program::program::Program;
 
 use super::{environment::IEnvironment, InterpretP, InterpretS};
 
