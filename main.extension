@@ -1,12 +1,10 @@
 begin
-
-
-
 h(f: int): int -> {
-    return 4+ f;
+    g(hey: int): int -> {
+        return hey;
+    }
+
+    return g(f);
 }
-
-
-
 i: int = h(2);
 

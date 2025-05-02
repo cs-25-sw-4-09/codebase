@@ -1,4 +1,4 @@
-use crate::program::{expression::Expr, statement::Stmt, r#type::Type};
+use crate::program::{expression::Expr, statement::Stmt};
 
 use super::stack::Stack;
 
@@ -8,28 +8,34 @@ pub struct IEnvironment {
     f_table: Stack<(Vec<Stmt>, Vec<String>)>,
     //  s_table: HashMap<String, (Attributes, Program)>,
     // d_array: Vec<()>,
-    r_value: Expr,
+    r_value: Option<Expr>,
 }
 
 impl IEnvironment {
     pub fn new() -> Self {
-        IEnvironment { v_table: Stack::new(), f_table: Stack::new(), r_value: Expr::Integer(0)}
+        IEnvironment { v_table: Stack::new(), f_table: Stack::new(), r_value: None}
     }
 
     pub fn vtable_push(&mut self, identifier: String, element: Expr) {
         self.v_table.push(identifier, element);
     }
+    
+    pub fn vtable_find(&mut self, identifier: String) -> Option<Expr> {
+        self.v_table.find(identifier)
+    }
+    
+    pub fn vtable_clear(&mut self) -> Stack<Expr> {
+        let vtable = self.v_table.clone();
+        self.v_table.clear();
+        vtable
+    }
 
-    pub fn vtable_pop(&mut self) {
-        self.v_table.pop();
+    pub fn vtable_restore(&mut self, restore: Stack<Expr>) {
+        self.v_table = restore;
     }
 
     pub fn ftable_push(&mut self, identifier: String, statements: Vec<Stmt>, parameters: Vec<String>) {
         self.f_table.push(identifier, (statements, parameters));
-    }
-
-    pub fn ftable_pop(&mut self) {
-        self.f_table.pop();
     }
 
     pub fn ftable_find(&mut self, identifier: String) -> Option<(Vec<Stmt>, Vec<String>)> {
@@ -37,8 +43,8 @@ impl IEnvironment {
     }
 
     pub fn push_scope(&mut self) {
-        self.v_table.push_vscope();
-        self.f_table.push_fscope();
+        self.v_table.push_scope();
+        self.f_table.push_scope();
     }
 
     pub fn pop_scope(&mut self) {
@@ -47,17 +53,16 @@ impl IEnvironment {
     }
 
     pub fn rvalue_set(&mut self, value: Expr) {
-        self.r_value = value;
+        self.r_value = Some(value);
+    }
+
+    pub fn rvalue_clear(&mut self) {
+        self.r_value = None;
     }
     
-    pub fn rvalue_get(&self) -> Expr {
+    pub fn rvalue_get(&self) -> Option<Expr> {
         self.r_value.clone()
     }
-    
-    pub fn vtable_find(&mut self, identifier: String) -> Option<Expr> {
-        self.v_table.find(identifier)
-    }
-    
    
     
 

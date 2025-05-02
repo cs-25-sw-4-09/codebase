@@ -1,57 +1,47 @@
-#[derive(Debug)]
-pub struct Stack<T> {
-    elements: Vec<StackElement<T>>,
-}
+use std::collections::HashMap;
 
-#[derive(Debug, PartialEq)]
-pub enum StackElement<T> {
-    Value(String, T),
-    FScope,
-    VScope
+#[derive(Debug, Clone)]
+pub struct Stack<T> {
+    elements: Vec<HashMap<String, T>>,
 }
 
 impl<T> Stack<T> {
     pub fn new() -> Self {
         Stack {
-            elements: Vec::new(),
+            elements: vec![HashMap::new()],
         }
     }
 
     pub fn push(&mut self, identifier: String, element: T) {
-        self.elements.push(StackElement::Value(identifier, element))
-    }
-
-    pub fn pop(&mut self) -> Option<StackElement<T>> {
-        self.elements.pop()
-    }
-
-    pub fn push_vscope(&mut self) {
-        self.elements.push(StackElement::VScope)
-    }
-
-    pub fn push_fscope(&mut self) {
-        self.elements.push(StackElement::FScope)
+        self.elements
+            .iter_mut()
+            .last()
+            .unwrap()
+            .insert(identifier, element);
     }
 
     pub fn pop_scope(&mut self) {
-        while let Some(elem) = self.elements.pop() {
-            match elem {
-                StackElement::Value(_, _) => continue,
-                _ => break
-            }
+        if self.elements.len() > 1 {
+            self.elements.pop();
         }
     }
 
-    pub fn find(&mut self, identifier: String) -> Option<T> where T: Clone {
-        for element in self.elements.iter() {
-            match element {
-                StackElement::Value(ref id, ref value) => {
-                    if id == &identifier {
-                        return Some(value.clone())
-                    }
-                },
-                StackElement::VScope => { return None },
-                StackElement::FScope => continue
+    pub fn push_scope(&mut self) {
+        self.elements.push(HashMap::new());
+    }
+
+    pub fn clear(&mut self) {
+        self.elements.clear();
+        self.elements.push(HashMap::new());
+    }
+
+    pub fn find(&mut self, identifier: String) -> Option<T>
+    where
+        T: Clone,
+    {
+        for map in self.elements.iter().rev() {
+            if let Some(value) = map.get(&identifier) {
+                return Some(value.clone());
             }
         }
         None

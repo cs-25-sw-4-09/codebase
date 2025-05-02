@@ -70,7 +70,7 @@ impl InterpretE for Expr {
             Expr::UnaryOperation { operator, expr } => todo!(),
             Expr::FCall { name, args } => {
                 //Make new scope
-                environment.push_scope();
+                let previous_stack = environment.vtable_clear();
 
                 let function = environment.ftable_find(name.into()).unwrap();
 
@@ -82,9 +82,14 @@ impl InterpretE for Expr {
                     f.interpret(environment)?;
                 }
 
-                environment.pop_scope();
+                environment.vtable_restore(previous_stack);
 
-                &environment.rvalue_get()
+                if let Some(rvalue) = environment.rvalue_get() {
+                    environment.rvalue_clear();
+                    &rvalue.interpret(environment)?
+                } else {
+                    panic!("FUNCTION DID NEVER RETURN U BITCH")
+                }
             }
             Expr::Point(expr, expr1) => todo!(),
             Expr::PathOperation { lhs, rhs, operator } => todo!(),
