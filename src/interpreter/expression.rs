@@ -1,11 +1,9 @@
-use std::collections::btree_map::Range;
-
 use crate::{
     interpreter::InterpretS,
-    program::{expression::Expr, statement::Stmt},
+    program::expression::Expr,
 };
 
-use super::InterpretE;
+use super::{errors, InterpretE};
 
 use crate::program::operators::binaryoperator::BinaryOperator;
 
@@ -91,13 +89,14 @@ impl InterpretE for Expr {
                     f.interpret(environment)?;
                 }
 
+                //Restore scope
                 environment.vtable_restore(previous_stack);
 
                 if let Some(rvalue) = environment.rvalue_get() {
                     environment.rvalue_clear();
                     &rvalue.interpret(environment)?
                 } else {
-                    panic!("FUNCTION DID NEVER RETURN U BITCH")
+                    return Err(errors::FunctionNotReturning(name.to_owned()).into());
                 }
             }
             Expr::Point(expr, expr1) => todo!(),

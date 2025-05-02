@@ -1,7 +1,4 @@
-use std::{
-    error::{self, Error},
-    process::id,
-};
+use std::error::Error;
 
 use crate::program::{
     expression::Expr,

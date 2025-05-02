@@ -3,7 +3,7 @@ use std::error::Error;
 
 use environment::IEnvironment;
 
-use crate::program::{expression::Expr, r#type::Type};
+use crate::program::expression::Expr;
 
 pub mod expression;
 pub mod program;

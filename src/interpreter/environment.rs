@@ -1,4 +1,6 @@
-use crate::program::{expression::Expr, statement::Stmt};
+use std::collections::HashMap;
+
+use crate::program::{expression::Expr, program::Program, statement::Stmt};
 
 use super::stack::Stack;
 
@@ -6,14 +8,14 @@ use super::stack::Stack;
 pub struct IEnvironment {
     v_table: Stack<Expr>,
     f_table: Stack<(Vec<Stmt>, Vec<String>)>,
-    //  s_table: HashMap<String, (Attributes, Program)>,
-    // d_array: Vec<()>,
+    s_table: HashMap<String, (Program, Option<Expr>)>,
+    d_array: Vec<()>,
     r_value: Option<Expr>,
 }
 
 impl IEnvironment {
     pub fn new() -> Self {
-        IEnvironment { v_table: Stack::new(), f_table: Stack::new(), r_value: None}
+        IEnvironment { v_table: Stack::new(), f_table: Stack::new(), s_table: HashMap::new(), d_array: Vec::new(), r_value: None}
     }
 
     pub fn vtable_push(&mut self, identifier: String, element: Expr) {
