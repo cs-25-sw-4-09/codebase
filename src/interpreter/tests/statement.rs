@@ -3,8 +3,6 @@ use crate::{
     program::{
         expression::Expr, operators::binaryoperator::BinaryOperator, r#type::Type, statement::Stmt,
     },
-    interpreter::{environment::IEnvironment, errors, InterpretE, InterpretS},
-    program::{expression::Expr, r#type::Type, statement::Stmt},
 };
 
 #[test]

@@ -77,8 +77,26 @@ fn addition() {
     .interpret(&mut env)
     .unwrap();
 
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Float(4.0).into(),
+        rhs: Expr::Float(7.0).into(),
+        operator: BinaryOperator::Add,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(4).into(),
+        rhs: Expr::Float(7.5).into(),
+        operator: BinaryOperator::Add,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
     assert_eq!(i1, Expr::Integer(11));
     assert_eq!(i2, Expr::Float(11.8));
+    assert_eq!(i3, Expr::Float(11.0));
+    assert_eq!(i4, Expr::Float(11.5));
 }
 
 #[test]
@@ -100,6 +118,25 @@ fn subtract() {
     .interpret(&mut env)
     .unwrap();
 
+    
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Float(4.0).into(),
+        rhs: Expr::Float(7.0).into(),
+        operator: BinaryOperator::Subtract,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(4).into(),
+        rhs: Expr::Float(7.5).into(),
+        operator: BinaryOperator::Subtract,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i3, Expr::Float(-3.0));
+    assert_eq!(i4, Expr::Float(-3.5));
     assert_eq!(i1, Expr::Integer(-3));
     assert_eq!(i2, Expr::Float(-2.2));
 }
@@ -123,6 +160,25 @@ fn multiply() {
     .interpret(&mut env)
     .unwrap();
 
+    
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Float(4.0).into(),
+        rhs: Expr::Float(7.0).into(),
+        operator: BinaryOperator::Multiply,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(4).into(),
+        rhs: Expr::Float(2.5).into(),
+        operator: BinaryOperator::Multiply,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i3, Expr::Float(28.0));
+    assert_eq!(i4, Expr::Float(10.0));
     assert_eq!(i1, Expr::Integer(16));
     assert_eq!(i2, Expr::Float(7.0));
 }
@@ -146,6 +202,25 @@ fn divide() {
     .interpret(&mut env)
     .unwrap();
 
+    
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Float(8.0).into(),
+        rhs: Expr::Float(2.0).into(),
+        operator: BinaryOperator::Divide,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(16).into(),
+        rhs: Expr::Float(4.5).into(),
+        operator: BinaryOperator::Divide,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i3, Expr::Float(4.0));
+    assert_eq!(i4, Expr::Float(3.5555555555555554));
     assert_eq!(i1, Expr::Integer(5));
     assert_eq!(i2, Expr::Float(1.0));
 }
@@ -184,6 +259,26 @@ fn modulus() {
     }
     .interpret(&mut env)
     .unwrap();
+
+
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Float(5.4).into(),
+        rhs: Expr::Float(2.2).into(),
+        operator: BinaryOperator::Modulus,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(16).into(),
+        rhs: Expr::Float(4.5).into(),
+        operator: BinaryOperator::Modulus,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i3, Expr::Float(1.0));
+    assert_eq!(i4, Expr::Float(2.5));
 
     assert_eq!(i1, Expr::Integer(1));
     assert_eq!(i2, Expr::Float(0.5));
