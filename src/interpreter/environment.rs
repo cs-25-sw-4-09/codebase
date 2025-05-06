@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
-use crate::program::{expression::Expr, program::Program, statement::Stmt};
-
+use crate::program::{expression::Expr, program::Program, statement::Stmt, figure::Figure};
 use super::stack::Stack;
 
 #[derive(Debug)]
@@ -9,7 +8,7 @@ pub struct IEnvironment {
     v_table: Stack<Expr>,
     f_table: Stack<(Vec<Stmt>, Vec<String>)>,
     s_table: HashMap<String, (Program, Option<Expr>)>,
-    d_array: Vec<()>,
+    d_array: Vec<Figure>,
     r_value: Option<Expr>,
 }
 
@@ -64,8 +63,6 @@ impl IEnvironment {
     
     pub fn rvalue_get(&self) -> Option<Expr> {
         self.r_value.clone()
-    }
-   
-    
+    }    
 
 }

@@ -1,0 +1,7 @@
+SVG kilder: 
+- https://github.com/linebender/resvg //Rust-crate for SVG-creation
+- https://crates.io/crates/svg //Rust-crate for SVG-creation
+
+
+Raster kilder:
+- https://github.com/image-rs/image/blob/main/README.md //Kan tage bytes --> raster types

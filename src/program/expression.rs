@@ -8,6 +8,7 @@ use super::{
         binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
         unaryoperator::UnaryOperator,
     },
+    figure::Figure,
 };
 
 #[derive(Debug, PartialEq, Clone)]
@@ -18,6 +19,7 @@ pub enum Expr {
     Float(f64),
     Point(Box<Expr>, Box<Expr>),
     Color(Box<Expr>, Box<Expr>, Box<Expr>, Box<Expr>),
+    Shape(Vec<Figure>),
     PathOperation {
         lhs: Box<Expr>,
         rhs: Box<Expr>,

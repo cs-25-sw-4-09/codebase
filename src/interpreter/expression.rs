@@ -10,7 +10,7 @@ impl InterpretE for Expr {
         environment: &mut super::environment::IEnvironment,
     ) -> Result<Expr, Box<dyn std::error::Error>> {
         let expr = match self {
-            Expr::Integer(_) | Expr::Boolean(_) | Expr::Float(_) | Expr::Color(_, _, _, _) => self,
+            Expr::Integer(_) | Expr::Boolean(_) | Expr::Float(_) | Expr::Color(_, _, _, _) | Expr::Shape(_) => self,
             Expr::Variable(identifier) => environment.vtable_find(identifier.to_owned()).unwrap(),
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let i1 = lhs.interpret(environment)?;
@@ -148,11 +148,19 @@ impl InterpretE for Expr {
             Expr::PathOperation { lhs, rhs, operator } => todo!(),
             Expr::PolygonOperation { path, operator } => todo!(),
             Expr::Array(exprs) => todo!(),
+
+            
             Expr::SCall {
                 name,
                 args,
                 path_poly,
-            } => todo!(),
+            } => {
+
+                todo!()   
+            }
+
+
+
             Expr::Member {
                 identifier,
                 member_access,

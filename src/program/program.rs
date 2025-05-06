@@ -1,9 +1,6 @@
 use std::{error::Error, fs, path::Path};
-
 use hime_redist::symbols::SemanticElementTrait;
-
 use crate::{interpreter::environment::IEnvironment, lexer_parser::grammar::cfg, typechecker::environment::TEnvironment};
-
 use super::statement::Stmt;
 
 #[derive(Debug)]

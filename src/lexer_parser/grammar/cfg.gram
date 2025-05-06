@@ -54,7 +54,7 @@ grammar cfg
     otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
 
     //Expressions
-    exprS -> (manipulation | exprFunc | SCall | color | path | range | polygon)^;
+    exprS -> (manipulation | exprFunc | SCall | color | path | polygon)^;
     exprFunc -> (expr )^;
     expr -> expr '||'^ expr1 | expr1^;
     expr1 -> expr1 '&&'^ expr2 | expr2^;
@@ -69,7 +69,6 @@ grammar cfg
     FCall -> id '('! args? ')'!;
 
     member -> id '.'! id;
-    range -> exprFunc ('..' | '..=') exprFunc;
     color -> '('! (expr) ','! (expr) ','! (expr) ','! (expr)')'! ;
     path   -> exprFunc (('--' | '~~')^ exprFunc)+;
     polygon -> exprS(('--*' | '~~*')^);
