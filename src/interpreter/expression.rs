@@ -103,13 +103,17 @@ impl InterpretE for Expr {
                     BinaryOperator::LogicalOr => &Expr::Boolean(i1.get_bool()? || i2.get_bool()?),
                 }
             }
-            Expr::UnaryOperation { operator, expr } => match operator {
-                UnaryOperator::Negate => {
-                    let i1 = expr.interpret(environment)?;
-                    &Expr::Boolean(!i1.get_bool()?)
+            Expr::UnaryOperation { operator, expr } => {
+                let i1 = expr.interpret(environment)?;
+                match operator {
+                    UnaryOperator::Negate => &Expr::Boolean(!i1.get_bool()?),
+                    UnaryOperator::Negative => match i1 {
+                        Expr::Integer(v) => &Expr::Integer(-v),
+                        Expr::Float(v) => &Expr::Float(-v),
+                        _ => unreachable!(),
+                    },
                 }
-                UnaryOperator::Negative => todo!(),
-            },
+            }
             Expr::FCall { name, args } => {
                 let mut params = Vec::new();
                 let function = environment.ftable_find(name.into()).unwrap().clone();
@@ -129,7 +133,7 @@ impl InterpretE for Expr {
                 for f in function.0 {
                     f.interpret(environment)?;
                 }
-
+                //todo: push ftable and pop
                 //Restore scope
                 environment.vtable_restore(previous_stack);
 

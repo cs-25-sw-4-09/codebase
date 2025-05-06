@@ -296,3 +296,24 @@ fn negate() {
 
     assert_eq!(i1, Expr::Boolean(false));
 }
+
+#[test]
+fn negative() {
+    //Integer
+    let mut env = IEnvironment::new();
+    let i1 = Expr::UnaryOperation {
+        operator: UnaryOperator::Negative,
+        expr: Expr::Integer(4).into(),
+    }.interpret(&mut env)
+    .unwrap();
+
+    //Float
+    let i2 = Expr::UnaryOperation {
+        operator: UnaryOperator::Negative,
+        expr: Expr::Float(2.0).into(),
+    }.interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i1, Expr::Integer(-4));
+    assert_eq!(i2, Expr::Float(-2.0));
+}
