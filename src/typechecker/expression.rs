@@ -274,6 +274,8 @@ impl TypeCheckE for Expr {
                         _ => Err(errors::MemberAccessColor().into()),
                     },
                     Type::Shape => match member_access.as_str() {
+                        "x" => Ok(Type::Float),
+                        "y" => Ok(Type::Float),
                         "width" => Ok(Type::Float),
                         "height" => Ok(Type::Float),
                         _ => Err(errors::MemberAccessShape().into()),
