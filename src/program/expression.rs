@@ -29,6 +29,8 @@ pub enum Expr {
         path: Box<Expr>,
         operator: PolyOperator,
     },
+    Path(Figure),
+    Polygon(Figure),
     Array(Vec<Expr>),
     BinaryOperation {
         lhs: Box<Expr>,

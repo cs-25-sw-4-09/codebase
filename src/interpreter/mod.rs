@@ -5,6 +5,7 @@ use environment::IEnvironment;
 
 use crate::program::expression::Expr;
 
+pub mod utils;
 pub mod expression;
 pub mod program;
 pub mod statement;

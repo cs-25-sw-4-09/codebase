@@ -28,3 +28,15 @@ impl fmt::Display for DivideByZero {
     }
 }
 
+
+#[derive(Debug, Clone)]
+pub struct PolyPathNotFound;
+impl Error for PolyPathNotFound {}
+impl fmt::Display for PolyPathNotFound {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Could not find polygon or path for shapeconstructor", 
+        )
+    }
+}

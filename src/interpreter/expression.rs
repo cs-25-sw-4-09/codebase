@@ -1,8 +1,9 @@
 use crate::{interpreter::InterpretS, program::expression::Expr};
 
-use super::{errors, InterpretE};
+use super::{errors, InterpretE, utils::path::path_to_fig};
 
 use crate::program::operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator};
+
 
 impl InterpretE for Expr {
     fn interpret(
@@ -10,7 +11,8 @@ impl InterpretE for Expr {
         environment: &mut super::environment::IEnvironment,
     ) -> Result<Expr, Box<dyn std::error::Error>> {
         let expr = match self {
-            Expr::Integer(_) | Expr::Boolean(_) | Expr::Float(_) | Expr::Color(_, _, _, _) | Expr::Shape(_) => self,
+            Expr::Integer(_) | Expr::Boolean(_) | Expr::Float(_) | Expr::Color(_, _, _, _) | 
+            Expr::Shape(_) | Expr::Path(_) | Expr::Polygon(_) => self,
             Expr::Variable(identifier) => environment.vtable_find(identifier.to_owned()).unwrap(),
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let i1 = lhs.interpret(environment)?;
@@ -145,8 +147,21 @@ impl InterpretE for Expr {
                 }
             }
             Expr::Point(expr, expr1) => todo!(),
-            Expr::PathOperation { lhs, rhs, operator } => todo!(),
-            Expr::PolygonOperation { path, operator } => todo!(),
+            Expr::PathOperation { lhs, rhs,  operator } => {
+                let i1 = path_to_fig(lhs, operator, rhs);
+                &Expr::Path(i1)
+            }
+            Expr::PolygonOperation { path, operator } => {
+                use crate::program::operators::polyoperator::PolyOperator;
+
+                let i1 = path.interpret(environment)?;
+                match operator {
+                    PolyOperator::Curved => todo!(),
+                    PolyOperator::Straight => todo!(),
+                }
+
+                todo!()
+            }
             Expr::Array(exprs) => todo!(),
 
             
@@ -155,7 +170,23 @@ impl InterpretE for Expr {
                 args,
                 path_poly,
             } => {
+                if let Some(name) = name {
+                    /*let shape = environment.vtable_find(name.into()).unwrap().clone();
+                    for i in 0..args.len() { 
+                        let i1 = args[i].clone().interpret(environment)?;                      
+                    }*/
+                } else {
+                    let i1 = path_poly
+                    .as_ref()
+                    .ok_or_else(|| errors::PolyPathNotFound)?
+                    .interpret(environment)?;
 
+                    
+
+
+                }
+
+        
                 todo!()   
             }
 

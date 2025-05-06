@@ -4,14 +4,15 @@ use hime_redist::symbols::Symbol;
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum PolyOperator {
-    Polygon,
+    Curved,
+    Straight
 }
 
 impl PolyOperator {
     pub fn new(operator: Symbol) -> Result<Self, Box<dyn Error>> {
         let operator = match operator.name {
-            "--*" => Self::Polygon,
-            "~~*" => Self::Polygon,
+            "--*" => Self::Straight,
+            "~~*" => Self::Curved,
             _ => panic!(),
         };
         Ok(operator)
