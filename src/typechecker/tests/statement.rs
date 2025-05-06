@@ -89,6 +89,51 @@ fn assign_error() {
 }
 
 #[test]
+fn array_assign() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::IntArray);
+    let t1 = Stmt::ArrayAssign {
+        name: "x".into(),
+        value: Expr::Integer(1),
+        index: Expr::Integer(5),
+    }
+    .type_check(&mut env);
+    assert!(t1.is_ok())
+}
+
+#[test]
+fn array_assign_conflict_empty() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::IntArray);
+    let t1 = Stmt::ArrayAssign {
+        name: "x".into(),
+        value: Expr::Float(5.2),
+        index: Expr::Integer(5),
+    }
+    .type_check(&mut env);
+    assert!(t1
+        .unwrap_err()
+        .downcast_ref::<errors::ArrayAssignTypeConflict>()
+        .is_some());
+}
+
+#[test]
+fn array_assign_index_error() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::IntArray);
+    let t1 = Stmt::ArrayAssign {
+        name: "x".into(),
+        value: Expr::Integer(5),
+        index: Expr::Float(5.2),
+    }
+    .type_check(&mut env);
+    assert!(t1
+        .unwrap_err()
+        .downcast_ref::<errors::ArrayIndexTypeError>()
+        .is_some());
+}
+
+#[test]
 fn draw_with_point() {
     let mut env = TEnvironment::new();
     env.stable_set(

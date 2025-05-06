@@ -39,7 +39,7 @@ grammar cfg
     decl -> id ':'! types ('='! exprS)?';'!;
 
     //Statements
-    stmtS -> (forkS | for | draw | return | funcDecl | assign | varDecl)+;
+    stmtS -> (forkS | for | draw | return | funcDecl | assign | arrayAssign | varDecl)+;
 
     forkS -> 'fork'! '{'! fork^ '}'!;
     for -> 'for'! id 'in'! exprS 'to'! exprS '{'! stmtS '}'! ;
@@ -48,6 +48,7 @@ grammar cfg
     funcDecl -> id '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;
     assign -> id '='! exprS ';'!;
     varDecl -> id ':'! types '='! exprS ';'!;
+    arrayAssign -> id '['! exprS ']'! '='!  exprS ';'!;    
 
     fork -> forkExpr+ otherwise?;
     forkExpr -> '('! exprFunc? ')'! '->'! '{'! stmtS '}'!;
