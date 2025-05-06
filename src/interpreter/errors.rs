@@ -18,3 +18,13 @@ impl fmt::Display for DeclValueNotSpecified {
         write!(f, "Decl {}'s value is not specified", self.0)
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct DivideByZero;
+impl Error for DivideByZero {}
+impl fmt::Display for DivideByZero {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Can't divide by 0")
+    }
+}
+

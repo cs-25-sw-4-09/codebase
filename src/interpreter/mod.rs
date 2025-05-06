@@ -11,6 +11,7 @@ pub mod statement;
 pub mod environment;
 pub mod errors;
 pub mod stack;
+mod tests;
 
 pub trait InterpretP {
     fn interpret(&mut self) -> Result<&IEnvironment, Box<dyn Error>>;

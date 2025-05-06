@@ -1,7 +1,4 @@
-use crate::{
-    interpreter::InterpretS,
-    program::expression::Expr,
-};
+use crate::{interpreter::InterpretS, program::expression::Expr};
 
 use super::{errors, InterpretE};
 
@@ -41,13 +38,18 @@ impl InterpretE for Expr {
                         (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Float(v1 as f64 * v2),
                         p => unreachable!("{:?}", p),
                     },
-                    BinaryOperator::Divide => match (i1, i2) {
-                        (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Integer(v1 / v2),
-                        (Expr::Float(v1), Expr::Float(v2)) => &Expr::Float(v1 / v2),
-                        (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Float(v1 / v2 as f64),
-                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Float(v1 as f64 / v2),
-                        _ => unreachable!(),
-                    },
+                    BinaryOperator::Divide => {
+                        if i2 == Expr::Integer(0) || i2 == Expr::Float(0.0) {
+                            return Err(errors::DivideByZero.into());
+                        }
+                        match (i1, i2) {
+                            (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Integer(v1 / v2),
+                            (Expr::Float(v1), Expr::Float(v2)) => &Expr::Float(v1 / v2),
+                            (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Float(v1 / v2 as f64),
+                            (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Float(v1 as f64 / v2),
+                            _ => unreachable!(),
+                        }
+                    }
                     BinaryOperator::Modulus => match (i1, i2) {
                         (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Integer(v1 % v2),
                         (Expr::Float(v1), Expr::Float(v2)) => &Expr::Float(v1 % v2),
@@ -59,56 +61,54 @@ impl InterpretE for Expr {
                         (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 >= v2),
                         (Expr::Float(v1), Expr::Float(v2)) => &Expr::Boolean(v1 >= v2),
                         (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 >= v2 as f64),
-                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 >= v2), 
+                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 >= v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::LessThanOrEquals => match (i1, i2) {
                         (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 <= v2),
                         (Expr::Float(v1), Expr::Float(v2)) => &Expr::Boolean(v1 <= v2),
                         (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 <= v2 as f64),
-                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 <= v2), 
+                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 <= v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::LessThan => match (i1, i2) {
                         (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 < v2),
                         (Expr::Float(v1), Expr::Float(v2)) => &Expr::Boolean(v1 < v2),
                         (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 < v2 as f64),
-                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean((v1 as f64) < v2), 
+                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean((v1 as f64) < v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::GreaterThan => match (i1, i2) {
                         (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 > v2),
                         (Expr::Float(v1), Expr::Float(v2)) => &Expr::Boolean(v1 > v2),
                         (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 > v2 as f64),
-                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 > v2), 
+                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 > v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::Equals => match (i1, i2) {
                         (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 == v2),
                         (Expr::Float(v1), Expr::Float(v2)) => &Expr::Boolean(v1 == v2),
                         (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 == v2 as f64),
-                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 == v2), 
+                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 == v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::NotEquals => match (i1, i2) {
                         (Expr::Integer(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 != v2),
                         (Expr::Float(v1), Expr::Float(v2)) => &Expr::Boolean(v1 != v2),
                         (Expr::Float(v1), Expr::Integer(v2)) => &Expr::Boolean(v1 != v2 as f64),
-                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 != v2), 
+                        (Expr::Integer(v1), Expr::Float(v2)) => &Expr::Boolean(v1 as f64 != v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::LogicalAnd => &Expr::Boolean(i1.get_bool()? && i2.get_bool()?),
                     BinaryOperator::LogicalOr => &Expr::Boolean(i1.get_bool()? || i2.get_bool()?),
                 }
             }
-            Expr::UnaryOperation { operator, expr } => {
-                match operator {
-                    UnaryOperator::Negate =>  {
-                        let i1 = expr.interpret(environment)?;
-                        &Expr::Boolean(!i1.get_bool()?)
-                    },
-                    UnaryOperator::Negative => todo!(),
+            Expr::UnaryOperation { operator, expr } => match operator {
+                UnaryOperator::Negate => {
+                    let i1 = expr.interpret(environment)?;
+                    &Expr::Boolean(!i1.get_bool()?)
                 }
+                UnaryOperator::Negative => todo!(),
             },
             Expr::FCall { name, args } => {
                 let mut params = Vec::new();

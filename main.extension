@@ -1,6 +1,6 @@
 begin
 
-othdderwise: bool = false && true || true;
+x: int = 10/1;
 
 
 
