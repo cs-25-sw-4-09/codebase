@@ -201,6 +201,33 @@ impl fmt::Display for ArrayElementsTypeNotCompatible {
 }
 
 #[derive(Debug, Clone)]
+pub struct ArrayAssignTypeConflict(pub Type, pub Type);
+impl Error for ArrayAssignTypeConflict {}
+impl fmt::Display for ArrayAssignTypeConflict {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "It is not possible to assign a type {:?} to a array type {:?}",
+            self.0, self.1
+        )
+    }
+}
+
+
+#[derive(Debug, Clone)]
+pub struct ArrayIndexTypeError(pub Type);
+impl Error for ArrayIndexTypeError {}
+impl fmt::Display for ArrayIndexTypeError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Can not index a array with type {:?}, can only with type Int",
+            self.0
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct NotAMemberType(pub Type);
 impl Error for NotAMemberType {}
 impl fmt::Display for NotAMemberType {

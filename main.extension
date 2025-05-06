@@ -1,5 +1,5 @@
 
 
 begin
-
-x:shape = place x ontop func on (1,2);
+a:int[] = [1,2,3];
+a[1] = 567.0;
