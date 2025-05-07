@@ -201,7 +201,7 @@ impl InterpretE for Expr {
                 identifier,
                 member_access,
             } => {
-                let t1 = *environment.vtable_find(*identifier).unwrap();
+                /*let t1 = *environment.vtable_find(*identifier).unwrap();
                 match t1 {
                     Value::Color(r,g,b,a) => match member_access.as_str() {
                         "r" => &r,
@@ -220,8 +220,8 @@ impl InterpretE for Expr {
                     Value::Polygon(figure) => todo!(),
                     //todo kan man få højten og breden af en path
                     _ => ()
-                }
-
+                }*/
+                todo!()
         }
             
             Expr::Place {

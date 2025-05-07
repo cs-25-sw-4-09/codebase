@@ -8,16 +8,20 @@ use crate::{
 use crate::interpreter::value::Value;
 
 #[derive(PartialEq)]
-enum ToAddState {
-    Straight,
-    Curved,
+enum ToAdd {
+    Straight(Point),
+    Curved(Vec<Point>),
     Empty
 }
 
 pub fn path_to_fig(path: &Expr, env: &mut IEnvironment) -> Result<Figure, Box<dyn std::error::Error>> {
     match path {
         Expr::PathOperation { lhs, rhs, operator } => {
-            let lines = path_to_fig_helper(lhs, operator, Some(rhs), (vec![], ToAddState::Empty), vec![], env)?;
+
+            println!("lhs: {:?}\n operator: {:?}\n rhs {:?}\n\n", lhs, operator, rhs);
+
+            let lines = path_to_fig_helper(lhs, Some(operator), Some(rhs), ToAdd::Empty, vec![], env)?;
+            println!("{:?}", lines);
             Ok(Figure::from(lines))
         }
         _ => unreachable!()
@@ -26,74 +30,91 @@ pub fn path_to_fig(path: &Expr, env: &mut IEnvironment) -> Result<Figure, Box<dy
 
 fn path_to_fig_helper(
     p1: &Box<Expr>, 
-    path_t: &PathOperator, 
+    path_t: Option<&PathOperator>, 
     rest: Option<&Box<Expr>>,  
-    mut to_add: (Vec<Point>, ToAddState),
+    to_add: ToAdd,
     mut lines: Vec<Line>,
     env: &mut IEnvironment
 ) -> Result<Vec<Line>, Box<dyn std::error::Error>> {
     let p1 = p1.interpret(env)?;
-    let to_add = match (p1, path_t, to_add.1) {
-        (Value::Point(p1), _, ToAddState::Straight) => {
-            let mut points = to_add.0;
-            points.push(p1); 
-            lines.push(Line::new(points));
-            (vec![], ToAddState::Empty)
+
+    //Todo: check if there is missing logic
+    //Handle to_add logic --> If there is points in it, then it should be handled correctly
+    let to_add = match (p1, path_t, to_add) {
+        (Value::Point(p2), _, ToAdd::Straight(p1)) => {
+            lines.push(Line::from((p1, p2)));
+            ToAdd::Empty
         }
-        (Value::Point(p1), PathOperator::Curve, ToAddState::Curved) => {
-            to_add.0.push(p1);
-            (to_add.0, to_add.1)
+        (Value::Point(p1), Some(PathOperator::Curve), ToAdd::Curved(mut points)) => {
+            points.push(p1);
+            ToAdd::Curved(points)
         },
-        (Value::Point(p1), t, ToAddState::Empty) => {
-            (vec![p1], match t {
-                PathOperator::Line => ToAddState::Straight,
-                PathOperator::Curve => ToAddState::Curved,
-            })
+        (Value::Point(p1), Some(t), ToAdd::Empty) => {
+            match t {
+                PathOperator::Line => ToAdd::Straight(p1),
+                PathOperator::Curve => ToAdd::Curved(vec![p1]),
+            }
         },
-        (Value::Path(path),t,_) => {
-            let (lines_new, new_to_add) = add_path(path, to_add, env);
-            lines_new.iter().for_each(|line| lines.push(line));
+        (Value::Path(path), _t, to_add) => {
+            //todo: handle T 
+            let (lines_new, new_to_add) = add_path(path, to_add);
+            lines_new.into_iter().for_each(|line| lines.push(line));
             new_to_add
         }, 
-        _ => to_add
+        (_,_,to_add) => to_add
     };
 
-    match rest {
-        Expr::Variable(_) => todo!(),
-        Expr::Point(expr, expr1) => todo!(),
-        Expr::PathOperation { lhs, rhs, operator } => todo!(),
-    }
+    //Handle the recursion
+    if let Some(rest) = rest {
+        match rest.as_ref() {
+            Expr::PathOperation { lhs, rhs, operator } => {
+                path_to_fig_helper(lhs, Some(operator), Some(rhs), to_add, lines, env)
+            }
+            val => path_to_fig_helper(&Box::new(val.clone()), None, None, to_add, lines, env), 
+        }
+    } else {
+        Ok(lines)
+    }    
 }
     
 
 fn add_path(
     fig: Figure, 
-    to_add: (Vec<Point>, ToAddState), 
-    env: &mut IEnvironment
-) -> (Vec<Line>, (Vec<Point>, ToAddState)) {
+    to_add: ToAdd, 
+) -> (Vec<Line>, ToAdd) {
     let mut lines: &[Line] = fig.get_lines();
-
-    //Check if toAddState contains curved lines and if the first line in the path 
-    //also contains curves
-    if lines.get(0).is_some_and(|l| l.get_points().len() > 2) 
-    && to_add.1 == ToAddState::Curved {
-        //todo: add logic
-
-        lines = &lines[1..];
-    }
     let mut return_lines: Vec<Line> = vec![];
-    if to_add.1 != ToAddState::Empty {
-        return_lines.push(Line::new(to_add.0));
+
+    //First handle toAdd 
+    match (to_add, lines.get(0)) {
+        (ToAdd::Straight(point), Some(line)) => return_lines.push(Line::from((point, line.get_points()[0].clone()))),
+        (ToAdd::Curved(mut points), Some(line)) if line.get_points().len() > 2 =>  {
+            //If the first element already is also curved, then they should extend each other
+            points.extend(line.get_points().to_vec().into_iter());
+            return_lines.push(Line::from(points));
+            
+            //First point has already been used
+            lines = &lines[1..];
+        } 
+        (ToAdd::Curved(mut points), Some(line)) => {
+            points.push(line.get_points()[0].clone());
+            return_lines.push(Line::from(points));
+        }
+        (_, _) => (),
     }
-    //Check if the last line is curved 
-    if lines.iter().last().is_some_and(|l| l.get_points().len() > 2) {
-        //todo: add logic
 
-        lines = &lines[..lines.len()-1];
-    }
+    //Add all middle lines in the path
+    return_lines.extend(lines.to_vec().into_iter().take(lines.len()-1));
+    
+    //Check if the last line is curved and if it is then return it
+    let return_add = match lines.iter().last() {
+        Some(line) if line.get_points().len() > 2 => ToAdd::Curved(line.get_points().to_vec()),
+        Some(line) => {
+            return_lines.push(line.clone());
+            ToAdd::Empty
+        }
+        None => ToAdd::Empty 
+    };
 
-    //todo: add logic
-    return_lines.extend(lines.to_vec().into_iter());
-
-    (return_lines, to_add)
+    (return_lines, return_add)
 }

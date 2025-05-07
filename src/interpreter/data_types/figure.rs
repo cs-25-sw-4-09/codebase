@@ -24,8 +24,8 @@ impl Figure {
         }
     }
 
-    pub fn push_line(&mut self, ps: Vec<Point>) {
-        self.lines.push(Line::new(ps));
+    pub fn push_points(&mut self, ps: Vec<Point>) {
+        self.lines.push(Line::from(ps));
     }
     pub fn push_lines(&mut self, lines: Vec<Line>) {
         lines.into_iter().for_each(|line| self.lines.push(line));
@@ -39,6 +39,17 @@ impl Figure {
 #[derive(Debug, PartialEq, Clone)]
 pub struct Line(Vec<Point>);
 impl Line {
-    pub fn new(value: Vec<Point>) -> Self { Self(value) }
     pub fn get_points(&self) -> &Vec<Point> { &self.0 }
+}
+
+impl From<(Point, Point)> for Line {
+    fn from(value: (Point, Point)) -> Self {
+        Self(vec![value.0, value.1])
+    }
+}
+
+impl From<Vec<Point>> for Line {
+    fn from(value: Vec<Point>) -> Self {
+        Self(value)
+    }
 }
