@@ -7,6 +7,7 @@ use crate::{
     program::{expression::Expr, operators::pathoperator::PathOperator}};
 use crate::interpreter::value::Value;
 
+#[derive(PartialEq)]
 enum ToAddState {
     Straight,
     Curved,
@@ -67,8 +68,32 @@ fn path_to_fig_helper(
 
 fn add_path(
     fig: Figure, 
-    to_add: (Vec<Points>, ToAddState), 
+    to_add: (Vec<Point>, ToAddState), 
     env: &mut IEnvironment
-) -> (Vec<Line>, (Vec<Points>, ToAddState)) {
-    
+) -> (Vec<Line>, (Vec<Point>, ToAddState)) {
+    let mut lines: &[Line] = fig.get_lines();
+
+    //Check if toAddState contains curved lines and if the first line in the path 
+    //also contains curves
+    if lines.get(0).is_some_and(|l| l.get_points().len() > 2) 
+    && to_add.1 == ToAddState::Curved {
+        //todo: add logic
+
+        lines = &lines[1..];
+    }
+    let mut return_lines: Vec<Line> = vec![];
+    if to_add.1 != ToAddState::Empty {
+        return_lines.push(Line::new(to_add.0));
+    }
+    //Check if the last line is curved 
+    if lines.iter().last().is_some_and(|l| l.get_points().len() > 2) {
+        //todo: add logic
+
+        lines = &lines[..lines.len()-1];
+    }
+
+    //todo: add logic
+    return_lines.extend(lines.to_vec().into_iter());
+
+    (return_lines, to_add)
 }

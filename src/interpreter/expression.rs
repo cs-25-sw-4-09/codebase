@@ -201,19 +201,29 @@ impl InterpretE for Expr {
                 identifier,
                 member_access,
             } => {
-                let t1 = environment.vtable_lookup(identifier)?.clone();
+                let t1 = *environment.vtable_find(*identifier).unwrap();
                 match t1 {
-                    Value::Color => match member_access.as_str() {
-                        "r" => ,
-                        "g" => Ok(Type::Int),
-                        "b" => Ok(Type::Int),
-                        "a" => Ok(Type::Int),
-                        _ => Err(errors::MemberAccessColor().into()),
+                    Value::Color(r,g,b,a) => match member_access.as_str() {
+                        "r" => &r,
+                        "g" => &g,
+                        "b" => &b,
+                        "a" => &a,
+                        _ => unreachable!()
+                    }
+                    Value::Point(point) =>  match member_access.as_str(){
+                        "x" => &point.0,
+                        "y" => &point.1,
+                        _ => unreachable!()
                     },
-            }
+                    Value::Shape(figures) => todo!(),
+                    Value::Path(figure) => todo!(),
+                    Value::Polygon(figure) => todo!(),
+                    //todo kan man få højten og breden af en path
+                    _ => ()
+                }
 
+        }
             
-             ,
             Expr::Place {
                 base_shape,
                 second_shape,

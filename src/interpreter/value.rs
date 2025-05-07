@@ -12,7 +12,8 @@ pub enum Value {
     Color(Box<Value>, Box<Value>, Box<Value>, Box<Value>),
     Shape(Vec<Figure>),
     Path(Figure),
-    Polygon(Figure)
+    Polygon(Figure),
+    Array(Vec<Box<Value>>)
 }
 
 impl Value {

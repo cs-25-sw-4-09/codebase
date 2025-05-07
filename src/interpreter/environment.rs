@@ -65,18 +65,6 @@ impl IEnvironment {
     
     pub fn rvalue_get(&self) -> Option<Value> {
         self.r_value.clone()
-    }    
-
-    pub fn vtable_lookup(&self, identifier: &String) -> Result<&Value, Box<dyn Error>> {
-        if let Some(etype) = self.v_table.get(identifier) {
-            match etype {
-                EType::Normal(t) | EType::DeclNonDefault(t) | EType::DeclDefault(t) => Ok(t),
-            }
-        } else {
-            Err(errors::IdentifierNotFound(identifier.to_owned()).into())
-        }
-    }
-
-    
+    }        
 
 }

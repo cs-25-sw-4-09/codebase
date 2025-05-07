@@ -30,10 +30,15 @@ impl Figure {
     pub fn push_lines(&mut self, lines: Vec<Line>) {
         lines.into_iter().for_each(|line| self.lines.push(line));
     }
+
+    pub fn get_lines(&self) -> &Vec<Line> {
+        &self.lines
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Line(Vec<Point>);
 impl Line {
     pub fn new(value: Vec<Point>) -> Self { Self(value) }
+    pub fn get_points(&self) -> &Vec<Point> { &self.0 }
 }
