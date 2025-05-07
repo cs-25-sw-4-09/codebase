@@ -22,7 +22,9 @@ impl InterpretE for Expr {
                 Box::new(b.interpret(environment)?), 
                 Box::new(a.interpret(environment)?)
             ), 
-            Expr::Point(x, y) => &Value::Point(Point::try_from((self, environment))?),
+            Expr::Point(x, y) => &Value::Point(
+                Point::from((x.interpret(environment)?, y.interpret(environment)?))
+            ),
             Expr::Variable(identifier) => environment.vtable_find(identifier.to_owned()).unwrap(),
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let i1 = lhs.interpret(environment)?;
@@ -192,30 +194,25 @@ impl InterpretE for Expr {
                 }
                 &Value::Array(values)
             },
-
-            
             Expr::SCall {
                 name,
                 args,
                 path_poly,
             } => {
-                if let Some(name) = name {
-                    /*let shape = environment.vtable_find(name.into()).unwrap().clone();
-                    for i in 0..args.len() { 
-                        let i1 = args[i].clone().interpret(environment)?;                      
-                    }*/
-                } else {
-                    let i1 = path_poly
-                    .as_ref()
-                    .ok_or_else(|| errors::PolyPathNotFound)?
-                    .interpret(environment)?;
+                match (name, path_poly) {
+                    (Some(_), _) => {
+                        /*let shape = environment.vtable_find(name.into()).unwrap().clone();
+                        for i in 0..args.len() { 
+                            let i1 = args[i].clone().interpret(environment)?;                      
+                        }*/
+                    },
+                    (None, Some(path)) => {
+                        let i1 = path.interpret(environment)?;
+                        
 
-                    
-
-
-                }
-
-        
+                    },
+                    _ => return Err(Box::new(errors::PolyPathNotFound)),
+                }        
                 todo!()   
             }
             Expr::Member {
