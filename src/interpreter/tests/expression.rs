@@ -1,5 +1,5 @@
 use crate::{
-    interpreter::{environment::IEnvironment, errors, InterpretE},
+    interpreter::{environment::IEnvironment, errors, InterpretE, value::Value},
     program::{
         expression::Expr,
         operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator},
@@ -10,21 +10,21 @@ use crate::{
 fn integer() {
     let mut env = IEnvironment::new();
     let i1 = Expr::Integer(4).interpret(&mut env).unwrap();
-    assert_eq!(i1, Expr::Integer(4))
+    assert_eq!(i1, Value::Integer(4))
 }
 
 #[test]
 fn float() {
     let mut env = IEnvironment::new();
     let i1 = Expr::Float(4.8).interpret(&mut env).unwrap();
-    assert_eq!(i1, Expr::Float(4.8))
+    assert_eq!(i1, Value::Float(4.8))
 }
 
 #[test]
 fn boolean() {
     let mut env = IEnvironment::new();
     let i1 = Expr::Boolean(true).interpret(&mut env).unwrap();
-    assert_eq!(i1, Expr::Boolean(true))
+    assert_eq!(i1, Value::Boolean(true))
 }
 
 #[test]
@@ -40,11 +40,11 @@ fn color() {
     .unwrap();
     assert_eq!(
         i1,
-        Expr::Color(
-            Expr::Integer(32).into(),
-            Expr::Integer(82).into(),
-            Expr::Integer(115).into(),
-            Expr::Integer(255).into()
+        Value::Color(
+            Value::Integer(32).into(),
+            Value::Integer(82).into(),
+            Value::Integer(115).into(),
+            Value::Integer(255).into()
         )
     )
 }
@@ -52,10 +52,10 @@ fn color() {
 #[test]
 fn variable() {
     let mut env = IEnvironment::new();
-    env.vtable_push("x".into(), Expr::Integer(4));
+    env.vtable_push("x".into(), Value::Integer(4));
 
     let i1 = Expr::Variable("x".into()).interpret(&mut env).unwrap();
-    assert_eq!(i1, Expr::Integer(4))
+    assert_eq!(i1, Value::Integer(4))
 }
 
 #[test]
@@ -93,10 +93,10 @@ fn addition() {
     .interpret(&mut env)
     .unwrap();
 
-    assert_eq!(i1, Expr::Integer(11));
-    assert_eq!(i2, Expr::Float(11.8));
-    assert_eq!(i3, Expr::Float(11.0));
-    assert_eq!(i4, Expr::Float(11.5));
+    assert_eq!(i1, Value::Integer(11));
+    assert_eq!(i2, Value::Float(11.8));
+    assert_eq!(i3, Value::Float(11.0));
+    assert_eq!(i4, Value::Float(11.5));
 }
 
 #[test]
@@ -135,10 +135,10 @@ fn subtract() {
     .interpret(&mut env)
     .unwrap();
 
-    assert_eq!(i3, Expr::Float(-3.0));
-    assert_eq!(i4, Expr::Float(-3.5));
-    assert_eq!(i1, Expr::Integer(-3));
-    assert_eq!(i2, Expr::Float(-2.2));
+    assert_eq!(i3, Value::Float(-3.0));
+    assert_eq!(i4, Value::Float(-3.5));
+    assert_eq!(i1, Value::Integer(-3));
+    assert_eq!(i2, Value::Float(-2.2));
 }
 
 #[test]
@@ -177,10 +177,10 @@ fn multiply() {
     .interpret(&mut env)
     .unwrap();
 
-    assert_eq!(i3, Expr::Float(28.0));
-    assert_eq!(i4, Expr::Float(10.0));
-    assert_eq!(i1, Expr::Integer(16));
-    assert_eq!(i2, Expr::Float(7.0));
+    assert_eq!(i3, Value::Float(28.0));
+    assert_eq!(i4, Value::Float(10.0));
+    assert_eq!(i1, Value::Integer(16));
+    assert_eq!(i2, Value::Float(7.0));
 }
 
 #[test]
@@ -219,10 +219,10 @@ fn divide() {
     .interpret(&mut env)
     .unwrap();
 
-    assert_eq!(i3, Expr::Float(4.0));
-    assert_eq!(i4, Expr::Float(3.5555555555555554));
-    assert_eq!(i1, Expr::Integer(5));
-    assert_eq!(i2, Expr::Float(1.0));
+    assert_eq!(i3, Value::Float(4.0));
+    assert_eq!(i4, Value::Float(3.5555555555555554));
+    assert_eq!(i1, Value::Integer(5));
+    assert_eq!(i2, Value::Float(1.0));
 }
 
 #[test]
@@ -277,11 +277,11 @@ fn modulus() {
     .interpret(&mut env)
     .unwrap();
 
-    assert_eq!(i3, Expr::Float(1.0));
-    assert_eq!(i4, Expr::Float(2.5));
+    assert_eq!(i3, Value::Float(1.0));
+    assert_eq!(i4, Value::Float(2.5));
 
-    assert_eq!(i1, Expr::Integer(1));
-    assert_eq!(i2, Expr::Float(0.5));
+    assert_eq!(i1, Value::Integer(1));
+    assert_eq!(i2, Value::Float(0.5));
 }
 
 #[test]
@@ -294,7 +294,7 @@ fn negate() {
     .interpret(&mut env)
     .unwrap();
 
-    assert_eq!(i1, Expr::Boolean(false));
+    assert_eq!(i1, Value::Boolean(false));
 }
 
 #[test]
@@ -314,6 +314,6 @@ fn negative() {
     }.interpret(&mut env)
     .unwrap();
 
-    assert_eq!(i1, Expr::Integer(-4));
-    assert_eq!(i2, Expr::Float(-2.0));
+    assert_eq!(i1, Value::Integer(-4));
+    assert_eq!(i2, Value::Float(-2.0));
 }

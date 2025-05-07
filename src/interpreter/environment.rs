@@ -1,15 +1,17 @@
 use std::collections::HashMap;
 
-use crate::program::{expression::Expr, program::Program, statement::Stmt, figure::Figure};
+use crate::program::{expression::Expr, program::Program, statement::Stmt};
+use super::data_types::figure::Figure;
 use super::stack::Stack;
+use super::value::Value;
 
 #[derive(Debug)]
 pub struct IEnvironment {
-    v_table: Stack<Expr>,
+    v_table: Stack<Value>,
     f_table: Stack<(Vec<Stmt>, Vec<String>)>,
     s_table: HashMap<String, (Program, Option<Expr>)>,
     d_array: Vec<Figure>,
-    r_value: Option<Expr>,
+    r_value: Option<Value>,
 }
 
 impl IEnvironment {
@@ -17,21 +19,21 @@ impl IEnvironment {
         IEnvironment { v_table: Stack::new(), f_table: Stack::new(), s_table: HashMap::new(), d_array: Vec::new(), r_value: None}
     }
 
-    pub fn vtable_push(&mut self, identifier: String, element: Expr) {
+    pub fn vtable_push(&mut self, identifier: String, element: Value) {
         self.v_table.push(identifier, element);
     }
     
-    pub fn vtable_find(&mut self, identifier: String) -> Option<&mut Expr> {
+    pub fn vtable_find(&mut self, identifier: String) -> Option<&mut Value> {
         self.v_table.find(identifier)
     }
     
-    pub fn vtable_clear(&mut self) -> Stack<Expr> {
+    pub fn vtable_clear(&mut self) -> Stack<Value> {
         let vtable = self.v_table.clone();
         self.v_table.clear();
         vtable
     }
 
-    pub fn vtable_restore(&mut self, restore: Stack<Expr>) {
+    pub fn vtable_restore(&mut self, restore: Stack<Value>) {
         self.v_table = restore;
     }
 
@@ -53,7 +55,7 @@ impl IEnvironment {
         self.f_table.pop_scope();
     }
 
-    pub fn rvalue_set(&mut self, value: Expr) {
+    pub fn rvalue_set(&mut self, value: Value) {
         self.r_value = Some(value);
     }
 
@@ -61,9 +63,19 @@ impl IEnvironment {
         self.r_value = None;
     }
     
-    pub fn rvalue_get(&self) -> Option<Expr> {
+    pub fn rvalue_get(&self) -> Option<Value> {
         self.r_value.clone()
     }    
+
+    pub fn vtable_lookup(&self, identifier: &String) -> Result<&Value, Box<dyn Error>> {
+        if let Some(etype) = self.v_table.get(identifier) {
+            match etype {
+                EType::Normal(t) | EType::DeclNonDefault(t) | EType::DeclDefault(t) => Ok(t),
+            }
+        } else {
+            Err(errors::IdentifierNotFound(identifier.to_owned()).into())
+        }
+    }
 
     
 

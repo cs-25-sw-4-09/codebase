@@ -162,7 +162,7 @@ fn polygon() {
             )),
             operator: PathOperator::Line,
         }),
-        operator: PolyOperator::Polygon,
+        operator: PolyOperator::Straight,
     }
     .type_check(&mut env)
     .unwrap();
@@ -174,7 +174,7 @@ fn polygon_invalid() {
     let mut env = TEnvironment::new();
     let invalid = Expr::PolygonOperation {
         path: Box::new(Expr::Integer(1)),
-        operator: PolyOperator::Polygon,
+        operator: PolyOperator::Straight,
     }
     .type_check(&mut env);
     assert!(invalid
@@ -477,7 +477,7 @@ fn scall_default_polygon() {
                     rhs: Expr::Point(Expr::Integer(2).into(), Expr::Integer(3).into()).into(),
                     operator: PathOperator::Line
                 }.into(),
-                operator: PolyOperator::Polygon
+                operator: PolyOperator::Straight
             }.into()
         )
     }

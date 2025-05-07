@@ -1,7 +1,7 @@
 use crate::{
-    interpreter::{environment::IEnvironment, errors, InterpretE, InterpretS},
+    interpreter::{environment::IEnvironment, errors, value::Value, InterpretE, InterpretS},
     program::{
-        expression::Expr, operators::binaryoperator::BinaryOperator, r#type::Type, statement::Stmt,
+        expression::Expr, operators::binaryoperator::BinaryOperator, statement::Stmt, r#type::Type
     },
 };
 
@@ -17,7 +17,7 @@ fn var_decl() {
     .unwrap();
     assert_eq!(
         env.vtable_find("x".into()).unwrap().clone(),
-        Expr::Integer(4)
+        Value::Integer(4)
     )
 }
 
@@ -63,7 +63,7 @@ fn func_decl_return() {
         }
         .interpret(&mut env)
         .unwrap(),
-        Expr::Boolean(true)
+        Value::Boolean(true)
     )
 }
 
@@ -71,7 +71,7 @@ fn func_decl_return() {
 fn fork() {
     let mut env = IEnvironment::new();
 
-    env.vtable_push("x".into(), Expr::Integer(4));
+    env.vtable_push("x".into(), Value::Integer(4));
 
     let _ = Stmt::Fork {
         branches: vec![(
@@ -86,14 +86,14 @@ fn fork() {
         otherwise: Option::None,
     }.interpret(&mut env);
 
-    assert_eq!(env.vtable_find("x".into()).unwrap().clone(), Expr::Integer(8))
+    assert_eq!(env.vtable_find("x".into()).unwrap().clone(), Value::Integer(8))
 }
 
 #[test]
 fn fork_otherwise() {
     let mut env = IEnvironment::new();
 
-    env.vtable_push("x".into(), Expr::Integer(4));
+    env.vtable_push("x".into(), Value::Integer(4));
 
     let _ = Stmt::Fork {
         branches: vec![(
@@ -108,5 +108,5 @@ fn fork_otherwise() {
         otherwise: Some(vec![Stmt::Assign { name: "x".into(), value: Expr::Integer(9)}]),
     }.interpret(&mut env);
 
-    assert_eq!(env.vtable_find("x".into()).unwrap().clone(), Expr::Integer(9))
+    assert_eq!(env.vtable_find("x".into()).unwrap().clone(), Value::Integer(9))
 }

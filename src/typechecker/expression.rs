@@ -340,9 +340,6 @@ impl TypeCheckE for Expr {
                                     Err(errors::ManipulationRotateTypeFault(t1, t2).into())
                                 }
                             }
-            Expr::Shape(_) => Ok(Type::Shape),
-            Expr::Path(_) => Ok(Type::Path),
-            Expr::Polygon(_) => Ok(Type::Polygon),
         }
     }
 }

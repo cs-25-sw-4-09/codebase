@@ -7,8 +7,7 @@ use super::{
     operators::{
         binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
         unaryoperator::UnaryOperator,
-    },
-    figure::Figure,
+    }
 };
 
 #[derive(Debug, PartialEq, Clone)]
@@ -19,7 +18,6 @@ pub enum Expr {
     Float(f64),
     Point(Box<Expr>, Box<Expr>),
     Color(Box<Expr>, Box<Expr>, Box<Expr>, Box<Expr>),
-    Shape(Vec<Figure>),
     PathOperation {
         lhs: Box<Expr>,
         rhs: Box<Expr>,
@@ -29,8 +27,6 @@ pub enum Expr {
         path: Box<Expr>,
         operator: PolyOperator,
     },
-    Path(Figure),
-    Polygon(Figure),
     Array(Vec<Expr>),
     BinaryOperation {
         lhs: Box<Expr>,
@@ -338,19 +334,5 @@ impl Expr {
         };
 
         Ok(expr)
-    }
-
-    pub fn get_int(&self) -> Result<i64, Box<dyn Error>> {
-        match self {
-            Expr::Integer(i) => Ok(*i),
-            _ => Err(errors::ExprParseAsIntegerError.into())
-        }
-    }
-
-    pub fn get_bool(&self) -> Result<bool, Box<dyn Error>> {
-        match self {
-            Expr::Boolean(i) => Ok(*i),
-            _ => Err(errors::ExprParseAsBooleanError.into())
-        }
     }
 }

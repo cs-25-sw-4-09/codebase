@@ -2,9 +2,9 @@ use std::error::Error;
 
 
 use environment::IEnvironment;
+use value::Value;
 
-use crate::program::expression::Expr;
-
+pub mod data_types;
 pub mod utils;
 pub mod expression;
 pub mod program;
@@ -12,6 +12,7 @@ pub mod statement;
 pub mod environment;
 pub mod errors;
 pub mod stack;
+pub mod value;
 mod tests;
 
 pub trait InterpretP {
@@ -21,5 +22,5 @@ pub trait InterpretS {
     fn interpret(&self, environment: &mut IEnvironment) -> Result<(), Box<dyn Error>>;
 }
 pub trait InterpretE {
-    fn interpret(&self, environment: &mut IEnvironment) -> Result<Expr, Box<dyn Error>>;
+    fn interpret(&self, environment: &mut IEnvironment) -> Result<Value, Box<dyn Error>>;
 }

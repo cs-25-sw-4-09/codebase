@@ -1,6 +1,6 @@
 use crate::program::{expression::Expr, statement::Stmt};
 
-use super::{errors, InterpretE, InterpretS};
+use super::{errors, InterpretE, InterpretS, value::Value};
 
 impl InterpretS for Stmt {
     fn interpret(
@@ -71,7 +71,7 @@ impl InterpretS for Stmt {
                     from.interpret(environment)?.get_int()?..to.interpret(environment)?.get_int()?
                 {
                     environment.push_scope();
-                    environment.vtable_push(counter.into(), Expr::Integer(i));
+                    environment.vtable_push(counter.into(), Value::Integer(i));
                     for stmt in body.iter() {
                         stmt.interpret(environment)?;
                     }
@@ -84,7 +84,7 @@ impl InterpretS for Stmt {
             }
             Stmt::Fork { branches, otherwise } => {
                 for (expr, stmts) in branches {
-                    if expr.interpret(environment)? == Expr::Boolean(true) {
+                    if expr.interpret(environment)? == Value::Boolean(true) {
                         environment.push_scope();
                         for stmt in stmts {
                             stmt.interpret(environment)?;
