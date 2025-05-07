@@ -34,12 +34,17 @@ impl Figure {
     pub fn get_lines(&self) -> &Vec<Line> {
         &self.lines
     }
+
+    pub fn get_mut_line(&mut self, idx: usize) -> Option<&mut Line> {
+        self.lines.get_mut(idx)
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Line(Vec<Point>);
 impl Line {
     pub fn get_points(&self) -> &Vec<Point> { &self.0 }
+    pub fn push_point(&mut self, val: Point) { self.0.push(val); }
 }
 
 impl From<(Point, Point)> for Line {

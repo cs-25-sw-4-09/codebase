@@ -1,3 +1,5 @@
+use std::collections::btree_map::Values;
+
 use crate::{interpreter::InterpretS, program::expression::Expr};
 
 use super::{data_types::point::Point, errors, utils::path::path_to_fig, value::Value, InterpretE};
@@ -162,15 +164,34 @@ impl InterpretE for Expr {
             Expr::PolygonOperation { path, operator } => {
                 use crate::program::operators::polyoperator::PolyOperator;
 
-                let i1 = path.interpret(environment)?;
+                let mut i1 = match path.interpret(environment)? {
+                    Value::Path(figure) => figure,
+                    _ => return Err(Box::new(errors::PolyPathNotFound))
+                };
                 match operator {
-                    PolyOperator::Curved => todo!(),
-                    PolyOperator::Straight => todo!(),
+                    PolyOperator::Curved => {
+                        let first_point = i1.get_lines()[0].get_points()[0].clone();
+                        let len = i1.get_lines().len();
+
+                        i1.get_mut_line(len - 1).map(|l| l.push_point(first_point));
+                    },
+                    PolyOperator::Straight => {
+                        let first_point = i1.get_lines()[0].get_points()[0].clone();
+                        let last_point = i1.get_lines().iter().last().unwrap().get_points().iter().last().unwrap().clone();
+
+                        i1.push_points(vec![first_point, last_point]);
+                    }
                 }
 
-                todo!()
+                &Value::Polygon(i1)
             }
-            Expr::Array(exprs) => todo!(),
+            Expr::Array(exprs) => {
+                let mut values: Vec<Box<Value>> = Vec::new();
+                for expr in exprs {
+                    values.push(Box::new(expr.interpret(environment)?));
+                }
+                &Value::Array(values)
+            },
 
             
             Expr::SCall {
