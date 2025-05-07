@@ -101,7 +101,7 @@ impl Expr {
                 }
             }
             "--" | "~~" => {
-                //use crate::lexer_parser::utils::tree_converter::stringify_tree; println!("{}", stringify_tree(expr));
+                use crate::lexer_parser::utils::tree_converter::stringify_tree; println!("{}", stringify_tree(expr));
 
 
                 let lhs = Box::new(Expr::new(expr.child(0))?);
