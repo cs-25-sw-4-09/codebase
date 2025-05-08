@@ -1,8 +1,8 @@
-use std::collections::btree_map::Values;
+use std::{collections::btree_map::Values};
 
 use crate::{interpreter::InterpretS, program::expression::Expr};
 
-use super::{data_types::point::Point, errors, utils::path::path_to_fig, value::Value, InterpretE};
+use super::{data_types::{figure::Figure, point::Point}, errors, utils::path::path_to_fig, value::Value, InterpretE};
 
 use crate::program::operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator};
 
@@ -236,19 +236,19 @@ impl InterpretE for Expr {
                             Value::Shape(figures) => match member_access.as_str() {
                                                         "height" => &Value::Integer(figures.iter().map(|f| f.get_height())
                                                         .max().unwrap_or(0)),
-                                                        "weight" => &Value::Integer(figures.iter().map(|f| f.get_weight())
+                                                        "weight" => &Value::Integer(figures.iter().map(|f| f.get_width())
                                                         .max().unwrap_or(0)),
                                                         _ => unreachable!()
                                                     },
                             Value::Path(figure) =>  match member_access.as_str() {
                                                         "height" => &Value::Integer(figure.get_height()),
-                                                        "weight" => &Value::Integer(figure.get_weight()),
+                                                        "weight" => &Value::Integer(figure.get_width()),
                                                         _ => unreachable!()
 
                                                     },
                             Value::Polygon(figure) => match member_access.as_str() {
                                                         "height" => &Value::Integer(figure.get_height()),
-                                                        "weight" => &Value::Integer(figure.get_weight()),
+                                                        "weight" => &Value::Integer(figure.get_width()),
                                                         _ => unreachable!()
                                                     },
                             Value::Array(array) => match member_access.as_str() {
@@ -260,7 +260,15 @@ impl InterpretE for Expr {
                     
                         }
             Expr::Place { base_shape, second_shape, place_at, point } => todo!(),
-                            Expr::Scale { base_shape, factor } => todo!(),
+
+                            Expr::Scale { base_shape, factor } => {
+                                let mut shape = base_shape.interpret(environment)?;
+                                match shape {
+                                    Value::Shape(mut figures) => todo!(),
+                                    _ => unreachable!()
+                                }
+
+                            },
                             Expr::Rotate { base_shape, factor } => todo!(),
                         };
             
