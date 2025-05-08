@@ -389,3 +389,12 @@ fn array_size() {
     let i2 = Expr::Member { identifier: "array".into(), member_access: "size".into() }.interpret(&mut env).unwrap();
     assert_eq!(i2, Value::Integer(2));
 }
+
+#[test]
+fn array_interpret() { 
+    let mut env = IEnvironment::new();
+
+     let i2 = Expr::Array(vec![Expr::Integer(4)]).interpret(&mut env).unwrap();
+
+     assert_eq!(i2, Value::Array(vec![Box::new(Value::Integer(4))]));
+}
