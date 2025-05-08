@@ -22,6 +22,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         Err(err) => println!("[Interpreter] error: {}", err),
     }
 
-    println!("{:?}", program.ienvironment);
+    println!("{:#?}", program.ienvironment);
     Ok(())
 }

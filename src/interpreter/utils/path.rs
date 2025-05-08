@@ -14,7 +14,7 @@ enum ToAdd {
     Empty
 }
 
-pub fn path_to_fig(path: &Expr, env: &mut IEnvironment) -> Result<Figure, Box<dyn std::error::Error>> {
+/*pub fn path_to_fig(path: &Expr, env: &mut IEnvironment) -> Result<Figure, Box<dyn std::error::Error>> {
     match path {
         Expr::PathOperation { lhs, rhs, operator } => {
 
@@ -26,9 +26,9 @@ pub fn path_to_fig(path: &Expr, env: &mut IEnvironment) -> Result<Figure, Box<dy
         }
         _ => unreachable!()
     }
-}
+}*/
 
-fn path_to_fig_helper(
+/*fn path_to_fig_helper(
     p1: &Box<Expr>, 
     path_t: Option<&PathOperator>, 
     rest: Option<&Box<Expr>>,  
@@ -55,7 +55,7 @@ fn path_to_fig_helper(
                 PathOperator::Curve => ToAdd::Curved(vec![p1]),
             }
         },
-        (Value::Path(path), _t, to_add) => {
+        (Value::Figure(path), _t, to_add) => {
             //todo: handle T 
             let (lines_new, new_to_add) = add_path(path, to_add);
             lines_new.into_iter().for_each(|line| lines.push(line));
@@ -75,10 +75,10 @@ fn path_to_fig_helper(
     } else {
         Ok(lines)
     }    
-}
+}*/
     
 
-fn add_path(
+/*fn add_path(
     fig: Figure, 
     to_add: ToAdd, 
 ) -> (Vec<Line>, ToAdd) {
@@ -117,4 +117,4 @@ fn add_path(
     };
 
     (return_lines, return_add)
-}
+}*/

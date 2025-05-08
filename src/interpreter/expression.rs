@@ -1,20 +1,13 @@
-use std::collections::btree_map::Values;
-
 use crate::{
     interpreter::{data_types::figure::Line, InterpretS},
     program::expression::Expr,
 };
 
-use super::{
-    data_types::{figure::Figure, point::Point},
-    errors,
-    utils::path::path_to_fig,
-    value::Value,
-    InterpretE,
-};
+use super::{data_types::point::Point, errors, value::Value, InterpretE};
 
 use crate::program::operators::{
-    binaryoperator::BinaryOperator, pathoperator::PathOperator, unaryoperator::UnaryOperator,
+    binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
+    unaryoperator::UnaryOperator,
 };
 
 impl InterpretE for Expr {
@@ -172,105 +165,109 @@ impl InterpretE for Expr {
             }
             Expr::PathOperation { lhs, rhs, operator } => {
                 let i1 = lhs.interpret(environment)?;
-                let i2 = lhs.interpret(environment)?;
+                let i2 = rhs.interpret(environment)?;
 
                 match (i1, i2) {
                     //Path-path
                     (Value::Figure(mut fig1), Value::Figure(mut fig2)) => {
                         let fig1_last_line = fig1.get_last_line()?;
                         let fig2_first_line = fig2.get_first_line()?;
-                        
+
                         match (operator, &fig1_last_line, &fig2_first_line) {
-                            (PathOperator::Line, _, _) | (PathOperator::Curve, Line::Straight(_), Line::Straight(_)) => {
+                            (PathOperator::Line, _, _)
+                            | (PathOperator::Curve, Line::Straight(_), Line::Straight(_)) => {
                                 let fig1_last_line = fig1_last_line.clone();
-                                fig1.push_line_after(
-                                    Line::Straight(vec![fig1_last_line.get_last_point()?.clone(), fig2_first_line.get_first_point()?.clone()])
-                                );
+                                fig1.push_line_after(Line::Straight(vec![
+                                    fig1_last_line.get_last_point()?.clone(),
+                                    fig2_first_line.get_first_point()?.clone(),
+                                ]));
                                 fig1.push_lines(fig2.get_lines().clone());
                                 &Value::Figure(fig1)
                             }
                             (PathOperator::Curve, Line::Straight(_), Line::Curved(_)) => {
-                                fig2_first_line.insert_point_first(
-                                    fig1_last_line.get_last_point()?.clone()
-                                );
-                                
+                                fig2_first_line
+                                    .insert_point_first(fig1_last_line.get_last_point()?.clone());
+
                                 fig1.push_lines(fig2.get_lines().clone());
                                 &Value::Figure(fig1)
-                            },
-                            (PathOperator::Curve, Line::Curved(_), Line::Straight(_)) => {
+                            }
+                            (PathOperator::Curve, Line::Curved(_), Line::Curved(_)) => {
                                 let fig1_last_line = fig1.pop_last_line()?;
                                 let fig2_first_line = fig2.pop_first_line()?;
-                                
-                                fig1.push_line_after(
-                                    Line::Curved(
-                                        fig1_last_line.get_points().to_vec().into_iter().chain(
-                                            fig2_first_line.get_points().to_vec().into_iter()
-                                        ).collect()
-                                    )
-                                );
-                                
+
+                                fig1.push_line_after(Line::Curved(
+                                    fig1_last_line
+                                        .get_points()
+                                        .to_vec()
+                                        .into_iter()
+                                        .chain(fig2_first_line.get_points().to_vec().into_iter())
+                                        .collect(),
+                                ));
+
                                 fig1.push_lines(fig2.get_lines().clone());
                                 &Value::Figure(fig1)
-                            },
-                            (PathOperator::Curve, Line::Curved(_), Line::Curved(_)) => {
-                                fig1_last_line.insert_point_last(
-                                    fig2_first_line.get_first_point()?.clone()
-                                );
-                                
+                            }
+                            (PathOperator::Curve, Line::Curved(_), Line::Straight(_)) => {
+                                fig1_last_line
+                                    .insert_point_last(fig2_first_line.get_first_point()?.clone());
+
                                 fig1.push_lines(fig2.get_lines().clone());
                                 &Value::Figure(fig1)
-                            },
-                        }       
-                    },
+                            }
+                        }
+                    }
                     //Point-path
                     (Value::Point(p), Value::Figure(mut fig)) => {
                         let line_first = fig.get_first_line()?;
                         match (operator, &line_first) {
                             (PathOperator::Line, _) => {
                                 let line_first = line_first.clone();
-                                fig.push_line_before(
-                                    Line::Straight(vec![p.clone(), line_first.get_first_point()?.clone()])
-                                );
+                                fig.push_line_before(Line::Straight(vec![
+                                    p.clone(),
+                                    line_first.get_first_point()?.clone(),
+                                ]));
                                 &Value::Figure(fig)
-                            },
+                            }
                             (PathOperator::Curve, Line::Curved(_)) => {
                                 line_first.insert_point_first(p);
                                 &Value::Figure(fig)
-                            },
+                            }
                             (PathOperator::Curve, Line::Straight(_)) => {
                                 let line_first = line_first.clone();
-                                fig.push_line_before(
-                                    Line::Curved(vec![p.clone(), line_first.get_first_point()?.clone()])
-                                );
+                                fig.push_line_before(Line::Curved(vec![
+                                    p.clone(),
+                                    line_first.get_first_point()?.clone(),
+                                ]));
                                 &Value::Figure(fig)
                             }
                         }
-                        
-                    },
+                    }
                     //path-point
                     (Value::Figure(mut fig), Value::Point(p)) => {
                         let line_last = fig.get_last_line()?;
                         match (operator, &line_last) {
                             (PathOperator::Line, _) => {
                                 let line_last = line_last.clone();
-                                fig.push_line_after(
-                                    Line::Straight(vec![line_last.get_last_point()?.clone(), p.clone()])
-                                );
+                                fig.push_line_after(Line::Straight(vec![
+                                    line_last.get_last_point()?.clone(),
+                                    p.clone(),
+                                ]));
                                 &Value::Figure(fig)
-                            },
+                            }
                             (PathOperator::Curve, Line::Curved(_)) => {
                                 line_last.insert_point_last(p);
                                 &Value::Figure(fig)
-                            },
+                            }
                             (PathOperator::Curve, Line::Straight(_)) => {
                                 let line_last = line_last.clone();
-                                fig.push_line_after(
-                                    Line::Curved(vec![line_last.get_last_point()?.clone(), p.clone()])
-                                );
+                                fig.push_line_after(Line::Curved(vec![
+                                    line_last.get_last_point()?.clone(),
+                                    p.clone(),
+                                ]));
                                 &Value::Figure(fig)
-                            },
+                            }
                         }
-                    },
+                    }
                     //point-point
                     (Value::Point(p1), Value::Point(p2)) => match operator {
                         PathOperator::Line => &Value::Figure(
@@ -284,37 +281,61 @@ impl InterpretE for Expr {
                 }
             }
             Expr::PolygonOperation { path, operator } => {
-                use crate::program::operators::polyoperator::PolyOperator;
+                let i1 = path.interpret(environment)?;
 
-                let mut i1 = match path.interpret(environment)? {
-                    Value::Figure(figure) => figure,
-                    _ => return Err(Box::new(errors::PolyPathNotFound)),
+                let Value::Figure(mut fig) = i1 else {
+                    unreachable!()
                 };
-                match operator {
-                    PolyOperator::Curved => {
-                        let first_point = i1.get_lines()[0].get_points()[0].clone();
-                        let len = i1.get_lines().len();
 
-                        i1.get_mut_line(len - 1).map(|l| l.push_point(first_point));
+                let line_first = fig.get_first_line()?.clone();
+                let line_last = fig.get_last_line()?;
+
+                match (operator, &line_first, &line_last) {
+                    (PolyOperator::Curved, Line::Straight(_), Line::Curved(_)) => {
+                        // Case 1
+                        line_last.insert_point_last(line_first.get_first_point()?.clone());
+                        &Value::Figure(fig)
                     }
-                    PolyOperator::Straight => {
-                        let first_point = i1.get_lines()[0].get_points()[0].clone();
-                        let last_point = i1
-                            .get_lines()
-                            .iter()
-                            .last()
-                            .unwrap()
-                            .get_points()
-                            .iter()
-                            .last()
-                            .unwrap()
-                            .clone();
+                    (PolyOperator::Curved, Line::Curved(_), Line::Straight(_)) => {
+                        // NY CASE: istedet for at have den ved case 2 hvor e.g. (a,b)~~(c,d)--(e,f)~~* => (c,d)--(e,f) ville blive konverteret til (c,d)~~(e,f)
+                        let mut line_first = fig.pop_first_line()?;
+                        line_first
+                            .insert_point_first(fig.get_last_line()?.get_last_point()?.clone());
+                        fig.push_line_after(line_first);
+                        &Value::Figure(fig)
+                    }
 
-                        i1.push_points(vec![first_point, last_point]);
+                    (PolyOperator::Curved, Line::Curved(_), Line::Curved(_)) => {
+                        // Case 2
+                        if fig.get_lines().len() > 1 {
+                            let line_first = fig.pop_first_line()?;
+                            let line_last = fig.pop_last_line()?;
+
+                            fig.push_line_after(Line::Curved(
+                                line_last
+                                    .get_points()
+                                    .to_vec()
+                                    .into_iter()
+                                    .chain(line_first.get_points().to_vec().into_iter())
+                                    .collect(),
+                            ));
+                        } else {
+                            let point_first = fig.get_first_line()?.get_first_point()?.clone();
+                            fig.get_first_line()?.insert_point_last(point_first);
+                        }
+                        &Value::Figure(fig)
+                    }
+                    (PolyOperator::Straight, _, _)
+                    | (PolyOperator::Curved, Line::Straight(_), Line::Straight(_)) => {
+                        // Case 3
+                        let line_last = line_last.clone();
+                        fig.push_line_after(Line::Straight(vec![
+                            line_last.get_last_point()?.clone(),
+                            line_first.get_first_point()?.clone(),
+                        ]));
+                        &Value::Figure(fig)
                     }
                 }
-
-                &Value::Figure(i1)
             }
             Expr::Array(exprs) => {
                 let mut values: Vec<Box<Value>> = Vec::new();
