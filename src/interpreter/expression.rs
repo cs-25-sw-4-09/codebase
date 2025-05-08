@@ -1,3 +1,5 @@
+use std::collections::btree_map::Values;
+
 use crate::{interpreter::InterpretS, program::expression::Expr};
 
 use super::{data_types::point::Point, errors, utils::path::path_to_fig, value::Value, InterpretE};
@@ -20,7 +22,9 @@ impl InterpretE for Expr {
                 Box::new(b.interpret(environment)?), 
                 Box::new(a.interpret(environment)?)
             ), 
-            Expr::Point(x, y) => &Value::Point(Point::try_from((self, environment))?),
+            Expr::Point(x, y) => &Value::Point(
+                Point::from((x.interpret(environment)?, y.interpret(environment)?))
+            ),
             Expr::Variable(identifier) => environment.vtable_find(identifier.to_owned()).unwrap(),
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let i1 = lhs.interpret(environment)?;
@@ -162,50 +166,60 @@ impl InterpretE for Expr {
             Expr::PolygonOperation { path, operator } => {
                 use crate::program::operators::polyoperator::PolyOperator;
 
-                let i1 = path.interpret(environment)?;
+                let mut i1 = match path.interpret(environment)? {
+                    Value::Path(figure) => figure,
+                    _ => return Err(Box::new(errors::PolyPathNotFound))
+                };
                 match operator {
-                    PolyOperator::Curved => todo!(),
-                    PolyOperator::Straight => todo!(),
+                    PolyOperator::Curved => {
+                        let first_point = i1.get_lines()[0].get_points()[0].clone();
+                        let len = i1.get_lines().len();
+
+                        i1.get_mut_line(len - 1).map(|l| l.push_point(first_point));
+                    },
+                    PolyOperator::Straight => {
+                        let first_point = i1.get_lines()[0].get_points()[0].clone();
+                        let last_point = i1.get_lines().iter().last().unwrap().get_points().iter().last().unwrap().clone();
+
+                        i1.push_points(vec![first_point, last_point]);
+                    }
                 }
 
-                todo!()
+                &Value::Polygon(i1)
             }
             Expr::Array(exprs) => {
-                let values: Result<Vec<_>, _> = exprs.iter()
-                .map(|e|e.interpret(environment).map(Box::new)).collect();
-                &Value::Array(values?)
+                let mut values: Vec<Box<Value>> = Vec::new();
+                for expr in exprs {
+                    values.push(Box::new(expr.interpret(environment)?));
+                }
+                &Value::Array(values)
             },
-
-            
             Expr::SCall {
                 name,
                 args,
                 path_poly,
             } => {
-                if let Some(name) = name {
-                    /*let shape = environment.vtable_find(name.into()).unwrap().clone();
-                    for i in 0..args.len() { 
-                        let i1 = args[i].clone().interpret(environment)?;                      
-                    }*/
-                } else {
-                    let i1 = path_poly
-                    .as_ref()
-                    .ok_or_else(|| errors::PolyPathNotFound)?
-                    .interpret(environment)?;
+                match (name, path_poly) {
+                    (Some(_), _) => {
+                        /*let shape = environment.vtable_find(name.into()).unwrap().clone();
+                        for i in 0..args.len() { 
+                            let i1 = args[i].clone().interpret(environment)?;                      
+                        }*/
+                    },
+                    (None, Some(path)) => {
+                        let i1 = path.interpret(environment)?;
+                        
 
-                    
-
-
-                }
-
-        
+                    },
+                    _ => return Err(Box::new(errors::PolyPathNotFound)),
+                }        
                 todo!()   
             }
             Expr::Member {
                 identifier,
                 member_access,
             } => {
-                let t1 = *environment.vtable_find(*identifier).unwrap();
+                /*let t1 = *environment.vtable_find(*identifier).unwrap();
                 match t1 {
                     Value::Color(r,g,b,a) => match member_access.as_str() {
                         "r" => &r,

@@ -25,8 +25,8 @@ impl Figure {
         }
     }
 
-    pub fn push_line(&mut self, ps: Vec<Point>) {
-        self.lines.push(Line::new(ps));
+    pub fn push_points(&mut self, ps: Vec<Point>) {
+        self.lines.push(Line::from(ps));
     }
     pub fn push_lines(&mut self, lines: Vec<Line>) {
         lines.into_iter().for_each(|line| self.lines.push(line));
@@ -34,6 +34,10 @@ impl Figure {
 
     pub fn get_lines(&self) -> &Vec<Line> {
         &self.lines
+    }
+
+    pub fn get_mut_line(&mut self, idx: usize) -> Option<&mut Line> {
+        self.lines.get_mut(idx)
     }
 
     pub fn get_height(&self) -> i64 {
@@ -78,6 +82,18 @@ impl Figure {
 #[derive(Debug, PartialEq, Clone)]
 pub struct Line(Vec<Point>);
 impl Line {
-    pub fn new(value: Vec<Point>) -> Self { Self(value) }
     pub fn get_points(&self) -> &Vec<Point> { &self.0 }
+    pub fn push_point(&mut self, val: Point) { self.0.push(val); }
+}
+
+impl From<(Point, Point)> for Line {
+    fn from(value: (Point, Point)) -> Self {
+        Self(vec![value.0, value.1])
+    }
+}
+
+impl From<Vec<Point>> for Line {
+    fn from(value: Vec<Point>) -> Self {
+        Self(value)
+    }
 }
