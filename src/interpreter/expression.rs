@@ -405,14 +405,14 @@ impl InterpretE for Expr {
                         "height" => &Value::Integer(
                             figures.iter().map(|f| f.get_height()).max().unwrap_or(0),
                         ),
-                        "weight" => &Value::Integer(
-                            figures.iter().map(|f| f.get_weight()).max().unwrap_or(0),
+                        "width" => &Value::Integer(
+                            figures.iter().map(|f| f.get_width()).max().unwrap_or(0),
                         ),
                         _ => unreachable!(),
                     },
                     Value::Figure(figure) => match member_access.as_str() {
                         "height" => &Value::Integer(figure.get_height()),
-                        "weight" => &Value::Integer(figure.get_weight()),
+                        "width" => &Value::Integer(figure.get_width()),
                         _ => unreachable!(),
                     },
                     Value::Array(array) => match member_access.as_str() {
