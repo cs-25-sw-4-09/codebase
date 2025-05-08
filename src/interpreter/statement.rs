@@ -57,7 +57,10 @@ impl InterpretS for Stmt {
                 }
             }
             Stmt::Import { name, path } => todo!(),
-            Stmt::Draw { shape, point } => todo!(),
+            Stmt::Draw { shape, point } => {
+                println!("{:?}", shape);
+                todo!()
+            },
             Stmt::Assign { name, value } => {
                 *environment.vtable_find(name.into()).unwrap() = value.interpret(environment)?;
             }

@@ -9,7 +9,7 @@ use super::value::Value;
 pub struct IEnvironment {
     v_table: Stack<Value>,
     f_table: Stack<(Vec<Stmt>, Vec<String>)>,
-    s_table: HashMap<String, (Program, Option<Expr>)>,
+    s_table: HashMap<String, Program>,
     d_array: Vec<Figure>,
     r_value: Option<Value>,
 }
@@ -43,6 +43,18 @@ impl IEnvironment {
 
     pub fn ftable_find(&mut self, identifier: String) -> Option<&mut (Vec<Stmt>, Vec<String>)> {
         self.f_table.find(identifier)
+    }
+
+    pub fn stable_push(&mut self, identifier: String, program: Program) {
+        self.s_table.insert(identifier, program);
+    }
+
+    pub fn stable_find(&mut self, identifier: String) -> Option<&mut Program> {
+        self.s_table.get_mut(&identifier)
+    }
+
+    pub fn darray_get(&self) -> &Vec<Figure> {
+        &self.d_array
     }
 
     pub fn push_scope(&mut self) {

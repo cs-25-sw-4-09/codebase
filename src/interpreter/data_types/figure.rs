@@ -6,7 +6,7 @@ use crate::interpreter::value::Value;
 #[derive(Debug, PartialEq, Clone)]
 pub struct Figure {
     lines: Vec<Line>,
-    attributes: HashMap<String, Box::<Expr>> 
+    attributes: HashMap<String, Value> 
 }
 
 impl From<Vec<Line>> for Figure {
@@ -23,6 +23,10 @@ impl Figure {
             lines: Vec::new(),
             attributes: HashMap::new()
         }
+    }
+
+    pub fn set_attribute(&mut self, attribute: (String, Value)) {
+        self.attributes.insert(attribute.0, attribute.1);
     }
 
     pub fn push_points(&mut self, ps: Vec<Point>) {

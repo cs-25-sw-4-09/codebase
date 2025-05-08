@@ -3,7 +3,7 @@ use crate::{
     program::expression::Expr,
 };
 
-use super::{data_types::point::Point, errors, value::Value, InterpretE};
+use super::{data_types::point::Point, errors, value::Value, InterpretE, InterpretP};
 
 use crate::program::operators::{
     binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
@@ -351,17 +351,37 @@ impl InterpretE for Expr {
             } => {
                 match (name, path_poly) {
                     (Some(_), _) => {
-                        /*let shape = environment.vtable_find(name.into()).unwrap().clone();
-                        for i in 0..args.len() {
-                            let i1 = args[i].clone().interpret(environment)?;
-                        }*/
+                        let mut interpreted_args = Vec::new();
+                        for (arg_name, expr) in args.iter() {
+                            let i1 = expr.interpret(environment)?;
+                            interpreted_args.push((arg_name, i1));
+                        }
+
+                        let program = environment.stable_find(name.clone().unwrap()).unwrap();
+
+                        for (arg_name, value) in interpreted_args {
+                            program.ienvironment.vtable_push(arg_name.clone(), value);
+                        }
+
+                        let sub_environment = program.interpret()?;
+
+                        &Value::Shape(sub_environment.darray_get().clone())
                     }
-                    (None, Some(path)) => {
-                        let i1 = path.interpret(environment)?;
+                    (None, Some(path_poly)) => { //Shape call to path/polygon
+                        let i1 = path_poly.interpret(environment)?;
+                        
+                        let Value::Figure(mut fig) = i1 else {
+                            unreachable!()
+                        };
+                        
+                        for (arg_name, expr) in args.clone() {
+                            fig.set_attribute((arg_name, expr.interpret(environment)?));
+                        }
+
+                        &Value::Shape(vec![fig])
                     }
-                    _ => return Err(Box::new(errors::PolyPathNotFound)),
+                    _ => return Err(errors::PolyPathNotFound.into()),
                 }
-                todo!()
             }
             Expr::Member {
                 identifier,
