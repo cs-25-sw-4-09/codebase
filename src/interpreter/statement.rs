@@ -58,8 +58,18 @@ impl InterpretS for Stmt {
             }
             Stmt::Import { name, path } => todo!(),
             Stmt::Draw { shape, point } => {
-                println!("{:?}", shape);
-                todo!()
+                let Value::Shape(shape) = shape.interpret(environment)? else { unreachable!() };
+
+                match point {
+                    Some(point) => {
+                        let p1 = point.interpret(environment)?;
+                        todo!()
+                    },
+                    None => {
+                        environment.darray_push(shape);
+                    },
+                }
+                return Ok(());
             },
             Stmt::Assign { name, value } => {
                 *environment.vtable_find(name.into()).unwrap() = value.interpret(environment)?;
