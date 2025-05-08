@@ -58,3 +58,13 @@ impl fmt::Display for ArrayNonExcisting {
         write!(f,"Array {} is not declared", self.0)
     }
 }
+
+
+#[derive(Debug, Clone)]
+pub struct NoLinesInFigure;
+impl Error for NoLinesInFigure {}
+impl fmt::Display for NoLinesInFigure {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"Last line is not defined in figure")
+    }
+}

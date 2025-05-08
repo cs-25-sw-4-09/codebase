@@ -11,8 +11,7 @@ pub enum Value {
     Point(Point),
     Color(Box<Value>, Box<Value>, Box<Value>, Box<Value>),
     Shape(Vec<Figure>),
-    Path(Figure),
-    Polygon(Figure),
+    Figure(Figure),
     Array(Vec<Box<Value>>)
 }
 

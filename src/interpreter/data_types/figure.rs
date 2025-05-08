@@ -1,5 +1,5 @@
-use crate::program::expression::Expr;
-use std::collections::HashMap;
+use crate::{interpreter::errors, program::expression::Expr};
+use std::{collections::HashMap, error::Error};
 use super::point::Point;
 use crate::interpreter::value::Value;
 
@@ -26,8 +26,16 @@ impl Figure {
     }
 
     pub fn push_points(&mut self, ps: Vec<Point>) {
-        self.lines.push(Line::from(ps));
+        self.lines.push(Line::Curved(ps));
     }
+
+    pub fn push_line_after(&mut self, line: Line) {
+        self.lines.push(line);
+    }
+    pub fn push_line_before(&mut self, line: Line) {
+        self.lines.insert(0, line);
+    }
+
     pub fn push_lines(&mut self, lines: Vec<Line>) {
         lines.into_iter().for_each(|line| self.lines.push(line));
     }
@@ -74,26 +82,68 @@ impl Figure {
         }).min().unwrap_or(0);
  
         max_y - min_y
-     }
+    }
+
+    pub fn get_last_line(&mut self) -> Result<&mut Line, Box<dyn Error>> {
+        self.lines.last_mut().ok_or_else(|| errors::NoLinesInFigure.into())
+    }
+    pub fn get_first_line(&mut self) -> Result<&mut Line, Box<dyn Error>> {
+        self.lines.first_mut().ok_or_else(|| errors::NoLinesInFigure.into())
+    }
+
+    pub fn pop_first_line(&mut self) -> Result<Line, Box<dyn Error>>{
+        if self.lines.is_empty() {
+            Err(errors::NoLinesInFigure.into())
+        } else {
+            Ok(self.lines.remove(0))
+        }
+    }
+    pub fn pop_last_line(&mut self) -> Result<Line, Box<dyn Error>>  {
+        self.lines.pop().ok_or_else(|| errors::NoLinesInFigure.into())
+    }
 
 
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct Line(Vec<Point>);
+pub enum Line {
+    Straight(Vec<Point>),
+    Curved(Vec<Point>)
+}
 impl Line {
-    pub fn get_points(&self) -> &Vec<Point> { &self.0 }
-    pub fn push_point(&mut self, val: Point) { self.0.push(val); }
-}
-
-impl From<(Point, Point)> for Line {
-    fn from(value: (Point, Point)) -> Self {
-        Self(vec![value.0, value.1])
+    pub fn get_points(&self) -> &Vec<Point> { match self {
+        Line::Straight(points) | 
+        Line::Curved(points) => &points,
+    }  }
+    pub fn push_point(&mut self, val: Point) { 
+        match self {
+            Line::Straight(points) | 
+            Line::Curved(points) => points.push(val),
+        } 
+    }
+    pub fn get_last_point(&self) -> Result<&Point, Box<dyn Error>> {
+        match self {
+            Line::Straight(points) | 
+            Line::Curved(points) => points.last().ok_or_else(|| errors::NoLinesInFigure.into())
+        }
+    }
+    pub fn get_first_point(&self) -> Result<&Point, Box<dyn Error>> {
+        match self {
+            Line::Straight(points) | 
+            Line::Curved(points) => points.first().ok_or_else(|| errors::NoLinesInFigure.into())
+        }
+    }
+    pub fn insert_point_first(&mut self, p: Point) {
+        match self {
+            Line::Straight(points) | 
+            Line::Curved(points) => points.insert(0, p),
+        }
+    }
+    pub fn insert_point_last(&mut self, p: Point) {
+        match self {
+            Line::Straight(points) | 
+            Line::Curved(points) => points.push(p)
+        }
     }
 }
 
-impl From<Vec<Point>> for Line {
-    fn from(value: Vec<Point>) -> Self {
-        Self(value)
-    }
-}
