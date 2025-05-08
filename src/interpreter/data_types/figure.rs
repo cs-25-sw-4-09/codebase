@@ -41,39 +41,39 @@ impl Figure {
     }
 
     pub fn get_height(&self) -> i64 {
-       let mut maxX = self.lines.iter()
+       let mut max_x = self.lines.iter()
        .flat_map(|line| line.get_points())
        .filter_map(|point| match point.x(){
         Value::Integer(i) => Some(*i),
         _ => None,
        }).max().unwrap_or(0);
 
-       let mut minX = self.lines.iter()
+       let mut min_x = self.lines.iter()
        .flat_map(|line| line.get_points())
        .filter_map(|point| match point.x(){
         Value::Integer(i) => Some(*i),
         _ => None,
        }).min().unwrap_or(0);
 
-       maxX - minX
+       max_x - min_x
     }
 
     pub fn get_weight(&self) -> i64 {
-        let mut maxY = self.lines.iter()
+        let mut max_y = self.lines.iter()
         .flat_map(|line| line.get_points())
         .filter_map(|point| match point.y(){
          Value::Integer(i) => Some(*i),
          _ => None,
         }).max().unwrap_or(0);
  
-        let mut minY = self.lines.iter()
+        let mut min_y = self.lines.iter()
         .flat_map(|line| line.get_points())
         .filter_map(|point| match point.y(){
          Value::Integer(i) => Some(*i),
          _ => None,
         }).min().unwrap_or(0);
  
-        maxY - minY
+        max_y - min_y
      }
 
 

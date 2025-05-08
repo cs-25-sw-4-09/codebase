@@ -264,7 +264,7 @@ fn test_program_new_converts_ast_to_program_scall_polygon_with_params() {
                             Box::new(Expr::Integer(1)),
                             Box::new(Expr::Integer(2))
                         )),
-                        operator: PolyOperator::Polygon
+                        operator: PolyOperator::Straight
                     }
                     .into()
                 )
@@ -385,7 +385,7 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_straight() {
                     Box::new(Expr::Integer(1)),
                     Box::new(Expr::Integer(2))
                 )),
-                operator: PolyOperator::Polygon
+                operator: PolyOperator::Straight
             }
         );
     }
@@ -413,7 +413,7 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_curve() {
                     Box::new(Expr::Integer(1)),
                     Box::new(Expr::Integer(2))
                 )),
-                operator: PolyOperator::Polygon
+                operator: PolyOperator::Curved
             }
         );
     }

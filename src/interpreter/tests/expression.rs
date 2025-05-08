@@ -1,8 +1,9 @@
 use crate::{
-    interpreter::{environment::IEnvironment, errors, InterpretE, value::Value},
+    interpreter::{environment::IEnvironment, errors, InterpretE, value::Value, InterpretS},
     program::{
-        expression::Expr,
+        expression::Expr,statement::Stmt,
         operators::{binaryoperator::BinaryOperator, unaryoperator::UnaryOperator},
+        r#type::Type
     },
 };
 
@@ -316,4 +317,75 @@ fn negative() {
 
     assert_eq!(i1, Value::Integer(-4));
     assert_eq!(i2, Value::Float(-2.0));
+}
+
+#[test]
+fn member_color() { 
+    let mut env = IEnvironment::new();
+    
+    let _ = Stmt::VarDecl {
+        name: "color".into(),
+        declared_type: Type::Color,
+        value: Expr::Color(Box::new(Expr::Integer(4)), Box::new(Expr::Integer(5)), Box::new(Expr::Integer(6)), Box::new(Expr::Integer(7))),
+    }.interpret(&mut env).unwrap();
+
+    let i2 = Expr::Member { identifier: "color".into(), member_access: "r".into() }.interpret(&mut env).unwrap();
+    let i3 = Expr::Member { identifier: "color".into(), member_access: "g".into() }.interpret(&mut env).unwrap();
+    let i4 = Expr::Member { identifier: "color".into(), member_access: "b".into() }.interpret(&mut env).unwrap();
+    let i5 = Expr::Member { identifier: "color".into(), member_access: "a".into() }.interpret(&mut env).unwrap();
+
+
+    assert_eq!(i2, Value::Integer(4));
+    assert_eq!(i3, Value::Integer(5));
+    assert_eq!(i4, Value::Integer(6));
+    assert_eq!(i5, Value::Integer(7));
+}
+
+#[test]
+fn member_point() { 
+    let mut env = IEnvironment::new();
+    
+    let _ = Stmt::VarDecl {
+        name: "point".into(),
+        declared_type: Type::Point,
+        value: Expr::Point(Box::new(Expr::Integer(4)), Box::new(Expr::Integer(5)))
+    }.interpret(&mut env).unwrap();
+
+    let i2 = Expr::Member { identifier: "point".into(), member_access: "x".into() }.interpret(&mut env).unwrap();
+    let i3 = Expr::Member { identifier: "point".into(), member_access: "y".into() }.interpret(&mut env).unwrap();
+
+
+    assert_eq!(i2, Value::Integer(4));
+    assert_eq!(i3, Value::Integer(5));
+}
+
+/*#[test]
+fn member_shape() { 
+    let mut env = IEnvironment::new();
+    
+    let _ = Stmt::VarDecl {
+        name: "shape".into(),
+        declared_type: Type::Shape,
+        value: Expr::Shape(Box::new(Expr::Integer(4)), Box::new(Expr::Integer(5)))
+    }.interpret(&mut env).unwrap();
+
+    let i2 = Expr::Member { identifier: "point".into(), member_access: "x".into() }.interpret(&mut env).unwrap();
+    let i3 = Expr::Member { identifier: "point".into(), member_access: "y".into() }.interpret(&mut env).unwrap();
+
+
+    assert_eq!(i2, Value::Integer(4));
+    assert_eq!(i3, Value::Integer(5));
+}*/
+
+#[test] 
+fn array_size() {
+    let mut env = IEnvironment::new();
+    let _ = Stmt::VarDecl {
+        name: "array".into(),
+        declared_type: Type::IntArray,
+        value: Expr::Array(vec![Expr::Integer(4), Expr::Integer(5)])
+    }.interpret(&mut env).unwrap();
+
+    let i2 = Expr::Member { identifier: "array".into(), member_access: "size".into() }.interpret(&mut env).unwrap();
+    assert_eq!(i2, Value::Integer(2));
 }
