@@ -40,3 +40,12 @@ impl fmt::Display for PolyPathNotFound {
         )
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct ArrayEmpty(pub String);
+impl Error for ArrayEmpty {}
+impl fmt::Display for ArrayEmpty {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"Array {} is empty", self.0)
+    }
+}

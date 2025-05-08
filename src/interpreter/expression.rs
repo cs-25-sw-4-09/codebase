@@ -170,7 +170,11 @@ impl InterpretE for Expr {
 
                 todo!()
             }
-            Expr::Array(exprs) => todo!(),
+            Expr::Array(exprs) => {
+                let values: Result<Vec<_>, _> = exprs.iter()
+                .map(|e|e.interpret(environment).map(Box::new)).collect();
+                &Value::Array(values?)
+            },
 
             
             Expr::SCall {
@@ -209,20 +213,35 @@ impl InterpretE for Expr {
                         "b" => &b,
                         "a" => &a,
                         _ => unreachable!()
-                    }
-                    Value::Point(point) =>  match member_access.as_str(){
-                        "x" => &point.0,
-                        "y" => &point.1,
+                    },
+                    Value::Point(point) =>  match member_access.as_str() {
+                        "x" => &*point.x(),
+                        "y" => &*point.y(),
                         _ => unreachable!()
                     },
-                    Value::Shape(figures) => todo!(),
-                    Value::Path(figure) => todo!(),
+                       
+                    Value::Shape(figures) => match member_access.as_str() {
+                        "height" => &Value::Integer(figures.iter().map(|f| f.get_height())
+                        .max().unwrap_or(0)),
+                        "weight" => &Value::Integer(figures.iter().map(|f| f.get_weight())
+                        .max().unwrap_or(0)),
+                        _ => unreachable!()
+                    },
+                    Value::Path(figure) =>  
+                        todo!(),
+                    
                     Value::Polygon(figure) => todo!(),
                     //todo kan man få højten og breden af en path
-                    _ => ()
-                }
+                    Value::Array(array) =>{ match member_access {
+                        
 
-        }
+                        
+                        }
+                    }
+                }
+                
+                }
+            };
             
             Expr::Place {
                 base_shape,
@@ -232,7 +251,8 @@ impl InterpretE for Expr {
             } => todo!(),
             Expr::Scale { base_shape, factor } => todo!(),
             Expr::Rotate { base_shape, factor } => todo!(),
-        };
+
         Ok(expr.clone())
+        
     }
 }

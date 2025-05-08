@@ -1,6 +1,7 @@
 use crate::program::expression::Expr;
 use std::collections::HashMap;
 use super::point::Point;
+use crate::interpreter::value::Value;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Figure {
@@ -34,6 +35,44 @@ impl Figure {
     pub fn get_lines(&self) -> &Vec<Line> {
         &self.lines
     }
+
+    pub fn get_height(&self) -> i64 {
+       let mut maxX = self.lines.iter()
+       .flat_map(|line| line.get_points())
+       .filter_map(|point| match point.x(){
+        Value::Integer(i) => Some(*i),
+        _ => None,
+       }).max().unwrap_or(0);
+
+       let mut minX = self.lines.iter()
+       .flat_map(|line| line.get_points())
+       .filter_map(|point| match point.x(){
+        Value::Integer(i) => Some(*i),
+        _ => None,
+       }).min().unwrap_or(0);
+
+       maxX - minX
+    }
+
+    pub fn get_weight(&self) -> i64 {
+        let mut maxY = self.lines.iter()
+        .flat_map(|line| line.get_points())
+        .filter_map(|point| match point.y(){
+         Value::Integer(i) => Some(*i),
+         _ => None,
+        }).max().unwrap_or(0);
+ 
+        let mut minY = self.lines.iter()
+        .flat_map(|line| line.get_points())
+        .filter_map(|point| match point.y(){
+         Value::Integer(i) => Some(*i),
+         _ => None,
+        }).min().unwrap_or(0);
+ 
+        maxY - minY
+     }
+
+
 }
 
 #[derive(Debug, PartialEq, Clone)]

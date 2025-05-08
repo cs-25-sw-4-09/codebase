@@ -29,3 +29,14 @@ impl TryFrom<(&Expr, &mut IEnvironment)> for Point {
         } 
     }
 }
+
+impl Point { 
+    pub fn x(&self) -> &Value{
+        &self.x
+    }
+    
+    pub fn y(&self) -> &Value{
+        &self.y
+    }
+}
+
