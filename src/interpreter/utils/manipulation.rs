@@ -11,7 +11,7 @@ pub fn scale(shape: Figure, factor: Value) {
     let origin_x = shape.get_min_x() as f64;
     let origin_y = shape.get_max_y() as f64;
 
-    for line in shape.get_mut_lines() {
+    for line in shape() {
         for point in line {
 
         }
