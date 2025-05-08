@@ -219,7 +219,7 @@ impl InterpretE for Expr {
                 identifier,
                 member_access,
             } => {
-                /*let t1 = *environment.vtable_find(*identifier).unwrap();
+                let t1 = *environment.vtable_find(*identifier).unwrap();
                 match t1 {
                     Value::Color(r,g,b,a) => match member_access.as_str() {
                         "r" => &r,
@@ -241,20 +241,33 @@ impl InterpretE for Expr {
                         .max().unwrap_or(0)),
                         _ => unreachable!()
                     },
-                    Value::Path(figure) =>  
-                        todo!(),
-                    
-                    Value::Polygon(figure) => todo!(),
-                    //todo kan man få højten og breden af en path
-                    Value::Array(array) =>{ match member_access {
-                        
+                    Value::Path(figure) =>  match member_access.as_str() {
+                        "height" => &Value::Integer(figure.get_height()),
+                        "weight" => &Value::Integer(figure.get_weight()),
+                        _ => unreachable!()
 
-                        
+                    },
+                    
+                    Value::Polygon(figure) => match member_access.as_str() {
+                        "height" => &Value::Integer(figure.get_height()),
+                        "weight" => &Value::Integer(figure.get_weight()),
+                        _ => unreachable!()
+                    },
+
+                    Value::Array(array) =>{ if let Ok(index) = member_access.parse::<usize>() {
+                        if let Some(value) = array.get(index) {
+                            value
+                        } else {
+                            return Err(errors::ArrayEmpty(member_access.to_owned()).into());
+                        }
+                    } else {
+                        return Err(errors::ArrayNonExcisting(member_access.to_owned()).into());
+                    }
                         }
                     }
                 }
                 
-                }
+                
             };
             
             Expr::Place {

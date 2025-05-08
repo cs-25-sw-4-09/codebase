@@ -49,3 +49,12 @@ impl fmt::Display for ArrayEmpty {
         write!(f,"Array {} is empty", self.0)
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct ArrayNonExcisting(pub String);
+impl Error for ArrayNonExcisting {}
+impl fmt::Display for ArrayNonExcisting {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"Array {} is not declared", self.0)
+    }
+}
