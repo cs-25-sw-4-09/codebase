@@ -23,8 +23,14 @@ impl TEnvironment {
         };
 
         env.stable_init();
+        env.ftable_init();
 
         env
+    }
+
+    pub fn ftable_init(&mut self){
+        self.ftable_set("push".to_string(), vec![Type::IntArray,Type::Int],Type::IntArray);
+        self.ftable_set("remove".to_string(), vec![Type::IntArray,Type::Int,Type::Int],Type::IntArray);
     }
 
     pub fn stable_init(&mut self){
