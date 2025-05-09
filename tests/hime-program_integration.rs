@@ -46,6 +46,33 @@ fn test_program_new_converts_ast_to_program_fcall() {
 }
 
 #[test]
+fn test_program_new_converts_ast_to_program_fcall_without_params() {
+    let code = "begin
+    x: int = f();";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::VarDecl {
+        name,
+        declared_type,
+        value,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "x");
+        assert_eq!(declared_type, &Type::Int);
+        assert_eq!(
+            value,
+            &Expr::FCall {
+                name: "f".to_string(),
+                args: vec![]
+            }
+        );
+    }
+}
+
+#[test]
 fn test_program_new_converts_ast_to_program_var_decl_int() {
     let code = "begin
     x: int = 1;";
@@ -1682,6 +1709,44 @@ fn test_program_new_converts_ast_to_program_function_decl_with_return_type() {
         );
     }
 }
+
+#[test]
+fn test_program_new_converts_ast_to_program_function_without_param() {
+    let code = "begin
+    func(): int -> {
+        f: int = 1;
+        return f;
+    }";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::FuncDecl {
+        name,
+        return_type,
+        parameters,
+        statements,
+    } = &program.stmts[0]
+    {
+        assert_eq!(name, "func");
+        assert_eq!(return_type, &Type::Int);
+        assert_eq!(parameters, &vec![]);
+        assert_eq!(
+            statements,
+            &vec![
+                Stmt::VarDecl {
+                    name: "f".into(),
+                    declared_type: Type::Int,
+                    value: Expr::Integer(1)
+                },
+                Stmt::Return(Expr::Variable("f".into()))
+            ]
+        );
+    }
+}
+
+
 
 //-----------------------------------
 //Tests of draw in construction field

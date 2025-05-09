@@ -12,8 +12,6 @@ fn example_program_parsing() {
         let string = el.to_string();
         let mut program = Program::new(&string).unwrap();
         let idkthing = program.type_check();
-        //println!("AGFHUIOPUGFDHJKFDSGJKLUDRDGHIJOUTRESFGUJIOUTDSFHJIOUTRDYHIJOUTDTYUI {:?}", idkthing.err());
-        //assert!(1==2)
         assert!(idkthing.is_ok());
     });
 }
