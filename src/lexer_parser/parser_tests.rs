@@ -1,10 +1,7 @@
 use super::{
-    utils::{
-        tree_converter::stringify_tree,
-        tree_builder::TreeBuilderStr
-    },
-    grammar::cfg,
-    valid_programs::get_programs
+    grammar::cfg, utils::{
+        tree_builder::TreeBuilderStr, tree_converter::stringify_tree
+    }, valid_programs::{get_programs, get_programs2}
 };
 
 /* Helper functions */
@@ -20,6 +17,17 @@ fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
 fn example_program_parsing() {
     //A program is succesfully parsed if get_root() does not panic.
     get_programs()
+    .into_iter()
+    .for_each(|el| {
+        let _ = cfg::parse_str(el).get_ast().get_root();
+    });
+}
+
+/* Example Program parsing */
+#[test]
+fn example_program_parsing_expr_value() {
+    //A program is succesfully parsed if get_root() does not panic.
+    get_programs2()
     .into_iter()
     .for_each(|el| {
         let _ = cfg::parse_str(el).get_ast().get_root();
@@ -125,7 +133,7 @@ fn fork_single() {
 
     let mut start = vec![("program", 0), ("declS",1), ("stmtS", 1)];
     let stmt1 = vec![
-        ("fork", 2), ("forkExpr", 3), (">",4),
+        ("fork", 2), ("forkCase", 3), (">",4),
         ("5", 5), ("4", 5), ("stmtS", 4), ("return", 5),
         ("10", 6)];
     start.extend(stmt1.iter());
@@ -148,14 +156,14 @@ fn fork_multi() {
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     let stmt_depth = 1;
     let stmt1 = vec![("fork", stmt_depth+1),
-    ("forkExpr", stmt_depth+2),
+    ("forkCase", stmt_depth+2),
     ("==", stmt_depth+3),
     ("5", stmt_depth+4), ("5", stmt_depth+4),
     ("stmtS", stmt_depth+3), ("return", stmt_depth+4), ("+", stmt_depth+5), ("5", stmt_depth+6),
      ("5", stmt_depth+6)
     ];
 
-    let stmt2 = vec![("forkExpr", stmt_depth+2), (">", stmt_depth+3),
+    let stmt2 = vec![("forkCase", stmt_depth+2), (">", stmt_depth+3),
     ("5", stmt_depth+4), ("3", stmt_depth+4),
     ("stmtS", stmt_depth+3), ("varDecl", stmt_depth+4), ("x", stmt_depth+5), ("int", stmt_depth+5), ("*", stmt_depth+5),
     ("6", stmt_depth+6), ("7", stmt_depth+6), ("return", stmt_depth+4), ("x", stmt_depth+5),
@@ -181,7 +189,7 @@ fn otherwise_fork(){
     ";
     let stmt_depth = 1;
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
-    let stmt1 = vec![("fork", stmt_depth+1), ("forkExpr", stmt_depth+2),
+    let stmt1 = vec![("fork", stmt_depth+1), ("forkCase", stmt_depth+2),
     ("==", stmt_depth+3), ("10", stmt_depth+4), ("10", stmt_depth+4), ("stmtS", stmt_depth+3),
     ("return", stmt_depth+4), ("1", stmt_depth+5)];
     let stmt2 = vec![("otherwise", stmt_depth+2), ("stmtS", stmt_depth+3), ("return", stmt_depth+4), ("0", stmt_depth+5)];
@@ -410,22 +418,64 @@ fn manipulation_place(){
     let program =
     "begin
     x = place rec left x;
-    x = place rec right 5 by (10, 10);
+    x = place rec right (10,10) offset 5;
     ";
     let manipulation_depth = 2;
     let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     let stmt1 = vec![("assign", manipulation_depth),
     ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
-    ("place", manipulation_depth+2), ("rec", manipulation_depth+3), ("pos", manipulation_depth+3),
-    ("left", manipulation_depth+4), ("x", manipulation_depth+4)];
+    ("place", manipulation_depth+2), ("rec", manipulation_depth+3),
+    ("left", manipulation_depth+3), ("x", manipulation_depth+3)];
+
     let stmt2 = vec![
         ("assign", manipulation_depth),
         ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
-        ("place", manipulation_depth+2), ("rec", manipulation_depth+3), ("pos", manipulation_depth+3),
-        ("right", manipulation_depth+4), ("5", manipulation_depth+4), ("point", manipulation_depth+4),
-        ("10", manipulation_depth+5), ("10", manipulation_depth+5)
+        ("place", manipulation_depth+2), ("rec", manipulation_depth+3),
+        ("right", manipulation_depth+3), ("point", manipulation_depth+3),
+        ("10", manipulation_depth+4), ("10", manipulation_depth+4),  ("5", manipulation_depth+3),
     ];
-    start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
+
+    println!("{:?}", stmt1.into_iter().chain(stmt2.into_iter()));
+
+    //start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
+    //test_equality(start, program);
+}
+
+#[test]
+fn manipulation_place1(){
+    let program =
+    "begin
+    x = place rec left x;
+    ";
+    let manipulation_depth = 2;
+    let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt1 = vec![("assign", manipulation_depth),
+    ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
+    ("place", manipulation_depth+2), ("rec", manipulation_depth+3),
+    ("left", manipulation_depth+3), ("x", manipulation_depth+3)];
+
+    start.extend(stmt1.into_iter());
+    test_equality(start, program);
+}
+
+#[test]
+fn manipulation_place2(){
+    let program =
+    "begin
+    x = place rec right (10,10) offset 5;
+    ";
+    let manipulation_depth = 2;
+    let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+
+    let stmt2 = vec![
+        ("assign", manipulation_depth),
+        ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
+        ("place", manipulation_depth+2), ("rec", manipulation_depth+3),
+        ("right", manipulation_depth+3), ("point", manipulation_depth+3),
+        ("10", manipulation_depth+4), ("10", manipulation_depth+4),  ("5", manipulation_depth+3),
+    ];
+
+    start.extend(stmt2.into_iter());
     test_equality(start, program);
 }
 
