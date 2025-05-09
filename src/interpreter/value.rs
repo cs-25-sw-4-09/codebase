@@ -1,6 +1,6 @@
 
 use super::data_types::{figure::Figure, figurearray::FigureArray, point::Point};
-use std::error::Error;
+use std::{error::Error, ops::{Add, Neg, Sub}};
 
 #[derive(Debug, Clone,PartialEq)]
 pub enum Value {
@@ -41,6 +41,46 @@ impl Value {
         match self {
             Value::Point(i) => Ok(i),
             _ => Err(crate::program::errors::ExprParseAsBooleanError.into())
+        }
+    }
+}
+
+impl Add for Value {
+    type Output = Value;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        match (self, rhs) {
+            (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 + v2),
+            (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 + v2),
+            (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 + v2 as f64),
+            (Value::Integer(v1), Value::Float(v2)) => Value::Float(v1 as f64 + v2),
+            _ => unreachable!()
+        }
+    }
+}
+
+impl Sub for Value {
+    type Output = Value;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        match (self, rhs) {
+        (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 - v2),
+        (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 - v2),
+        (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 - v2 as f64),
+        (Value::Integer(v1), Value::Float(v2)) => Value::Float(v1 as f64 - v2),
+        _ => unreachable!()
+        }
+    }
+}
+
+impl Neg for Value {
+    type Output = Value;
+
+    fn neg(self) -> Self::Output {
+        match self {
+            Value::Integer(i) => Value::Integer(i),
+            Value::Float(i) => Value::Float(i),
+            _ => unreachable!()
         }
     }
 }

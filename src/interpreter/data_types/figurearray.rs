@@ -16,6 +16,13 @@ impl FigureArray {
         &self.0
     }
 
+    pub fn height(&self) -> Value {
+        todo!()
+    }
+    pub fn width(&self) -> Value {
+        todo!()
+    }
+
 }
 
 
@@ -28,5 +35,9 @@ impl From<Vec<Figure>> for FigureArray {
 impl FigureArray {
     pub fn get_top_left(&self) -> Point {
         todo!()
+    }
+
+    pub fn push_figures(&mut self, shape: FigureArray) {
+        shape.0.into_iter().for_each(|fig| self.0.push(fig));
     }
 }

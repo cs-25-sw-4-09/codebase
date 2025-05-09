@@ -23,30 +23,30 @@ use crate::interpreter::value::Value;
 //todo: 
 /*
 - Logic for top_left
-- Logic for dir_offset
-- Logic for place_point 
-- Logic for Point addition and Subtraction
-- Add fig_new to s1
+- Logic for width
+- Logic for height
 */
-pub fn place(mut s1: FigureArray, mut s2: FigureArray, offset: Point, direction: Direction) -> FigureArray {
-    let p1_top_left = s1.get_top_left();
+pub fn place(s1: FigureArray, mut s2: FigureArray, offset: Point, direction: Direction) -> FigureArray {
+    //s1 is placed in relation to s2, so the updated s1 is added to s2
     let p_offset = offset + s2.get_top_left() + direction.offset(&s1,&s2);
+    let fig_new = place_shape_at(s1, p_offset);
+    s2.push_figures(fig_new);
+    s2
+}
 
-    let fig_new = s2.get_mut_figures().iter_mut().for_each(|fig| {
+pub fn place_shape_at(mut s: FigureArray, p: Point) -> FigureArray {
+    let top_left = s.get_top_left();
+    s.get_mut_figures().iter_mut().for_each(|fig| {
         fig.get_mut_lines().iter_mut().for_each(|line| {
             line.get_mut_points().iter_mut().for_each(|point| {
-                *point = place_point(&p1_top_left, point, &p_offset)
+                *point = place_point_at(top_left.clone(), point.clone(), p.clone())
             });
         })
     });
-
-
-    todo!()
+    s
 }
 
-fn place_point(point_top_left: &Point, point: &Point, offset: &Point) -> Point {
-    todo!()
-}
+fn place_point_at(point_top_left: Point, point: Point, offset: Point) -> Point { (point_top_left - point) + offset }
 
 pub enum Direction {
     Top, 
@@ -73,11 +73,11 @@ impl From<&str> for Direction {
 impl Direction {
     fn offset(&self, s1: &FigureArray, s2: &FigureArray) -> Point {
         match self {
-            Direction::Top => todo!(),
-            Direction::Bottom => todo!(),
-            Direction::Right => todo!(),
-            Direction::Left => todo!(),
-            Direction::Ontop => todo!(),
-        }
+            Direction::Top => (Value::Integer(0), s1.height()),
+            Direction::Bottom => (Value::Integer(0), -s2.height()),
+            Direction::Right => (-s1.width(), Value::Integer(0)),
+            Direction::Left => (-s2.width(), Value::Integer(0)),
+            Direction::Ontop => (Value::Integer(0), Value::Integer(0)),
+        }.into()
     }
 }
