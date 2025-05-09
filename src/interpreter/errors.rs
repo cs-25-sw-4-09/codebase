@@ -87,3 +87,12 @@ impl fmt::Display for MaxCanNotBeFound {
         write!(f,"max can not be found")
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct ArrayOutOfBounds(pub String);
+impl Error for ArrayOutOfBounds {}
+impl fmt::Display for ArrayOutOfBounds {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"Array {} is out of bounds", self.0)
+    }
+}
