@@ -52,6 +52,10 @@ impl Figure {
         self.lines.get_mut(idx)
     }
 
+    pub fn get_mut_lines(&mut self) -> &mut Vec<Line> {
+        &mut self.lines
+    }
+
     pub fn get_max_x(&self) -> f64 {
         let mut max_x = self.lines.iter()
        .flat_map(|line| line.get_points())
