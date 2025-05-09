@@ -55,26 +55,25 @@ grammar cfg
     otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
 
     //Expressions
-    exprS -> (manipulation | expr | SCall | color | path | polygon)^;
+    exprS -> (manipulation | expr | SCall | path | polygon)^;
     expr -> expr '||'^ expr1 | expr1^;
     expr1 -> expr1 '&&'^ expr2 | expr2^;
     expr2 -> expr3 ('==' | '<' | '>' | '>=' | '<=' | '!=')^ expr3 | expr3^;
     expr3 -> expr3 '+'^ expr4 | expr3 '-'^ expr4 | expr4^;
     expr4 -> expr4 '%'^ expr5 | expr4 '*'^ expr5 | expr4 '/'^ expr5 | expr5^;
     expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
-    expr6 -> (point | FCall | FLOAT | INTEGER | IDENTIFIER | member | array | BOOLEAN | arrayIdx)^;
+    expr6 -> '('! exprS^ ')'! | expr7^; 
+    expr7 -> ( color | point | FCall | FLOAT | INTEGER | IDENTIFIER | member | array | BOOLEAN | arrayIdx)^;
 
-    //Also contains parenthesis, but this case is promoted
-    point -> '('! (expr^ | (expr) ','! (expr)) ')'!;
     FCall -> IDENTIFIER '('! args? ')'!;
 
     member -> IDENTIFIER '.'! IDENTIFIER;
+    point -> '('! expr ','! expr ')'!;
     color -> '('! (expr) ','! (expr) ','! (expr) ','! (expr)')'! ;
-    path   -> expr (('--' | '~~')^ expr)+;
+    path   -> (point | IDENTIFIER) (('--' | '~~')^ (point | IDENTIFIER))+;
     polygon -> exprS(('--*' | '~~*')^);
 
-    args -> arg (','! arg)*;
-    arg -> exprS^;
+    args -> exprS (','! exprS)*;
 
     SCall -> (path | IDENTIFIER | polygon) '(|'! attrS '|)'!;
     attrS -> (attr (','! attr)*)? ;

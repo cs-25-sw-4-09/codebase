@@ -210,11 +210,11 @@ pub const TERMINALS: &[Symbol] = &[
     },
     Symbol {
         id: 0x0060,
-        name: ","
+        name: "."
     },
     Symbol {
         id: 0x0061,
-        name: "."
+        name: ","
     },
     Symbol {
         id: 0x0062,
@@ -406,22 +406,22 @@ pub const ID_VARIABLE_EXPR4: u32 = 0x0023;
 pub const ID_VARIABLE_EXPR5: u32 = 0x0024;
 /// The unique identifier for variable `expr6`
 pub const ID_VARIABLE_EXPR6: u32 = 0x0025;
-/// The unique identifier for variable `point`
-pub const ID_VARIABLE_POINT: u32 = 0x0026;
+/// The unique identifier for variable `expr7`
+pub const ID_VARIABLE_EXPR7: u32 = 0x0026;
 /// The unique identifier for variable `FCall`
 pub const ID_VARIABLE_FCALL: u32 = 0x0027;
 /// The unique identifier for variable `member`
 pub const ID_VARIABLE_MEMBER: u32 = 0x0028;
+/// The unique identifier for variable `point`
+pub const ID_VARIABLE_POINT: u32 = 0x0029;
 /// The unique identifier for variable `color`
-pub const ID_VARIABLE_COLOR: u32 = 0x0029;
+pub const ID_VARIABLE_COLOR: u32 = 0x002A;
 /// The unique identifier for variable `path`
-pub const ID_VARIABLE_PATH: u32 = 0x002A;
+pub const ID_VARIABLE_PATH: u32 = 0x002B;
 /// The unique identifier for variable `polygon`
-pub const ID_VARIABLE_POLYGON: u32 = 0x002B;
+pub const ID_VARIABLE_POLYGON: u32 = 0x002C;
 /// The unique identifier for variable `args`
-pub const ID_VARIABLE_ARGS: u32 = 0x002C;
-/// The unique identifier for variable `arg`
-pub const ID_VARIABLE_ARG: u32 = 0x002D;
+pub const ID_VARIABLE_ARGS: u32 = 0x002D;
 /// The unique identifier for variable `SCall`
 pub const ID_VARIABLE_SCALL: u32 = 0x002E;
 /// The unique identifier for variable `attrS`
@@ -552,7 +552,7 @@ pub const VARIABLES: &[Symbol] = &[
     },
     Symbol {
         id: 0x0026,
-        name: "point"
+        name: "expr7"
     },
     Symbol {
         id: 0x0027,
@@ -564,23 +564,23 @@ pub const VARIABLES: &[Symbol] = &[
     },
     Symbol {
         id: 0x0029,
-        name: "color"
+        name: "point"
     },
     Symbol {
         id: 0x002A,
-        name: "path"
+        name: "color"
     },
     Symbol {
         id: 0x002B,
-        name: "polygon"
+        name: "path"
     },
     Symbol {
         id: 0x002C,
-        name: "args"
+        name: "polygon"
     },
     Symbol {
         id: 0x002D,
-        name: "arg"
+        name: "args"
     },
     Symbol {
         id: 0x002E,
@@ -764,14 +764,14 @@ pub trait Visitor {
     fn on_variable_expr4(&self, node: &AstNode) {}
     fn on_variable_expr5(&self, node: &AstNode) {}
     fn on_variable_expr6(&self, node: &AstNode) {}
-    fn on_variable_point(&self, node: &AstNode) {}
+    fn on_variable_expr7(&self, node: &AstNode) {}
     fn on_variable_fcall(&self, node: &AstNode) {}
     fn on_variable_member(&self, node: &AstNode) {}
+    fn on_variable_point(&self, node: &AstNode) {}
     fn on_variable_color(&self, node: &AstNode) {}
     fn on_variable_path(&self, node: &AstNode) {}
     fn on_variable_polygon(&self, node: &AstNode) {}
     fn on_variable_args(&self, node: &AstNode) {}
-    fn on_variable_arg(&self, node: &AstNode) {}
     fn on_variable_scall(&self, node: &AstNode) {}
     fn on_variable_attr_s(&self, node: &AstNode) {}
     fn on_variable_attr(&self, node: &AstNode) {}
@@ -831,14 +831,14 @@ pub fn visit_ast_node(node: AstNode, visitor: &dyn Visitor) {
         0x0023 => visitor.on_variable_expr4(&node),
         0x0024 => visitor.on_variable_expr5(&node),
         0x0025 => visitor.on_variable_expr6(&node),
-        0x0026 => visitor.on_variable_point(&node),
+        0x0026 => visitor.on_variable_expr7(&node),
         0x0027 => visitor.on_variable_fcall(&node),
         0x0028 => visitor.on_variable_member(&node),
-        0x0029 => visitor.on_variable_color(&node),
-        0x002A => visitor.on_variable_path(&node),
-        0x002B => visitor.on_variable_polygon(&node),
-        0x002C => visitor.on_variable_args(&node),
-        0x002D => visitor.on_variable_arg(&node),
+        0x0029 => visitor.on_variable_point(&node),
+        0x002A => visitor.on_variable_color(&node),
+        0x002B => visitor.on_variable_path(&node),
+        0x002C => visitor.on_variable_polygon(&node),
+        0x002D => visitor.on_variable_args(&node),
         0x002E => visitor.on_variable_scall(&node),
         0x002F => visitor.on_variable_attr_s(&node),
         0x0030 => visitor.on_variable_attr(&node),
