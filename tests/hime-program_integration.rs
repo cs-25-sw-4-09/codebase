@@ -264,7 +264,7 @@ fn test_program_new_converts_ast_to_program_scall_polygon_with_params() {
                             Box::new(Expr::Integer(1)),
                             Box::new(Expr::Integer(2))
                         )),
-                        operator: PolyOperator::Polygon
+                        operator: PolyOperator::Straight
                     }
                     .into()
                 )
@@ -385,7 +385,7 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_straight() {
                     Box::new(Expr::Integer(1)),
                     Box::new(Expr::Integer(2))
                 )),
-                operator: PolyOperator::Polygon
+                operator: PolyOperator::Straight
             }
         );
     }
@@ -413,7 +413,7 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_curve() {
                     Box::new(Expr::Integer(1)),
                     Box::new(Expr::Integer(2))
                 )),
-                operator: PolyOperator::Polygon
+                operator: PolyOperator::Curved
             }
         );
     }
@@ -1783,7 +1783,7 @@ fn test_program_fork() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::Fork { branch, otherwise } = &program.stmts[0] {
+    if let Stmt::Fork { branches: branch, otherwise } = &program.stmts[0] {
         assert_eq!(otherwise, &None);
         assert_eq!(
             branch,
@@ -1811,7 +1811,7 @@ fn test_program_fork_otherwise() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::Fork { branch, otherwise } = &program.stmts[0] {
+    if let Stmt::Fork { branches: branch, otherwise } = &program.stmts[0] {
         assert_eq!(
             otherwise,
             &Some(vec![Stmt::VarDecl {

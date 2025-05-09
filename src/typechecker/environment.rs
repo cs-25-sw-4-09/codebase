@@ -133,6 +133,12 @@ impl TEnvironment {
     pub fn return_lookup(&self) -> Type {
         self.r_type
     }
+
+    pub fn clear(&mut self) {
+        self.v_table.clear();
+        self.f_table.clear();
+        self.s_table.clear();
+    }
 }
 
 #[derive(Debug, Clone)]

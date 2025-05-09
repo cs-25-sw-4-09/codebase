@@ -37,3 +37,24 @@ impl fmt::Display for ParemeterAlreadyDefined {
     }
 }
 
+
+
+#[derive(Debug, Clone)]
+pub struct ExprParseAsIntegerError;
+impl Error for ExprParseAsIntegerError {}
+impl fmt::Display for ExprParseAsIntegerError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Expression could not be parsed as integer")
+    }
+}
+
+
+#[derive(Debug, Clone)]
+pub struct ExprParseAsBooleanError;
+impl Error for ExprParseAsBooleanError {}
+impl fmt::Display for ExprParseAsBooleanError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Expression could not be parsed as boolean")
+    }
+}
+

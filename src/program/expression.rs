@@ -7,7 +7,7 @@ use super::{
     operators::{
         binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
         unaryoperator::UnaryOperator,
-    },
+    }
 };
 
 #[derive(Debug, PartialEq, Clone)]
@@ -101,9 +101,14 @@ impl Expr {
                 }
             }
             "--" | "~~" => {
+                use crate::lexer_parser::utils::tree_converter::stringify_tree; println!("{}", stringify_tree(expr));
+
+
                 let lhs = Box::new(Expr::new(expr.child(0))?);
                 let rhs = Box::new(Expr::new(expr.child(1))?);
                 let operator = PathOperator::new(expr.get_symbol())?;
+
+                //println!("lhs: {:?}\n operator: {:?}\n rhs {:?}\n\n", lhs, operator, rhs);
 
                 Expr::PathOperation { lhs, rhs, operator }
             }

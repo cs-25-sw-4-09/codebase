@@ -1,0 +1,112 @@
+use crate::{
+    interpreter::{environment::IEnvironment, errors, value::Value, InterpretE, InterpretS},
+    program::{
+        expression::Expr, operators::binaryoperator::BinaryOperator, statement::Stmt, r#type::Type
+    },
+};
+
+#[test]
+fn var_decl() {
+    let mut env = IEnvironment::new();
+    let i1 = Stmt::VarDecl {
+        name: "x".into(),
+        declared_type: Type::Int,
+        value: Expr::Integer(4),
+    }
+    .interpret(&mut env)
+    .unwrap();
+    assert_eq!(
+        env.vtable_find("x".into()).unwrap().clone(),
+        Value::Integer(4)
+    )
+}
+
+#[test]
+fn func_decl_no_return() {
+    let mut env = IEnvironment::new();
+    let _ = Stmt::FuncDecl {
+        name: "f".into(),
+        return_type: Type::Bool,
+        parameters: vec![("x".into(), Type::Int)],
+        statements: vec![Stmt::VarDecl {
+            name: "y".into(),
+            declared_type: Type::Int,
+            value: Expr::Integer(4),
+        }],
+    }
+    .interpret(&mut env);
+    let i1 = Expr::FCall {
+        name: "f".into(),
+        args: vec![Expr::Integer(4)],
+    }
+    .interpret(&mut env);
+    assert!(i1
+        .unwrap_err()
+        .downcast_ref::<errors::FunctionNotReturning>()
+        .is_some())
+}
+
+#[test]
+fn func_decl_return() {
+    let mut env = IEnvironment::new();
+    let _ = Stmt::FuncDecl {
+        name: "f".into(),
+        return_type: Type::Bool,
+        parameters: vec![("x".into(), Type::Int)],
+        statements: vec![Stmt::Return(Expr::Boolean(true))],
+    }
+    .interpret(&mut env);
+    assert_eq!(
+        Expr::FCall {
+            name: "f".into(),
+            args: vec![Expr::Integer(4)]
+        }
+        .interpret(&mut env)
+        .unwrap(),
+        Value::Boolean(true)
+    )
+}
+
+#[test]
+fn fork() {
+    let mut env = IEnvironment::new();
+
+    env.vtable_push("x".into(), Value::Integer(4));
+
+    let _ = Stmt::Fork {
+        branches: vec![(
+            Expr::BinaryOperation {
+                lhs: Expr::Integer(1).into(),
+                rhs: Expr::Integer(3).into(),
+                operator: BinaryOperator::LessThan,
+            },
+            vec![Stmt::Assign { name: "x".into(), value: Expr::Integer(8) }
+            ],
+        )],
+        otherwise: Option::None,
+    }.interpret(&mut env);
+
+    assert_eq!(env.vtable_find("x".into()).unwrap().clone(), Value::Integer(8))
+}
+
+#[test]
+fn fork_otherwise() {
+    let mut env = IEnvironment::new();
+
+    env.vtable_push("x".into(), Value::Integer(4));
+
+    let _ = Stmt::Fork {
+        branches: vec![(
+            Expr::BinaryOperation {
+                lhs: Expr::Integer(1).into(),
+                rhs: Expr::Integer(3).into(),
+                operator: BinaryOperator::GreaterThan,
+            },
+            vec![Stmt::Assign { name: "x".into(), value: Expr::Integer(8) }
+            ],
+        )],
+        otherwise: Some(vec![Stmt::Assign { name: "x".into(), value: Expr::Integer(9)}]),
+    }.interpret(&mut env);
+
+    assert_eq!(env.vtable_find("x".into()).unwrap().clone(), Value::Integer(9))
+}

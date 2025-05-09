@@ -210,8 +210,8 @@ impl TypeCheckS for Stmt {
 
                         Ok(())
                     }
-            Stmt::Fork { branch, otherwise } => {
-                        for (bool_expr, body) in branch {
+            Stmt::Fork { branches, otherwise } => {
+                        for (bool_expr, body) in branches {
                             let t1 = bool_expr.type_check(environment)?;
                             if bool_expr.type_check(environment)? != Type::Bool {
                                 return Err(errors::ForkNotBooltypeError(t1).into());
