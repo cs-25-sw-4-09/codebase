@@ -8,6 +8,10 @@ pub struct FigureArray(Vec<Figure>);
 
 
 impl FigureArray {
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
     pub fn get_mut_figures(&mut self) -> &mut Vec<Figure> {
         &mut self.0 
     }
