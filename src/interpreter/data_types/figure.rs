@@ -60,9 +60,9 @@ impl Figure {
     pub fn get_max_x(&self) -> f64 {
         let mut max_x = self.lines.iter()
        .flat_map(|line| line.get_points())
-       .filter_map(|point| match point.x(){
-        Value::Float(f) => Some(*f),
-        Value::Integer(i) => Some(*i as f64),
+       .filter_map(|point| match *point.x{
+        Value::Float(f) => Some(f),
+        Value::Integer(i) => Some(i as f64),
         _ => None,
        }).max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).unwrap_or(0f64);
        max_x
@@ -71,9 +71,9 @@ impl Figure {
     pub fn get_min_x(&self) -> f64 { 
         let mut min_x = self.lines.iter()
        .flat_map(|line| line.get_points())
-       .filter_map(|point| match point.x(){
-        Value::Float(f) => Some(*f),
-        Value::Integer(i) => Some(*i as f64),
+       .filter_map(|point| match *point.x{
+        Value::Float(f) => Some(f),
+        Value::Integer(i) => Some(i as f64),
         _ => None,
        }).min_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).unwrap_or(0f64);
        min_x
@@ -86,9 +86,9 @@ impl Figure {
     pub fn get_max_y(&self) -> f64 {
         let mut max_y = self.lines.iter()
         .flat_map(|line| line.get_points())
-        .filter_map(|point| match point.y(){
-        Value::Float(f) => Some(*f),
-        Value::Integer(i) => Some(*i as f64),
+        .filter_map(|point| match *point.y{
+        Value::Float(f) => Some(f),
+        Value::Integer(i) => Some(i as f64),
          _ => None,
         }).max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).unwrap_or(0f64);
         max_y
@@ -97,9 +97,9 @@ impl Figure {
     pub fn get_min_y(&self) -> f64 {
         let mut min_y = self.lines.iter()
         .flat_map(|line| line.get_points())
-        .filter_map(|point| match point.y(){
-        Value::Float(f) => Some(*f),
-        Value::Integer(i) => Some(*i as f64),
+        .filter_map(|point| match *point.y{
+        Value::Float(f) => Some(f),
+        Value::Integer(i) => Some(i as f64),
          _ => None,
         }).min_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).unwrap_or(0f64);
 

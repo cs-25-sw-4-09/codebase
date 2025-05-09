@@ -23,6 +23,15 @@ impl Value {
         }
     }
 
+    pub fn get_float(&self) -> Result<f64, Box<dyn Error>> {
+        match self {
+            Value::Integer(i) => Ok(*i as f64),
+            Value::Float(f) => Ok(*f),
+            _ => Err(crate::program::errors::ExprParseAsFloatError.into())
+        }
+    }
+
+
     pub fn get_bool(&self) -> Result<bool, Box<dyn Error>> {
         match self {
             Value::Boolean(i) => Ok(*i),

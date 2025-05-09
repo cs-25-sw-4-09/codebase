@@ -23,11 +23,32 @@ pub fn scale(mut shape: FigureArray, factor: Value) -> Result<(), Box<dyn Error>
         .min_by(|a, b| a.partial_cmp(b).unwrap())
         .ok_or_else(|| Box::new(errors::MinCanNotBeFound))?;
 
-    let fig_new = shape.get_mut_figures().iter_mut().for_each(|fig| {
-        fig.get_mut_lines().iter_mut().for_each(|line| {
+    let factor = match factor {
+        Value::Integer(i) => i as f64,
+        Value::Float(f) => f,
+        _ => unreachable!(),
+    };
+
+        shape.get_mut_figures().iter_mut().for_each(|fig| {
+            fig.get_mut_lines().iter_mut().for_each(|line| {
+                line.get_mut_points().iter_mut().for_each(|point| { 
+                    let dist_origin_x = point.x().get_float().unwrap() - origin_x;
+                    let dist_origin_y = point.y().get_float().unwrap() - origin_y;
+                    
+                    point.x = match *point.x {
+                        Value::Integer(_) =>  Value::Float(dist_origin_x * factor).into(),
+                        Value::Float(_) =>  Value::Float(dist_origin_x * factor).into(),
+                        _ => unreachable!()
+                    };
+                    point.y = match *point.y {
+                        Value::Integer(_) =>  Value::Float(dist_origin_y * factor).into(),
+                        Value::Float(_) =>  Value::Float(dist_origin_y * factor).into(),
+                        _ => unreachable!()
+                    };
+                });
             
+            });
         });
-    });
 
     Ok(())
 }

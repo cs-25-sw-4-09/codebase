@@ -400,7 +400,7 @@ impl InterpretE for Expr {
                         "a" => &a.clone(),
                         _ => unreachable!(),
                     },
-                    Value::Point(point) => match member_access.as_str() {
+                    Value::Point(mut point) => match member_access.as_str() {
                         "x" => &point.x().clone(),
                         "y" => &point.y().clone(),
                         _ => unreachable!(),
