@@ -68,3 +68,22 @@ impl fmt::Display for NoLinesInFigure {
         write!(f,"Last line is not defined in figure")
     }
 }
+
+
+#[derive(Debug, Clone)]
+pub struct MinCanNotBeFound;
+impl Error for MinCanNotBeFound {}
+impl fmt::Display for MinCanNotBeFound {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"min can not be found")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MaxCanNotBeFound;
+impl Error for MaxCanNotBeFound {}
+impl fmt::Display for MaxCanNotBeFound {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"max can not be found")
+    }
+}
