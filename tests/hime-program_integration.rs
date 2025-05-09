@@ -233,7 +233,7 @@ fn test_program_new_converts_ast_to_program_scall_path_with_params() {
 #[test]
 fn test_program_new_converts_ast_to_program_scall_polygon_with_params() {
     let code = "begin
-    myShape: shape = (1,2)--*(|fill = (1,1,1,1)|);";
+    myShape: shape = (1,2)--(3,4)--*(|fill = (1,1,1,1)|);";
 
     let program = program::Program::new(&code.to_string()).unwrap();
 
@@ -260,10 +260,17 @@ fn test_program_new_converts_ast_to_program_scall_polygon_with_params() {
                 ),]),
                 path_poly: Some(
                     Expr::PolygonOperation {
-                        path: Box::new(Expr::Point(
-                            Box::new(Expr::Integer(1)),
-                            Box::new(Expr::Integer(2))
-                        )),
+                        path: Expr::PathOperation {
+                            lhs: Box::new(Expr::Point(
+                                Box::new(Expr::Integer(1)),
+                                Box::new(Expr::Integer(2))
+                            )),
+                            rhs: Box::new(Expr::Point(
+                                Box::new(Expr::Integer(3)),
+                                Box::new(Expr::Integer(4))
+                            )),
+                            operator: PathOperator::Line
+                        }.into(),
                         operator: PolyOperator::Straight
                     }
                     .into()
@@ -366,7 +373,7 @@ fn test_program_new_converts_ast_to_program_var_decl_path_curved() {
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_polygon_straight() {
     let code = "begin
-    x: polygon = (1,2)--*;";
+    x: polygon = (1,2)--(3,4)--*;";
 
     let program = program::Program::new(&code.to_string()).unwrap();
 
@@ -381,10 +388,17 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_straight() {
         assert_eq!(
             value,
             &Expr::PolygonOperation {
-                path: Box::new(Expr::Point(
-                    Box::new(Expr::Integer(1)),
-                    Box::new(Expr::Integer(2))
-                )),
+                path: Expr::PathOperation {
+                    lhs: Box::new(Expr::Point(
+                        Box::new(Expr::Integer(1)),
+                        Box::new(Expr::Integer(2))
+                    )),
+                    rhs: Box::new(Expr::Point(
+                        Box::new(Expr::Integer(3)),
+                        Box::new(Expr::Integer(4))
+                    )),
+                    operator: PathOperator::Line
+                }.into(),
                 operator: PolyOperator::Straight
             }
         );
@@ -394,7 +408,7 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_straight() {
 #[test]
 fn test_program_new_converts_ast_to_program_var_decl_polygon_curve() {
     let code = "begin
-    x: polygon = (1,2)~~*;";
+    x: polygon = (1,2)~~(3,4)~~*;";
 
     let program = program::Program::new(&code.to_string()).unwrap();
 
@@ -409,10 +423,17 @@ fn test_program_new_converts_ast_to_program_var_decl_polygon_curve() {
         assert_eq!(
             value,
             &Expr::PolygonOperation {
-                path: Box::new(Expr::Point(
-                    Box::new(Expr::Integer(1)),
-                    Box::new(Expr::Integer(2))
-                )),
+                path: Expr::PathOperation {
+                    lhs: Box::new(Expr::Point(
+                        Box::new(Expr::Integer(1)),
+                        Box::new(Expr::Integer(2))
+                    )),
+                    rhs: Box::new(Expr::Point(
+                        Box::new(Expr::Integer(3)),
+                        Box::new(Expr::Integer(4))
+                    )),
+                    operator: PathOperator::Curve
+                }.into(),
                 operator: PolyOperator::Curved
             }
         );
@@ -560,7 +581,7 @@ fn test_program_new_converts_ast_to_program_member_access_array() {
 #[test]
 fn test_program_new_converts_ast_to_program_place() {
     let code = "begin
-    z:shape = place x ontop y by (1,2);
+    z:shape = place x ontop (1,2) offset y;
     ";
     let program = program::Program::new(&code.to_string()).unwrap();
 
@@ -1728,7 +1749,7 @@ fn test_program_array_assign() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::ArrayAssign { name, value , index} = &program.stmts[0] {
+    if let Stmt::ArrayAssign { name, value, index } = &program.stmts[0] {
         assert_eq!(name, &"x".to_string());
         assert_eq!(value, &Expr::Integer(10));
         assert_eq!(index, &Expr::Integer(1));
@@ -1783,7 +1804,11 @@ fn test_program_fork() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::Fork { branches: branch, otherwise } = &program.stmts[0] {
+    if let Stmt::Fork {
+        branches: branch,
+        otherwise,
+    } = &program.stmts[0]
+    {
         assert_eq!(otherwise, &None);
         assert_eq!(
             branch,
@@ -1811,7 +1836,11 @@ fn test_program_fork_otherwise() {
 
     assert_eq!(program.stmts.len(), 1);
 
-    if let Stmt::Fork { branches: branch, otherwise } = &program.stmts[0] {
+    if let Stmt::Fork {
+        branches: branch,
+        otherwise,
+    } = &program.stmts[0]
+    {
         assert_eq!(
             otherwise,
             &Some(vec![Stmt::VarDecl {
