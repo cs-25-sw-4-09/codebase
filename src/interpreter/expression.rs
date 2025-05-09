@@ -380,7 +380,7 @@ impl InterpretE for Expr {
 
                         &Value::Shape(vec![fig])
                     }
-                    _ => return Err(errors::PolyPathNotFound.into()),
+                    _ => unreachable!(),
                 }
             }
             Expr::Member {
