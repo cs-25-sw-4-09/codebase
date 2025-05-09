@@ -1,0 +1,100 @@
+grammar cfg
+{
+
+  options
+  {
+    Axiom = "program"; // the top variable for this grammar
+    Separator = "SEPARATOR"; // the terminal that represent white space
+  }
+  terminals
+  {
+    WHITE_SPACE -> U+0020 | U+0009 | U+000B | U+000C | U+000A
+                  | U+000D | U+0085 | U+2028 | U+2029 | U+0009;
+
+    COMMENT_MULTI -> '/*' ( .* - (.* '*/' .*) ) '*/';
+    COMMENT_SINGLE -> '//' [^\r\n]* ;
+    SEPARATOR   -> WHITE_SPACE+ | COMMENT_MULTI | COMMENT_SINGLE;
+
+    CONST       -> [0-9];
+    INTEGER -> [1-9] CONST* | '0';
+
+    FLOAT       -> INTEGER? '.' CONST+;
+    LETTER      -> [A-Za-z];
+
+
+    IDENTIFIER -> (LETTER | '_') (LETTER | CONST | '_')*;
+    STRING -> '"'(LETTER | '\\' | '/' | CONST | '.')*'"';
+    BOOLEAN -> 'true' | 'false';
+
+  }
+
+  rules
+  {
+    //Start place
+    program -> declS 'begin'! stmtS;
+
+    //Declarations
+    declS -> (import | decl)*;
+    import -> 'import'! IDENTIFIER STRING ';'!;
+    decl -> IDENTIFIER ':'! types ('='! exprT2)?';'!;
+
+    //Statements
+    stmtS -> (forkS | for | draw | return | funcDecl | assign | arrayAssign | varDecl)+;
+
+    forkS -> 'fork'! '{'! fork^ '}'!;
+        fork -> forkCase+ otherwise?;
+        forkCase -> '('! exprV ')'! '->'! '{'! stmtS '}'!;
+        otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
+    for -> 'for'! IDENTIFIER 'in'! exprV 'to'! exprV '{'! stmtS '}'! ;
+    draw -> 'draw'! exprT1 ('at'! exprT1)? ';'!;
+    return -> 'return'! exprT2 ';'!;
+    funcDecl -> IDENTIFIER '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;
+        params -> param (','! param)*;
+        param -> IDENTIFIER ':'! types;
+    assign -> IDENTIFIER '='! exprT2 ';'!;
+    varDecl -> IDENTIFIER ':'! types '='! exprT2 ';'!;
+    arrayAssign -> IDENTIFIER '['! exprV ']'! '='!  exprV ';'!;    
+
+
+
+    //Expressions
+    exprT2 -> (array | exprT1)^ ;
+      array -> '['! (exprT1 (','! exprT1)*)? ']'! ;
+    exprT1 -> (exprV | path | polygon | exprS)^;
+
+    point -> '('! exprV ','! exprV ')'! ;
+    color -> '('! exprV ','! exprV ','! exprV ','! exprV ')'!;
+    path   -> exprV (('--' | '~~')^ exprV)+ ;
+    polygon -> path(('--*' | '~~*')^) ;
+
+    exprS -> (manipulation | SCall)^ ;
+    manipulation -> place | scale | rotate;
+    scale -> 'scale'! exprT1 'by'! exprV;
+    rotate -> 'rotate'! exprT1 'by'! exprV;
+    place -> 'place'! exprT1 pos (exprV 'offset'!)? exprT1  ;
+        pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop')^;
+    SCall -> (exprV | path | polygon) '(|'! attrS '|)'!;
+        attrS -> (attr (','! attr)*)? ;
+        attr -> IDENTIFIER '='! exprT2;
+
+    exprV -> exprV '||'^ exprV1 | exprV1^;
+    exprV1 -> exprV1 '&&'^ exprV2 | exprV2^;
+    exprV2 -> exprV3 ('==' | '<' | '>' | '>=' | '<=' | '!=')^ exprV3 | exprV3^;
+    exprV3 -> exprV3 '+'^ exprV4 | exprV3 '-'^ exprV4 | exprV4^;
+    exprV4 -> exprV4 '%'^ exprV5 | exprV4 '*'^ exprV5 | exprV4 '/'^ exprV5 | exprV5^;
+    exprV5 -> '-'^exprV6 | '!'^exprV6 | exprV6^;
+    exprV6 -> '('! exprV^ ')'! | exprV7^;
+    exprV7 -> ( FCall | FLOAT | INTEGER | member | BOOLEAN | arrayIdx | IDENTIFIER | color | point )^;
+
+    FCall -> IDENTIFIER '('! args? ')'!;
+    args -> exprT2 (','! exprT2)*;
+
+    arrayIdx -> IDENTIFIER '['! exprV ']'!;
+    member -> IDENTIFIER '.'! IDENTIFIER;
+
+    //Types
+    types -> ('int' | 'float' | 'point' | 'color'
+    | 'shape' | 'path' | 'polygon' | 'bool' | 'int[]' | 'float[]' | 'point[]' | 'color[]'
+    | 'shape[]' | 'path[]' | 'polygon[]' | 'bool[]')^;
+  }
+}
