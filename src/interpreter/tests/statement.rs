@@ -230,5 +230,38 @@ fn for_loop() {
     .interpret(&mut env)
     .unwrap();
 
-    assert_eq!(env.vtable_find("count".into()).unwrap().clone(), Value::Integer(5))
+    assert_eq!(
+        env.vtable_find("count".into()).unwrap().clone(),
+        Value::Integer(5)
+    )
+}
+
+#[test]
+fn for_loop_return() {
+    let mut env = IEnvironment::new();
+    env.vtable_push("count".into(), Value::Integer(0));
+    Stmt::For {
+        counter: "i".into(),
+        from: Expr::Integer(0),
+        to: Expr::Integer(5),
+        body: vec![
+            Stmt::Assign {
+                name: "count".into(),
+                value: Expr::BinaryOperation {
+                    lhs: Expr::Variable("count".into()).into(),
+                    rhs: Expr::Integer(1).into(),
+                    operator: BinaryOperator::Add,
+                }
+                .into(),
+            },
+            Stmt::Return(Expr::Integer(0)),
+        ],
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        env.vtable_find("count".into()).unwrap().clone(),
+        Value::Integer(1)
+    )
 }
