@@ -30,14 +30,14 @@ impl Value {
         }
     }
 
-    pub fn get_shape(&self) -> Result<&FigureArray, Box<dyn Error>> {
+    pub fn get_shape(self) -> Result<FigureArray, Box<dyn Error>> {
         match self {
             Value::Shape(i) => Ok(i),
             _ => Err(crate::program::errors::ExprParseAsBooleanError.into())
         }
     }
 
-    pub fn get_point(&self) -> Result<&Point, Box<dyn Error>> {
+    pub fn get_point(self) -> Result<Point, Box<dyn Error>> {
         match self {
             Value::Point(i) => Ok(i),
             _ => Err(crate::program::errors::ExprParseAsBooleanError.into())

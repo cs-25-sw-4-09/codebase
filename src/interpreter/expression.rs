@@ -432,10 +432,10 @@ impl InterpretE for Expr {
                 point,
             } => {
                 let (s1, s2, p, dir) = (
-                    base_shape.interpret(environment)?.get_shape()?.clone(), 
-                    second_shape.interpret(environment)?.get_shape()?.clone(), 
+                    base_shape.interpret(environment)?.get_shape()?, 
+                    second_shape.interpret(environment)?.get_shape()?, 
                     match point {
-                        Some(exp) => exp.interpret(environment)?.get_point()?.clone(),
+                        Some(exp) => exp.interpret(environment)?.get_point()?,
                         None => (0,0).into(),
                     }, 
                     place_at.as_str().into()
