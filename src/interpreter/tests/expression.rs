@@ -943,6 +943,23 @@ fn polygonoperation_curve() {
     .interpret(&mut env)
     .unwrap();
 
+    let i4 = Expr::PolygonOperation {
+        path: Expr::PathOperation {
+            lhs: Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                operator: PathOperator::Curve,
+            }
+            .into(),
+            rhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        operator: PolyOperator::Curved,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
     assert_eq!(
         i1,
         Value::Figure(
@@ -1000,6 +1017,21 @@ fn polygonoperation_curve() {
                     (Value::Integer(7), Value::Integer(8)).into(),
                     (Value::Integer(1), Value::Integer(2)).into(),
                     (Value::Integer(3), Value::Integer(4)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i4,
+        Value::Figure(
+            vec![
+                Line::Curved(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into()
                 ])
             ]
             .into()
