@@ -418,22 +418,64 @@ fn manipulation_place(){
     let program =
     "begin
     x = place rec left x;
-    x = place rec right 5 by (10, 10);
+    x = place rec right (10,10) offset 5;
     ";
     let manipulation_depth = 2;
     let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     let stmt1 = vec![("assign", manipulation_depth),
     ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
-    ("place", manipulation_depth+2), ("rec", manipulation_depth+3), ("pos", manipulation_depth+3),
-    ("left", manipulation_depth+4), ("x", manipulation_depth+4)];
+    ("place", manipulation_depth+2), ("rec", manipulation_depth+3),
+    ("left", manipulation_depth+3), ("x", manipulation_depth+3)];
+
     let stmt2 = vec![
         ("assign", manipulation_depth),
         ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
-        ("place", manipulation_depth+2), ("rec", manipulation_depth+3), ("pos", manipulation_depth+3),
-        ("right", manipulation_depth+4), ("5", manipulation_depth+4), ("point", manipulation_depth+4),
-        ("10", manipulation_depth+5), ("10", manipulation_depth+5)
+        ("place", manipulation_depth+2), ("rec", manipulation_depth+3),
+        ("right", manipulation_depth+3), ("point", manipulation_depth+3),
+        ("10", manipulation_depth+4), ("10", manipulation_depth+4),  ("5", manipulation_depth+3),
     ];
-    start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
+
+    println!("{:?}", stmt1.into_iter().chain(stmt2.into_iter()));
+
+    //start.extend(stmt1.into_iter().chain(stmt2.into_iter()));
+    //test_equality(start, program);
+}
+
+#[test]
+fn manipulation_place1(){
+    let program =
+    "begin
+    x = place rec left x;
+    ";
+    let manipulation_depth = 2;
+    let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+    let stmt1 = vec![("assign", manipulation_depth),
+    ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
+    ("place", manipulation_depth+2), ("rec", manipulation_depth+3),
+    ("left", manipulation_depth+3), ("x", manipulation_depth+3)];
+
+    start.extend(stmt1.into_iter());
+    test_equality(start, program);
+}
+
+#[test]
+fn manipulation_place2(){
+    let program =
+    "begin
+    x = place rec right (10,10) offset 5;
+    ";
+    let manipulation_depth = 2;
+    let mut start  = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
+
+    let stmt2 = vec![
+        ("assign", manipulation_depth),
+        ("x", manipulation_depth+1), ("manipulation", manipulation_depth+1),
+        ("place", manipulation_depth+2), ("rec", manipulation_depth+3),
+        ("right", manipulation_depth+3), ("point", manipulation_depth+3),
+        ("10", manipulation_depth+4), ("10", manipulation_depth+4),  ("5", manipulation_depth+3),
+    ];
+
+    start.extend(stmt2.into_iter());
     test_equality(start, program);
 }
 

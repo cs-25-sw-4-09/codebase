@@ -1,7 +1,13 @@
 
 pub fn get_programs() -> Vec<&'static str> {
-    vec![PROGRAM1, PROGRAM2, PROGRAM3, PROGRAM4]
+    vec![
+        PROGRAM1, 
+        PROGRAM2, 
+        PROGRAM3, 
+        PROGRAM4,
+        ]
 }
+
 
 pub fn get_programs2() -> Vec<&'static str> {
     vec![
@@ -160,8 +166,8 @@ window: shape = window(|width = width/8, fill = (0,255,255,255), border = (0,0,0
 door: shape = rectangle(|height=(height-width)*2, width=width/6, fill = (133,72,54,255)|);
 
 house: shape = place roof top base;
-house = place window ontop house by (width/2- width/4, height-width + width/2- width/4);
-house = place door bottom house by (width/2, door.height);
+house = place window ontop (width/2- width/4, height-width + width/2- width/4) offset house;
+house = place door bottom (width/2, door.height) offset house;
 
 draw house;"; 
 

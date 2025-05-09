@@ -1,2 +1,2 @@
 begin
-x = rotate rec by 10;
+x = place rec left x;

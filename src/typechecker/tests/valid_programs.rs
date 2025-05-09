@@ -1,9 +1,9 @@
 
 pub fn get_programs() -> Vec<&'static str> {
     vec![
-        PROGRAM1 , 
+        PROGRAM1, 
         PROGRAM2, 
-        PROGRAM3 , 
+        PROGRAM3, 
         PROGRAM4
         ]
 }
@@ -18,9 +18,9 @@ begin
 draw (0,0)--(width,0)--(width,height)--(0,height)--* (|fill = fill|);";
 
 const PROGRAM2: &str = 
-"import triangle \"./src/typechecker/tests/test_imports/triangle.extension\";
-import rectangle \"./src/typechecker/tests/test_imports/rectangle.extension\";
-import window \"./src/typechecker/tests/test_imports/window.extension\";
+"import triangle \"./triangle.EXTENSION\";
+import rectangle \"./rectangle.EXTENSION\";
+import window \"./window.EXTENSION\";
 
 width: int;
 height: int;
@@ -36,8 +36,8 @@ window: shape = window(|width = width/8, fill = (0,255,255,255), border = (0,0,0
 door: shape = rectangle(|height=(height-width)*2, width=width/6, fill = (133,72,54,255)|);
 
 house: shape = place roof top base;
-house = place window ontop house by (width/2- width/4, height-width + width/2- width/4);
-house = place door bottom house by (width/2, door.height);
+house = place window ontop (width/2- width/4, height-width + width/2- width/4) offset house;
+house = place door bottom (width/2, door.height) offset house;
 
 draw house;"; 
 

@@ -67,8 +67,8 @@ grammar cfg
     path   -> exprV (('--' | '~~')^ exprV)+ ;
     polygon -> path(('--*' | '~~*')^) ;
 
-    exprS -> (SCall | manipulation)^;
-    manipulation -> (place | scale | rotate)^;
+    exprS -> (manipulation | SCall)^ ;
+    manipulation -> place | scale | rotate;
     scale -> 'scale'! exprT1 'by'! exprV;
     rotate -> 'rotate'! exprT1 'by'! exprV;
     place -> 'place'! exprT1 pos (exprV 'offset'!)? exprT1  ;
