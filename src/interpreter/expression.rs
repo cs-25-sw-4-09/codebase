@@ -363,9 +363,9 @@ impl InterpretE for Expr {
                             program.ienvironment.vtable_push(arg_name.clone(), value);
                         }
 
-                        let sub_environment = program.interpret()?;
+                        let draw_array = program.interpret()?;
 
-                        &Value::Shape(sub_environment.darray_get().clone())
+                        &Value::Shape(draw_array.clone())
                     }
                     (None, Some(path_poly)) => { //Shape call to path/polygon
                         let i1 = path_poly.interpret(environment)?;
