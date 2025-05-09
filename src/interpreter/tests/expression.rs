@@ -726,6 +726,24 @@ fn pathoperation_path_path() {
         rhs: Expr::PathOperation {
             lhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
             rhs: Expr::Point(Expr::Integer(7).into(), Expr::Integer(8).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        operator: PathOperator::Curve,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::PathOperation {
+        lhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        rhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            rhs: Expr::Point(Expr::Integer(7).into(), Expr::Integer(8).into()).into(),
             operator: PathOperator::Line,
         }
         .into(),
@@ -775,6 +793,21 @@ fn pathoperation_path_path() {
 
     assert_eq!(
         i3,
+        Value::Figure(
+            vec![
+                Line::Curved(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into(),
+                    (Value::Integer(7), Value::Integer(8)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i4,
         Value::Figure(
             vec![
                 Line::Curved(vec![
