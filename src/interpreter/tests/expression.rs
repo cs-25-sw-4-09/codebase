@@ -12,13 +12,10 @@ use crate::{
         InterpretE, InterpretS,
     },
     program::{
-        expression::Expr,
-        operators::{
+        expression::Expr, operators::{
             binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
             unaryoperator::UnaryOperator,
-        },
-        r#type::Type,
-        statement::Stmt,
+        }, program::Program, statement::Stmt, r#type::Type
     },
 };
 
@@ -1088,6 +1085,60 @@ pub fn scall_pathpoly() {
                 vec![Line::Straight(vec![
                     (Value::Integer(1), Value::Integer(2)).into(),
                     (Value::Integer(3), Value::Integer(4)).into()
+                ])]
+                .into(),
+                vec![(
+                    "fill".to_owned(),
+                    Value::Color(
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into()
+                    )
+                    .into()
+                )]
+                .into_iter()
+                .collect()
+            )
+                .into()]
+            .into(),
+        )
+    )
+}
+
+#[test]
+pub fn scall_identifier() {
+    let mut env = IEnvironment::new();
+
+    let pgr = Program::new(&"width: int = 3;
+    begin
+    x: shape = (width,2)--(width,4)(|fill = (255,255,255,255)|);
+    draw x;
+    ".into()).unwrap();
+
+    env.stable_push("figure".into(), pgr);
+
+
+    let i1 = Expr::SCall {
+        name: Some("figure".into()),
+        args: vec![(
+            "width".to_owned(),
+            Expr::Float(4.2).into(),
+        )]
+        .into_iter()
+        .collect(),
+        path_poly: None,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![(
+                vec![Line::Straight(vec![
+                    (Value::Float(4.2), Value::Integer(2)).into(),
+                    (Value::Float(4.2), Value::Integer(4)).into()
                 ])]
                 .into(),
                 vec![(
