@@ -133,7 +133,7 @@ fn fork_single() {
 
     let mut start = vec![("program", 0), ("declS",1), ("stmtS", 1)];
     let stmt1 = vec![
-        ("fork", 2), ("forkExpr", 3), (">",4),
+        ("fork", 2), ("forkCase", 3), (">",4),
         ("5", 5), ("4", 5), ("stmtS", 4), ("return", 5),
         ("10", 6)];
     start.extend(stmt1.iter());
@@ -156,14 +156,14 @@ fn fork_multi() {
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
     let stmt_depth = 1;
     let stmt1 = vec![("fork", stmt_depth+1),
-    ("forkExpr", stmt_depth+2),
+    ("forkCase", stmt_depth+2),
     ("==", stmt_depth+3),
     ("5", stmt_depth+4), ("5", stmt_depth+4),
     ("stmtS", stmt_depth+3), ("return", stmt_depth+4), ("+", stmt_depth+5), ("5", stmt_depth+6),
      ("5", stmt_depth+6)
     ];
 
-    let stmt2 = vec![("forkExpr", stmt_depth+2), (">", stmt_depth+3),
+    let stmt2 = vec![("forkCase", stmt_depth+2), (">", stmt_depth+3),
     ("5", stmt_depth+4), ("3", stmt_depth+4),
     ("stmtS", stmt_depth+3), ("varDecl", stmt_depth+4), ("x", stmt_depth+5), ("int", stmt_depth+5), ("*", stmt_depth+5),
     ("6", stmt_depth+6), ("7", stmt_depth+6), ("return", stmt_depth+4), ("x", stmt_depth+5),
@@ -189,7 +189,7 @@ fn otherwise_fork(){
     ";
     let stmt_depth = 1;
     let mut start = vec![("program", 0), ("declS", 1), ("stmtS", 1)];
-    let stmt1 = vec![("fork", stmt_depth+1), ("forkExpr", stmt_depth+2),
+    let stmt1 = vec![("fork", stmt_depth+1), ("forkCase", stmt_depth+2),
     ("==", stmt_depth+3), ("10", stmt_depth+4), ("10", stmt_depth+4), ("stmtS", stmt_depth+3),
     ("return", stmt_depth+4), ("1", stmt_depth+5)];
     let stmt2 = vec![("otherwise", stmt_depth+2), ("stmtS", stmt_depth+3), ("return", stmt_depth+4), ("0", stmt_depth+5)];

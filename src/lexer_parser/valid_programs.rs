@@ -16,15 +16,16 @@ pub fn get_programs2() -> Vec<&'static str> {
         EXPR_SCALE,
         EXPR_ROTATE,
         EXPR_WILD,
+        EXPR_SCALL_BIG,
         ]
 }
 
 const EXPR_WILD: &str ="
 begin
-_ = scale place (0,0) mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20;
-_ = place scale place (0,0) mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 top scale place (0,0) mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20;
-_ = rotate place scale place (0,0) mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 top scale place (0,0) mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 by 123123;
-_ = place x(||) right rotate place scale place (0,0) mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 top scale place (0,0) mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 by 123123;
+_ = scale place (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20;
+_ = place scale place (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 top scale place  (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20;
+_ = rotate place scale place (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 top scale place  (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 by 123123;
+_ = place x(||) right rotate place scale place  (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 top scale place  (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|) by 20 by 123123;
 
 ";
 
@@ -35,6 +36,16 @@ _ = (x,0)--(x,x)--x--(0,0)--*(||);
 _ = testName(||);
 ";
 
+
+const EXPR_SCALL_BIG: &str ="
+begin
+_ = (x,0)--(x,x)--x--(0,0)(|x = x,x=5|);
+_ = (x,0)--(x,x)--x--(0,0)--*(|x = (1,1,1,1),x =512, x=123123|);
+_ = testName(|x = [1]|);
+_ = (x,0)--(x,x)--x--(0,0)(|x = 12+23+(-123)|);
+_ = (x,0)--(x,x)--x--(0,0)--*(|x = (1,1,1,1)|);
+_ = testName(|x = [1]|);
+";
 const EXPR_SCALL_WITHFEILDS: &str ="
 begin
 _ = (x,0)--(x,x)--x--(0,0)(|x = x|);
@@ -71,12 +82,12 @@ _ = rotate x by -1.2;
 
 const EXPR_PLACE: &str ="
 begin
-_ = place (0,0) mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|);
-_ = place x mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (x,0)--(x,x)--x--(0,0)(|x = x|);
-_ = place (0,0) mount  x ontop (x,0)--(x,x)--x--(0,0)(|x = x|);
-_ = place x mount (x,0)--(x,x)--x--(0,0)(|x = x|) ontop x;
-_ = place (0,0) mount x ontop x;
-_ = place x mount x ontop x;
+_ = place (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (0,0) offset (x,0)--(x,x)--x--(0,0)(|x = x|);
+_ = place (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (0,0) offset (x,0)--(x,x)--x--(0,0)(|x = x|);
+_ = place x ontop (0,0) offset (x,0)--(x,x)--x--(0,0)(|x = x|);
+_ = place (x,0)--(x,x)--x--(0,0)(|x = x|) ontop (0,0) offset x;
+_ = place x ontop (0,0) offset x;
+_ = place x ontop (0,0) offset x;
 ";
 
 const EXPR_ARRAY: &str ="
