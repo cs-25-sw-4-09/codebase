@@ -136,7 +136,7 @@ fn fork_otherwise() {
 }
 
 #[test]
-pub fn draw_without_place() {
+fn draw_without_place() {
     let mut env = IEnvironment::new();
 
     Stmt::Draw {
@@ -194,4 +194,17 @@ pub fn draw_without_place() {
             .into(),
         )
     )
+}
+
+#[test]
+fn import() {
+    let mut env = IEnvironment::new();
+    Stmt::Import {
+        name: "test".into(),
+        path: "./src/interpreter/tests/test_imports/dummyfile.extension".into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert!(env.stable_find("test".into()).is_some())
 }
