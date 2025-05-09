@@ -265,3 +265,54 @@ fn for_loop_return() {
         Value::Integer(1)
     )
 }
+
+#[test]
+fn decl_non_default() {
+    let mut env = IEnvironment::new();
+
+    env.vtable_push("x".into(), Value::Integer(4));
+
+    let i1 = Stmt::Decl {
+        name: "x".into(),
+        declared_type: Type::Int,
+        value: None,
+    }
+    .interpret(&mut env);
+    let i2 = Stmt::Decl {
+        name: "y".into(),
+        declared_type: Type::Int,
+        value: None,
+    }
+    .interpret(&mut env);
+
+    assert!(i1.is_ok());
+
+    assert!(i2
+        .unwrap_err()
+        .downcast_ref::<errors::DeclValueNotSpecified>()
+        .is_some())
+}
+
+#[test]
+fn decl_default() {
+    let mut env = IEnvironment::new();
+
+    env.vtable_push("x".into(), Value::Integer(4));
+
+    let i1 = Stmt::Decl {
+        name: "x".into(),
+        declared_type: Type::Int,
+        value: Some(Expr::Integer(3)),
+    }
+    .interpret(&mut env);
+    Stmt::Decl {
+        name: "y".into(),
+        declared_type: Type::Int,
+        value: Some(Expr::Integer(3)),
+    }
+    .interpret(&mut env).unwrap();
+
+    assert!(i1.is_ok());
+
+    assert_eq!(env.vtable_find("y".into()).unwrap().clone(), Value::Integer(3))
+}
