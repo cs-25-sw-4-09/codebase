@@ -3,7 +3,10 @@ use crate::{
     program::expression::Expr,
 };
 
-use super::{data_types::point::Point, errors, value::Value, InterpretE, InterpretP};
+use super::{data_types::{figurearray::FigureArray, point::Point}, errors, utils::manipulation::{
+        place, Direction
+    }, value::Value, InterpretE, InterpretP
+};
 
 use crate::program::operators::{
     binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
@@ -365,7 +368,7 @@ impl InterpretE for Expr {
 
                         let sub_environment = program.interpret()?;
 
-                        &Value::Shape(sub_environment.darray_get().clone())
+                        &Value::Shape(FigureArray::from(sub_environment.darray_get().clone()))
                     }
                     (None, Some(path_poly)) => { //Shape call to path/polygon
                         let i1 = path_poly.interpret(environment)?;
@@ -378,7 +381,7 @@ impl InterpretE for Expr {
                             fig.set_attribute((arg_name, expr.interpret(environment)?));
                         }
 
-                        &Value::Shape(vec![fig])
+                        &Value::Shape(FigureArray::from(vec![fig]))
                     }
                     _ => return Err(errors::PolyPathNotFound.into()),
                 }
@@ -403,10 +406,10 @@ impl InterpretE for Expr {
                     },
                     Value::Shape(figures) => match member_access.as_str() {
                         "height" => &Value::Integer(
-                            figures.iter().map(|f| f.get_height()).max().unwrap_or(0),
+                            figures.get_figures().iter().map(|f| f.get_height()).max().unwrap_or(0),
                         ),
                         "width" => &Value::Integer(
-                            figures.iter().map(|f| f.get_width()).max().unwrap_or(0),
+                            figures.get_figures().iter().map(|f| f.get_width()).max().unwrap_or(0),
                         ),
                         _ => unreachable!(),
                     },
@@ -427,7 +430,21 @@ impl InterpretE for Expr {
                 second_shape,
                 place_at,
                 point,
-            } => todo!(),
+            } => {
+                let (s1, s2, p, dir) = (
+                    base_shape.interpret(environment)?.get_shape()?.clone(), 
+                    second_shape.interpret(environment)?.get_shape()?.clone(), 
+                    match point {
+                        Some(exp) => exp.interpret(environment)?.get_point()?.clone(),
+                        None => Point::from((0,0)),
+                    }, 
+                    Direction::from(place_at.as_str())
+                );
+
+                let v = place(s1, s2, p, dir);
+
+                &Value::Shape(v)
+            },
             Expr::Scale { base_shape, factor } => todo!(),
             Expr::Rotate { base_shape, factor } => todo!(),
         };

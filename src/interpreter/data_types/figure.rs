@@ -52,6 +52,10 @@ impl Figure {
         self.lines.get_mut(idx)
     }
 
+    pub fn get_mut_lines(&mut self) -> &mut Vec<Line> {
+        &mut self.lines
+    }
+
     pub fn get_max_x(&self) -> i64 {
         let mut max_x = self.lines.iter()
        .flat_map(|line| line.get_points())
@@ -132,6 +136,7 @@ impl Line {
         Line::Straight(points) | 
         Line::Curved(points) => &points,
     }  }
+
     pub fn push_point(&mut self, val: Point) { 
         match self {
             Line::Straight(points) | 
@@ -160,6 +165,13 @@ impl Line {
         match self {
             Line::Straight(points) | 
             Line::Curved(points) => points.push(p)
+        }
+    }
+
+    pub fn get_mut_points(&mut self) -> &mut Vec<Point> {
+        match self {
+            Line::Straight(points) |
+            Line::Curved(points) => points,
         }
     }
 }

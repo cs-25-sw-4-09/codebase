@@ -1,5 +1,5 @@
 
-use super::data_types::{figure::Figure,point::Point};
+use super::data_types::{figure::Figure, figurearray::FigureArray, point::Point};
 use std::error::Error;
 
 #[derive(Debug, Clone,PartialEq)]
@@ -10,7 +10,7 @@ pub enum Value {
     Float(f64),
     Point(Point),
     Color(Box<Value>, Box<Value>, Box<Value>, Box<Value>),
-    Shape(Vec<Figure>),
+    Shape(FigureArray),
     Figure(Figure),
     Array(Vec<Box<Value>>)
 }
@@ -26,6 +26,20 @@ impl Value {
     pub fn get_bool(&self) -> Result<bool, Box<dyn Error>> {
         match self {
             Value::Boolean(i) => Ok(*i),
+            _ => Err(crate::program::errors::ExprParseAsBooleanError.into())
+        }
+    }
+
+    pub fn get_shape(&self) -> Result<&FigureArray, Box<dyn Error>> {
+        match self {
+            Value::Shape(i) => Ok(i),
+            _ => Err(crate::program::errors::ExprParseAsBooleanError.into())
+        }
+    }
+
+    pub fn get_point(&self) -> Result<&Point, Box<dyn Error>> {
+        match self {
+            Value::Point(i) => Ok(i),
             _ => Err(crate::program::errors::ExprParseAsBooleanError.into())
         }
     }
