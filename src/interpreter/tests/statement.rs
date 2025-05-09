@@ -1,7 +1,16 @@
 use crate::{
-    interpreter::{environment::IEnvironment, errors, value::Value, InterpretE, InterpretS},
+    interpreter::{
+        data_types::figure::{Figure, Line},
+        environment::IEnvironment,
+        errors,
+        value::Value,
+        InterpretE, InterpretS,
+    },
     program::{
-        expression::Expr, operators::binaryoperator::BinaryOperator, statement::Stmt, r#type::Type
+        expression::Expr,
+        operators::{binaryoperator::BinaryOperator, pathoperator::PathOperator},
+        r#type::Type,
+        statement::Stmt,
     },
 };
 
@@ -80,13 +89,19 @@ fn fork() {
                 rhs: Expr::Integer(3).into(),
                 operator: BinaryOperator::LessThan,
             },
-            vec![Stmt::Assign { name: "x".into(), value: Expr::Integer(8) }
-            ],
+            vec![Stmt::Assign {
+                name: "x".into(),
+                value: Expr::Integer(8),
+            }],
         )],
         otherwise: Option::None,
-    }.interpret(&mut env);
+    }
+    .interpret(&mut env);
 
-    assert_eq!(env.vtable_find("x".into()).unwrap().clone(), Value::Integer(8))
+    assert_eq!(
+        env.vtable_find("x".into()).unwrap().clone(),
+        Value::Integer(8)
+    )
 }
 
 #[test]
@@ -102,11 +117,94 @@ fn fork_otherwise() {
                 rhs: Expr::Integer(3).into(),
                 operator: BinaryOperator::GreaterThan,
             },
-            vec![Stmt::Assign { name: "x".into(), value: Expr::Integer(8) }
-            ],
+            vec![Stmt::Assign {
+                name: "x".into(),
+                value: Expr::Integer(8),
+            }],
         )],
-        otherwise: Some(vec![Stmt::Assign { name: "x".into(), value: Expr::Integer(9)}]),
-    }.interpret(&mut env);
+        otherwise: Some(vec![Stmt::Assign {
+            name: "x".into(),
+            value: Expr::Integer(9),
+        }]),
+    }
+    .interpret(&mut env);
 
-    assert_eq!(env.vtable_find("x".into()).unwrap().clone(), Value::Integer(9))
+    assert_eq!(
+        env.vtable_find("x".into()).unwrap().clone(),
+        Value::Integer(9)
+    )
+}
+
+#[test]
+fn draw_without_place() {
+    let mut env = IEnvironment::new();
+
+    Stmt::Draw {
+        shape: Expr::SCall {
+            name: None,
+            args: vec![(
+                "stroke".to_owned(),
+                Expr::Color(
+                    Expr::Integer(255).into(),
+                    Expr::Integer(255).into(),
+                    Expr::Integer(255).into(),
+                    Expr::Integer(255).into(),
+                )
+                .into(),
+            )]
+            .into_iter()
+            .collect(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        },
+        point: None,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        Value::Shape(env.darray_get().clone()),
+        Value::Shape(
+            vec![(
+                vec![Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ])]
+                .into(),
+                vec![(
+                    "stroke".to_owned(),
+                    Value::Color(
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into()
+                    )
+                    .into()
+                )]
+                .into_iter()
+                .collect()
+            )
+                .into()]
+            .into(),
+        )
+    )
+}
+
+#[test]
+fn import() {
+    let mut env = IEnvironment::new();
+    Stmt::Import {
+        name: "test".into(),
+        path: "./src/interpreter/tests/test_imports/dummyfile.extension".into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert!(env.stable_find("test".into()).is_some())
 }

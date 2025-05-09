@@ -1,6 +1,6 @@
 use std::{error::Error, fs, path::Path};
 use hime_redist::symbols::SemanticElementTrait;
-use crate::{interpreter::environment::IEnvironment, lexer_parser::{grammar::cfg, utils::tree_converter::stringify_tree}, typechecker::environment::TEnvironment};
+use crate::{interpreter::environment::IEnvironment, lexer_parser::grammar::cfg, typechecker::environment::TEnvironment};
 use super::statement::Stmt;
 
 #[derive(Debug)]
@@ -21,8 +21,6 @@ impl Program {
         let parsed = cfg::parse_string(programstr.into());
         let ast = parsed.get_ast();
         let root_node = ast.get_root();
-
-        println!("{}",  stringify_tree(root_node));
 
         for node in root_node.children() {
             match node.get_symbol().name {
