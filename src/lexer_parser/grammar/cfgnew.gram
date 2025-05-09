@@ -39,7 +39,7 @@ grammar cfg
     decl -> IDENTIFIER ':'! types ('='! exprT2)?';'!;
 
     //Statements
-    stmtS -> (forkS | for /*| draw*/ | return | funcDecl | assign | arrayAssign | varDecl)+;
+    stmtS -> (forkS | for | draw | return | funcDecl | assign | arrayAssign | varDecl)+;
 
     forkS -> 'fork'! '{'! fork^ '}'!;
         fork -> forkCase+ otherwise?;
@@ -58,24 +58,24 @@ grammar cfg
 
 
     //Expressions
-    exprT2 -> array | exprT1 ;
-    exprT1 -> exprV | path | polygon | exprS;
+    exprT2 -> (array | exprT1)^ ;
+      array -> '['! (exprT1 (','! exprT1)*)? ']'! ;
+    exprT1 -> (exprV | path | polygon | exprS)^;
 
     point -> '('! exprV ','! exprV ')'! ;
     color -> '('! exprV ','! exprV ','! exprV ','! exprV ')'!;
-    array -> '['! (exprT1 (','exprT1)*)? ']'! ;
     path   -> exprV (('--' | '~~')^ exprV)+ ;
     polygon -> path(('--*' | '~~*')^) ;
 
-    exprS -> Scall! | manipulation;
-    manipulation -> place | scale | rotate;
+    exprS -> (SCall | manipulation)^;
+    manipulation -> (place | scale | rotate)^;
     scale -> 'scale'! exprT1 'by'! exprV;
     rotate -> 'rotate'! exprT1 'by'! exprV;
-    place -> 'place'! (exprV 'mount'!)? exprT1 pos exprT1  ;
+    place -> 'place'! exprT1 pos (exprV 'offset'!)? exprT1  ;
         pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop')^;
-    Scall -> (exprV | path | polygon) '(|'! attrS? '|)'!;
-    attrS -> exprV ('='! exprT2)*;
-
+    SCall -> (exprV | path | polygon) '(|'! attrS '|)'!;
+        attrS -> (attr (','! attr)*)? ;
+        attr -> IDENTIFIER '='! exprT2;
 
     exprV -> exprV '||'^ exprV1 | exprV1^;
     exprV1 -> exprV1 '&&'^ exprV2 | exprV2^;
@@ -86,7 +86,9 @@ grammar cfg
     exprV6 -> '('! exprV^ ')'! | exprV7^;
     exprV7 -> ( FCall | FLOAT | INTEGER | member | BOOLEAN | arrayIdx | IDENTIFIER | color | point )^;
 
-    FCall -> IDENTIFIER '('! (exprT2 (','! exprT2)*)? ')'!;
+    FCall -> IDENTIFIER '('! args? ')'!;
+    args -> exprT2 (','! exprT2)*;
+
     arrayIdx -> IDENTIFIER '['! exprV ']'!;
     member -> IDENTIFIER '.'! IDENTIFIER;
 
