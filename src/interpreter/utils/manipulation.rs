@@ -26,6 +26,7 @@ use crate::interpreter::value::Value;
 - Logic for dir_offset
 - Logic for place_point 
 - Logic for Point addition and Subtraction
+- Add fig_new to s1
 */
 pub fn place(mut s1: FigureArray, mut s2: FigureArray, offset: Point, direction: Direction) -> FigureArray {
     let p1_top_left = s1.get_top_left();
