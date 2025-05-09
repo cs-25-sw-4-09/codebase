@@ -363,7 +363,16 @@ impl InterpretE for Expr {
                             program.ienvironment.vtable_push(arg_name.clone(), value);
                         }
 
-                        let draw_array = program.interpret()?;
+                        let draw_array = match program.interpret() {
+                            Ok(draw_array) => {
+                                println!("[Interpreter] Constructor Call: {} - OK", name.clone().unwrap());
+                                draw_array
+                            },
+                            Err(err) => {
+                                println!("[Interpreter] Constructor Call: {} - ERROR", name.clone().unwrap());
+                                return Err(err);
+                            },
+                        };
 
                         &Value::Shape(draw_array.clone())
                     }
