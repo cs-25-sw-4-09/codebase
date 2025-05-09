@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{
     interpreter::{
         data_types::{
@@ -794,14 +796,12 @@ fn pathoperation_path_path() {
     assert_eq!(
         i3,
         Value::Figure(
-            vec![
-                Line::Curved(vec![
-                    (Value::Integer(1), Value::Integer(2)).into(),
-                    (Value::Integer(3), Value::Integer(4)).into(),
-                    (Value::Integer(5), Value::Integer(6)).into(),
-                    (Value::Integer(7), Value::Integer(8)).into()
-                ])
-            ]
+            vec![Line::Curved(vec![
+                (Value::Integer(1), Value::Integer(2)).into(),
+                (Value::Integer(3), Value::Integer(4)).into(),
+                (Value::Integer(5), Value::Integer(6)).into(),
+                (Value::Integer(7), Value::Integer(8)).into()
+            ])]
             .into()
         )
     );
@@ -1041,15 +1041,70 @@ fn polygonoperation_curve() {
     assert_eq!(
         i4,
         Value::Figure(
-            vec![
-                Line::Curved(vec![
-                    (Value::Integer(1), Value::Integer(2)).into(),
-                    (Value::Integer(3), Value::Integer(4)).into(),
-                    (Value::Integer(5), Value::Integer(6)).into(),
-                    (Value::Integer(1), Value::Integer(2)).into()
-                ])
-            ]
+            vec![Line::Curved(vec![
+                (Value::Integer(1), Value::Integer(2)).into(),
+                (Value::Integer(3), Value::Integer(4)).into(),
+                (Value::Integer(5), Value::Integer(6)).into(),
+                (Value::Integer(1), Value::Integer(2)).into()
+            ])]
             .into()
         )
     );
+}
+
+#[test]
+pub fn scall_pathpoly() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::SCall {
+        name: None,
+        args: vec![(
+            "fill".to_owned(),
+            Expr::Color(
+                Expr::Integer(255).into(),
+                Expr::Integer(255).into(),
+                Expr::Integer(255).into(),
+                Expr::Integer(255).into(),
+            )
+            .into(),
+        )]
+        .into_iter()
+        .collect(),
+        path_poly: Some(
+            Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                operator: PathOperator::Line,
+            }
+            .into(),
+        ),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![(
+                vec![Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ])]
+                .into(),
+                vec![(
+                    "fill".to_owned(),
+                    Value::Color(
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into()
+                    )
+                    .into()
+                )]
+                .into_iter()
+                .collect()
+            )
+                .into()]
+            .into(),
+        )
+    )
 }
