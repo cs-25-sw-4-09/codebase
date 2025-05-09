@@ -35,67 +35,70 @@ grammar cfg
 
     //Declarations
     declS -> (import | decl)*;
-    import -> 'import'! IDENTIFIER STRING ';'!;
-    decl -> IDENTIFIER ':'! types ('='! exprS)?';'!;
+    import -> 'import'! id STRING ';'!;
+    decl -> id ':'! types ('='! exprS)?';'!;
 
     //Statements
-    stmtS -> (forkS | for | draw | return | funcDecl | assign | arrayAssign | varDecl)+;
+    stmtS -> (forkS | for | draw | return | funcDecl | assign | varDecl)+;
 
     forkS -> 'fork'! '{'! fork^ '}'!;
-    for -> 'for'! IDENTIFIER 'in'! exprS 'to'! exprS '{'! stmtS '}'! ;
+    for -> 'for'! id 'in'! exprS 'to'! exprS '{'! stmtS '}'! ;
     draw -> 'draw'! exprS ('at'! exprS)? ';'!;
     return -> 'return'! exprS ';'!;
-    funcDecl -> IDENTIFIER '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;
-    assign -> IDENTIFIER '='! exprS ';'!;
-    varDecl -> IDENTIFIER ':'! types '='! exprS ';'!;
-    arrayAssign -> IDENTIFIER '['! exprS ']'! '='!  exprS ';'!;    
+    funcDecl -> id '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;
+    assign -> id '='! exprS ';'!;
+    varDecl -> id ':'! types '='! exprS ';'!;
 
     fork -> forkExpr+ otherwise?;
-    forkExpr -> '('! expr? ')'! '->'! '{'! stmtS '}'!;
+    forkExpr -> '('! exprFunc? ')'! '->'! '{'! stmtS '}'!;
     otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
 
     //Expressions
-    exprS -> (manipulation | expr | exprS1)^;
-    exprS1 -> (path | polygon | SCall | exprS2)^;
-    exprS2 -> IDENTIFIER^;
+    exprS -> (manipulation | exprFunc | SCall | color | path | polygon)^;
+    exprFunc -> (expr )^;
     expr -> expr '||'^ expr1 | expr1^;
     expr1 -> expr1 '&&'^ expr2 | expr2^;
     expr2 -> expr3 ('==' | '<' | '>' | '>=' | '<=' | '!=')^ expr3 | expr3^;
     expr3 -> expr3 '+'^ expr4 | expr3 '-'^ expr4 | expr4^;
     expr4 -> expr4 '%'^ expr5 | expr4 '*'^ expr5 | expr4 '/'^ expr5 | expr5^;
     expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
-    expr6 -> '('! exprS^ ')'! | expr7^;
-    expr7 -> ( color | point | FCall | FLOAT | INTEGER | IDENTIFIER | member | array | BOOLEAN | arrayIdx)^;
+    expr6 -> (point | FCall | FLOAT | INTEGER | id | member | array | BOOLEAN | arrayIdx)^;
 
-    FCall -> IDENTIFIER '('! args? ')'!;
+    //Also contains parenthesis, but this case is promoted
+    point -> '('! (expr^ | (expr) ','! (expr)) ')'!;
+    FCall -> id '('! args? ')'!;
 
-    member -> IDENTIFIER '.'! IDENTIFIER;
-    point -> '('! expr ','! expr ')'!;
+    member -> id '.'! id;
     color -> '('! (expr) ','! (expr) ','! (expr) ','! (expr)')'! ;
-    path   -> (point | IDENTIFIER) (('--' | '~~')^ (point | IDENTIFIER))+;
-    polygon -> exprS1(('--*' | '~~*')^);
+    path   -> exprFunc (('--' | '~~')^ exprFunc)+;
+    polygon -> exprS(('--*' | '~~*')^);
 
-    args -> exprS (','! exprS)*;
+    args -> arg (','! arg)*;
+    arg -> exprS^;
 
-    SCall -> (path | IDENTIFIER | polygon) '(|'! /*attrS*/ '|)'!;
+    SCall -> (path | id | polygon) '(|'! attrS '|)'!;
     attrS -> (attr (','! attr)*)? ;
-    attr -> IDENTIFIER '='! exprS;
+    attr -> id '='! exprS;
 
-    arrayIdx -> IDENTIFIER ('['! exprS ']'!)+;
-    array -> '['! ((exprS (','! exprS)*))? ']'!;
+    arrayIdx -> id ('['! exprS ']'!)+;
+    array -> ('['! ((exprS (','! exprS)*))? ']'! | '[]'!);
 
-    pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop') exprS1 ('by'! point)?;
+    pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop') expr ('by'! point)?;
     manipulation -> place | scale | rotate;
-    place -> 'place'! exprS1 pos;
-    scale -> 'scale'! exprS1 'by'! expr;
-    rotate -> 'rotate'! exprS1 'by'! expr;
+    place -> 'place'! exprFunc pos;
+    scale -> 'scale'! exprFunc 'by'! exprFunc;
+    rotate -> 'rotate'! exprFunc 'by'! exprFunc;
 
     params -> param (','! param)*;
-    param -> IDENTIFIER ':'! types;
+    param -> id ':'! types;
 
     //Types
     types -> ('int' | 'float' | 'point' | 'color'
     | 'shape' | 'path' | 'polygon' | 'bool' | 'int[]' | 'float[]' | 'point[]' | 'color[]'
     | 'shape[]' | 'path[]' | 'polygon[]' | 'bool[]')^;
+
+
+    //Simple things
+    id -> IDENTIFIER^;
   }
 }
