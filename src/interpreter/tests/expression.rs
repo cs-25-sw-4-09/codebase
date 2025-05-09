@@ -1,16 +1,24 @@
+use std::collections::HashMap;
+
 use crate::{
     interpreter::{
-        data_types::{figure::{Figure, Line}, figurearray::FigureArray},
+        data_types::{
+            figure::{Figure, Line},
+            figurearray::FigureArray,
+        },
         environment::IEnvironment,
         errors,
         value::Value,
         InterpretE, InterpretS,
     },
     program::{
-        expression::Expr, operators::{
+        expression::Expr,
+        operators::{
             binaryoperator::BinaryOperator, pathoperator::PathOperator,
             unaryoperator::UnaryOperator,
-        }, statement::Stmt, r#type::Type
+        },
+        r#type::Type,
+        statement::Stmt,
     },
 };
 
@@ -454,12 +462,29 @@ fn array_interpret() {
 fn scale() {
     let mut env = IEnvironment::new();
     let i1 = Expr::Scale {
-        base_shape: Stmt::Draw { shape: Expr::PathOperation {
-            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
-            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
-            operator: PathOperator::Line,
+        base_shape: Expr::SCall {
+            name: None,
+            args: vec![(
+                "fill".to_owned(),
+                Expr::Color(
+                    Expr::Integer(1).into(),
+                    Expr::Integer(2).into(),
+                    Expr::Integer(3).into(),
+                    Expr::Integer(4).into(),
+                ),
+            )]
+            .into_iter()
+            .collect(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
         }
-        .into(), point: None },
+        .into(),
         factor: Expr::Integer(4).into(),
     }
     .interpret(&mut env)
@@ -468,13 +493,11 @@ fn scale() {
     assert_eq!(
         i1,
         Value::Shape(
-            vec![
-                vec![Line::Straight(vec![
-                    (Value::Integer(1), Value::Integer(12)).into(),
-                    (Value::Integer(9), Value::Integer(4)).into()
-                ])]
-                .into()
-            ]
+            vec![vec![Line::Straight(vec![
+                (Value::Float(1.0), Value::Float(12.0)).into(),
+                (Value::Float(9.0), Value::Float(4.0)).into()
+            ])]
+            .into()]
             .into()
         )
     );
