@@ -4,7 +4,7 @@ use crate::{
 };
 
 use super::{data_types::{figurearray::FigureArray, point::Point}, errors, utils::manipulation::{
-        place, Direction
+        place, scale, Direction
     }, value::Value, InterpretE, InterpretP
 };
 
@@ -448,7 +448,16 @@ impl InterpretE for Expr {
 
                 &Value::Shape(v)
             },
-            Expr::Scale { base_shape, factor } => todo!(),
+            Expr::Scale { base_shape, factor } => {
+                let Value::Shape(shape) = base_shape.interpret(environment)? else {
+                    unreachable!()
+                };
+                let factor = factor.interpret(environment)?;
+                let scaled_shape = scale(shape, factor)?;
+
+                &Value::Shape(scaled_shape)
+
+            },
             Expr::Rotate { base_shape, factor } => todo!(),
         };
 

@@ -9,18 +9,19 @@ use crate::{
 };
 use std::error::Error;
 
-pub fn scale(mut shape: FigureArray, factor: Value) -> Result<(), Box<dyn Error>> {
+pub fn scale(shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
+    let mut shape = shape.clone();
     let origin_x = shape
         .get_mut_figures()
         .iter()
-        .map(|l| l.get_max_x())
-        .max_by(|a, b| a.partial_cmp(b).unwrap())
+        .map(|l| l.get_min_x())
+        .min_by(|a, b| a.partial_cmp(b).unwrap())
         .ok_or_else(|| Box::new(errors::MaxCanNotBeFound))?;
     let origin_y = shape
         .get_mut_figures()
         .iter()
-        .map(|l| l.get_min_y())
-        .min_by(|a, b| a.partial_cmp(b).unwrap())
+        .map(|l| l.get_max_y())
+        .max_by(|a, b| a.partial_cmp(b).unwrap())
         .ok_or_else(|| Box::new(errors::MinCanNotBeFound))?;
 
     let factor = match factor {
@@ -33,16 +34,16 @@ pub fn scale(mut shape: FigureArray, factor: Value) -> Result<(), Box<dyn Error>
             fig.get_mut_lines().iter_mut().for_each(|line| {
                 line.get_mut_points().iter_mut().for_each(|point| { 
                     let dist_origin_x = point.x().get_float().unwrap() - origin_x;
-                    let dist_origin_y = point.y().get_float().unwrap() - origin_y;
+                    let dist_origin_y =  origin_y - point.y().get_float().unwrap();
                     
                     point.x = match *point.x {
-                        Value::Integer(_) =>  Value::Float(dist_origin_x * factor).into(),
-                        Value::Float(_) =>  Value::Float(dist_origin_x * factor).into(),
+                        Value::Integer(_) =>  Value::Float(dist_origin_x * factor + origin_x).into(),
+                        Value::Float(_) =>  Value::Float(dist_origin_x * factor + origin_x).into(),
                         _ => unreachable!()
                     };
                     point.y = match *point.y {
-                        Value::Integer(_) =>  Value::Float(dist_origin_y * factor).into(),
-                        Value::Float(_) =>  Value::Float(dist_origin_y * factor).into(),
+                        Value::Integer(_) =>  Value::Float(dist_origin_y * factor + origin_y).into(),
+                        Value::Float(_) =>  Value::Float(dist_origin_y * factor + origin_y).into(),
                         _ => unreachable!()
                     };
                 });
@@ -50,7 +51,7 @@ pub fn scale(mut shape: FigureArray, factor: Value) -> Result<(), Box<dyn Error>
             });
         });
 
-    Ok(())
+    Ok(shape)
 }
 
 
