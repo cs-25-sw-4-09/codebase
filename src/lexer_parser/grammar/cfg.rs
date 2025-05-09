@@ -242,106 +242,102 @@ pub const TERMINALS: &[Symbol] = &[
     },
     Symbol {
         id: 0x006D,
-        name: "[]"
-    },
-    Symbol {
-        id: 0x006E,
         name: "left"
     },
     Symbol {
-        id: 0x006F,
+        id: 0x006E,
         name: "right"
     },
     Symbol {
-        id: 0x0070,
+        id: 0x006F,
         name: "top"
     },
     Symbol {
-        id: 0x0071,
+        id: 0x0070,
         name: "bottom"
     },
     Symbol {
-        id: 0x0072,
+        id: 0x0071,
         name: "ontop"
     },
     Symbol {
-        id: 0x0073,
+        id: 0x0072,
         name: "by"
     },
     Symbol {
-        id: 0x0074,
+        id: 0x0073,
         name: "place"
     },
     Symbol {
-        id: 0x0075,
+        id: 0x0074,
         name: "scale"
     },
     Symbol {
-        id: 0x0076,
+        id: 0x0075,
         name: "rotate"
     },
     Symbol {
-        id: 0x0078,
+        id: 0x0077,
         name: "int"
     },
     Symbol {
-        id: 0x0079,
+        id: 0x0078,
         name: "float"
     },
     Symbol {
-        id: 0x007A,
+        id: 0x0079,
         name: "point"
     },
     Symbol {
-        id: 0x007B,
+        id: 0x007A,
         name: "color"
     },
     Symbol {
-        id: 0x007C,
+        id: 0x007B,
         name: "shape"
     },
     Symbol {
-        id: 0x007D,
+        id: 0x007C,
         name: "path"
     },
     Symbol {
-        id: 0x007E,
+        id: 0x007D,
         name: "polygon"
     },
     Symbol {
-        id: 0x007F,
+        id: 0x007E,
         name: "bool"
     },
     Symbol {
-        id: 0x0080,
+        id: 0x007F,
         name: "int[]"
     },
     Symbol {
-        id: 0x0081,
+        id: 0x0080,
         name: "float[]"
     },
     Symbol {
-        id: 0x0082,
+        id: 0x0081,
         name: "point[]"
     },
     Symbol {
-        id: 0x0083,
+        id: 0x0082,
         name: "color[]"
     },
     Symbol {
-        id: 0x0084,
+        id: 0x0083,
         name: "shape[]"
     },
     Symbol {
-        id: 0x0085,
+        id: 0x0084,
         name: "path[]"
     },
     Symbol {
-        id: 0x0086,
+        id: 0x0085,
         name: "polygon[]"
     },
     Symbol {
-        id: 0x0087,
+        id: 0x0086,
         name: "bool[]"
     }
 ];
@@ -667,11 +663,11 @@ pub const VARIABLES: &[Symbol] = &[
         name: "__V108"
     },
     Symbol {
-        id: 0x0077,
-        name: "__V119"
+        id: 0x0076,
+        name: "__V118"
     },
     Symbol {
-        id: 0x0088,
+        id: 0x0087,
         name: "__VAxiom"
     }
 ];

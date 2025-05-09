@@ -80,7 +80,7 @@ grammar cfg
     attr -> IDENTIFIER '='! exprS;
 
     arrayIdx -> IDENTIFIER ('['! exprS ']'!)+;
-    array -> ('['! ((exprS (','! exprS)*))? ']'! | '[]'!);
+    array -> '['! ((exprS (','! exprS)*))? ']'!;
 
     pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop') expr ('by'! point)?;
     manipulation -> place | scale | rotate;
