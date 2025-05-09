@@ -73,8 +73,7 @@ grammar cfg
     path   -> expr (('--' | '~~')^ expr)+;
     polygon -> exprS(('--*' | '~~*')^);
 
-    args -> arg (','! arg)*;
-    arg -> exprS^;
+    args -> exprS (','! exprS)*;
 
     SCall -> (path | IDENTIFIER | polygon) '(|'! attrS '|)'!;
     attrS -> (attr (','! attr)*)? ;
