@@ -449,7 +449,6 @@ impl InterpretE for Expr {
                 &Value::Shape(v)
             },
             Expr::Scale { base_shape, factor } => {
-                println!("{:?}", base_shape.interpret(environment)?);
                 let Value::Shape(shape) = base_shape.interpret(environment)? else {
                     unreachable!()
                 };
