@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::data_types::figure::Figure;
+use super::data_types::{figure::Figure, figurearray::FigureArray};
 use super::stack::Stack;
 use super::value::Value;
 use crate::program::{program::Program, statement::Stmt};
@@ -10,7 +10,7 @@ pub struct IEnvironment {
     v_table: Stack<Value>,
     f_table: Stack<(Vec<Stmt>, Vec<String>)>,
     s_table: HashMap<String, Program>,
-    d_array: Vec<Figure>,
+    d_array: FigureArray,
     r_value: Option<Value>,
 }
 
@@ -20,7 +20,7 @@ impl IEnvironment {
             v_table: Stack::new(),
             f_table: Stack::new(),
             s_table: HashMap::new(),
-            d_array: Vec::new(),
+            d_array: FigureArray::new(),
             r_value: None,
         }
     }
@@ -64,11 +64,11 @@ impl IEnvironment {
         self.s_table.get_mut(&identifier)
     }
 
-    pub fn darray_get(&self) -> &Vec<Figure> {
+    pub fn darray_get(&self) -> &FigureArray {
         &self.d_array
     }
 
-    pub fn darray_push(&mut self, shape: Vec<Figure>) {
+    pub fn darray_push(&mut self, shape: FigureArray){
         self.d_array.extend(shape);
     }
 

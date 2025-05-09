@@ -1,7 +1,7 @@
 use std::error::Error;
 
 
-use data_types::figure::Figure;
+use data_types::{figure::Figure, figurearray::FigureArray};
 use environment::IEnvironment;
 use value::Value;
 
@@ -17,7 +17,7 @@ pub mod value;
 mod tests;
 
 pub trait InterpretP {
-    fn interpret(&mut self) -> Result<&Vec<Figure>, Box<dyn Error>>;
+    fn interpret(&mut self) -> Result<&FigureArray, Box<dyn Error>>;
 }
 pub trait InterpretS {
     fn interpret(&self, environment: &mut IEnvironment) -> Result<(), Box<dyn Error>>;

@@ -3,7 +3,10 @@ use crate::{
     program::expression::Expr,
 };
 
-use super::{data_types::point::Point, errors, value::Value, InterpretE, InterpretP};
+use super::{data_types::{figurearray::FigureArray, point::Point}, errors, utils::manipulation::{
+        place, Direction
+    }, value::Value, InterpretE, InterpretP
+};
 
 use crate::program::operators::{
     binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
@@ -365,7 +368,8 @@ impl InterpretE for Expr {
 
                         let draw_array = program.interpret()?;
 
-                        &Value::Shape(draw_array.clone())
+
+                        &Value::Shape(FigureArray::from(draw_array.clone()))
                     }
                     (None, Some(path_poly)) => { //Shape call to path/polygon
                         let i1 = path_poly.interpret(environment)?;
@@ -378,7 +382,7 @@ impl InterpretE for Expr {
                             fig.set_attribute((arg_name, expr.interpret(environment)?));
                         }
 
-                        &Value::Shape(vec![fig])
+                        &Value::Shape(FigureArray::from(vec![fig]))
                     }
                     _ => return Err(errors::PolyPathNotFound.into()),
                 }
@@ -402,17 +406,19 @@ impl InterpretE for Expr {
                         _ => unreachable!(),
                     },
                     Value::Shape(figures) => match member_access.as_str() {
-                        "height" => &Value::Integer(
-                            figures.iter().map(|f| f.get_height()).max().unwrap_or(0),
+                        "height" => &Value::Float(
+                            figures.get_figures().iter().map(|f| f.get_height()).max_by(|a, b| a.partial_cmp(b).unwrap())
+                            .ok_or_else(|| Box::new(errors::MaxCanNotBeFound))?,
                         ),
-                        "width" => &Value::Integer(
-                            figures.iter().map(|f| f.get_width()).max().unwrap_or(0),
+                        "width" => &Value::Float(
+                            figures.get_figures().iter().map(|f| f.get_width()).max_by(|a, b| a.partial_cmp(b).unwrap())
+                            .ok_or_else(|| Box::new(errors::MaxCanNotBeFound))?,
                         ),
                         _ => unreachable!(),
                     },
                     Value::Figure(figure) => match member_access.as_str() {
-                        "height" => &Value::Integer(figure.get_height()),
-                        "width" => &Value::Integer(figure.get_width()),
+                        "height" => &Value::Float(figure.get_height()),
+                        "width" => &Value::Float(figure.get_width()),
                         _ => unreachable!(),
                     },
                     Value::Array(array) => match member_access.as_str() {
@@ -427,7 +433,21 @@ impl InterpretE for Expr {
                 second_shape,
                 place_at,
                 point,
-            } => todo!(),
+            } => {
+                let (s1, s2, p, dir) = (
+                    base_shape.interpret(environment)?.get_shape()?, 
+                    second_shape.interpret(environment)?.get_shape()?, 
+                    match point {
+                        Some(exp) => exp.interpret(environment)?.get_point()?,
+                        None => (0,0).into(),
+                    }, 
+                    place_at.as_str().into()
+                );
+
+                let v = place(s1, s2, p, dir);
+
+                &Value::Shape(v)
+            },
             Expr::Scale { base_shape, factor } => todo!(),
             Expr::Rotate { base_shape, factor } => todo!(),
         };

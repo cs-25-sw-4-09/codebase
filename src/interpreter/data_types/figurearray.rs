@@ -16,4 +16,25 @@ impl FigureArray {
         &self.0
     }
 
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
+    pub fn extend(&mut self, shape: FigureArray){
+        self.0.extend(shape.0);
+    }
+
+}
+
+
+impl From<Vec<Figure>> for FigureArray {
+    fn from(value: Vec<Figure>) -> Self {
+        Self(value)
+    }
+}
+
+impl FigureArray {
+    pub fn get_top_left(&self) -> Point {
+        todo!()
+    }
 }

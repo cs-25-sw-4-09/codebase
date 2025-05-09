@@ -2,6 +2,7 @@ use crate::{
     interpreter::{environment::IEnvironment, value::Value, InterpretE}, 
     program::expression::Expr
 };
+use std::ops;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Point {
@@ -14,6 +15,13 @@ impl From<(Value, Value)> for Point {
         Self { x: Box::new(value.0), y: Box::new(value.1) }
     }
 }
+
+impl From<(i64, i64)> for Point {
+    fn from(value: (i64, i64)) -> Self {
+        Self { x: Box::new(Value::Integer(value.0)), y: Box::new(Value::Integer(value.1)) }
+    }
+}
+
 
 impl TryFrom<(&Expr, &mut IEnvironment)> for Point {
     type Error = Box<dyn std::error::Error>;
@@ -40,3 +48,18 @@ impl Point {
     }
 }
 
+impl ops::Add for Point {
+    type Output = Point;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        todo!()
+    }
+}
+
+impl ops::Sub for Point {
+    type Output = Point;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        todo!()
+    }
+}
