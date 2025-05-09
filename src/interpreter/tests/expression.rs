@@ -10,13 +10,9 @@ use crate::{
         InterpretE, InterpretS,
     },
     program::{
-        expression::Expr,
-        operators::{
-            binaryoperator::BinaryOperator, pathoperator::PathOperator,
-            unaryoperator::UnaryOperator,
-        },
-        r#type::Type,
-        statement::Stmt,
+        expression::Expr, operators::{
+            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator, unaryoperator::UnaryOperator
+        }, statement::Stmt, r#type::Type
     },
 };
 
@@ -803,6 +799,70 @@ let i4 = Expr::PathOperation {
                 Line::Straight(vec![
                     (Value::Integer(5), Value::Integer(6)).into(),
                     (Value::Integer(7), Value::Integer(8)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+}
+
+
+#[test]
+fn polygonoperation_straight() {
+    let mut env = IEnvironment::new();
+
+    let i1 = Expr::PolygonOperation {
+        path: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        operator: PolyOperator::Straight,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::PolygonOperation {
+        path: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        operator: PolyOperator::Straight,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i2,
+        Value::Figure(
+            vec![
+                Line::Curved(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into()
                 ])
             ]
             .into()
