@@ -46,7 +46,7 @@ grammar cfg
         forkCase -> '('! exprV ')'! '->'! '{'! stmtS '}'!;
         otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
     for -> 'for'! IDENTIFIER 'in'! exprV 'to'! exprV '{'! stmtS '}'! ;
-    //draw -> 'draw'! exprS ('at'! point)? ';'!;
+    draw -> 'draw'! exprT1 ('at'! exprT1)? ';'!;
     return -> 'return'! exprT2 ';'!;
     funcDecl -> IDENTIFIER '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;
         params -> param (','! param)*;
