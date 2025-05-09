@@ -436,9 +436,9 @@ impl InterpretE for Expr {
                     second_shape.interpret(environment)?.get_shape()?.clone(), 
                     match point {
                         Some(exp) => exp.interpret(environment)?.get_point()?.clone(),
-                        None => Point::from((0,0)),
+                        None => (0,0).into(),
                     }, 
-                    Direction::from(place_at.as_str())
+                    place_at.as_str().into()
                 );
 
                 let v = place(s1, s2, p, dir);
