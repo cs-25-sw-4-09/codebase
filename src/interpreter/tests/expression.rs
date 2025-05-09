@@ -464,17 +464,7 @@ fn scale() {
     let i1 = Expr::Scale {
         base_shape: Expr::SCall {
             name: None,
-            args: vec![(
-                "fill".to_owned(),
-                Expr::Color(
-                    Expr::Integer(1).into(),
-                    Expr::Integer(2).into(),
-                    Expr::Integer(3).into(),
-                    Expr::Integer(4).into(),
-                ),
-            )]
-            .into_iter()
-            .collect(),
+            args: HashMap::new(),
             path_poly: Some(
                 Expr::PathOperation {
                     lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
@@ -498,8 +488,8 @@ fn scale() {
                 (Value::Float(9.0), Value::Float(4.0)).into()
             ])]
             .into()]
-            .into()
-        )
+            .into(),
+        ) 
     );
 }
 
