@@ -1,10 +1,7 @@
 use super::{
-    utils::{
-        tree_converter::stringify_tree,
-        tree_builder::TreeBuilderStr
-    },
-    grammar::cfg,
-    valid_programs::get_programs
+    grammar::cfg, utils::{
+        tree_builder::TreeBuilderStr, tree_converter::stringify_tree
+    }, valid_programs::{get_programs, get_programs2}
 };
 
 /* Helper functions */
@@ -20,6 +17,17 @@ fn test_equality(nodes: Vec<(&str, usize)>, program: &str) {
 fn example_program_parsing() {
     //A program is succesfully parsed if get_root() does not panic.
     get_programs()
+    .into_iter()
+    .for_each(|el| {
+        let _ = cfg::parse_str(el).get_ast().get_root();
+    });
+}
+
+/* Example Program parsing */
+#[test]
+fn example_program_parsing_expr_value() {
+    //A program is succesfully parsed if get_root() does not panic.
+    get_programs2()
     .into_iter()
     .for_each(|el| {
         let _ = cfg::parse_str(el).get_ast().get_root();
