@@ -208,3 +208,111 @@ fn import() {
 
     assert!(env.stable_find("test".into()).is_some())
 }
+
+#[test]
+fn for_loop() {
+    let mut env = IEnvironment::new();
+    env.vtable_push("count".into(), Value::Integer(0));
+    Stmt::For {
+        counter: "i".into(),
+        from: Expr::Integer(0),
+        to: Expr::Integer(5),
+        body: vec![Stmt::Assign {
+            name: "count".into(),
+            value: Expr::BinaryOperation {
+                lhs: Expr::Variable("count".into()).into(),
+                rhs: Expr::Integer(1).into(),
+                operator: BinaryOperator::Add,
+            }
+            .into(),
+        }],
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        env.vtable_find("count".into()).unwrap().clone(),
+        Value::Integer(5)
+    )
+}
+
+#[test]
+fn for_loop_return() {
+    let mut env = IEnvironment::new();
+    env.vtable_push("count".into(), Value::Integer(0));
+    Stmt::For {
+        counter: "i".into(),
+        from: Expr::Integer(0),
+        to: Expr::Integer(5),
+        body: vec![
+            Stmt::Assign {
+                name: "count".into(),
+                value: Expr::BinaryOperation {
+                    lhs: Expr::Variable("count".into()).into(),
+                    rhs: Expr::Integer(1).into(),
+                    operator: BinaryOperator::Add,
+                }
+                .into(),
+            },
+            Stmt::Return(Expr::Integer(0)),
+        ],
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        env.vtable_find("count".into()).unwrap().clone(),
+        Value::Integer(1)
+    )
+}
+
+#[test]
+fn decl_non_default() {
+    let mut env = IEnvironment::new();
+
+    env.vtable_push("x".into(), Value::Integer(4));
+
+    let i1 = Stmt::Decl {
+        name: "x".into(),
+        declared_type: Type::Int,
+        value: None,
+    }
+    .interpret(&mut env);
+    let i2 = Stmt::Decl {
+        name: "y".into(),
+        declared_type: Type::Int,
+        value: None,
+    }
+    .interpret(&mut env);
+
+    assert!(i1.is_ok());
+
+    assert!(i2
+        .unwrap_err()
+        .downcast_ref::<errors::DeclValueNotSpecified>()
+        .is_some())
+}
+
+#[test]
+fn decl_default() {
+    let mut env = IEnvironment::new();
+
+    env.vtable_push("x".into(), Value::Integer(4));
+
+    let i1 = Stmt::Decl {
+        name: "x".into(),
+        declared_type: Type::Int,
+        value: Some(Expr::Integer(3)),
+    }
+    .interpret(&mut env);
+    Stmt::Decl {
+        name: "y".into(),
+        declared_type: Type::Int,
+        value: Some(Expr::Integer(3)),
+    }
+    .interpret(&mut env).unwrap();
+
+    assert!(i1.is_ok());
+
+    assert_eq!(env.vtable_find("y".into()).unwrap().clone(), Value::Integer(3))
+}
