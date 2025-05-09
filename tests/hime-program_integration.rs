@@ -1717,6 +1717,25 @@ fn test_program_assign() {
 }
 
 //-----------------------------------
+//Tests of array assign in construction field
+//-----------------------------------
+#[test]
+fn test_program_array_assign() {
+    let code = "begin
+    x[1] = 10;";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    if let Stmt::ArrayAssign { name, value , index} = &program.stmts[0] {
+        assert_eq!(name, &"x".to_string());
+        assert_eq!(value, &Expr::Integer(10));
+        assert_eq!(index, &Expr::Integer(1));
+    }
+}
+
+//-----------------------------------
 //Tests of for in construction field
 //-----------------------------------
 #[test]

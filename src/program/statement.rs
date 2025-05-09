@@ -38,6 +38,11 @@ pub enum Stmt {
         name: String,
         value: Expr,
     },
+    ArrayAssign {
+        name: String,
+        value: Expr,
+        index: Expr,
+    },
     For {
         counter: String,
         from: Expr,
@@ -144,6 +149,24 @@ impl Stmt {
                         })?
                         .into(),
                     value: Expr::new(stmt.child(1))?,
+                }
+            }
+            "arrayAssign" => {
+                if stmt.children_count() != 3 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
+                    );
+                }
+                Stmt::ArrayAssign {
+                    name: (stmt
+                        .child(0)
+                        .get_value()
+                        .ok_or_else(|| {
+                            errors::ASTNodeValueInvalid(stmt.child(0).get_symbol().name.to_owned())
+                        })?
+                        .into()),
+                    value: (Expr::new(stmt.child(2))?),
+                    index: (Expr::new(stmt.child(1))?),
                 }
             }
             "funcDecl" => {
@@ -299,8 +322,8 @@ impl Stmt {
                             for stmt in forkexpr.child(1).children() {
                                 statements.push(Stmt::new(stmt)?);
                             }
-                            branchs.push((Expr::new(forkexpr.child(0))?,statements));
-                        },
+                            branchs.push((Expr::new(forkexpr.child(0))?, statements));
+                        }
                         "otherwise" => {
                             statements = vec![];
                             for stmt in forkexpr.child(0).children() {
