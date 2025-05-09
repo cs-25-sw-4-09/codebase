@@ -56,7 +56,8 @@ impl Figure {
         &mut self.lines
     }
 
-    pub fn get_max_x(&self) -> i64 {
+    //todo
+    pub fn get_max_x(&self) -> Result<Value, Box<dyn Error>> {
         let mut max_x = self.lines.iter()
        .flat_map(|line| line.get_points())
        .filter_map(|point| match point.x(){
@@ -65,8 +66,8 @@ impl Figure {
        }).max().unwrap_or(0);
        max_x
     }
-
-    pub fn get_min_x(&self) -> i64 { 
+    //todo
+    pub fn get_min_x(&self) -> Result<Value, Box<dyn Error>> { 
         let mut min_x = self.lines.iter()
        .flat_map(|line| line.get_points())
        .filter_map(|point| match point.x(){
@@ -76,11 +77,11 @@ impl Figure {
        min_x
     }
 
-    pub fn get_height(&self) -> i64 {
-       self.get_max_x() - self.get_min_x()
+    pub fn get_height(&self) -> Result<Value, Box<dyn Error>> {
+       Ok(self.get_max_x()? - self.get_min_x()?)
     }
-
-    pub fn get_max_y(&self) -> i64 {
+    //todo
+    pub fn get_max_y(&self) -> Result<Value, Box<dyn Error>> {
         let mut max_y = self.lines.iter()
         .flat_map(|line| line.get_points())
         .filter_map(|point| match point.y(){
@@ -89,8 +90,8 @@ impl Figure {
         }).max().unwrap_or(0);
         max_y
     }
-
-    pub fn get_min_y(&self) -> i64 {
+    //todo
+    pub fn get_min_y(&self) -> Result<Value, Box<dyn Error>> {
         let mut min_y = self.lines.iter()
         .flat_map(|line| line.get_points())
         .filter_map(|point| match point.y(){
@@ -100,10 +101,10 @@ impl Figure {
 
         min_y
     }
-
-    pub fn get_width(&self) -> i64 {
-        self.get_max_y() - self.get_min_y()
-     }
+    //todo
+    pub fn get_width(&self) -> Result<Value, Box<dyn Error>> {
+        Ok(self.get_max_y()? - self.get_min_y()?)
+    }
 
      pub fn get_last_line(&mut self) -> Result<&mut Line, Box<dyn Error>> {
          self.lines.last_mut().ok_or_else(|| errors::NoLinesInFigure.into())

@@ -1,5 +1,5 @@
-use crate::program::expression::Expr;
-use std::collections::HashMap;
+use crate::{interpreter::errors, program::expression::Expr};
+use std::{collections::HashMap, error::Error};
 use super::{figure::Figure, point::Point};
 use crate::interpreter::value::Value;
 
@@ -20,11 +20,13 @@ impl FigureArray {
         &self.0
     }
 
-    pub fn height(&self) -> Value {
-        todo!()
+    pub fn height(&self) -> Result<Value, Box<dyn Error>> {
+        self.0.iter().filter_map(|fig| fig.get_height().ok()).max()
+        .ok_or_else(|| errors::NoFiguresInFigureArray.into())
     }
-    pub fn width(&self) -> Value {
-        todo!()
+    pub fn width(&self) -> Result<Value, Box<dyn Error>> {
+        self.0.iter().filter_map(|fig| fig.get_width().ok()).max()
+        .ok_or_else(|| errors::NoFiguresInFigureArray.into())
     }
 
 }
