@@ -72,7 +72,7 @@ grammar cfg
     rotate -> 'rotate'! exprT 'by'! exprV;
     place -> 'place'! exprT pos (exprV 'offset'!)? exprT ;
         pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop')^;
-    SCall -> (exprV | path | polygon) '(|'! attrS '|)'!;
+    SCall -> (IDENTIFIER | path | polygon) '(|'! attrS '|)'!;
         attrS -> (attr (','! attr)*)? ;
         attr -> IDENTIFIER '='! exprT;
 
