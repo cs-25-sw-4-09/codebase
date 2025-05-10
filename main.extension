@@ -1,4 +1,3 @@
 import square "./square.extension";
-radius: int;
 begin
-return radius;
+return 1;
