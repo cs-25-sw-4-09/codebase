@@ -52,7 +52,12 @@ impl ops::Add for Point {
     type Output = Point;
 
     fn add(self, rhs: Self) -> Self::Output {
-        todo!()
+        let new_x = *self.x + *rhs.x;
+        let new_y = *self.y + *rhs.y;
+        Self { 
+            x: Box::new(new_x),
+            y: Box::new(new_y)
+        }
     }
 }
 
@@ -60,6 +65,11 @@ impl ops::Sub for Point {
     type Output = Point;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        todo!()
+        let new_x = *self.x - *rhs.x;
+        let new_y = *self.y - *rhs.y;
+        Self { 
+            x: Box::new(new_x),
+            y: Box::new(new_y)
+        }
     }
 }

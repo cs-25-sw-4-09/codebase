@@ -68,6 +68,7 @@ impl Figure {
        max_x
     }
 
+
     pub fn get_min_x(&self) -> f64 { 
         let mut min_x = self.lines.iter()
        .flat_map(|line| line.get_points())
@@ -78,6 +79,7 @@ impl Figure {
        }).min_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).unwrap_or(0f64);
        min_x
     }
+
 
     pub fn get_height(&self) -> f64 {
        self.get_max_x() - self.get_min_x()

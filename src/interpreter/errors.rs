@@ -65,7 +65,16 @@ pub struct NoLinesInFigure;
 impl Error for NoLinesInFigure {}
 impl fmt::Display for NoLinesInFigure {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f,"Last line is not defined in figure")
+        write!(f,"Figure is empty")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct NoFiguresInFigureArray;
+impl Error for NoFiguresInFigureArray {}
+impl fmt::Display for NoFiguresInFigureArray {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"No figures found")
     }
 }
 
