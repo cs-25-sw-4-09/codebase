@@ -1,11 +1,8 @@
 use crate::interpreter::data_types::point::Point;
 use crate::interpreter::value::Value;
-use crate::{
-    interpreter::{
-        data_types::{figure::Figure, figurearray::FigureArray, },
-        errors,
-    },
-    program::{expression::Expr, operators::pathoperator::PathOperator},
+use crate::interpreter::{
+    data_types::figurearray::FigureArray,
+    errors,
 };
 use std::error::Error;
 
