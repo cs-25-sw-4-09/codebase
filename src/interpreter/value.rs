@@ -2,7 +2,7 @@
 use super::data_types::{figure::Figure, figurearray::FigureArray, point::Point};
 use std::{cmp::Ordering, error::Error, ops::{Add, Mul, Neg, Sub}};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Value {
     Integer(i64),
     Variable(String),
@@ -163,19 +163,6 @@ impl Ord for Value {
 impl PartialOrd for Value {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other)) 
-    }
-}
-
-
-impl PartialEq for Value {
-    fn eq(&self, other: &Self) -> bool {
-        match (self, other) {
-            (Value::Integer(v1), Value::Integer(v2)) => v1 == v2,
-            (Value::Float(v1), Value::Float(v2)) => v1 == v2,
-            (Value::Integer(v1), Value::Float(v2)) => (*v1 as f64) == *v2,
-            (Value::Float(v1), Value::Integer(v2)) => *v1 == (*v2 as f64),
-            _ => false,
-        }
     }
 }
 
