@@ -73,275 +73,275 @@ pub const TERMINALS: &[Symbol] = &[
         name: "BOOLEAN"
     },
     Symbol {
-        id: 0x003D,
+        id: 0x003C,
         name: "begin"
     },
     Symbol {
-        id: 0x003F,
+        id: 0x003E,
         name: "import"
     },
     Symbol {
-        id: 0x0040,
+        id: 0x003F,
         name: ";"
     },
     Symbol {
-        id: 0x0041,
+        id: 0x0040,
         name: ":"
     },
     Symbol {
-        id: 0x0042,
+        id: 0x0041,
         name: "="
     },
     Symbol {
-        id: 0x0044,
+        id: 0x0043,
         name: "fork"
     },
     Symbol {
-        id: 0x0045,
+        id: 0x0044,
         name: "{"
     },
     Symbol {
-        id: 0x0046,
+        id: 0x0045,
         name: "}"
     },
     Symbol {
-        id: 0x0048,
+        id: 0x0047,
         name: "("
     },
     Symbol {
-        id: 0x0049,
+        id: 0x0048,
         name: ")"
     },
     Symbol {
-        id: 0x004A,
+        id: 0x0049,
         name: "->"
     },
     Symbol {
-        id: 0x004B,
+        id: 0x004A,
         name: "otherwise"
     },
     Symbol {
-        id: 0x004C,
+        id: 0x004B,
         name: "for"
     },
     Symbol {
-        id: 0x004D,
+        id: 0x004C,
         name: "in"
     },
     Symbol {
-        id: 0x004E,
+        id: 0x004D,
         name: "to"
     },
     Symbol {
-        id: 0x004F,
+        id: 0x004E,
         name: "draw"
     },
     Symbol {
-        id: 0x0050,
+        id: 0x004F,
         name: "at"
     },
     Symbol {
-        id: 0x0051,
+        id: 0x0050,
         name: "return"
     },
     Symbol {
-        id: 0x0052,
+        id: 0x0051,
         name: ","
     },
     Symbol {
-        id: 0x0054,
+        id: 0x0053,
         name: "["
     },
     Symbol {
-        id: 0x0055,
+        id: 0x0054,
         name: "]"
     },
     Symbol {
-        id: 0x0057,
+        id: 0x0056,
         name: "--"
     },
     Symbol {
-        id: 0x0058,
+        id: 0x0057,
         name: "~~"
     },
     Symbol {
-        id: 0x005A,
+        id: 0x0059,
         name: "--*"
     },
     Symbol {
-        id: 0x005B,
+        id: 0x005A,
         name: "~~*"
     },
     Symbol {
-        id: 0x005C,
+        id: 0x005B,
         name: "scale"
     },
     Symbol {
-        id: 0x005D,
+        id: 0x005C,
         name: "by"
     },
     Symbol {
-        id: 0x005E,
+        id: 0x005D,
         name: "rotate"
     },
     Symbol {
-        id: 0x005F,
+        id: 0x005E,
         name: "place"
     },
     Symbol {
-        id: 0x0060,
+        id: 0x005F,
         name: "offset"
     },
     Symbol {
-        id: 0x0061,
+        id: 0x0060,
         name: "left"
     },
     Symbol {
-        id: 0x0062,
+        id: 0x0061,
         name: "right"
     },
     Symbol {
-        id: 0x0063,
+        id: 0x0062,
         name: "top"
     },
     Symbol {
-        id: 0x0064,
+        id: 0x0063,
         name: "bottom"
     },
     Symbol {
-        id: 0x0065,
+        id: 0x0064,
         name: "ontop"
     },
     Symbol {
-        id: 0x0066,
+        id: 0x0065,
         name: "(|"
     },
     Symbol {
-        id: 0x0067,
+        id: 0x0066,
         name: "|)"
     },
     Symbol {
-        id: 0x0069,
+        id: 0x0068,
         name: "||"
     },
     Symbol {
-        id: 0x006A,
+        id: 0x0069,
         name: "&&"
     },
     Symbol {
-        id: 0x006B,
+        id: 0x006A,
         name: "=="
     },
     Symbol {
-        id: 0x006C,
+        id: 0x006B,
         name: "<"
     },
     Symbol {
-        id: 0x006D,
+        id: 0x006C,
         name: ">"
     },
     Symbol {
-        id: 0x006E,
+        id: 0x006D,
         name: ">="
     },
     Symbol {
-        id: 0x006F,
+        id: 0x006E,
         name: "<="
     },
     Symbol {
-        id: 0x0070,
+        id: 0x006F,
         name: "!="
     },
     Symbol {
-        id: 0x0071,
+        id: 0x0070,
         name: "+"
     },
     Symbol {
-        id: 0x0072,
+        id: 0x0071,
         name: "-"
     },
     Symbol {
-        id: 0x0073,
+        id: 0x0072,
         name: "%"
     },
     Symbol {
-        id: 0x0074,
+        id: 0x0073,
         name: "*"
     },
     Symbol {
-        id: 0x0075,
+        id: 0x0074,
         name: "/"
     },
     Symbol {
-        id: 0x0076,
+        id: 0x0075,
         name: "!"
     },
     Symbol {
-        id: 0x0078,
+        id: 0x0077,
         name: "."
     },
     Symbol {
-        id: 0x0079,
+        id: 0x0078,
         name: "int"
     },
     Symbol {
-        id: 0x007A,
+        id: 0x0079,
         name: "float"
     },
     Symbol {
-        id: 0x007B,
+        id: 0x007A,
         name: "point"
     },
     Symbol {
-        id: 0x007C,
+        id: 0x007B,
         name: "color"
     },
     Symbol {
-        id: 0x007D,
+        id: 0x007C,
         name: "shape"
     },
     Symbol {
-        id: 0x007E,
+        id: 0x007D,
         name: "path"
     },
     Symbol {
-        id: 0x007F,
+        id: 0x007E,
         name: "polygon"
     },
     Symbol {
-        id: 0x0080,
+        id: 0x007F,
         name: "bool"
     },
     Symbol {
-        id: 0x0081,
+        id: 0x0080,
         name: "int[]"
     },
     Symbol {
-        id: 0x0082,
+        id: 0x0081,
         name: "float[]"
     },
     Symbol {
-        id: 0x0083,
+        id: 0x0082,
         name: "point[]"
     },
     Symbol {
-        id: 0x0084,
+        id: 0x0083,
         name: "color[]"
     },
     Symbol {
-        id: 0x0085,
+        id: 0x0084,
         name: "shape[]"
     },
     Symbol {
-        id: 0x0086,
+        id: 0x0085,
         name: "path[]"
     },
     Symbol {
-        id: 0x0087,
+        id: 0x0086,
         name: "polygon[]"
     },
     Symbol {
-        id: 0x0088,
+        id: 0x0087,
         name: "bool[]"
     }
 ];
@@ -394,64 +394,62 @@ pub const ID_VARIABLE_ASSIGN: u32 = 0x001D;
 pub const ID_VARIABLE_VAR_DECL: u32 = 0x001E;
 /// The unique identifier for variable `arrayAssign`
 pub const ID_VARIABLE_ARRAY_ASSIGN: u32 = 0x001F;
-/// The unique identifier for variable `exprT2`
-pub const ID_VARIABLE_EXPR_T2: u32 = 0x0020;
+/// The unique identifier for variable `exprT`
+pub const ID_VARIABLE_EXPR_T: u32 = 0x0020;
 /// The unique identifier for variable `array`
 pub const ID_VARIABLE_ARRAY: u32 = 0x0021;
-/// The unique identifier for variable `exprT1`
-pub const ID_VARIABLE_EXPR_T1: u32 = 0x0022;
 /// The unique identifier for variable `point`
-pub const ID_VARIABLE_POINT: u32 = 0x0023;
+pub const ID_VARIABLE_POINT: u32 = 0x0022;
 /// The unique identifier for variable `color`
-pub const ID_VARIABLE_COLOR: u32 = 0x0024;
+pub const ID_VARIABLE_COLOR: u32 = 0x0023;
 /// The unique identifier for variable `path`
-pub const ID_VARIABLE_PATH: u32 = 0x0025;
+pub const ID_VARIABLE_PATH: u32 = 0x0024;
 /// The unique identifier for variable `polygon`
-pub const ID_VARIABLE_POLYGON: u32 = 0x0026;
+pub const ID_VARIABLE_POLYGON: u32 = 0x0025;
 /// The unique identifier for variable `exprS`
-pub const ID_VARIABLE_EXPR_S: u32 = 0x0027;
+pub const ID_VARIABLE_EXPR_S: u32 = 0x0026;
 /// The unique identifier for variable `manipulation`
-pub const ID_VARIABLE_MANIPULATION: u32 = 0x0028;
+pub const ID_VARIABLE_MANIPULATION: u32 = 0x0027;
 /// The unique identifier for variable `scale`
-pub const ID_VARIABLE_SCALE: u32 = 0x0029;
+pub const ID_VARIABLE_SCALE: u32 = 0x0028;
 /// The unique identifier for variable `rotate`
-pub const ID_VARIABLE_ROTATE: u32 = 0x002A;
+pub const ID_VARIABLE_ROTATE: u32 = 0x0029;
 /// The unique identifier for variable `place`
-pub const ID_VARIABLE_PLACE: u32 = 0x002B;
+pub const ID_VARIABLE_PLACE: u32 = 0x002A;
 /// The unique identifier for variable `pos`
-pub const ID_VARIABLE_POS: u32 = 0x002C;
+pub const ID_VARIABLE_POS: u32 = 0x002B;
 /// The unique identifier for variable `SCall`
-pub const ID_VARIABLE_SCALL: u32 = 0x002D;
+pub const ID_VARIABLE_SCALL: u32 = 0x002C;
 /// The unique identifier for variable `attrS`
-pub const ID_VARIABLE_ATTR_S: u32 = 0x002E;
+pub const ID_VARIABLE_ATTR_S: u32 = 0x002D;
 /// The unique identifier for variable `attr`
-pub const ID_VARIABLE_ATTR: u32 = 0x002F;
+pub const ID_VARIABLE_ATTR: u32 = 0x002E;
 /// The unique identifier for variable `exprV`
-pub const ID_VARIABLE_EXPR_V: u32 = 0x0030;
+pub const ID_VARIABLE_EXPR_V: u32 = 0x002F;
 /// The unique identifier for variable `exprV1`
-pub const ID_VARIABLE_EXPR_V1: u32 = 0x0031;
+pub const ID_VARIABLE_EXPR_V1: u32 = 0x0030;
 /// The unique identifier for variable `exprV2`
-pub const ID_VARIABLE_EXPR_V2: u32 = 0x0032;
+pub const ID_VARIABLE_EXPR_V2: u32 = 0x0031;
 /// The unique identifier for variable `exprV3`
-pub const ID_VARIABLE_EXPR_V3: u32 = 0x0033;
+pub const ID_VARIABLE_EXPR_V3: u32 = 0x0032;
 /// The unique identifier for variable `exprV4`
-pub const ID_VARIABLE_EXPR_V4: u32 = 0x0034;
+pub const ID_VARIABLE_EXPR_V4: u32 = 0x0033;
 /// The unique identifier for variable `exprV5`
-pub const ID_VARIABLE_EXPR_V5: u32 = 0x0035;
+pub const ID_VARIABLE_EXPR_V5: u32 = 0x0034;
 /// The unique identifier for variable `exprV6`
-pub const ID_VARIABLE_EXPR_V6: u32 = 0x0036;
+pub const ID_VARIABLE_EXPR_V6: u32 = 0x0035;
 /// The unique identifier for variable `exprV7`
-pub const ID_VARIABLE_EXPR_V7: u32 = 0x0037;
+pub const ID_VARIABLE_EXPR_V7: u32 = 0x0036;
 /// The unique identifier for variable `FCall`
-pub const ID_VARIABLE_FCALL: u32 = 0x0038;
+pub const ID_VARIABLE_FCALL: u32 = 0x0037;
 /// The unique identifier for variable `args`
-pub const ID_VARIABLE_ARGS: u32 = 0x0039;
+pub const ID_VARIABLE_ARGS: u32 = 0x0038;
 /// The unique identifier for variable `arrayIdx`
-pub const ID_VARIABLE_ARRAY_IDX: u32 = 0x003A;
+pub const ID_VARIABLE_ARRAY_IDX: u32 = 0x0039;
 /// The unique identifier for variable `member`
-pub const ID_VARIABLE_MEMBER: u32 = 0x003B;
+pub const ID_VARIABLE_MEMBER: u32 = 0x003A;
 /// The unique identifier for variable `types`
-pub const ID_VARIABLE_TYPES: u32 = 0x003C;
+pub const ID_VARIABLE_TYPES: u32 = 0x003B;
 
 
 /// The collection of variables matched by this parser
@@ -532,7 +530,7 @@ pub const VARIABLES: &[Symbol] = &[
     },
     Symbol {
         id: 0x0020,
-        name: "exprT2"
+        name: "exprT"
     },
     Symbol {
         id: 0x0021,
@@ -540,146 +538,142 @@ pub const VARIABLES: &[Symbol] = &[
     },
     Symbol {
         id: 0x0022,
-        name: "exprT1"
-    },
-    Symbol {
-        id: 0x0023,
         name: "point"
     },
     Symbol {
-        id: 0x0024,
+        id: 0x0023,
         name: "color"
     },
     Symbol {
-        id: 0x0025,
+        id: 0x0024,
         name: "path"
     },
     Symbol {
-        id: 0x0026,
+        id: 0x0025,
         name: "polygon"
     },
     Symbol {
-        id: 0x0027,
+        id: 0x0026,
         name: "exprS"
     },
     Symbol {
-        id: 0x0028,
+        id: 0x0027,
         name: "manipulation"
     },
     Symbol {
-        id: 0x0029,
+        id: 0x0028,
         name: "scale"
     },
     Symbol {
-        id: 0x002A,
+        id: 0x0029,
         name: "rotate"
     },
     Symbol {
-        id: 0x002B,
+        id: 0x002A,
         name: "place"
     },
     Symbol {
-        id: 0x002C,
+        id: 0x002B,
         name: "pos"
     },
     Symbol {
-        id: 0x002D,
+        id: 0x002C,
         name: "SCall"
     },
     Symbol {
-        id: 0x002E,
+        id: 0x002D,
         name: "attrS"
     },
     Symbol {
-        id: 0x002F,
+        id: 0x002E,
         name: "attr"
     },
     Symbol {
-        id: 0x0030,
+        id: 0x002F,
         name: "exprV"
     },
     Symbol {
-        id: 0x0031,
+        id: 0x0030,
         name: "exprV1"
     },
     Symbol {
-        id: 0x0032,
+        id: 0x0031,
         name: "exprV2"
     },
     Symbol {
-        id: 0x0033,
+        id: 0x0032,
         name: "exprV3"
     },
     Symbol {
-        id: 0x0034,
+        id: 0x0033,
         name: "exprV4"
     },
     Symbol {
-        id: 0x0035,
+        id: 0x0034,
         name: "exprV5"
     },
     Symbol {
-        id: 0x0036,
+        id: 0x0035,
         name: "exprV6"
     },
     Symbol {
-        id: 0x0037,
+        id: 0x0036,
         name: "exprV7"
     },
     Symbol {
-        id: 0x0038,
+        id: 0x0037,
         name: "FCall"
     },
     Symbol {
-        id: 0x0039,
+        id: 0x0038,
         name: "args"
     },
     Symbol {
-        id: 0x003A,
+        id: 0x0039,
         name: "arrayIdx"
     },
     Symbol {
-        id: 0x003B,
+        id: 0x003A,
         name: "member"
     },
     Symbol {
-        id: 0x003C,
+        id: 0x003B,
         name: "types"
     },
     Symbol {
-        id: 0x003E,
-        name: "__V62"
+        id: 0x003D,
+        name: "__V61"
     },
     Symbol {
-        id: 0x0043,
-        name: "__V67"
+        id: 0x0042,
+        name: "__V66"
     },
     Symbol {
-        id: 0x0047,
-        name: "__V71"
+        id: 0x0046,
+        name: "__V70"
     },
     Symbol {
-        id: 0x0053,
-        name: "__V83"
+        id: 0x0052,
+        name: "__V82"
     },
     Symbol {
-        id: 0x0056,
-        name: "__V86"
+        id: 0x0055,
+        name: "__V85"
     },
     Symbol {
-        id: 0x0059,
-        name: "__V89"
+        id: 0x0058,
+        name: "__V88"
     },
     Symbol {
-        id: 0x0068,
-        name: "__V104"
+        id: 0x0067,
+        name: "__V103"
     },
     Symbol {
-        id: 0x0077,
-        name: "__V119"
+        id: 0x0076,
+        name: "__V118"
     },
     Symbol {
-        id: 0x0089,
+        id: 0x0088,
         name: "__VAxiom"
     }
 ];
@@ -766,9 +760,8 @@ pub trait Visitor {
     fn on_variable_assign(&self, node: &AstNode) {}
     fn on_variable_var_decl(&self, node: &AstNode) {}
     fn on_variable_array_assign(&self, node: &AstNode) {}
-    fn on_variable_expr_t2(&self, node: &AstNode) {}
+    fn on_variable_expr_t(&self, node: &AstNode) {}
     fn on_variable_array(&self, node: &AstNode) {}
-    fn on_variable_expr_t1(&self, node: &AstNode) {}
     fn on_variable_point(&self, node: &AstNode) {}
     fn on_variable_color(&self, node: &AstNode) {}
     fn on_variable_path(&self, node: &AstNode) {}
@@ -835,35 +828,34 @@ pub fn visit_ast_node(node: AstNode, visitor: &dyn Visitor) {
         0x001D => visitor.on_variable_assign(&node),
         0x001E => visitor.on_variable_var_decl(&node),
         0x001F => visitor.on_variable_array_assign(&node),
-        0x0020 => visitor.on_variable_expr_t2(&node),
+        0x0020 => visitor.on_variable_expr_t(&node),
         0x0021 => visitor.on_variable_array(&node),
-        0x0022 => visitor.on_variable_expr_t1(&node),
-        0x0023 => visitor.on_variable_point(&node),
-        0x0024 => visitor.on_variable_color(&node),
-        0x0025 => visitor.on_variable_path(&node),
-        0x0026 => visitor.on_variable_polygon(&node),
-        0x0027 => visitor.on_variable_expr_s(&node),
-        0x0028 => visitor.on_variable_manipulation(&node),
-        0x0029 => visitor.on_variable_scale(&node),
-        0x002A => visitor.on_variable_rotate(&node),
-        0x002B => visitor.on_variable_place(&node),
-        0x002C => visitor.on_variable_pos(&node),
-        0x002D => visitor.on_variable_scall(&node),
-        0x002E => visitor.on_variable_attr_s(&node),
-        0x002F => visitor.on_variable_attr(&node),
-        0x0030 => visitor.on_variable_expr_v(&node),
-        0x0031 => visitor.on_variable_expr_v1(&node),
-        0x0032 => visitor.on_variable_expr_v2(&node),
-        0x0033 => visitor.on_variable_expr_v3(&node),
-        0x0034 => visitor.on_variable_expr_v4(&node),
-        0x0035 => visitor.on_variable_expr_v5(&node),
-        0x0036 => visitor.on_variable_expr_v6(&node),
-        0x0037 => visitor.on_variable_expr_v7(&node),
-        0x0038 => visitor.on_variable_fcall(&node),
-        0x0039 => visitor.on_variable_args(&node),
-        0x003A => visitor.on_variable_array_idx(&node),
-        0x003B => visitor.on_variable_member(&node),
-        0x003C => visitor.on_variable_types(&node),
+        0x0022 => visitor.on_variable_point(&node),
+        0x0023 => visitor.on_variable_color(&node),
+        0x0024 => visitor.on_variable_path(&node),
+        0x0025 => visitor.on_variable_polygon(&node),
+        0x0026 => visitor.on_variable_expr_s(&node),
+        0x0027 => visitor.on_variable_manipulation(&node),
+        0x0028 => visitor.on_variable_scale(&node),
+        0x0029 => visitor.on_variable_rotate(&node),
+        0x002A => visitor.on_variable_place(&node),
+        0x002B => visitor.on_variable_pos(&node),
+        0x002C => visitor.on_variable_scall(&node),
+        0x002D => visitor.on_variable_attr_s(&node),
+        0x002E => visitor.on_variable_attr(&node),
+        0x002F => visitor.on_variable_expr_v(&node),
+        0x0030 => visitor.on_variable_expr_v1(&node),
+        0x0031 => visitor.on_variable_expr_v2(&node),
+        0x0032 => visitor.on_variable_expr_v3(&node),
+        0x0033 => visitor.on_variable_expr_v4(&node),
+        0x0034 => visitor.on_variable_expr_v5(&node),
+        0x0035 => visitor.on_variable_expr_v6(&node),
+        0x0036 => visitor.on_variable_expr_v7(&node),
+        0x0037 => visitor.on_variable_fcall(&node),
+        0x0038 => visitor.on_variable_args(&node),
+        0x0039 => visitor.on_variable_array_idx(&node),
+        0x003A => visitor.on_variable_member(&node),
+        0x003B => visitor.on_variable_types(&node),
         _ => ()
     };
 }
