@@ -94,6 +94,21 @@ impl Sub for Value {
     }
 }
 
+impl Sub for &Value {
+    type Output = Value;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        match (self, rhs) {
+        (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 - v2),
+        (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 - v2),
+        (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 - *v2 as f64),
+        (Value::Integer(v1), Value::Float(v2)) => Value::Float(*v1 as f64 - v2),
+        _ => unreachable!()
+        }
+    }
+}
+
+
 impl Mul for Value {
     type Output = Value;
 
@@ -116,6 +131,18 @@ impl Neg for Value {
         match self {
             Value::Integer(i) => Value::Integer(-i),
             Value::Float(i) => Value::Float(-i),
+            _ => unreachable!()
+        }
+    }
+}
+
+impl Neg for &Value {
+    type Output = Value;
+
+    fn neg(self) -> Self::Output {
+        match self {
+            Value::Integer(i) => Value::Integer(-(*i)),
+            Value::Float(i) => Value::Float(-(*i)),
             _ => unreachable!()
         }
     }

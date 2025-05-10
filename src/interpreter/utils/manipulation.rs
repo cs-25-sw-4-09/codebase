@@ -20,8 +20,8 @@ pub fn scale(mut shape: FigureArray, factor: Value) -> Result<FigureArray, Box<d
     Ok(shape)
 }
 
-fn scale_point(p: Point, top_left: Point, factor: Value) -> Point {
-    (top_left.clone() - p) * factor + top_left
+pub fn scale_point(p: Point, top_left: Point, factor: Value) -> Point {
+    Point::from((p.get_x() - top_left.get_x(), -(top_left.get_y() - p.get_y()))) * factor + top_left
 }
 
 

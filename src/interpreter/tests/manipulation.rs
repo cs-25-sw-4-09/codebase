@@ -148,7 +148,43 @@ fn test_place_with_offset() {
 }
 
 /*********************************************** Scale *****************************************/
+#[test]
+fn scale_operation() {
 
+}
+
+#[test]
+fn test_scale_point() {
+    let i1 = (0,0).into();
+    let i2 = (2,0).into(); 
+    let i3 = 5.into();
+    let i4 = scale_point(i2,i1,i3);
+    assert_eq!(i4, (10,0).into());
+
+    let i1 = (0,0).into();
+    let i2 = (-2,0).into(); 
+    let i3 = 5.into();
+    let i4 = scale_point(i2,i1,i3);
+    assert_eq!(i4, (-10,0).into());
+
+    let i1 = (0,2).into(); 
+    let i2 = (0,0).into();
+    let i3 = 5.into();
+    let i4 = scale_point(i2,i1,i3);
+    assert_eq!(i4, (0,-8).into());
+
+    let i1 = (0,-2).into(); 
+    let i2 = (0,0).into();
+    let i3 = 5.into();
+    let i4 = scale_point(i1, i2,i3);
+    assert_eq!(i4, (0,-10).into());
+
+    let i1 = (0,2).into();
+    let i2 = (2,0).into(); 
+    let i3 = 5.into();
+    let i4 = scale_point(i2,i1,i3);
+    assert_eq!(i4, (10,-8).into());
+}
 
 
 /*********************************************** Rotate ****************************************/

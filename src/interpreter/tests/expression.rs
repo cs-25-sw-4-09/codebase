@@ -451,8 +451,43 @@ fn array_interpret() {
     assert_eq!(i2, Value::Array(vec![Box::new(Value::Integer(4))]));
 }
 
-#[test]
+/*#[test]
 fn scale() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::Scale {
+        base_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        }
+        .into(),
+        factor: Expr::Integer(4).into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![vec![Line::Straight(vec![
+                (Value::Float(1.0), Value::Float(12.0)).into(),
+                (Value::Float(9.0), Value::Float(4.0)).into()
+            ])]
+            .into()]
+            .into(),
+        )
+    );
+}*/
+
+#[test]
+fn scale2() {
     let mut env = IEnvironment::new();
     let i1 = Expr::Scale {
         base_shape: Expr::SCall {
