@@ -136,34 +136,55 @@ impl InterpretE for Expr {
                 }
             }
             Expr::FCall { name, args } => {
-                let mut params = Vec::new();
-                let function = environment.ftable_find(name.into()).unwrap().clone();
+                match name.as_str() {
+                    "push" => { 
+                        let t1 = args[0].interpret(environment)?;
+                        let t2 = args[1].interpret(environment)?;
+                        &Value::Array(vec![Box::new(t1), Box::new(t2)])
+                    }
+                    "remove" => {  
+                        let t1 = args[0].interpret(environment)?;
+                        let t2 = args[1].interpret(environment)?;
+                        let index_to_remove = t2.get_int()? as usize;
+                        let mut array= match t1 {
+                            Value::Array(i) => Ok(i),
+                            _ => Err(errors::ArrayEmpty(name.to_string())).into(),
+                        };
+                        array.as_mut().unwrap().remove(index_to_remove);
+                        &Value::Array(array.unwrap())
+                        
+                    }
+                    _ => {
+                        let mut params = Vec::new();
+                        let function = environment.ftable_find(name.into()).unwrap().clone();
 
-                for i in 0..function.1.len() {
-                    let i1 = args[i].clone().interpret(environment)?;
-                    params.push((function.1[i].clone(), i1));
-                }
+                        for i in 0..function.1.len() {
+                            let i1 = args[i].clone().interpret(environment)?;
+                            params.push((function.1[i].clone(), i1));
+                        }
 
-                //Make new scope
-                let previous_stack = environment.vtable_clear();
+                        //Make new scope
+                        let previous_stack = environment.vtable_clear();
 
-                for (param_identifier, param_elem) in params {
-                    environment.vtable_push(param_identifier, param_elem);
-                }
+                        for (param_identifier, param_elem) in params {
+                            environment.vtable_push(param_identifier, param_elem);
+                        }
 
-                for f in function.0 {
-                    f.interpret(environment)?;
-                }
-                //todo: push ftable and pop
-                //Restore scope
-                environment.vtable_restore(previous_stack);
+                        for f in function.0 {
+                            f.interpret(environment)?;
+                        }
+                        //todo: push ftable and pop
+                        //Restore scope
+                        environment.vtable_restore(previous_stack);
 
-                if let Some(rvalue) = environment.rvalue_get() {
-                    environment.rvalue_clear();
-                    //todo: potentielt kom tilbage
-                    &rvalue.clone()
-                } else {
-                    return Err(errors::FunctionNotReturning(name.to_owned()).into());
+                        if let Some(rvalue) = environment.rvalue_get() {
+                            environment.rvalue_clear();
+                            //todo: potentielt kom tilbage
+                            &rvalue.clone()
+                        } else {
+                            return Err(errors::FunctionNotReturning(name.to_owned()).into());
+                        }
+                    }
                 }
             }
             Expr::PathOperation { lhs, rhs, operator } => {

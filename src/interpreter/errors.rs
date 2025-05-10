@@ -105,3 +105,12 @@ impl fmt::Display for ArrayOutOfBounds {
         write!(f,"Array {} is out of bounds", self.0)
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct InvalidArrayAccess(pub String);
+impl Error for InvalidArrayAccess {}
+impl fmt::Display for InvalidArrayAccess {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"{} is not an array", self.0)
+    }
+}
