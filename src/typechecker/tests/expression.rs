@@ -417,6 +417,118 @@ fn fcall_parameters_incompatible() {
 }
 
 #[test]
+fn fcall_push_intarray() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::FCall {
+        name: "push".into(),
+        args: vec![Expr::Array(vec![Expr::Integer(5)]),Expr::Integer(5)],
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::IntArray);
+}
+
+#[test]
+fn fcall_push_empty() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::FCall {
+        name: "push".into(),
+        args: vec![Expr::Array(vec![]),Expr::Integer(5)],
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::IntArray);
+}
+
+#[test]
+fn fcall_push_typeconflict() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier = Expr::FCall {
+        name: "push".into(),
+        args: vec![Expr::Array(vec![Expr::Integer(5)]),Expr::Float(5.0)],
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::ErrorInPush>()
+        .is_some());
+}
+
+#[test]
+fn fcall_push_empty_array_with_array() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier = Expr::FCall {
+        name: "push".into(),
+        args: vec![Expr::Array(vec![]),Expr::Array(vec![Expr::Integer(5)])],
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::ErrorInPush>()
+        .is_some());
+}
+
+
+#[test]
+fn fcall_push_not_array() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier = Expr::FCall {
+        name: "push".into(),
+        args: vec![Expr::Integer(5),Expr::Integer(5)],
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::ErrorInPush>()
+        .is_some());
+}
+
+#[test]
+fn fcall_remove_intarray() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::FCall {
+        name: "remove".into(),
+        args: vec![Expr::Array(vec![Expr::Integer(5)]),Expr::Integer(5)],
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::IntArray);
+}
+
+#[test]
+fn fcall_remove_empty_array() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier = Expr::FCall {
+        name: "remove".into(),
+        args: vec![Expr::Array(vec![]),Expr::Integer(5)],
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::ErrorInRemove>()
+        .is_some());
+}
+
+#[test]
+fn fcall_remove_not_int_index() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier = Expr::FCall {
+        name: "remove".into(),
+        args: vec![Expr::Array(vec![Expr::Integer(5)]),Expr::Float(5.0)],
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::ErrorInRemove>()
+        .is_some());
+}
+
+
+
+
+
+
+#[test]
 fn scall() {
     let mut env = TEnvironment::new();
     env.stable_set(

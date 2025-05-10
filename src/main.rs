@@ -1,11 +1,7 @@
 use std::{error::Error, path::Path};
 
 use codebase::{
-    interpreter::InterpretP, lexer_parser::{
-        grammar::cfg,
-        //valid_programs::get_programs
-        utils::tree_converter::stringify_tree,
-    }, program::program::Program, typechecker::TypeCheckP
+    interpreter::InterpretP, program::program::Program, typechecker::TypeCheckP
 };
 
 fn main() -> Result<(), Box<dyn Error>> {

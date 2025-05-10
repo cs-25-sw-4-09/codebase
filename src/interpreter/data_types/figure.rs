@@ -17,6 +17,15 @@ impl From<Vec<Line>> for Figure {
     }
 }
 
+impl From<(Vec<Line>, HashMap<String, Value>)> for Figure {
+    fn from(value: (Vec<Line>, HashMap<String, Value>)) -> Self {
+        let mut fig = Figure::new();
+        fig.lines = value.0;
+        fig.attributes = value.1;
+        fig
+    }
+}
+
 impl Figure {
     pub fn new() -> Self {
         Self {

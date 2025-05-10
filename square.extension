@@ -1,0 +1,8 @@
+x1: float;
+y1: float;
+x2: float;
+y2: float;
+fill: color = (0,0,0,0);
+stroke: color = (255,255,255,255);
+begin
+draw (x1,y1)--(x2,y1)--(x2,y2)--(x1,y2)--*(|fill=fill|);
