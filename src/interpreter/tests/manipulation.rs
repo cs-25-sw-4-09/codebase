@@ -150,7 +150,29 @@ fn test_place_with_offset() {
 /*********************************************** Scale *****************************************/
 #[test]
 fn scale_operation() {
+    let i1 = basic_square().get_shape().unwrap();
+    let i2 = scale(i1, 2.into()).unwrap(); 
 
+    assert_eq!(i2.get_figures()[0].get_lines().to_vec(), 
+        vec![
+            Line::Straight(vec![
+                (0,-1).into(),
+                (2,-1).into(),
+            ]),
+            Line::Straight(vec![
+                (2,-1).into(),
+                (2, 1).into(),
+            ]),
+            Line::Straight(vec![
+                (2, 1).into(),
+                (0,1).into(),
+            ]),
+            Line::Straight(vec![
+                (0,1).into(),
+                (0,-1).into(),
+            ])
+        ]
+    )
 }
 
 #[test]
