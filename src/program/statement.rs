@@ -317,7 +317,7 @@ impl Stmt {
                 let mut statements: Vec<Stmt>;
                 for forkexpr in stmt.children() {
                     match forkexpr.to_string().as_str() {
-                        "forkExpr" => {
+                        "forkCase" => {
                             statements = vec![];
                             for stmt in forkexpr.child(1).children() {
                                 statements.push(Stmt::new(stmt)?);

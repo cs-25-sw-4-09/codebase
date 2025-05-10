@@ -1,4 +1,4 @@
-use std::{env, error::Error, path::Path};
+use std::{error::Error, path::Path};
 
 use codebase::{
     generators::generator::{self, get_generator},

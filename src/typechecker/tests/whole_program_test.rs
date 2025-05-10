@@ -11,8 +11,7 @@ fn example_program_parsing() {
     .for_each(|el| {
         let string = el.to_string();
         let mut program = Program::new(&string).unwrap();
-        //println!("{:?}",program.type_check().err());
-        assert!(program.type_check().is_ok())
-        
+        let idkthing = program.type_check();
+        assert!(idkthing.is_ok());
     });
 }
