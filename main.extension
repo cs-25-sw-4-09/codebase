@@ -1,3 +1,2 @@
-import square "./square.extension";
 begin
 return 1;
