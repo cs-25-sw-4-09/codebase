@@ -25,23 +25,23 @@ impl FigureArray {
     pub fn max_x(&self) -> Value {
         self.0.iter().map(|fig| fig.get_max_x())
         .max()
-        .unwrap_or(Value::Float(0.))
+        .unwrap_or(0.into())
     }
 
     pub fn min_x(&self) -> Value {
         self.0.iter().map(|fig| fig.get_min_x())
         .min()
-        .unwrap_or(Value::Float(0.))
+        .unwrap_or(0.into())
     }
     pub fn max_y(&self) -> Value {
         self.0.iter().map(|fig| fig.get_max_y())
         .max()
-        .unwrap_or(Value::Float(0.))
+        .unwrap_or(0.into())
     }
     pub fn min_y(&self) -> Value {
         self.0.iter().map(|fig| fig.get_min_y())
         .min()
-        .unwrap_or(Value::Float(0.))
+        .unwrap_or(0.into())
     }
 
     //todo: optimize

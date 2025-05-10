@@ -1,6 +1,6 @@
 
 use super::data_types::{figure::Figure, figurearray::FigureArray, point::Point};
-use std::{error::Error, ops::{Add, Neg, Sub},cmp::Ordering};
+use std::{cmp::Ordering, error::Error, ops::{Add, Mul, Neg, Sub}};
 
 #[derive(Debug, Clone)]
 pub enum Value {
@@ -93,6 +93,21 @@ impl Sub for Value {
         }
     }
 }
+
+impl Mul for Value {
+    type Output = Value;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        match (self, rhs) {
+            (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 * v2),
+            (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 * v2),
+            (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 * v2 as f64),
+            (Value::Integer(v1), Value::Float(v2)) => Value::Float(v1 as f64 * v2),
+            _ => unreachable!()
+        }
+    }
+}
+
 
 impl Neg for Value {
     type Output = Value;

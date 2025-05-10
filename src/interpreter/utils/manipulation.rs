@@ -6,57 +6,24 @@ use crate::interpreter::{
 };
 use std::error::Error;
 
-pub fn scale(shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
-    Ok(FigureArray::new())
+
+pub fn scale(mut shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
+    let top_left = shape.get_top_left();
+    shape.get_mut_figures().iter_mut().for_each(|fig| {
+        fig.get_mut_lines().iter_mut().for_each(|line| {
+            line.get_mut_points().iter_mut().for_each(|point| { 
+                *point = scale_point(point.clone(), top_left.clone(), factor.clone());
+            });
+        
+        });
+    });
+    Ok(shape)
 }
 
-/*pub fn scale(shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
-    let mut shape = shape.clone();
-    let origin_x = shape
-        .get_mut_figures()
-        .iter()
-        .map(|l| l.get_min_x())
-        .min_by(|a, b| a.partial_cmp(b).unwrap())
-        .ok_or_else(|| Box::new(errors::MaxCanNotBeFound))?;
-    let origin_y = shape
-        .get_mut_figures()
-        .iter()
-        .map(|l| l.get_max_y())
-        .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .ok_or_else(|| Box::new(errors::MinCanNotBeFound))?;
+fn scale_point(p: Point, top_left: Point, factor: Value) -> Point {
+    (top_left.clone() - p) * factor + top_left
+}
 
-    let factor = match factor {
-        Value::Integer(i) => i as f64,
-        Value::Float(f) => f,
-        _ => unreachable!(),
-    };
-
-        shape.get_mut_figures().iter_mut().for_each(|fig| {
-            fig.get_mut_lines().iter_mut().for_each(|line| {
-                line.get_mut_points().iter_mut().for_each(|point| { 
-                    let x = point.get_x();
-                    let y = point.get_y();
-
-                    let dist_origin_x = x.get_float().unwrap() - origin_x;
-                    let dist_origin_y =  origin_y - y.get_float().unwrap();
-                    
-                    point.set_x(match *x {
-                        Value::Integer(_) =>  Value::Float(dist_origin_x * factor + origin_x).into(),
-                        Value::Float(_) =>  Value::Float(dist_origin_x * factor + origin_x).into(),
-                        _ => unreachable!()
-                    });
-                    point.set_y(match *point.get_y() {
-                        Value::Integer(_) =>  Value::Float(dist_origin_y * factor + origin_y).into(),
-                        Value::Float(_) =>  Value::Float(dist_origin_y * factor + origin_y).into(),
-                        _ => unreachable!()
-                    });
-                });
-            
-            });
-        });
-
-    Ok(shape)
-}*/
 
 
 pub fn place(s1: FigureArray, mut s2: FigureArray, offset: Point, direction: Direction) -> FigureArray {
