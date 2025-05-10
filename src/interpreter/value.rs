@@ -94,7 +94,6 @@ impl Neg for Value {
     }
 }
 
-//todo: Check if other possibilities than unwrap
 impl Ord for Value {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         match (self, other) {

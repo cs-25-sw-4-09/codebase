@@ -86,7 +86,7 @@ impl Figure {
     }
 
     pub fn get_max_y(&self) -> f64 {
-        let mut max_y = self.lines.iter()
+        let max_y = self.lines.iter()
         .flat_map(|line| line.get_points())
         .filter_map(|point| match *point.y{
         Value::Float(f) => Some(f),
@@ -97,7 +97,7 @@ impl Figure {
     }
 
     pub fn get_min_y(&self) -> f64 {
-        let mut min_y = self.lines.iter()
+        let min_y = self.lines.iter()
         .flat_map(|line| line.get_points())
         .filter_map(|point| match *point.y{
         Value::Float(f) => Some(f),
@@ -107,6 +107,7 @@ impl Figure {
 
         min_y
     }
+
 
     pub fn get_width(&self) -> f64 {
         self.get_max_y() - self.get_min_y()

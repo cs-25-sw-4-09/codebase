@@ -70,7 +70,7 @@ impl IEnvironment {
 
     pub fn darray_push(&mut self, shape: FigureArray){
         self.d_array.extend(shape);
-
+    }
 
     pub fn push_scope(&mut self) {
         self.v_table.push_scope();

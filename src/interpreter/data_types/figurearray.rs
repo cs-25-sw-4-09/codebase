@@ -20,21 +20,31 @@ impl FigureArray {
         &self.0
     }
 
-    pub fn new() -> Self {
-        Self(Vec::new())
-    }
-
     pub fn extend(&mut self, shape: FigureArray){
         self.0.extend(shape.0);
     }
 
-    pub fn height(&self) -> Result<Value, Box<dyn Error>> {
-        self.0.iter().filter_map(|fig| fig.get_height().ok()).max()
-        .ok_or_else(|| errors::NoFiguresInFigureArray.into())
+    //todo: optimize
+    pub fn height(&self) -> Value {
+        Value::Float(
+            self.0.iter().map(|fig| fig.get_max_y())
+            .max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+            .unwrap_or(0f64) -  
+            self.0.iter().map(|fig| fig.get_min_y())
+            .max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+            .unwrap_or(0f64) 
+        )
     }
-    pub fn width(&self) -> Result<Value, Box<dyn Error>> {
-        self.0.iter().filter_map(|fig| fig.get_width().ok()).max()
-        .ok_or_else(|| errors::NoFiguresInFigureArray.into())
+    //todo: optimize
+    pub fn width(&self) -> Value {
+        Value::Float(
+            self.0.iter().map(|fig| fig.get_max_x())
+            .max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+            .unwrap_or(0f64) -  
+            self.0.iter().map(|fig| fig.get_min_x())
+            .max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+            .unwrap_or(0f64) 
+        )
 
     }
 
