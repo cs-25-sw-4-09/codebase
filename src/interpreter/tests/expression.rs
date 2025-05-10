@@ -460,7 +460,7 @@ fn greater_than() {
     let i1 = Expr::BinaryOperation {
         lhs: Expr::Integer(10).into(),
         rhs: Expr::Integer(3).into(),
-        operator: BinaryOperator::LessThan,
+        operator: BinaryOperator::GreaterThan,
     }
     .interpret(&mut env)
     .unwrap();
@@ -468,7 +468,7 @@ fn greater_than() {
     let i2 = Expr::BinaryOperation {
         lhs: Expr::Float(5.0).into(),
         rhs: Expr::Integer(5).into(),
-        operator: BinaryOperator::LessThan,
+        operator: BinaryOperator::GreaterThan,
     }
     .interpret(&mut env)
     .unwrap();
@@ -476,7 +476,7 @@ fn greater_than() {
     let i3 = Expr::BinaryOperation {
         lhs: Expr::Float(2.0).into(),
         rhs: Expr::Float(4.0).into(),
-        operator: BinaryOperator::LessThan,
+        operator: BinaryOperator::GreaterThan,
     }
     .interpret(&mut env)
     .unwrap();
@@ -484,15 +484,15 @@ fn greater_than() {
     let i4 = Expr::BinaryOperation {
         lhs: Expr::Integer(10).into(),
         rhs: Expr::Float(5.0).into(),
-        operator: BinaryOperator::LessThan,
+        operator: BinaryOperator::GreaterThan,
     }
     .interpret(&mut env)
     .unwrap();
 
-    assert_eq!(i1, Value::Boolean(false));
+    assert_eq!(i1, Value::Boolean(true));
     assert_eq!(i2, Value::Boolean(false));
-    assert_eq!(i3, Value::Boolean(true));
-    assert_eq!(i4, Value::Boolean(false));
+    assert_eq!(i3, Value::Boolean(false));
+    assert_eq!(i4, Value::Boolean(true));
 }
 
 #[test]
@@ -530,10 +530,19 @@ fn equals() {
     .interpret(&mut env)
     .unwrap();
 
+    let i5 = Expr::BinaryOperation {
+        lhs: Expr::Float(10.0).into(),
+        rhs: Expr::Float(10.0).into(),
+        operator: BinaryOperator::Equals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
     assert_eq!(i1, Value::Boolean(false));
     assert_eq!(i2, Value::Boolean(true));
     assert_eq!(i3, Value::Boolean(true));
     assert_eq!(i4, Value::Boolean(false));
+    assert_eq!(i5, Value::Boolean(true));
 }
 
 
@@ -572,10 +581,19 @@ fn not_equals() {
     .interpret(&mut env)
     .unwrap();
 
+    let i5 = Expr::BinaryOperation {
+        lhs: Expr::Float(10.0).into(),
+        rhs: Expr::Float(10.0).into(),
+        operator: BinaryOperator::NotEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
     assert_eq!(i1, Value::Boolean(true));
     assert_eq!(i2, Value::Boolean(false));
     assert_eq!(i3, Value::Boolean(false));
     assert_eq!(i4, Value::Boolean(true));
+    assert_eq!(i5, Value::Boolean(false));
 }
 
 #[test]
