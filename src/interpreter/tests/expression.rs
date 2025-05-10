@@ -2,9 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     interpreter::{
-        data_types::{
-            figure::Figure, line::Line, point::Point
-        },
+        data_types::line::Line,
         environment::IEnvironment,
         errors,
         value::Value,
@@ -1426,8 +1424,6 @@ fn polygonoperation_curve() {
     );
 }
 
-//todo Få sjernholm til at tjekke
-/*
 #[test]
 pub fn scall_pathpoly() {
     let mut env = IEnvironment::new();
@@ -1479,7 +1475,7 @@ pub fn scall_pathpoly() {
             ).into()].into(),
         )
     )
-}*/
+}
 
 #[test]
 pub fn scall_identifier() {

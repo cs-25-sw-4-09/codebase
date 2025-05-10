@@ -2,7 +2,7 @@ use crate::interpreter::data_types::{line::Line, point::Point};
 use super::*;
 
 
-/***** Point ******/
+/***** Point *****/
 #[test] 
 fn point_addition() {
     let i1: Point = (5,5).into();
@@ -17,7 +17,7 @@ fn point_subtraction() {
 }
 
 
-/***** Line ******/
+/***** Line *****/
 #[test]
 fn get_first_and_last_point() {
     let i1 = Line::Curved(vec![(0,0).into(), (5,5).into(), (10,10).into()]);
@@ -34,8 +34,8 @@ fn insert_first_and_last_point() {
     assert_eq!(i1.get_last_point().unwrap().clone(), (50,50).into());
 }
 
- 
-/***** Figure ******/
+
+/***** Figure *****/
 #[test]
 fn test_height_width() {
     let i1 = basic_square().get_shape().unwrap().get_figures().first().unwrap().clone();
@@ -72,7 +72,7 @@ fn get_pop_last_first_line() {
 }
 
 
-/***** Figure Array ******/
+/***** Figure Array *****/
 #[test]
 fn top_left() {
     let i1 = basic_house().get_shape().unwrap();

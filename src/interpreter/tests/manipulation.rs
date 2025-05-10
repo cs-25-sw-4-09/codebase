@@ -11,7 +11,7 @@ fn create_direction_enum() {
     assert_eq!(Direction::Bottom, Direction::from("bottom"));
     assert_eq!(Direction::Left, Direction::from("left"));
     assert_eq!(Direction::Right, Direction::from("right"));
-} 
+}
 
 #[test]
 fn direction_offset() {
@@ -142,11 +142,52 @@ fn test_place_no_offset() {
     );
 }
 
-//todo
-/*#[test]
+
+#[test]
 fn test_place_with_offset() {
-    todo!()
-}*/
+    let i1 = basic_square().get_shape().unwrap(); 
+    let i2 = basic_triangle().get_shape().unwrap();
+
+    let i3 = place(i1, i2, (0,2).into(), Direction::Top);
+    assert_eq!(i3.get_figures().iter().map(|fig| fig.get_lines().to_vec()).collect::<Vec<Vec<Line>>>(), 
+        vec![
+            //Triangle
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(0), Value::Integer(0)).into(),
+                    (Value::Integer(2), Value::Integer(0)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(2), Value::Integer(0)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(0), Value::Integer(0)).into()
+                ]),
+            ],
+            //New Square
+            vec![
+                Line::Straight(vec![
+                    (0,4).into(),
+                    (1,4).into()   
+                ]),
+                Line::Straight(vec![
+                    (1,4).into(),
+                    (1,5).into()
+                ]),
+                Line::Straight(vec![
+                    (1,5).into(),
+                    (0,5).into()
+                ]),
+                Line::Straight(vec![
+                    (0,5).into(),
+                    (0,4).into()
+                ])
+            ]
+        ]
+    );
+}
 
 /*********************************************** Scale *****************************************/
 #[test]
