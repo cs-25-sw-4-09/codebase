@@ -22,26 +22,26 @@ fn direction_offset() {
     //Should return the height of the square in the y-coordinate
     let i3 = Direction::from("top").offset(&i1, &i2);
     assert_eq!(i1.height(), Value::Integer(1));
-    assert_eq!(i3, (Value::Integer(0), Value::Integer(1)).into());
+    assert_eq!(i3, (0,1).into());
 
     //Should be (0,0)
     let i3 = Direction::from("ontop").offset(&i1, &i2);
-    assert_eq!(i3, (Value::Integer(0), Value::Integer(0)).into());
+    assert_eq!(i3, (0,0).into());
 
     //Should return the negated height of the triangle in the y-coordinate as we wish to place the square under the triangle
     let i3 = Direction::from("bottom").offset(&i1, &i2);
-    assert_eq!(i2.height(), Value::Float(2.));
-    assert_eq!(i3, (Value::Integer(0), Value::Float(-2.)).into());
+    assert_eq!(i2.height(), 2.into());
+    assert_eq!(i3, (0,-2).into());
 
     //Should return the negated width of the square in the x-coordinate as we wish to place the square to the left of triangle
     let i3 = Direction::from("left").offset(&i1, &i2);
-    assert_eq!(i1.width(), Value::Integer(1));
-    assert_eq!(i3, (Value::Integer(-1), Value::Integer(0)).into());
+    assert_eq!(i1.width(), 1.into());
+    assert_eq!(i3, (-1,0).into());
 
     //Should return the negated width of the square in the x-coordinate as we wish to place the square to the left of triangle
     let i3 = Direction::from("right").offset(&i1, &i2);
-    assert_eq!(i2.width(), Value::Integer(2));
-    assert_eq!(i3, (Value::Integer(2), Value::Integer(0)).into());
+    assert_eq!(i2.width(), 2.into());
+    assert_eq!(i3, (2,0).into());
 }
 
 #[test]
@@ -74,21 +74,21 @@ fn test_place_shape() {
     assert_eq!(i3.get_figures()[0].get_lines().to_vec(), 
             vec![
                 Line::Straight(vec![
-                    (Value::Float(50.), Value::Float(49.)).into(),
-                    (Value::Float(51.), Value::Float(49.)).into()
+                    (50,49).into(),
+                    (51,49).into()
                     ]
                 ),
                 Line::Straight(vec![
-                    (Value::Float(51.), Value::Float(49.)).into(),
-                    (Value::Float(51.), Value::Float(50.)).into()
+                    (51,49).into(),
+                    (51,50).into()
                 ]),
                 Line::Straight(vec![
-                    (Value::Float(51.), Value::Float(50.)).into(),
-                    (Value::Float(50.), Value::Float(50.)).into()
+                    (51,50).into(),
+                    (50,50).into()
                 ]),
                 Line::Straight(vec![
-                    (Value::Float(50.), Value::Float(50.)).into(),
-                    (Value::Float(50.), Value::Float(49.)).into()
+                    (50,50).into(),
+                    (50,49).into()
                 ])
             ]
     );
@@ -121,21 +121,21 @@ fn test_place_no_offset() {
             //New Square
             vec![
                 Line::Straight(vec![
-                    (Value::Float(0.), Value::Float(2.)).into(),
-                    (Value::Float(1.), Value::Float(2.)).into()
+                    (0,2).into(),
+                    (1,2).into()
                     ]
                 ),
                 Line::Straight(vec![
-                    (Value::Float(1.), Value::Float(2.)).into(),
-                    (Value::Float(1.), Value::Float(3.)).into()
+                    (1,2).into(),
+                    (1,3).into()
                 ]),
                 Line::Straight(vec![
-                    (Value::Float(1.), Value::Float(3.)).into(),
-                    (Value::Float(0.), Value::Float(3.)).into()
+                    (1,3).into(),
+                    (0,3).into()
                 ]),
                 Line::Straight(vec![
-                    (Value::Float(0.), Value::Float(3.)).into(),
-                    (Value::Float(0.), Value::Float(2.)).into()
+                    (0,3).into(),
+                    (0,2).into()
                 ])
             ]
         ]

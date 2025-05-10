@@ -1,9 +1,6 @@
 use crate::interpreter::data_types::point::Point;
 use crate::interpreter::value::Value;
-use crate::interpreter::{
-    data_types::figurearray::FigureArray,
-    errors,
-};
+use crate::interpreter::data_types::figurearray::FigureArray;
 use std::error::Error;
 
 
