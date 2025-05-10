@@ -69,7 +69,7 @@ impl Figure {
     pub fn get_max_x(&self) -> f64 {
         let max_x = self.lines.iter()
        .flat_map(|line| line.get_points())
-       .filter_map(|point| match *point.x{
+       .filter_map(|point| match *point.get_x(){
         Value::Float(f) => Some(f),
         Value::Integer(i) => Some(i as f64),
         _ => None,
@@ -81,7 +81,7 @@ impl Figure {
     pub fn get_min_x(&self) -> f64 { 
         let min_x = self.lines.iter()
        .flat_map(|line| line.get_points())
-       .filter_map(|point| match *point.x{
+       .filter_map(|point| match *point.get_x(){
         Value::Float(f) => Some(f),
         Value::Integer(i) => Some(i as f64),
         _ => None,
@@ -97,7 +97,7 @@ impl Figure {
     pub fn get_max_y(&self) -> f64 {
         let max_y = self.lines.iter()
         .flat_map(|line| line.get_points())
-        .filter_map(|point| match *point.y{
+        .filter_map(|point| match *point.get_y(){
         Value::Float(f) => Some(f),
         Value::Integer(i) => Some(i as f64),
          _ => None,
@@ -108,7 +108,7 @@ impl Figure {
     pub fn get_min_y(&self) -> f64 {
         let min_y = self.lines.iter()
         .flat_map(|line| line.get_points())
-        .filter_map(|point| match *point.y{
+        .filter_map(|point| match *point.get_y(){
         Value::Float(f) => Some(f),
         Value::Integer(i) => Some(i as f64),
          _ => None,

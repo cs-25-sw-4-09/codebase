@@ -6,8 +6,8 @@ use std::ops;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Point {
-    pub x: Box::<Value>, 
-    pub y: Box::<Value>
+    x: Box::<Value>, 
+    y: Box::<Value>
 }
 
 impl From<(Value, Value)> for Point {
@@ -39,12 +39,21 @@ impl TryFrom<(&Expr, &mut IEnvironment)> for Point {
 }
 
 impl Point { 
-    pub fn x(&mut self) -> &mut Value{
-        &mut self.x
-    }
     
-    pub fn y(&mut self) -> &mut Value{
-        &mut self.y
+    pub fn get_x(&self) -> &Value{
+        &self.x
+    }
+
+    pub fn get_y(&self) -> &Value{
+        &self.y
+    }
+
+    pub fn set_x(&mut self, value: Value) {
+        self.x = Box::new(value);
+    }
+
+    pub fn set_y(&mut self, value: Value) {
+        self.y = Box::new(value);
     }
 }
 
