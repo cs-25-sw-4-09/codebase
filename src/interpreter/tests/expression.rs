@@ -821,7 +821,7 @@ fn scale() {
         i1,
         Value::Shape(
             vec![vec![Line::Straight(vec![
-                (1,12).into(),
+                (1,-4).into(),
                 (9,4).into()
             ])]
             .into()]

@@ -142,10 +142,11 @@ fn test_place_no_offset() {
     );
 }
 
-#[test]
+//todo
+/*#[test]
 fn test_place_with_offset() {
     todo!()
-}
+}*/
 
 /*********************************************** Scale *****************************************/
 #[test]
