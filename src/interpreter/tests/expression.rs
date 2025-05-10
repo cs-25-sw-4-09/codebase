@@ -4,11 +4,8 @@ use crate::{
     interpreter::{
         data_types::{
             figure::{Figure, Line},
-
             figurearray::FigureArray,
-
             point::Point,
-
         },
         environment::IEnvironment,
         errors,
@@ -16,20 +13,9 @@ use crate::{
         InterpretE, InterpretS,
     },
     program::{
-
-        expression::Expr,
-        operators::{
-            binaryoperator::BinaryOperator, pathoperator::PathOperator,
-            unaryoperator::UnaryOperator,
-        },
-        r#type::Type,
-        statement::Stmt,
-
         expression::Expr, operators::{
-            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
-            unaryoperator::UnaryOperator,
+            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator, unaryoperator::UnaryOperator
         }, program::Program, statement::Stmt, r#type::Type
-
     },
 };
 
@@ -494,14 +480,13 @@ fn scale() {
     assert_eq!(
         i1,
         Value::Shape(
-
             vec![vec![Line::Straight(vec![
                 (Value::Float(1.0), Value::Float(12.0)).into(),
                 (Value::Float(9.0), Value::Float(4.0)).into()
             ])]
             .into()]
             .into(),
-        ) 
+        )
     );
 }
 
@@ -1098,7 +1083,6 @@ fn polygonoperation_curve() {
     );
 }
 
-
 //todo Få sjernholm til at tjekke
 /*
 #[test]
@@ -1153,23 +1137,23 @@ pub fn scall_pathpoly() {
 pub fn scall_identifier() {
     let mut env = IEnvironment::new();
 
-    let pgr = Program::new(&"width: int = 3;
+    let pgr = Program::new(
+        &"width: int = 3;
     begin
     x: shape = (width,2)--(width,4)(|fill = (255,255,255,255)|);
     draw x;
-    ".into()).unwrap();
+    "
+        .into(),
+    )
+    .unwrap();
 
     env.stable_push("figure".into(), pgr);
 
-
     let i1 = Expr::SCall {
         name: Some("figure".into()),
-        args: vec![(
-            "width".to_owned(),
-            Expr::Float(4.2).into(),
-        )]
-        .into_iter()
-        .collect(),
+        args: vec![("width".to_owned(), Expr::Float(4.2).into())]
+            .into_iter()
+            .collect(),
         path_poly: None,
     }
     .interpret(&mut env)
@@ -1202,4 +1186,3 @@ pub fn scall_identifier() {
         )
     )
 }
-
