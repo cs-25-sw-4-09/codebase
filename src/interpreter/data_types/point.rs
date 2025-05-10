@@ -2,7 +2,7 @@ use crate::{
     interpreter::{environment::IEnvironment, value::Value, InterpretE}, 
     program::expression::Expr
 };
-use std::ops;
+use std::ops::{self, Mul};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Point {
@@ -79,6 +79,17 @@ impl ops::Sub for Point {
         Self { 
             x: Box::new(new_x),
             y: Box::new(new_y)
+        }
+    }
+}
+
+impl Mul<Value> for Point {
+    type Output = Point;
+
+    fn mul(self, rhs: Value) -> Self::Output {
+        Self {
+            x: Box::new(*self.x * rhs.clone()),
+            y: Box::new(*self.y * rhs),
         }
     }
 }

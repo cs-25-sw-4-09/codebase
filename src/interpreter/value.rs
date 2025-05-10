@@ -1,8 +1,8 @@
 
 use super::data_types::{figure::Figure, figurearray::FigureArray, point::Point};
-use std::{error::Error, ops::{Add, Neg, Sub},cmp::Ordering};
+use std::{cmp::Ordering, error::Error, ops::{Add, Mul, Neg, Sub}};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Value {
     Integer(i64),
     Variable(String),
@@ -94,6 +94,36 @@ impl Sub for Value {
     }
 }
 
+impl Sub for &Value {
+    type Output = Value;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        match (self, rhs) {
+        (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 - v2),
+        (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 - v2),
+        (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 - *v2 as f64),
+        (Value::Integer(v1), Value::Float(v2)) => Value::Float(*v1 as f64 - v2),
+        _ => unreachable!()
+        }
+    }
+}
+
+
+impl Mul for Value {
+    type Output = Value;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        match (self, rhs) {
+            (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 * v2),
+            (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 * v2),
+            (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 * v2 as f64),
+            (Value::Integer(v1), Value::Float(v2)) => Value::Float(v1 as f64 * v2),
+            _ => unreachable!()
+        }
+    }
+}
+
+
 impl Neg for Value {
     type Output = Value;
 
@@ -101,6 +131,18 @@ impl Neg for Value {
         match self {
             Value::Integer(i) => Value::Integer(-i),
             Value::Float(i) => Value::Float(-i),
+            _ => unreachable!()
+        }
+    }
+}
+
+impl Neg for &Value {
+    type Output = Value;
+
+    fn neg(self) -> Self::Output {
+        match self {
+            Value::Integer(i) => Value::Integer(-(*i)),
+            Value::Float(i) => Value::Float(-(*i)),
             _ => unreachable!()
         }
     }
@@ -121,19 +163,6 @@ impl Ord for Value {
 impl PartialOrd for Value {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other)) 
-    }
-}
-
-
-impl PartialEq for Value {
-    fn eq(&self, other: &Self) -> bool {
-        match (self, other) {
-            (Value::Integer(v1), Value::Integer(v2)) => v1 == v2,
-            (Value::Float(v1), Value::Float(v2)) => v1 == v2,
-            (Value::Integer(v1), Value::Float(v2)) => (*v1 as f64) == *v2,
-            (Value::Float(v1), Value::Integer(v2)) => *v1 == (*v2 as f64),
-            _ => false,
-        }
     }
 }
 
