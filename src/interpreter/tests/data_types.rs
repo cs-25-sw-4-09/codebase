@@ -1,4 +1,4 @@
-use crate::interpreter::data_types::{line::Line, point::Point, figure::Figure};
+use crate::interpreter::data_types::{line::Line, point::Point};
 use super::*;
 
 
@@ -76,22 +76,22 @@ fn get_pop_last_first_line() {
 #[test]
 fn top_left() {
     let i1 = basic_house().get_shape().unwrap();
-    assert_eq!(i1.get_top_left(), (0,2).into());
+    assert_eq!(Value::Point(i1.get_top_left()), (0,2).into());
 
     let i2 = basic_square().get_shape().unwrap();
-    assert_eq!(i2.get_top_left(), (0,1).into());
+    assert_eq!(Value::Point(i2.get_top_left()), (0,1).into());
     
     let i3 = basic_triangle().get_shape().unwrap();
-    assert_eq!(i3.get_top_left(), (0,2).into());
+    assert_eq!(Value::Point(i3.get_top_left()), (0,2).into());
 }
 
 #[test]
 fn min_max_shape() {
     let i1 = basic_house().get_shape().unwrap().clone();
-    assert_eq!(i1.max_x(), 1.);
-    assert_eq!(i1.min_x(), 0.);
-    assert_eq!(i1.max_y(), 2.);
-    assert_eq!(i1.min_y(), 0.);
+    assert_eq!(i1.max_x(), 1.0.into());
+    assert_eq!(i1.min_x(), 0.0.into());
+    assert_eq!(i1.max_y(), 2.0.into());
+    assert_eq!(i1.min_y(), 0.0.into());
 }
 
 #[test]

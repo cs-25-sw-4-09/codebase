@@ -486,6 +486,7 @@ fn scale() {
     );
 }
 
+#[test]
 fn pathoperation_point_point() {
     let mut env = IEnvironment::new();
 

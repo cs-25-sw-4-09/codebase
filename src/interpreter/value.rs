@@ -54,6 +54,23 @@ impl Value {
     }
 }
 
+impl From<i64> for Value {
+    fn from(value: i64) -> Self {
+        Self::Integer(value)
+    }
+}
+impl From<f64> for Value {
+    fn from(value: f64) -> Self {
+        Self::Float(value)
+    }
+}
+
+impl From<(i64,i64)> for Value {
+    fn from(value: (i64,i64)) -> Self {
+        Self::Point(value.into())
+    }
+}
+
 
 impl Add for Value {
     type Output = Value;
@@ -109,7 +126,7 @@ impl Ord for Value {
 
 impl PartialOrd for Value {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other)) // delegate to your existing Ord implementation
+        Some(self.cmp(other)) 
     }
 }
 

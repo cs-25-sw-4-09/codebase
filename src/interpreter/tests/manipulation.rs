@@ -3,9 +3,6 @@ use crate::interpreter::{data_types::line::Line, value::Value};
 use super::super::utils::manipulation::*;
 use super::*;
 
-
-
-
 /****************************** Place *******************************/
 #[test] 
 fn create_direction_enum() {
@@ -145,4 +142,13 @@ fn test_place_no_offset() {
     );
 }
 
+#[test]
+fn test_place_with_offset() {
+    todo!()
+}
 
+/*********************************************** Scale *****************************************/
+
+
+
+/*********************************************** Rotate ****************************************/
