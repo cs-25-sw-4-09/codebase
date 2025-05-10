@@ -1,13 +1,14 @@
+import square "./square.extension";
 begin
 
-x:int[] = [1,2,3];
+base: shape = rectangle(|height=height, width=width, fill = color_base|);
+roof: shape = triangle(|width=width, height=height-width, fill = color_roof|);
 
-y:int[] = push(x,4);
-//v:int[] = push([1,2,3],4);
+window: shape = window(|width = width/8, fill = (0,255,255,255), border = (0,0,0,255)|);
+door: shape = rectangle(|height=(height-width)*2, width=width/6, fill = (133,72,54,255)|);
 
+house: shape = place roof top base;
+house = place window ontop (width/2- width/4, height-width + width/2- width/4) offset house;
+house = place door bottom (width/2, door.height) offset house;
 
-// y = [1,2,3,4];
-
-z:int[] = remove(x,1);
-
-// z = [1,3]
+draw house;

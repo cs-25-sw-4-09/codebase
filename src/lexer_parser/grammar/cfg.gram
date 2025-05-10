@@ -36,62 +36,61 @@ grammar cfg
     //Declarations
     declS -> (import | decl)*;
     import -> 'import'! IDENTIFIER STRING ';'!;
-    decl -> IDENTIFIER ':'! types ('='! exprS)?';'!;
+    decl -> IDENTIFIER ':'! types ('='! exprT2)?';'!;
 
     //Statements
     stmtS -> (forkS | for | draw | return | funcDecl | assign | arrayAssign | varDecl)+;
 
     forkS -> 'fork'! '{'! fork^ '}'!;
-    for -> 'for'! IDENTIFIER 'in'! exprS 'to'! exprS '{'! stmtS '}'! ;
-    draw -> 'draw'! exprS ('at'! exprS)? ';'!;
-    return -> 'return'! exprS ';'!;
+        fork -> forkCase+ otherwise?;
+        forkCase -> '('! exprV ')'! '->'! '{'! stmtS '}'!;
+        otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
+    for -> 'for'! IDENTIFIER 'in'! exprV 'to'! exprV '{'! stmtS '}'! ;
+    draw -> 'draw'! exprT1 ('at'! exprT1)? ';'!;
+    return -> 'return'! exprT2 ';'!;
     funcDecl -> IDENTIFIER '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;
-    assign -> IDENTIFIER '='! exprS ';'!;
-    varDecl -> IDENTIFIER ':'! types '='! exprS ';'!;
-    arrayAssign -> IDENTIFIER '['! exprS ']'! '='!  exprS ';'!;    
+        params -> param (','! param)*;
+        param -> IDENTIFIER ':'! types;
+    assign -> IDENTIFIER '='! exprT2 ';'!;
+    varDecl -> IDENTIFIER ':'! types '='! exprT2 ';'!;
+    arrayAssign -> IDENTIFIER '['! exprV ']'! '='!  exprV ';'!;    
 
-    fork -> forkExpr+ otherwise?;
-    forkExpr -> '('! expr? ')'! '->'! '{'! stmtS '}'!;
-    otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
+
 
     //Expressions
-    exprS -> (manipulation | expr | exprS1)^;
-    exprS1 -> (path | polygon | SCall | exprS2)^;
-    exprS2 -> IDENTIFIER^;
-    expr -> expr '||'^ expr1 | expr1^;
-    expr1 -> expr1 '&&'^ expr2 | expr2^;
-    expr2 -> expr3 ('==' | '<' | '>' | '>=' | '<=' | '!=')^ expr3 | expr3^;
-    expr3 -> expr3 '+'^ expr4 | expr3 '-'^ expr4 | expr4^;
-    expr4 -> expr4 '%'^ expr5 | expr4 '*'^ expr5 | expr4 '/'^ expr5 | expr5^;
-    expr5 -> '-'^expr6 | '!'^expr6 | expr6^;
-    expr6 -> '('! exprS^ ')'! | expr7^;
-    expr7 -> ( color | point | FCall | FLOAT | INTEGER | IDENTIFIER | member | array | BOOLEAN | arrayIdx)^;
+    exprT2 -> (array | exprT1)^ ;
+      array -> '['! (exprT1 (','! exprT1)*)? ']'! ;
+    exprT1 -> (exprV | path | polygon | exprS)^;
+
+    point -> '('! exprV ','! exprV ')'! ;
+    color -> '('! exprV ','! exprV ','! exprV ','! exprV ')'!;
+    path   -> exprV (('--' | '~~')^ exprV)+ ;
+    polygon -> path(('--*' | '~~*')^) ;
+
+    exprS -> (manipulation | SCall)^ ;
+    manipulation -> place | scale | rotate;
+    scale -> 'scale'! exprT1 'by'! exprV;
+    rotate -> 'rotate'! exprT1 'by'! exprV;
+    place -> 'place'! exprT1 pos (exprV 'offset'!)? exprT1  ;
+        pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop')^;
+    SCall -> (exprV | path | polygon) '(|'! attrS '|)'!;
+        attrS -> (attr (','! attr)*)? ;
+        attr -> IDENTIFIER '='! exprT2;
+
+    exprV -> exprV '||'^ exprV1 | exprV1^;
+    exprV1 -> exprV1 '&&'^ exprV2 | exprV2^;
+    exprV2 -> exprV3 ('==' | '<' | '>' | '>=' | '<=' | '!=')^ exprV3 | exprV3^;
+    exprV3 -> exprV3 '+'^ exprV4 | exprV3 '-'^ exprV4 | exprV4^;
+    exprV4 -> exprV4 '%'^ exprV5 | exprV4 '*'^ exprV5 | exprV4 '/'^ exprV5 | exprV5^;
+    exprV5 -> '-'^exprV6 | '!'^exprV6 | exprV6^;
+    exprV6 -> '('! exprV^ ')'! | exprV7^;
+    exprV7 -> ( FCall | FLOAT | INTEGER | member | BOOLEAN | arrayIdx | IDENTIFIER | color | point )^;
 
     FCall -> IDENTIFIER '('! args? ')'!;
+    args -> exprT2 (','! exprT2)*;
 
+    arrayIdx -> IDENTIFIER '['! exprV ']'!;
     member -> IDENTIFIER '.'! IDENTIFIER;
-    point -> '('! expr ','! expr ')'!;
-    color -> '('! (expr) ','! (expr) ','! (expr) ','! (expr)')'! ;
-    path   -> (point | IDENTIFIER) (('--' | '~~')^ (point | IDENTIFIER))+;
-    polygon -> exprS1(('--*' | '~~*')^);
-
-    args -> exprS (','! exprS)*;
-
-    SCall -> (path | IDENTIFIER | polygon) '(|'! /*attrS*/ '|)'!;
-    attrS -> (attr (','! attr)*)? ;
-    attr -> IDENTIFIER '='! exprS;
-
-    arrayIdx -> IDENTIFIER ('['! exprS ']'!)+;
-    array -> '['! ((exprS (','! exprS)*))? ']'!;
-
-    pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop') exprS1 ('by'! point)?;
-    manipulation -> place | scale | rotate;
-    place -> 'place'! exprS1 pos;
-    scale -> 'scale'! exprS1 'by'! expr;
-    rotate -> 'rotate'! exprS1 'by'! expr;
-
-    params -> param (','! param)*;
-    param -> IDENTIFIER ':'! types;
 
     //Types
     types -> ('int' | 'float' | 'point' | 'color'
