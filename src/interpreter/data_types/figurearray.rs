@@ -30,17 +30,17 @@ impl FigureArray {
 
     pub fn min_x(&self) -> f64 {
         self.0.iter().map(|fig| fig.get_min_x())
-            .max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+            .min_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
             .unwrap_or(0f64) 
     }
     pub fn max_y(&self) -> f64 {
         self.0.iter().map(|fig| fig.get_max_y())
-            .max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
-            .unwrap_or(0f64)
+        .max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+        .unwrap_or(0f64)
     }
     pub fn min_y(&self) -> f64 {
         self.0.iter().map(|fig| fig.get_min_y())
-        .max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+        .min_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
         .unwrap_or(0f64)
     }
 
