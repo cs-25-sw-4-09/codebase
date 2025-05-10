@@ -9,6 +9,7 @@ use crate::{
 };
 use std::error::Error;
 
+
 pub fn scale(shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
     let mut shape = shape.clone();
     let origin_x = shape

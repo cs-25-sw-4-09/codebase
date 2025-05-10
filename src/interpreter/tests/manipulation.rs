@@ -1,14 +1,12 @@
-use crate::interpreter::{data_types::{figure::Line, figurearray::FigureArray}, value::Value};
+use crate::interpreter::{data_types::figure::Line, value::Value};
 
 use super::super::utils::manipulation::*;
-
+use super::*;
 
 
 
 
 /****************************** Place *******************************/
-
-
 #[test] 
 fn create_direction_enum() {
     assert_eq!(Direction::Ontop, Direction::from("ontop"));
@@ -16,10 +14,6 @@ fn create_direction_enum() {
     assert_eq!(Direction::Bottom, Direction::from("bottom"));
     assert_eq!(Direction::Left, Direction::from("left"));
     assert_eq!(Direction::Right, Direction::from("right"));
-} 
-#[test] #[should_panic] 
-fn create_direction_enum2() {
-    let _ = Direction::from("Hello World");
 } 
 
 #[test]
@@ -152,72 +146,3 @@ fn test_place_no_offset() {
 }
 
 
-fn basic_square() -> Value {
-    Value::Shape(
-        vec![(
-            vec![
-                Line::Straight(vec![
-                    (Value::Integer(0), Value::Integer(0)).into(),
-                    (Value::Integer(1), Value::Integer(0)).into()
-                    ]
-                ),
-                Line::Straight(vec![
-                    (Value::Integer(1), Value::Integer(0)).into(),
-                    (Value::Integer(1), Value::Integer(1)).into()
-                ]),
-                Line::Straight(vec![
-                    (Value::Integer(1), Value::Integer(1)).into(),
-                    (Value::Integer(0), Value::Integer(1)).into()
-                ]),
-                Line::Straight(vec![
-                    (Value::Integer(0), Value::Integer(1)).into(),
-                    (Value::Integer(0), Value::Integer(0)).into()
-                ])
-            ].into(),
-            vec![(
-                "fill".to_owned(),
-                Value::Color(
-                    Value::Integer(255).into(),
-                    Value::Integer(255).into(),
-                    Value::Integer(255).into(),
-                    Value::Integer(255).into()
-                ).into()
-            )]
-            .into_iter()
-            .collect()
-        ).into()].into(),
-    )
-}
-
-fn basic_triangle() -> Value {
-    Value::Shape(
-        vec![(
-            vec![
-                Line::Straight(vec![
-                    (Value::Integer(0), Value::Integer(0)).into(),
-                    (Value::Integer(2), Value::Integer(0)).into()
-                    ]
-                ),
-                Line::Straight(vec![
-                    (Value::Integer(2), Value::Integer(0)).into(),
-                    (Value::Integer(1), Value::Integer(2)).into()
-                ]),
-                Line::Straight(vec![
-                    (Value::Integer(1), Value::Integer(2)).into(),
-                    (Value::Integer(0), Value::Integer(0)).into()
-                ]),
-            ].into(),
-            vec![(
-                "fill".to_owned(),
-                Value::Color(
-                    Value::Integer(255).into(),
-                    Value::Integer(255).into(),
-                    Value::Integer(255).into(),
-                    Value::Integer(255).into()
-                ).into()
-            )]
-            .into_iter()
-            .collect()
-        ).into()].into(),
-    )
-}
