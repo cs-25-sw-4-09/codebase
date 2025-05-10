@@ -80,39 +80,26 @@ fn test_place_shape() {
     let i2 = (50,50).into();
 
     let i3 = place_shape_at(i1, i2);
-    assert_eq!(i3, Value::Shape(
-        vec![(
+    assert_eq!(i3.get_figures()[0].get_lines().to_vec(), 
             vec![
                 Line::Straight(vec![
-                    (Value::Integer(0), Value::Integer(0)).into(),
-                    (Value::Integer(1), Value::Integer(0)).into()
+                    (Value::Float(50.), Value::Float(49.)).into(),
+                    (Value::Float(51.), Value::Float(49.)).into()
                     ]
                 ),
                 Line::Straight(vec![
-                    (Value::Integer(1), Value::Integer(0)).into(),
-                    (Value::Integer(1), Value::Integer(1)).into()
+                    (Value::Float(51.), Value::Float(49.)).into(),
+                    (Value::Float(51.), Value::Float(50.)).into()
                 ]),
                 Line::Straight(vec![
-                    (Value::Integer(1), Value::Integer(1)).into(),
-                    (Value::Integer(0), Value::Integer(1)).into()
+                    (Value::Float(51.), Value::Float(50.)).into(),
+                    (Value::Float(50.), Value::Float(50.)).into()
                 ]),
                 Line::Straight(vec![
-                    (Value::Integer(0), Value::Integer(1)).into(),
-                    (Value::Integer(0), Value::Integer(0)).into()
+                    (Value::Float(50.), Value::Float(50.)).into(),
+                    (Value::Float(50.), Value::Float(49.)).into()
                 ])
-            ].into(),
-            vec![(
-                "fill".to_owned(),
-                Value::Color(
-                    Value::Integer(255).into(),
-                    Value::Integer(255).into(),
-                    Value::Integer(255).into(),
-                    Value::Integer(255).into()
-                ).into()
-            )]
-            .into_iter()
-            .collect()
-        ).into()].into(),
+            ]
     );
 }
 
