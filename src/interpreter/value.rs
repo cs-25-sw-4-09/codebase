@@ -87,8 +87,8 @@ impl Neg for Value {
 
     fn neg(self) -> Self::Output {
         match self {
-            Value::Integer(i) => Value::Integer(i),
-            Value::Float(i) => Value::Float(i),
+            Value::Integer(i) => Value::Integer(-i),
+            Value::Float(i) => Value::Float(-i),
             _ => unreachable!()
         }
     }

@@ -75,8 +75,9 @@ pub fn place_shape_at(mut s: FigureArray, p: Point) -> FigureArray {
     s
 }
 
-fn place_point_at(point_top_left: Point, point: Point, offset: Point) -> Point { (point_top_left - point) + offset }
+pub fn place_point_at(point_top_left: Point, point: Point, offset: Point) -> Point { (point - point_top_left) + offset }
 
+#[derive(PartialEq, Debug)]
 pub enum Direction {
     Top, 
     Bottom, 
@@ -100,12 +101,12 @@ impl From<&str> for Direction {
 }
 
 impl Direction {
-    fn offset(&self, s1: &FigureArray, s2: &FigureArray) -> Point {
+    pub fn offset(&self, s1: &FigureArray, s2: &FigureArray) -> Point {
         match self {
             Direction::Top => (Value::Integer(0), s1.height()),
             Direction::Bottom => (Value::Integer(0), -s2.height()),
-            Direction::Right => (-s1.width(), Value::Integer(0)),
-            Direction::Left => (-s2.width(), Value::Integer(0)),
+            Direction::Left => (-s1.width(), Value::Integer(0)),
+            Direction::Right => (s2.width(), Value::Integer(0)),
             Direction::Ontop => (Value::Integer(0), Value::Integer(0)),
         }.into()
     }
