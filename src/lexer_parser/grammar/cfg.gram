@@ -36,7 +36,7 @@ grammar cfg
     //Declarations
     declS -> (import | decl)*;
     import -> 'import'! IDENTIFIER STRING ';'!;
-    decl -> IDENTIFIER ':'! types ('='! exprT2)?';'!;
+    decl -> IDENTIFIER ':'! types ('='! exprT)?';'!;
 
     //Statements
     stmtS -> (forkS | for | draw | return | funcDecl | assign | arrayAssign | varDecl)+;
@@ -46,21 +46,20 @@ grammar cfg
         forkCase -> '('! exprV ')'! '->'! '{'! stmtS '}'!;
         otherwise -> '('! 'otherwise'! ')'! '->'! '{'! stmtS '}'!;
     for -> 'for'! IDENTIFIER 'in'! exprV 'to'! exprV '{'! stmtS '}'! ;
-    draw -> 'draw'! exprT1 ('at'! exprT1)? ';'!;
-    return -> 'return'! exprT2 ';'!;
+    draw -> 'draw'! exprT ('at'! exprT)? ';'!;
+    return -> 'return'! exprT ';'!;
     funcDecl -> IDENTIFIER '('! params? ')'! ':'! types '->'! '{'! stmtS '}'!;
         params -> param (','! param)*;
         param -> IDENTIFIER ':'! types;
-    assign -> IDENTIFIER '='! exprT2 ';'!;
-    varDecl -> IDENTIFIER ':'! types '='! exprT2 ';'!;
+    assign -> IDENTIFIER '='! exprT ';'!;
+    varDecl -> IDENTIFIER ':'! types '='! exprT ';'!;
     arrayAssign -> IDENTIFIER '['! exprV ']'! '='!  exprV ';'!;    
 
 
 
     //Expressions
-    exprT2 -> (array | exprT1)^ ;
-      array -> '['! (exprT1 (','! exprT1)*)? ']'! ;
-    exprT1 -> (exprV | path | polygon | exprS)^;
+    exprT -> (array| exprV | path | polygon | exprS)^ ;
+      array -> '['! (exprT (','! exprT)*)? ']'! ;
 
     point -> '('! exprV ','! exprV ')'! ;
     color -> '('! exprV ','! exprV ','! exprV ','! exprV ')'!;
@@ -69,13 +68,13 @@ grammar cfg
 
     exprS -> (manipulation | SCall)^ ;
     manipulation -> place | scale | rotate;
-    scale -> 'scale'! exprT1 'by'! exprV;
-    rotate -> 'rotate'! exprT1 'by'! exprV;
-    place -> 'place'! exprT1 pos (exprV 'offset'!)? exprT1  ;
+    scale -> 'scale'! exprT 'by'! exprV;
+    rotate -> 'rotate'! exprT 'by'! exprV;
+    place -> 'place'! exprT pos (exprV 'offset'!)? exprT ;
         pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop')^;
     SCall -> (exprV | path | polygon) '(|'! attrS '|)'!;
         attrS -> (attr (','! attr)*)? ;
-        attr -> IDENTIFIER '='! exprT2;
+        attr -> IDENTIFIER '='! exprT;
 
     exprV -> exprV '||'^ exprV1 | exprV1^;
     exprV1 -> exprV1 '&&'^ exprV2 | exprV2^;
@@ -87,7 +86,7 @@ grammar cfg
     exprV7 -> ( FCall | FLOAT | INTEGER | member | BOOLEAN | arrayIdx | IDENTIFIER | color | point )^;
 
     FCall -> IDENTIFIER '('! args? ')'!;
-    args -> exprT2 (','! exprT2)*;
+    args -> exprT (','! exprT)*;
 
     arrayIdx -> IDENTIFIER '['! exprV ']'!;
     member -> IDENTIFIER '.'! IDENTIFIER;
