@@ -2,11 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     interpreter::{
-        data_types::{
-            figure::{Figure, Line},
-            figurearray::FigureArray,
-            point::Point,
-        },
+        data_types::line::Line,
         environment::IEnvironment,
         errors,
         value::Value,

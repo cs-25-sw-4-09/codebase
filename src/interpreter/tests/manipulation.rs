@@ -1,4 +1,4 @@
-use crate::interpreter::{data_types::figure::Line, value::Value};
+use crate::interpreter::{data_types::line::Line, value::Value};
 
 use super::super::utils::manipulation::*;
 use super::*;

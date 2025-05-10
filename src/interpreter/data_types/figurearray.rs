@@ -1,5 +1,3 @@
-use crate::{interpreter::errors, program::expression::Expr};
-use std::{collections::HashMap, error::Error};
 use super::{figure::Figure, point::Point};
 use crate::interpreter::value::Value;
 

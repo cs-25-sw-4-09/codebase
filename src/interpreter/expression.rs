@@ -1,10 +1,10 @@
 use crate::{
-    interpreter::{data_types::figure::Line, InterpretS},
+    interpreter::{data_types::line::Line, InterpretS},
     program::expression::Expr,
 };
 
 use super::{data_types::{figurearray::FigureArray, point::Point}, errors, utils::manipulation::{
-        place, scale, Direction
+        place, scale
     }, value::Value, InterpretE, InterpretP
 };
 

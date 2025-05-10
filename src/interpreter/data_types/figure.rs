@@ -1,6 +1,6 @@
-use crate::{interpreter::errors, program::expression::Expr};
-use std::{collections::HashMap, default, error::Error};
-use super::point::Point;
+use crate::interpreter::errors;
+use std::{collections::HashMap, error::Error};
+use super::{line::Line, point::Point};
 use crate::interpreter::value::Value;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -67,7 +67,7 @@ impl Figure {
 
 
     pub fn get_max_x(&self) -> f64 {
-        let mut max_x = self.lines.iter()
+        let max_x = self.lines.iter()
        .flat_map(|line| line.get_points())
        .filter_map(|point| match *point.x{
         Value::Float(f) => Some(f),
@@ -79,7 +79,7 @@ impl Figure {
 
 
     pub fn get_min_x(&self) -> f64 { 
-        let mut min_x = self.lines.iter()
+        let min_x = self.lines.iter()
        .flat_map(|line| line.get_points())
        .filter_map(|point| match *point.x{
         Value::Float(f) => Some(f),
@@ -141,55 +141,5 @@ impl Figure {
      }
 
 
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum Line {
-    Straight(Vec<Point>),
-    Curved(Vec<Point>)
-}
-impl Line {
-    pub fn get_points(&self) -> &Vec<Point> { match self {
-        Line::Straight(points) | 
-        Line::Curved(points) => &points,
-    }  }
-
-    pub fn push_point(&mut self, val: Point) { 
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.push(val),
-        } 
-    }
-    pub fn get_last_point(&self) -> Result<&Point, Box<dyn Error>> {
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.last().ok_or_else(|| errors::NoLinesInFigure.into())
-        }
-    }
-    pub fn get_first_point(&self) -> Result<&Point, Box<dyn Error>> {
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.first().ok_or_else(|| errors::NoLinesInFigure.into())
-        }
-    }
-    pub fn insert_point_first(&mut self, p: Point) {
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.insert(0, p),
-        }
-    }
-    pub fn insert_point_last(&mut self, p: Point) {
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.push(p)
-        }
-    }
-
-    pub fn get_mut_points(&mut self) -> &mut Vec<Point> {
-        match self {
-            Line::Straight(points) |
-            Line::Curved(points) => points,
-        }
-    }
 }
 

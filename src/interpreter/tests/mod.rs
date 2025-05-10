@@ -11,10 +11,9 @@ mod manipulation;
 #[cfg(test)]
 mod data_types;
 
-
-
-use crate::interpreter::data_types::figure::Line;
+use crate::interpreter::data_types::line::Line;
 use super::value::Value;
+#[allow(dead_code)]
 pub fn basic_square() -> Value {
     Value::Shape(
         vec![(
@@ -52,6 +51,7 @@ pub fn basic_square() -> Value {
     )
 }
 
+#[allow(dead_code)]
 pub fn basic_triangle() -> Value {
     Value::Shape(
         vec![(
