@@ -66,7 +66,7 @@ impl Figure {
     }
 
 
-    pub fn get_max_x(&self) -> f64 {
+    /*pub fn get_max_x(&self) -> f64 {
         let max_x = self.lines.iter()
        .flat_map(|line| line.get_points())
        .filter_map(|point| match *point.get_x(){
@@ -75,10 +75,10 @@ impl Figure {
         _ => None,
        }).max_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).unwrap_or(0f64);
        max_x
-    }
+    }*/
 
 
-    pub fn get_min_x(&self) -> f64 { 
+    /*pub fn get_min_x(&self) -> f64 { 
         let min_x = self.lines.iter()
        .flat_map(|line| line.get_points())
        .filter_map(|point| match *point.get_x(){
@@ -87,14 +87,44 @@ impl Figure {
         _ => None,
        }).min_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).unwrap_or(0f64);
        min_x
+    }*/
+
+    /*pub fn get_height(&self) -> f64 {
+        self.get_max_x() - self.get_min_x()
+     }*/
+
+    pub fn get_max_x(&self) -> Value { 
+        self.lines.iter().flat_map(
+            |line| line.get_points().iter().map(|p| p.get_x())
+        ).max().unwrap_or(&Value::Integer(0)).clone()
     }
 
 
-    pub fn get_height(&self) -> f64 {
-       self.get_max_x() - self.get_min_x()
+    pub fn get_min_x(&self) -> Value { 
+        self.lines.iter().flat_map(
+            |line| line.get_points().iter().map(|p| p.get_x())
+        ).min().unwrap_or(&Value::Integer(0)).clone()
     }
 
-    pub fn get_max_y(&self) -> f64 {
+    pub fn get_max_y(&self) -> Value { 
+        self.lines.iter().flat_map(
+            |line| line.get_points().iter().map(|p| p.get_y())
+        ).max().unwrap_or(&Value::Integer(0)).clone()
+    }
+
+    pub fn get_min_y(&self) -> Value { 
+        self.lines.iter().flat_map(
+            |line| line.get_points().iter().map(|p| p.get_y())
+        ).min().unwrap_or(&Value::Integer(0)).clone()
+    }
+
+    pub fn get_height(&self) -> Value {
+        self.get_max_x() - self.get_min_x()
+    }
+
+    
+
+    /*pub fn get_max_y(&self) -> f64 {
         let max_y = self.lines.iter()
         .flat_map(|line| line.get_points())
         .filter_map(|point| match *point.get_y(){
@@ -115,10 +145,10 @@ impl Figure {
         }).min_by(|a,b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).unwrap_or(0f64);
 
         min_y
-    }
+    }*/
 
 
-    pub fn get_width(&self) -> f64 {
+    pub fn get_width(&self) -> Value {
         self.get_max_y() - self.get_min_y()
      }
 

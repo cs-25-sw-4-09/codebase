@@ -415,19 +415,15 @@ impl InterpretE for Expr {
                         _ => unreachable!(),
                     },
                     Value::Shape(figures) => match member_access.as_str() {
-                        "height" => &Value::Float(
-                            figures.get_figures().iter().map(|f| f.get_height()).max_by(|a, b| a.partial_cmp(b).unwrap())
+                        "height" => &figures.get_figures().iter().map(|f| f.get_height()).max_by(|a, b| a.partial_cmp(b).unwrap())
                             .ok_or_else(|| Box::new(errors::MaxCanNotBeFound))?,
-                        ),
-                        "width" => &Value::Float(
-                            figures.get_figures().iter().map(|f| f.get_width()).max_by(|a, b| a.partial_cmp(b).unwrap())
+                        "width" => &figures.get_figures().iter().map(|f| f.get_width()).max()
                             .ok_or_else(|| Box::new(errors::MaxCanNotBeFound))?,
-                        ),
                         _ => unreachable!(),
                     },
                     Value::Figure(figure) => match member_access.as_str() {
-                        "height" => &Value::Float(figure.get_height()),
-                        "width" => &Value::Float(figure.get_width()),
+                        "height" => &figure.get_height(),
+                        "width" => &figure.get_width(),
                         _ => unreachable!(),
                     },
                     Value::Array(array) => match member_access.as_str() {

@@ -6,8 +6,11 @@ use crate::interpreter::{
 };
 use std::error::Error;
 
-
 pub fn scale(shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
+    Ok(FigureArray::new())
+}
+
+/*pub fn scale(shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
     let mut shape = shape.clone();
     let origin_x = shape
         .get_mut_figures()
@@ -53,7 +56,7 @@ pub fn scale(shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn E
         });
 
     Ok(shape)
-}
+}*/
 
 
 pub fn place(s1: FigureArray, mut s2: FigureArray, offset: Point, direction: Direction) -> FigureArray {
