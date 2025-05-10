@@ -55,17 +55,11 @@ pub fn scale(shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn E
 }
 
 
-//todo: 
-/*
-- Logic for top_left
-- Logic for width
-- Logic for height
-*/
 pub fn place(s1: FigureArray, mut s2: FigureArray, offset: Point, direction: Direction) -> FigureArray {
     //s1 is placed in relation to s2, so the updated s1 is added to s2
     let p_offset = offset + s2.get_top_left() + direction.offset(&s1,&s2);
     let fig_new = place_shape_at(s1, p_offset);
-    s2.push_figures(fig_new);
+    s2.extend(fig_new);
     s2
 }
 
