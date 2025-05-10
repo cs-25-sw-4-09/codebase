@@ -103,6 +103,54 @@ fn test_place_shape() {
     );
 }
 
+#[test]
+fn test_place_no_offset() {
+    let i1 = basic_square().get_shape().unwrap(); 
+    let i2 = basic_triangle().get_shape().unwrap();
+
+    let i3 = place(i1, i2, (0,0).into(), Direction::Top);
+    assert_eq!(i3.get_figures().iter().map(|fig| fig.get_lines().to_vec()).collect::<Vec<Vec<Line>>>(), 
+        vec![
+            //Triangle
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(0), Value::Integer(0)).into(),
+                    (Value::Integer(2), Value::Integer(0)).into()
+                    ]
+                ),
+                Line::Straight(vec![
+                    (Value::Integer(2), Value::Integer(0)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(0), Value::Integer(0)).into()
+                ]),
+            ],
+            //New Square
+            vec![
+                Line::Straight(vec![
+                    (Value::Float(0.), Value::Float(2.)).into(),
+                    (Value::Float(1.), Value::Float(2.)).into()
+                    ]
+                ),
+                Line::Straight(vec![
+                    (Value::Float(1.), Value::Float(2.)).into(),
+                    (Value::Float(1.), Value::Float(3.)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Float(1.), Value::Float(3.)).into(),
+                    (Value::Float(0.), Value::Float(3.)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Float(0.), Value::Float(3.)).into(),
+                    (Value::Float(0.), Value::Float(2.)).into()
+                ])
+            ]
+        ]
+    );
+}
+
 
 fn basic_square() -> Value {
     Value::Shape(
