@@ -35,18 +35,47 @@ fn insert_first_and_last_point() {
 }
 
  
-/***** Figure ******/ //todo
+/***** Figure ******/
 #[test]
-fn test_height_width() {}
+fn test_height_width() {
+    let i1 = basic_square().get_shape().unwrap().get_figures().first().unwrap().clone();
+    assert_eq!(i1.get_height(), 1.);
+    assert_eq!(i1.get_width(), 1.);
+    
+    let i2 = basic_triangle().get_shape().unwrap().get_figures().first().unwrap().clone();
+    assert_eq!(i2.get_height(), 2.);
+    assert_eq!(i2.get_width(), 2.);
+}
 
 #[test]
-fn top_left() {}
+fn max_min() {
+    let i1 = basic_square().get_shape().unwrap().get_figures().first().unwrap().clone();
+    assert_eq!(i1.get_max_x(), 1.);
+    assert_eq!(i1.get_min_x(), 0.);
+    assert_eq!(i1.get_max_y(), 1.);
+    assert_eq!(i1.get_min_y(), 0.);
 
-#[test]
-fn max_min() {}
+    let i1 = basic_triangle().get_shape().unwrap().get_figures().first().unwrap().clone();
+    assert_eq!(i1.get_max_x(), 2.);
+    assert_eq!(i1.get_min_x(), 0.);
+    assert_eq!(i1.get_max_y(), 2.);
+    assert_eq!(i1.get_min_y(), 0.);
+}
 
 #[test] 
-fn get_pop_last_first_line() {}
+fn get_pop_last_first_line() {
+    let mut i1 = basic_square().get_shape().unwrap().get_figures().first().unwrap().clone();
+    assert_eq!(i1.pop_first_line().unwrap(), Line::Straight(vec![(0, 0).into(), (1,0).into()]));
+    assert_eq!(*i1.get_first_line().unwrap(), Line::Straight(vec![(1, 0).into(), (1,1).into()]));
+    assert_eq!(i1.pop_last_line().unwrap(), Line::Straight(vec![(0, 1).into(), (0,0).into()]));
+    assert_eq!(*i1.get_last_line().unwrap(), Line::Straight(vec![(1, 1).into(), (0,1).into()]));
+}
 
 
 /***** Figure Array ******/ //todo
+#[test]
+fn top_left() {
+    let i1 = basic_square().get_shape().unwrap().get_figures().first().unwrap().clone();
+    let i2 = basic_triangle().get_shape().unwrap().get_figures().first().unwrap().clone();
+
+}
