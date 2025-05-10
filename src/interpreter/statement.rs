@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::{env, path::Path};
 
 use crate::program::{expression::Expr, program::Program, statement::Stmt};
 
@@ -62,22 +62,21 @@ impl InterpretS for Stmt {
             Stmt::Import { name, path } => {
                 let subprogram = Program::from_file(Path::new(path))?;
                 environment.stable_push(name.clone(), subprogram);
-            },
+            }
 
             Stmt::Draw { shape, point } => {
                 let Value::Shape(shape) = shape.interpret(environment)? else {
                     unreachable!()
                 };
 
-
                 match point {
                     Some(point) => {
                         let p1 = point.interpret(environment)?;
                         todo!()
-                    },
+                    }
                     None => {
                         environment.darray_push(shape);
-                    },
+                    }
                 }
             }
 
@@ -129,20 +128,17 @@ impl InterpretS for Stmt {
                 }
             }
             Stmt::ArrayAssign { name, value, index } => {
-                match environment.vtable_find(name.to_owned()) {
-                    Some(_) => (),
-                    None => return Err(errors::DeclValueNotSpecified(name.to_owned()).into())
+                let index = index.interpret(environment)?.get_int()?;
+                let new_value = Box::new(value.interpret(environment)?);
+
+                let Value::Array(array) = environment.vtable_find(name.to_owned()).unwrap() else {
+                    return Err(errors::InvalidArrayAccess(name.to_owned()).into());
+                };
+                if index < 0 || index >= array.len() as i64 {
+                    return Err(errors::ArrayOutOfBounds(name.to_owned()).into());
                 }
 
-                let index = index.interpret(environment)?.get_int();   
-
-                if index.as_ref().unwrap() < &0 || index.unwrap() >= name.len() as i64 {
-                    return Err(errors::ArrayOutOfBounds(name.to_owned()).into())
-                }
-
-                let value = value.interpret(environment)?;
-                
-                //come back to push assign 
+                array[index as usize] = new_value;
             }
         }
 

@@ -2,7 +2,9 @@ use std::collections::HashMap;
 
 use crate::{
     interpreter::{
-        data_types::line::Line,
+        data_types::{
+            figure::Figure, line::Line, point::Point
+        },
         environment::IEnvironment,
         errors,
         value::Value,
@@ -323,6 +325,350 @@ fn negative() {
 
     assert_eq!(i1, Value::Integer(-4));
     assert_eq!(i2, Value::Float(-2.0));
+}
+
+#[test]
+fn greater_than_or_equals() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Integer(3).into(),
+        operator: BinaryOperator::GreaterThanOrEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::BinaryOperation {
+        lhs: Expr::Float(5.0).into(),
+        rhs: Expr::Integer(5).into(),
+        operator: BinaryOperator::GreaterThanOrEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Float(2.0).into(),
+        rhs: Expr::Float(4.0).into(),
+        operator: BinaryOperator::GreaterThanOrEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Float(5.0).into(),
+        operator: BinaryOperator::GreaterThanOrEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i1, Value::Boolean(true));
+    assert_eq!(i2, Value::Boolean(true));
+    assert_eq!(i3, Value::Boolean(false));
+    assert_eq!(i4, Value::Boolean(true));
+}
+
+#[test]
+fn less_than_or_equals() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Integer(3).into(),
+        operator: BinaryOperator::LessThanOrEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::BinaryOperation {
+        lhs: Expr::Float(5.0).into(),
+        rhs: Expr::Integer(5).into(),
+        operator: BinaryOperator::LessThanOrEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Float(2.0).into(),
+        rhs: Expr::Float(4.0).into(),
+        operator: BinaryOperator::LessThanOrEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Float(5.0).into(),
+        operator: BinaryOperator::LessThanOrEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i1, Value::Boolean(false));
+    assert_eq!(i2, Value::Boolean(true));
+    assert_eq!(i3, Value::Boolean(true));
+    assert_eq!(i4, Value::Boolean(false));
+}
+
+
+#[test]
+fn less_than() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Integer(3).into(),
+        operator: BinaryOperator::LessThan,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::BinaryOperation {
+        lhs: Expr::Float(5.0).into(),
+        rhs: Expr::Integer(5).into(),
+        operator: BinaryOperator::LessThan,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Float(2.0).into(),
+        rhs: Expr::Float(4.0).into(),
+        operator: BinaryOperator::LessThan,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Float(5.0).into(),
+        operator: BinaryOperator::LessThan,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i1, Value::Boolean(false));
+    assert_eq!(i2, Value::Boolean(false));
+    assert_eq!(i3, Value::Boolean(true));
+    assert_eq!(i4, Value::Boolean(false));
+}
+
+
+#[test]
+fn greater_than() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Integer(3).into(),
+        operator: BinaryOperator::GreaterThan,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::BinaryOperation {
+        lhs: Expr::Float(5.0).into(),
+        rhs: Expr::Integer(5).into(),
+        operator: BinaryOperator::GreaterThan,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Float(2.0).into(),
+        rhs: Expr::Float(4.0).into(),
+        operator: BinaryOperator::GreaterThan,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Float(5.0).into(),
+        operator: BinaryOperator::GreaterThan,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i1, Value::Boolean(true));
+    assert_eq!(i2, Value::Boolean(false));
+    assert_eq!(i3, Value::Boolean(false));
+    assert_eq!(i4, Value::Boolean(true));
+}
+
+#[test]
+fn equals() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Integer(3).into(),
+        operator: BinaryOperator::Equals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::BinaryOperation {
+        lhs: Expr::Float(5.0).into(),
+        rhs: Expr::Integer(5).into(),
+        operator: BinaryOperator::Equals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Integer(4).into(),
+        rhs: Expr::Integer(4).into(),
+        operator: BinaryOperator::Equals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Float(5.0).into(),
+        operator: BinaryOperator::Equals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i5 = Expr::BinaryOperation {
+        lhs: Expr::Float(10.0).into(),
+        rhs: Expr::Float(10.0).into(),
+        operator: BinaryOperator::Equals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i1, Value::Boolean(false));
+    assert_eq!(i2, Value::Boolean(true));
+    assert_eq!(i3, Value::Boolean(true));
+    assert_eq!(i4, Value::Boolean(false));
+    assert_eq!(i5, Value::Boolean(true));
+}
+
+
+#[test]
+fn not_equals() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Integer(3).into(),
+        operator: BinaryOperator::NotEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::BinaryOperation {
+        lhs: Expr::Float(5.0).into(),
+        rhs: Expr::Integer(5).into(),
+        operator: BinaryOperator::NotEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Integer(4).into(),
+        rhs: Expr::Integer(4).into(),
+        operator: BinaryOperator::NotEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Integer(10).into(),
+        rhs: Expr::Float(5.0).into(),
+        operator: BinaryOperator::NotEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i5 = Expr::BinaryOperation {
+        lhs: Expr::Float(10.0).into(),
+        rhs: Expr::Float(10.0).into(),
+        operator: BinaryOperator::NotEquals,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i1, Value::Boolean(true));
+    assert_eq!(i2, Value::Boolean(false));
+    assert_eq!(i3, Value::Boolean(false));
+    assert_eq!(i4, Value::Boolean(true));
+    assert_eq!(i5, Value::Boolean(false));
+}
+
+#[test]
+fn logical_and() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::BinaryOperation {
+        lhs: Expr::Boolean(true).into(),
+        rhs: Expr::Boolean(false).into(),
+        operator: BinaryOperator::LogicalAnd,
+    }
+    .interpret(&mut env)
+    .unwrap();
+    let i2 = Expr::BinaryOperation {
+        lhs: Expr::Boolean(false).into(),
+        rhs: Expr::Boolean(true).into(),
+        operator: BinaryOperator::LogicalAnd,
+    }
+    .interpret(&mut env)
+    .unwrap();
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Boolean(true).into(),
+        rhs: Expr::Boolean(true).into(),
+        operator: BinaryOperator::LogicalAnd,
+    }
+    .interpret(&mut env)
+    .unwrap();
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Boolean(false).into(),
+        rhs: Expr::Boolean(false).into(),
+        operator: BinaryOperator::LogicalAnd,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i1, Value::Boolean(false));
+    assert_eq!(i2, Value::Boolean(false));
+    assert_eq!(i3, Value::Boolean(true));
+    assert_eq!(i4, Value::Boolean(false));
+}
+
+
+#[test]
+fn logical_or() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::BinaryOperation {
+        lhs: Expr::Boolean(true).into(),
+        rhs: Expr::Boolean(false).into(),
+        operator: BinaryOperator::LogicalOr,
+    }
+    .interpret(&mut env)
+    .unwrap();
+    let i2 = Expr::BinaryOperation {
+        lhs: Expr::Boolean(false).into(),
+        rhs: Expr::Boolean(true).into(),
+        operator: BinaryOperator::LogicalOr,
+    }
+    .interpret(&mut env)
+    .unwrap();
+    let i3 = Expr::BinaryOperation {
+        lhs: Expr::Boolean(true).into(),
+        rhs: Expr::Boolean(true).into(),
+        operator: BinaryOperator::LogicalOr,
+    }
+    .interpret(&mut env)
+    .unwrap();
+    let i4 = Expr::BinaryOperation {
+        lhs: Expr::Boolean(false).into(),
+        rhs: Expr::Boolean(false).into(),
+        operator: BinaryOperator::LogicalOr,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i1, Value::Boolean(true));
+    assert_eq!(i2, Value::Boolean(true));
+    assert_eq!(i3, Value::Boolean(true));
+    assert_eq!(i4, Value::Boolean(false));
 }
 
 #[test]
@@ -1107,8 +1453,13 @@ pub fn scall_pathpoly() {
             }
             .into(),
         ),
-        //(1,12), (9,4)
+    }
+    .interpret(&mut env)
+    .unwrap();
 
+    assert_eq!(
+        i1,
+        Value::Shape(
             vec![(
                 vec![Line::Straight(vec![
                     (Value::Integer(1), Value::Integer(2)).into(),
@@ -1184,4 +1535,3 @@ pub fn scall_identifier() {
     )
 }
 
-//todo: create testcase for place in expr
