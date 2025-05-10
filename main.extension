@@ -1,3 +1,4 @@
 import square "./square.extension";
+radius: int;
 begin
-draw x;
+return radius;
