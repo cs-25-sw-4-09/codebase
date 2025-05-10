@@ -58,25 +58,29 @@ impl InterpretS for Stmt {
                     }
                 }
             }
+
             Stmt::Import { name, path } => {
                 let subprogram = Program::from_file(Path::new(path))?;
                 environment.stable_push(name.clone(), subprogram);
             },
+
             Stmt::Draw { shape, point } => {
                 let Value::Shape(shape) = shape.interpret(environment)? else {
                     unreachable!()
                 };
 
-                        match point {
-                            Some(point) => {
-                                let p1 = point.interpret(environment)?;
-                                todo!()
-                            },
-                            None => {
-                                environment.darray_push(shape);
-                            },
-                        }
+
+                match point {
+                    Some(point) => {
+                        let p1 = point.interpret(environment)?;
+                        todo!()
                     },
+                    None => {
+                        environment.darray_push(shape);
+                    },
+                }
+            }
+
             Stmt::Assign { name, value } => {
                 *environment.vtable_find(name.into()).unwrap() = value.interpret(environment)?;
             }
@@ -140,6 +144,7 @@ impl InterpretS for Stmt {
                 
                 //come back to push assign 
             }
+
         }
 
         Ok(())

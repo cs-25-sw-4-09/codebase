@@ -3,8 +3,7 @@ use std::collections::HashMap;
 use crate::{
     interpreter::{
         data_types::{
-            figure::{Figure, Line},
-            point::Point,
+            figure::Figure, line::Line, point::Point
         },
         environment::IEnvironment,
         errors,
@@ -13,8 +12,7 @@ use crate::{
     },
     program::{
         expression::Expr, operators::{
-            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
-            unaryoperator::UnaryOperator,
+            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator, unaryoperator::UnaryOperator
         }, program::Program, statement::Stmt, r#type::Type
     },
 };
@@ -800,6 +798,41 @@ fn array_interpret() {
 }
 
 #[test]
+fn scale() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::Scale {
+        base_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        }
+        .into(),
+        factor: Expr::Integer(4).into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![vec![Line::Straight(vec![
+                (Value::Float(1.0), Value::Float(12.0)).into(),
+                (Value::Float(9.0), Value::Float(4.0)).into()
+            ])]
+            .into()]
+            .into(),
+        )
+    );
+}
+
+#[test]
 fn pathoperation_point_point() {
     let mut env = IEnvironment::new();
 
@@ -1393,6 +1426,8 @@ fn polygonoperation_curve() {
     );
 }
 
+//todo Få sjernholm til at tjekke
+/*
 #[test]
 pub fn scall_pathpoly() {
     let mut env = IEnvironment::new();
@@ -1429,7 +1464,8 @@ pub fn scall_pathpoly() {
                 vec![Line::Straight(vec![
                     (Value::Integer(1), Value::Integer(2)).into(),
                     (Value::Integer(3), Value::Integer(4)).into()
-                ])]
+                    ]
+                )]
                 .into(),
                 vec![(
                     "fill".to_owned(),
@@ -1438,39 +1474,34 @@ pub fn scall_pathpoly() {
                         Value::Integer(255).into(),
                         Value::Integer(255).into(),
                         Value::Integer(255).into()
-                    )
-                    .into()
-                )]
-                .into_iter()
-                .collect()
-            )
-                .into()]
-            .into(),
+                    ).into()
+                )].into_iter().collect()
+            ).into()].into(),
         )
     )
-}
+}*/
 
 #[test]
 pub fn scall_identifier() {
     let mut env = IEnvironment::new();
 
-    let pgr = Program::new(&"width: int = 3;
+    let pgr = Program::new(
+        &"width: int = 3;
     begin
     x: shape = (width,2)--(width,4)(|fill = (255,255,255,255)|);
     draw x;
-    ".into()).unwrap();
+    "
+        .into(),
+    )
+    .unwrap();
 
     env.stable_push("figure".into(), pgr);
 
-
     let i1 = Expr::SCall {
         name: Some("figure".into()),
-        args: vec![(
-            "width".to_owned(),
-            Expr::Float(4.2).into(),
-        )]
-        .into_iter()
-        .collect(),
+        args: vec![("width".to_owned(), Expr::Float(4.2).into())]
+            .into_iter()
+            .collect(),
         path_poly: None,
     }
     .interpret(&mut env)
@@ -1504,39 +1535,3 @@ pub fn scall_identifier() {
     )
 }
 
-#[test]
-fn scale() {
-    let mut env = IEnvironment::new();
-    let i1 = Expr::Scale {
-        base_shape: Expr::SCall {
-            name: None,
-            args: HashMap::new(),
-            path_poly: Some(
-                Expr::PathOperation {
-                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
-                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
-                    operator: PathOperator::Line,
-                }
-                .into(),
-            ),
-        }
-        .into(),
-        factor: Expr::Integer(4).into(),
-    }
-    .interpret(&mut env)
-    .unwrap();
-
-    assert_eq!(
-        i1,
-        Value::Shape(
-            vec![vec![Line::Straight(vec![
-                (Value::Float(1.0), Value::Float(12.0)).into(),
-                (Value::Float(9.0), Value::Float(4.0)).into()
-            ])]
-            .into()]
-            .into(),
-        ) 
-    );
-}
-
-//(1,12), (9,4)

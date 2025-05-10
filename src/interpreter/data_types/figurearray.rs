@@ -1,5 +1,3 @@
-use crate::program::expression::Expr;
-use std::collections::HashMap;
 use super::{figure::Figure, point::Point};
 use crate::interpreter::value::Value;
 
@@ -8,6 +6,10 @@ pub struct FigureArray(Vec<Figure>);
 
 
 impl FigureArray {
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
     pub fn get_mut_figures(&mut self) -> &mut Vec<Figure> {
         &mut self.0 
     }
@@ -16,12 +18,43 @@ impl FigureArray {
         &self.0
     }
 
-    pub fn new() -> Self {
-        Self(Vec::new())
-    }
-
     pub fn extend(&mut self, shape: FigureArray){
         self.0.extend(shape.0);
+    }
+
+    pub fn max_x(&self) -> Value {
+        self.0.iter().map(|fig| Value::Float(fig.get_max_x()))
+        .max()
+        .unwrap_or(Value::Float(0.))
+    }
+
+    pub fn min_x(&self) -> Value {
+        self.0.iter().map(|fig| Value::Float(fig.get_min_x()))
+        .min()
+        .unwrap_or(Value::Float(0.))
+    }
+    pub fn max_y(&self) -> Value {
+        self.0.iter().map(|fig| Value::Float(fig.get_max_y()))
+        .max()
+        .unwrap_or(Value::Float(0.))
+    }
+    pub fn min_y(&self) -> Value {
+        self.0.iter().map(|fig| Value::Float(fig.get_min_y()))
+        .min()
+        .unwrap_or(Value::Float(0.))
+    }
+
+    //todo: optimize
+    pub fn height(&self) -> Value {
+        self.max_y() -  self.min_y()
+    }
+    //todo: optimize
+    pub fn width(&self) -> Value {
+        self.max_x() - self.min_x()
+    }
+
+    pub fn get_top_left(&self) -> Point {
+        (self.min_x(), self.max_y()).into()
     }
 
 }
@@ -30,11 +63,5 @@ impl FigureArray {
 impl From<Vec<Figure>> for FigureArray {
     fn from(value: Vec<Figure>) -> Self {
         Self(value)
-    }
-}
-
-impl FigureArray {
-    pub fn get_top_left(&self) -> Point {
-        todo!()
     }
 }

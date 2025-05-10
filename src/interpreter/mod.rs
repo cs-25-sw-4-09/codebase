@@ -1,7 +1,7 @@
 use std::error::Error;
 
 
-use data_types::{figure::Figure, figurearray::FigureArray};
+use data_types::figurearray::FigureArray;
 use environment::IEnvironment;
 use value::Value;
 

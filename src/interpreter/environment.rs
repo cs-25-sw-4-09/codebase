@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::data_types::{figure::Figure, figurearray::FigureArray};
+use super::data_types::figurearray::FigureArray;
 use super::stack::Stack;
 use super::value::Value;
 use crate::program::{program::Program, statement::Stmt};

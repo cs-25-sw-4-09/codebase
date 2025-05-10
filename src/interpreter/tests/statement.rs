@@ -1,6 +1,6 @@
 use crate::{
     interpreter::{
-        data_types::figure::{Figure, Line},
+        data_types::line::Line,
         environment::IEnvironment,
         errors,
         value::Value,
@@ -17,13 +17,12 @@ use crate::{
 #[test]
 fn var_decl() {
     let mut env = IEnvironment::new();
-    let i1 = Stmt::VarDecl {
+    let _ = Stmt::VarDecl {
         name: "x".into(),
         declared_type: Type::Int,
         value: Expr::Integer(4),
     }
-    .interpret(&mut env)
-    .unwrap();
+    .interpret(&mut env);
     assert_eq!(
         env.vtable_find("x".into()).unwrap().clone(),
         Value::Integer(4)

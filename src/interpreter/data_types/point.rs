@@ -6,8 +6,8 @@ use std::ops;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Point {
-    pub x: Box::<Value>, 
-    pub y: Box::<Value>
+    x: Box::<Value>, 
+    y: Box::<Value>
 }
 
 impl From<(Value, Value)> for Point {
@@ -39,12 +39,21 @@ impl TryFrom<(&Expr, &mut IEnvironment)> for Point {
 }
 
 impl Point { 
-    pub fn x(&mut self) -> &mut Value{
-        &mut self.x
-    }
     
-    pub fn y(&mut self) -> &mut Value{
-        &mut self.y
+    pub fn get_x(&self) -> &Value{
+        &self.x
+    }
+
+    pub fn get_y(&self) -> &Value{
+        &self.y
+    }
+
+    pub fn set_x(&mut self, value: Value) {
+        self.x = Box::new(value);
+    }
+
+    pub fn set_y(&mut self, value: Value) {
+        self.y = Box::new(value);
     }
 }
 
@@ -52,7 +61,12 @@ impl ops::Add for Point {
     type Output = Point;
 
     fn add(self, rhs: Self) -> Self::Output {
-        todo!()
+        let new_x = *self.x + *rhs.x;
+        let new_y = *self.y + *rhs.y;
+        Self { 
+            x: Box::new(new_x),
+            y: Box::new(new_y)
+        }
     }
 }
 
@@ -60,6 +74,11 @@ impl ops::Sub for Point {
     type Output = Point;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        todo!()
+        let new_x = *self.x - *rhs.x;
+        let new_y = *self.y - *rhs.y;
+        Self { 
+            x: Box::new(new_x),
+            y: Box::new(new_y)
+        }
     }
 }

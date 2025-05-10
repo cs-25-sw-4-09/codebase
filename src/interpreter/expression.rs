@@ -1,10 +1,10 @@
 use crate::{
-    interpreter::{data_types::figure::Line, InterpretS},
+    interpreter::{data_types::line::Line, InterpretS},
     program::expression::Expr,
 };
 
 use super::{data_types::{figurearray::FigureArray, point::Point}, errors, utils::manipulation::{
-        place, scale, Direction
+        place, scale
     }, value::Value, InterpretE, InterpretP
 };
 
@@ -409,9 +409,9 @@ impl InterpretE for Expr {
                         "a" => &a.clone(),
                         _ => unreachable!(),
                     },
-                    Value::Point(mut point) => match member_access.as_str() {
-                        "x" => &point.x().clone(),
-                        "y" => &point.y().clone(),
+                    Value::Point(point) => match member_access.as_str() {
+                        "x" => &point.get_x().clone(),
+                        "y" => &point.get_y().clone(),
                         _ => unreachable!(),
                     },
                     Value::Shape(figures) => match member_access.as_str() {
