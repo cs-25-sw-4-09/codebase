@@ -1,4 +1,6 @@
-use crate::program::{expression::Expr, statement::Stmt};
+use std::path::Path;
+
+use crate::program::{expression::Expr, program::Program, statement::Stmt};
 
 use super::{errors, value::Value, InterpretE, InterpretS};
 
@@ -56,23 +58,29 @@ impl InterpretS for Stmt {
                     }
                 }
             }
-            Stmt::Import { name, path } => todo!(),
+
+            Stmt::Import { name, path } => {
+                let subprogram = Program::from_file(Path::new(path))?;
+                environment.stable_push(name.clone(), subprogram);
+            },
+
             Stmt::Draw { shape, point } => {
                 let Value::Shape(shape) = shape.interpret(environment)? else {
                     unreachable!()
                 };
 
+
                 match point {
                     Some(point) => {
                         let p1 = point.interpret(environment)?;
                         todo!()
-                    }
+                    },
                     None => {
                         environment.darray_push(shape);
-                    }
+                    },
                 }
-                return Ok(());
             }
+
             Stmt::Assign { name, value } => {
                 *environment.vtable_find(name.into()).unwrap() = value.interpret(environment)?;
             }

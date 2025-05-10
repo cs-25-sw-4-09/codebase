@@ -4,7 +4,11 @@ use crate::{
     interpreter::{
         data_types::{
             figure::{Figure, Line},
+
             figurearray::FigureArray,
+
+            point::Point,
+
         },
         environment::IEnvironment,
         errors,
@@ -12,6 +16,7 @@ use crate::{
         InterpretE, InterpretS,
     },
     program::{
+
         expression::Expr,
         operators::{
             binaryoperator::BinaryOperator, pathoperator::PathOperator,
@@ -19,6 +24,12 @@ use crate::{
         },
         r#type::Type,
         statement::Stmt,
+
+        expression::Expr, operators::{
+            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
+            unaryoperator::UnaryOperator,
+        }, program::Program, statement::Stmt, r#type::Type
+
     },
 };
 
@@ -483,6 +494,7 @@ fn scale() {
     assert_eq!(
         i1,
         Value::Shape(
+
             vec![vec![Line::Straight(vec![
                 (Value::Float(1.0), Value::Float(12.0)).into(),
                 (Value::Float(9.0), Value::Float(4.0)).into()
@@ -493,4 +505,701 @@ fn scale() {
     );
 }
 
-//(1,12), (9,4)
+fn pathoperation_point_point() {
+    let mut env = IEnvironment::new();
+
+    let i1 = Expr::PathOperation {
+        lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+        rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+        operator: PathOperator::Line,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::PathOperation {
+        lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+        rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+        operator: PathOperator::Curve,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Figure(
+            vec![Line::Straight(vec![
+                (Value::Integer(1), Value::Integer(2)).into(),
+                (Value::Integer(3), Value::Integer(4)).into()
+            ])]
+            .into()
+        )
+    );
+    assert_eq!(
+        i2,
+        Value::Figure(
+            vec![Line::Curved(vec![
+                (Value::Integer(1), Value::Integer(2)).into(),
+                (Value::Integer(3), Value::Integer(4)).into()
+            ])]
+            .into()
+        )
+    );
+}
+
+#[test]
+fn pathoperation_path_point() {
+    let mut env = IEnvironment::new();
+
+    let i1 = Expr::PathOperation {
+        lhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        rhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+        operator: PathOperator::Line,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::PathOperation {
+        lhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        rhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+        operator: PathOperator::Curve,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::PathOperation {
+        lhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        rhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+        operator: PathOperator::Curve,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+    assert_eq!(
+        i2,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Curved(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i3,
+        Value::Figure(
+            vec![Line::Curved(vec![
+                (Value::Integer(1), Value::Integer(2)).into(),
+                (Value::Integer(3), Value::Integer(4)).into(),
+                (Value::Integer(5), Value::Integer(6)).into()
+            ])]
+            .into()
+        )
+    );
+}
+
+#[test]
+fn pathoperation_point_path() {
+    let mut env = IEnvironment::new();
+
+    let i1 = Expr::PathOperation {
+        lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+        rhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            rhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        operator: PathOperator::Line,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::PathOperation {
+        lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+        rhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            rhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        operator: PathOperator::Curve,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::PathOperation {
+        lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+        rhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            rhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        operator: PathOperator::Curve,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+    assert_eq!(
+        i2,
+        Value::Figure(
+            vec![
+                Line::Curved(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i3,
+        Value::Figure(
+            vec![Line::Curved(vec![
+                (Value::Integer(1), Value::Integer(2)).into(),
+                (Value::Integer(3), Value::Integer(4)).into(),
+                (Value::Integer(5), Value::Integer(6)).into()
+            ])]
+            .into()
+        )
+    );
+}
+
+#[test]
+fn pathoperation_path_path() {
+    let mut env = IEnvironment::new();
+
+    let i1 = Expr::PathOperation {
+        lhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        rhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            rhs: Expr::Point(Expr::Integer(7).into(), Expr::Integer(8).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        operator: PathOperator::Line,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::PathOperation {
+        lhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        rhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            rhs: Expr::Point(Expr::Integer(7).into(), Expr::Integer(8).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        operator: PathOperator::Curve,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::PathOperation {
+        lhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        rhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            rhs: Expr::Point(Expr::Integer(7).into(), Expr::Integer(8).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        operator: PathOperator::Curve,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::PathOperation {
+        lhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        rhs: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            rhs: Expr::Point(Expr::Integer(7).into(), Expr::Integer(8).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        operator: PathOperator::Curve,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(5), Value::Integer(6)).into(),
+                    (Value::Integer(7), Value::Integer(8)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i2,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Curved(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into(),
+                    (Value::Integer(7), Value::Integer(8)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i3,
+        Value::Figure(
+            vec![Line::Curved(vec![
+                (Value::Integer(1), Value::Integer(2)).into(),
+                (Value::Integer(3), Value::Integer(4)).into(),
+                (Value::Integer(5), Value::Integer(6)).into(),
+                (Value::Integer(7), Value::Integer(8)).into()
+            ])]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i4,
+        Value::Figure(
+            vec![
+                Line::Curved(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(5), Value::Integer(6)).into(),
+                    (Value::Integer(7), Value::Integer(8)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+}
+
+#[test]
+fn polygonoperation_straight() {
+    let mut env = IEnvironment::new();
+
+    let i1 = Expr::PolygonOperation {
+        path: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        operator: PolyOperator::Straight,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::PolygonOperation {
+        path: Expr::PathOperation {
+            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+            rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        operator: PolyOperator::Straight,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i2,
+        Value::Figure(
+            vec![
+                Line::Curved(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+}
+
+#[test]
+fn polygonoperation_curve() {
+    let mut env = IEnvironment::new();
+
+    let i1 = Expr::PolygonOperation {
+        path: Expr::PathOperation {
+            lhs: Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                operator: PathOperator::Line,
+            }
+            .into(),
+            rhs: Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+                rhs: Expr::Point(Expr::Integer(7).into(), Expr::Integer(8).into()).into(),
+                operator: PathOperator::Curve,
+            }
+            .into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        operator: PolyOperator::Curved,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i2 = Expr::PolygonOperation {
+        path: Expr::PathOperation {
+            lhs: Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                operator: PathOperator::Curve,
+            }
+            .into(),
+            rhs: Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+                rhs: Expr::Point(Expr::Integer(7).into(), Expr::Integer(8).into()).into(),
+                operator: PathOperator::Line,
+            }
+            .into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        operator: PolyOperator::Curved,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i3 = Expr::PolygonOperation {
+        path: Expr::PathOperation {
+            lhs: Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                operator: PathOperator::Curve,
+            }
+            .into(),
+            rhs: Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+                rhs: Expr::Point(Expr::Integer(7).into(), Expr::Integer(8).into()).into(),
+                operator: PathOperator::Curve,
+            }
+            .into(),
+            operator: PathOperator::Line,
+        }
+        .into(),
+        operator: PolyOperator::Curved,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    let i4 = Expr::PolygonOperation {
+        path: Expr::PathOperation {
+            lhs: Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                operator: PathOperator::Curve,
+            }
+            .into(),
+            rhs: Expr::Point(Expr::Integer(5).into(), Expr::Integer(6).into()).into(),
+            operator: PathOperator::Curve,
+        }
+        .into(),
+        operator: PolyOperator::Curved,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into()
+                ]),
+                Line::Curved(vec![
+                    (Value::Integer(5), Value::Integer(6)).into(),
+                    (Value::Integer(7), Value::Integer(8)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i2,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into()
+                ]),
+                Line::Straight(vec![
+                    (Value::Integer(5), Value::Integer(6)).into(),
+                    (Value::Integer(7), Value::Integer(8)).into()
+                ]),
+                Line::Curved(vec![
+                    (Value::Integer(7), Value::Integer(8)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i3,
+        Value::Figure(
+            vec![
+                Line::Straight(vec![
+                    (Value::Integer(3), Value::Integer(4)).into(),
+                    (Value::Integer(5), Value::Integer(6)).into()
+                ]),
+                Line::Curved(vec![
+                    (Value::Integer(5), Value::Integer(6)).into(),
+                    (Value::Integer(7), Value::Integer(8)).into(),
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                ])
+            ]
+            .into()
+        )
+    );
+
+    assert_eq!(
+        i4,
+        Value::Figure(
+            vec![Line::Curved(vec![
+                (Value::Integer(1), Value::Integer(2)).into(),
+                (Value::Integer(3), Value::Integer(4)).into(),
+                (Value::Integer(5), Value::Integer(6)).into(),
+                (Value::Integer(1), Value::Integer(2)).into()
+            ])]
+            .into()
+        )
+    );
+}
+
+
+//todo Få sjernholm til at tjekke
+/*
+#[test]
+pub fn scall_pathpoly() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::SCall {
+        name: None,
+        args: vec![(
+            "fill".to_owned(),
+            Expr::Color(
+                Expr::Integer(255).into(),
+                Expr::Integer(255).into(),
+                Expr::Integer(255).into(),
+                Expr::Integer(255).into(),
+            )
+            .into(),
+        )]
+        .into_iter()
+        .collect(),
+        path_poly: Some(
+            Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                operator: PathOperator::Line,
+            }
+            .into(),
+        ),
+        //(1,12), (9,4)
+
+            vec![(
+                vec![Line::Straight(vec![
+                    (Value::Integer(1), Value::Integer(2)).into(),
+                    (Value::Integer(3), Value::Integer(4)).into()
+                    ]
+                )]
+                .into(),
+                vec![(
+                    "fill".to_owned(),
+                    Value::Color(
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into()
+                    ).into()
+                )].into_iter().collect()
+            ).into()].into(),
+        )
+    )
+}*/
+
+#[test]
+pub fn scall_identifier() {
+    let mut env = IEnvironment::new();
+
+    let pgr = Program::new(&"width: int = 3;
+    begin
+    x: shape = (width,2)--(width,4)(|fill = (255,255,255,255)|);
+    draw x;
+    ".into()).unwrap();
+
+    env.stable_push("figure".into(), pgr);
+
+
+    let i1 = Expr::SCall {
+        name: Some("figure".into()),
+        args: vec![(
+            "width".to_owned(),
+            Expr::Float(4.2).into(),
+        )]
+        .into_iter()
+        .collect(),
+        path_poly: None,
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![(
+                vec![Line::Straight(vec![
+                    (Value::Float(4.2), Value::Integer(2)).into(),
+                    (Value::Float(4.2), Value::Integer(4)).into()
+                ])]
+                .into(),
+                vec![(
+                    "fill".to_owned(),
+                    Value::Color(
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into()
+                    )
+                    .into()
+                )]
+                .into_iter()
+                .collect()
+            )
+                .into()]
+            .into(),
+        )
+    )
+}
+

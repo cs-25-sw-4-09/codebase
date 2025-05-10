@@ -1,13 +1,6 @@
-import triangle \"./triangle.EXTENSION\";
-import rectangle \"./rectangle.EXTENSION\";
-import window \"./window.EXTENSION\";
-
-width: int;
-height: int;
-color_roof: color;
-color_base: color;
-
+import square "./square.extension";
 begin
+
 
 base: shape = rectangle(|height=height, width=width, fill = color_base|);
 roof: shape = triangle(|width=width, height=height-width, fill = color_roof|);
