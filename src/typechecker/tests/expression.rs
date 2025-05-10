@@ -454,6 +454,20 @@ fn fcall_push_typeconflict() {
         .is_some());
 }
 
+#[test]
+fn fcall_push_empty_array_with_array() {
+    let mut env = TEnvironment::new();
+    let invalid_identifier = Expr::FCall {
+        name: "push".into(),
+        args: vec![Expr::Array(vec![]),Expr::Array(vec![Expr::Integer(5)])],
+    }
+    .type_check(&mut env);
+    assert!(invalid_identifier
+        .unwrap_err()
+        .downcast_ref::<errors::ErrorInPush>()
+        .is_some());
+}
+
 
 #[test]
 fn fcall_push_not_array() {
