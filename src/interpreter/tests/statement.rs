@@ -1,6 +1,6 @@
 use crate::{
     interpreter::{
-        data_types::figure::{Figure, Line},
+        data_types::line::Line,
         environment::IEnvironment,
         errors,
         value::Value,
@@ -17,13 +17,12 @@ use crate::{
 #[test]
 fn var_decl() {
     let mut env = IEnvironment::new();
-    let i1 = Stmt::VarDecl {
+    let _ = Stmt::VarDecl {
         name: "x".into(),
         declared_type: Type::Int,
         value: Expr::Integer(4),
     }
-    .interpret(&mut env)
-    .unwrap();
+    .interpret(&mut env);
     assert_eq!(
         env.vtable_find("x".into()).unwrap().clone(),
         Value::Integer(4)
@@ -197,6 +196,68 @@ fn draw_without_place() {
 }
 
 #[test]
+fn draw_with_place() {
+    let mut env = IEnvironment::new();
+
+    Stmt::Draw {
+        shape: Expr::SCall {
+            name: None,
+            args: vec![(
+                "stroke".to_owned(),
+                Expr::Color(
+                    Expr::Integer(255).into(),
+                    Expr::Integer(255).into(),
+                    Expr::Integer(255).into(),
+                    Expr::Integer(255).into(),
+                )
+                .into(),
+            )]
+            .into_iter()
+            .collect(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        },
+        point: Some(Expr::Point(Expr::Integer(4).into(), Expr::Integer(5).into()).into()),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        Value::Shape(env.darray_get().clone()),
+        Value::Shape(
+            vec![(
+                vec![Line::Straight(vec![
+                    (Value::Integer(4), Value::Integer(3)).into(),
+                    (Value::Integer(6), Value::Integer(5)).into()
+                ])]
+                .into(),
+                vec![(
+                    "stroke".to_owned(),
+                    Value::Color(
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into()
+                    )
+                    .into()
+                )]
+                .into_iter()
+                .collect()
+            )
+                .into()]
+            .into(),
+        )
+    )
+}
+
+
+#[test]
 fn import() {
     let mut env = IEnvironment::new();
     Stmt::Import {
@@ -315,4 +376,18 @@ fn decl_default() {
     assert!(i1.is_ok());
 
     assert_eq!(env.vtable_find("y".into()).unwrap().clone(), Value::Integer(3))
+}
+
+#[test]
+fn array_assign() {
+    let mut env = IEnvironment::new();
+
+    env.vtable_push("x".into(), Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(2)), Box::new(Value::Integer(3))]));
+
+    let i1 = Stmt::ArrayAssign{ name: "x".into(), value: Expr::Integer(5), index: Expr::Integer(1)}
+    .interpret(&mut env);
+
+    assert!(i1.is_ok());
+
+    assert_eq!(env.vtable_find("x".into()).unwrap().clone(),Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(5)), Box::new(Value::Integer(3))]))
 }

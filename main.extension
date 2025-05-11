@@ -1,3 +1,42 @@
 begin
 
-draw (-10,-10)--(-10,0)--(0, 0)--(0,-10)--*(| thickness = 4, stroke = (50,50,50,255) |);
+
+
+x: shape = (0,0)--(1,0)--(1,1)--(0,1)--*(|fill=(255,0,0,255)|);
+y: shape = (100,100)--(101,100)--(100.5,105)--*(|fill=(0,255,0,255)|);
+
+
+
+z: shape = place x top x;
+z= place x top z;
+z= place x top z;
+z= place x top z;
+z= place x top z;
+z= place x top z;
+z= place x top z;
+z= place x top z;
+z= place z right z;
+z= place z right z;
+z= place z right z;
+z = place z top y;
+z = place z top y;
+z = place z top y;
+z = place z top y;
+z= place z right z;
+z= place z right z;
+z= place z right z;
+z= place z right z;
+z= place z right z;
+z = place z top y;
+z = place z top y;
+z = place z top y;
+z= place z top z;
+z= place z top z;
+z= place z top z;
+z= place z top z;
+
+draw z;
+
+
+
+

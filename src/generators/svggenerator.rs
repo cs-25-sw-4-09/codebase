@@ -2,8 +2,7 @@ use std::{error::Error, fs::File, io::Write, path};
 
 use crate::interpreter::{
     data_types::{
-        figure::{self, Figure},
-        point::{self, Point},
+        figure::{self, Figure}, figurearray::FigureArray, point::{self, Point}
     },
     value::Value,
 };
@@ -16,10 +15,10 @@ use super::{
 pub struct SvgGenerator;
 
 impl Generator for SvgGenerator {
-    fn generate(&self, draw_array: &Vec<Figure>, file_name: String) -> Result<(), Box<dyn Error>> {
+    fn generate(&self, draw_array: &FigureArray, file_name: String) -> Result<(), Box<dyn Error>> {
         let mut file = File::create(format!("{}.svg", file_name)).unwrap();
 
-        let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array.clone())?;
+        let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array.get_figures().clone())?;
 
         writeln!(
             file,
@@ -27,7 +26,7 @@ impl Generator for SvgGenerator {
             x1, y1, x2, y2
         )?;
 
-        for fig in draw_array {
+        for fig in draw_array.get_figures() {
             writeln!(file, "{}", figure_to_path_str(fig.clone())?)?;
         }
 
@@ -56,13 +55,13 @@ fn get_viewbox_coordiantes(
 
         for line in fig.get_lines() {
             for point in line.get_points() {
-                let x_val = match point.x() {
+                let x_val = match point.get_x() {
                     crate::interpreter::value::Value::Integer(x) => *x as f64,
                     crate::interpreter::value::Value::Float(x) => *x,
                     _ => unreachable!(),
                 };
 
-                let y_val = match point.y() {
+                let y_val = match point.get_y() {
                     crate::interpreter::value::Value::Integer(y) => *y as f64,
                     crate::interpreter::value::Value::Float(y) => *y,
                     _ => unreachable!(),
@@ -144,13 +143,13 @@ fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
 fn to_f64_coords(point: &Point) -> (f64, f64) {
     use crate::interpreter::value::Value;
 
-    let x = match point.x() {
+    let x = match point.get_x() {
         Value::Integer(x) => *x as f64,
         Value::Float(x) => *x,
         _ => unreachable!(),
     };
 
-    let y = match point.y() {
+    let y = match point.get_y() {
         Value::Integer(y) => *y as f64,
         Value::Float(y) => *y,
         _ => unreachable!(),

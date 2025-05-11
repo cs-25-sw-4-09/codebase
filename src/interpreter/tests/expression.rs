@@ -1,11 +1,9 @@
 use std::collections::HashMap;
+use super::*;
 
 use crate::{
     interpreter::{
-        data_types::{
-            figure::{Figure, Line},
-            point::Point,
-        },
+        data_types::line::Line,
         environment::IEnvironment,
         errors,
         value::Value,
@@ -13,8 +11,7 @@ use crate::{
     },
     program::{
         expression::Expr, operators::{
-            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
-            unaryoperator::UnaryOperator,
+            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator, unaryoperator::UnaryOperator
         }, program::Program, statement::Stmt, r#type::Type
     },
 };
@@ -750,23 +747,69 @@ fn member_point() {
     assert_eq!(i3, Value::Integer(5));
 }
 
-/*#[test]
+#[test]
 fn member_shape() {
+    let mut env = IEnvironment::new();
+    let i1 = basic_house();
+    env.vtable_push("house".into(), i1);
+
+    let i2 = Expr::Member {
+        identifier: "house".into(),
+        member_access: "width".into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+    let i3 = Expr::Member {
+        identifier: "house".into(),
+        member_access: "height".into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(i2, Value::Integer(1));
+    assert_eq!(i3, Value::Integer(2));
+}
+
+#[test]
+fn member_figure() {
     let mut env = IEnvironment::new();
 
     let _ = Stmt::VarDecl {
-        name: "shape".into(),
+        name: "figure".into(),
         declared_type: Type::Shape,
-        value: Expr::Shape(Box::new(Expr::Integer(4)), Box::new(Expr::Integer(5)))
-    }.interpret(&mut env).unwrap();
+        value: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(1).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(4).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        }
+        .into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
 
-    let i2 = Expr::Member { identifier: "point".into(), member_access: "x".into() }.interpret(&mut env).unwrap();
-    let i3 = Expr::Member { identifier: "point".into(), member_access: "y".into() }.interpret(&mut env).unwrap();
+    let i2 = Expr::Member {
+        identifier: "figure".into(),
+        member_access: "width".into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+    let i3 = Expr::Member {
+        identifier: "figure".into(),
+        member_access: "height".into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
 
-
-    assert_eq!(i2, Value::Integer(4));
-    assert_eq!(i3, Value::Integer(5));
-}*/
+    assert_eq!(i2, Value::Integer(3));
+    assert_eq!(i3, Value::Integer(3));
+}
 
 #[test]
 fn array_size() {
@@ -798,6 +841,128 @@ fn array_interpret() {
 
     assert_eq!(i2, Value::Array(vec![Box::new(Value::Integer(4))]));
 }
+
+#[test]
+fn scale() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::Scale {
+        base_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        }
+        .into(),
+        factor: Expr::Integer(4).into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![vec![Line::Straight(vec![
+                (1,-4).into(),
+                (9,4).into()
+            ])]
+            .into()]
+            .into(),
+        )
+    );
+}
+
+#[test]
+fn place() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::Place {
+        base_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(600).into(), Expr::Integer(601).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(602).into(), Expr::Integer(603).into()).into(),
+                    operator: PathOperator::Line,
+                }.into(),
+            ),
+        }.into(),
+        second_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }.into(),
+            ),
+        }.into(),
+        place_at: "right".into(),
+        point: Some(Box::new(Expr::Point(Expr::Integer(3).into(), Expr::Integer(0).into()).into()))
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![vec![Line::Straight(vec![
+                (1,2).into(),
+                (3,4).into()
+            ])]
+            .into(),
+            vec![Line::Straight(vec![
+                (6,2).into(),
+                (8,4).into()
+            ])].into()
+            ]
+            .into(),
+        )
+    );
+}
+
+#[test]
+fn rotate() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::Rotate {
+        base_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        }
+        .into(),
+        factor: Expr::Integer(90).into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![vec![Line::Straight(vec![
+                (1.,4.).into(),
+                (3.,2.).into()
+            ])]
+            .into()]
+            .into(),
+        )
+    );
+}
+
+
 
 #[test]
 fn pathoperation_point_point() {
@@ -1429,7 +1594,8 @@ pub fn scall_pathpoly() {
                 vec![Line::Straight(vec![
                     (Value::Integer(1), Value::Integer(2)).into(),
                     (Value::Integer(3), Value::Integer(4)).into()
-                ])]
+                    ]
+                )]
                 .into(),
                 vec![(
                     "fill".to_owned(),
@@ -1438,14 +1604,9 @@ pub fn scall_pathpoly() {
                         Value::Integer(255).into(),
                         Value::Integer(255).into(),
                         Value::Integer(255).into()
-                    )
-                    .into()
-                )]
-                .into_iter()
-                .collect()
-            )
-                .into()]
-            .into(),
+                    ).into()
+                )].into_iter().collect()
+            ).into()].into(),
         )
     )
 }
@@ -1454,23 +1615,23 @@ pub fn scall_pathpoly() {
 pub fn scall_identifier() {
     let mut env = IEnvironment::new();
 
-    let pgr = Program::new(&"width: int = 3;
+    let pgr = Program::new(
+        &"width: int = 3;
     begin
     x: shape = (width,2)--(width,4)(|fill = (255,255,255,255)|);
     draw x;
-    ".into()).unwrap();
+    "
+        .into(),
+    )
+    .unwrap();
 
     env.stable_push("figure".into(), pgr);
 
-
     let i1 = Expr::SCall {
         name: Some("figure".into()),
-        args: vec![(
-            "width".to_owned(),
-            Expr::Float(4.2).into(),
-        )]
-        .into_iter()
-        .collect(),
+        args: vec![("width".to_owned(), Expr::Float(4.2).into())]
+            .into_iter()
+            .collect(),
         path_poly: None,
     }
     .interpret(&mut env)
@@ -1503,3 +1664,27 @@ pub fn scall_identifier() {
         )
     )
 }
+
+#[test]
+pub fn fcall_remove() {
+    let mut env = IEnvironment::new();
+
+     env.vtable_push("x".into(), Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(2)), Box::new(Value::Integer(3))]));
+
+    let i1 = Expr::FCall { name: "remove".into(), args: vec![Expr::Array(vec![Expr::Integer(1), Expr::Integer(2), Expr::Integer(3)]), Expr::Integer(1)] }.interpret(&mut env).unwrap();
+
+    assert_eq!(i1, Value::Array(vec![Box::new(Value::Integer(1)),  Box::new(Value::Integer(3))]))
+}
+
+#[test]
+pub fn fcall_push() {
+    let mut env = IEnvironment::new();
+
+     env.vtable_push("x".into(), Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(2)), Box::new(Value::Integer(3))]));
+
+    let i1 = Expr::FCall { name: "push".into(), args: vec![Expr::Array(vec![Expr::Integer(1), Expr::Integer(2), Expr::Integer(3)]), Expr::Integer(1)]}.interpret(&mut env).unwrap();
+
+    assert_eq!(i1, Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(2)), Box::new(Value::Integer(3)), Box::new(Value::Integer(1))]))
+}
+
+

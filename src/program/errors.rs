@@ -48,6 +48,15 @@ impl fmt::Display for ExprParseAsIntegerError {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct ExprParseAsFloatError;
+impl Error for ExprParseAsFloatError {}
+impl fmt::Display for ExprParseAsFloatError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Expression could not be parsed as float")
+    }
+}
+
 
 #[derive(Debug, Clone)]
 pub struct ExprParseAsBooleanError;
@@ -57,4 +66,23 @@ impl fmt::Display for ExprParseAsBooleanError {
         write!(f, "Expression could not be parsed as boolean")
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct ExprParseAsShapeError;
+impl Error for ExprParseAsShapeError {}
+impl fmt::Display for ExprParseAsShapeError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Expression could not be parsed as a shape")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ExprParseAsPointError;
+impl Error for ExprParseAsPointError {}
+impl fmt::Display for ExprParseAsPointError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Expression could not be parsed as a shape")
+    }
+}
+
 
