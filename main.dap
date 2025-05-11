@@ -1,0 +1,7 @@
+import fib "./dapFolder/fib.dap";
+
+begin
+
+x:int = 1;
+
+draw fib(|square_count = 5|);

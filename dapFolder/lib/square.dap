@@ -1,0 +1,8 @@
+size: int;
+fill: color = (0,0,0,0);
+border_color: color = (0,0,0,0);
+line_size: int = 4;
+
+begin
+
+draw (0,0)--(size,0)--(size,size)--(0,size)--* (|fill = fill|);
