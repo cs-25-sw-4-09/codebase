@@ -16,12 +16,16 @@ use super::{
 pub struct SvgGenerator;
 
 impl Generator for SvgGenerator {
-    fn generate(&self, draw_array: &Vec<Figure>) -> Result<(), Box<dyn Error>> {
-        let mut file = File::create("test.svg").unwrap();
+    fn generate(&self, draw_array: &Vec<Figure>, file_name: String) -> Result<(), Box<dyn Error>> {
+        let mut file = File::create(format!("{}.svg", file_name)).unwrap();
 
-        let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array);
+        let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array.clone())?;
 
-        writeln!(file, "<svg viewBox=\"{} {} {} {}\">", x1, y1, x2, y2)?;
+        writeln!(
+            file,
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"{} {} {} {}\">",
+            x1, y1, x2, y2
+        )?;
 
         for fig in draw_array {
             writeln!(file, "{}", figure_to_path_str(fig.clone())?)?;
@@ -32,13 +36,24 @@ impl Generator for SvgGenerator {
     }
 }
 
-fn get_viewbox_coordiantes(draw_array: &Vec<Figure>) -> (f64, f64, f64, f64) {
+fn get_viewbox_coordiantes(
+    draw_array: Vec<Figure>,
+) -> Result<(f64, f64, f64, f64), Box<dyn Error>> {
     let mut x_min = f64::INFINITY;
     let mut y_min = f64::INFINITY;
     let mut x_max = f64::NEG_INFINITY;
     let mut y_max = f64::NEG_INFINITY;
+    let mut line_thickness_max = 1;
 
-    for fig in draw_array {
+    for mut fig in draw_array {
+        if let Some(thickness_val) = fig.get_attributes().get("thickness") {
+            if let Ok(thickness) = thickness_val.get_int() {
+                if thickness > line_thickness_max {
+                    line_thickness_max = thickness;
+                }
+            }
+        }
+
         for line in fig.get_lines() {
             for point in line.get_points() {
                 let x_val = match point.x() {
@@ -69,7 +84,12 @@ fn get_viewbox_coordiantes(draw_array: &Vec<Figure>) -> (f64, f64, f64, f64) {
         }
     }
 
-    (x_min, y_min, x_max, y_max)
+   Ok((
+    x_min - line_thickness_max as f64,
+    y_min - line_thickness_max as f64,
+    (x_max - x_min) + 2.0 * line_thickness_max as f64,
+    (y_max - y_min) + 2.0 * line_thickness_max as f64,
+))
 }
 
 fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
@@ -110,7 +130,7 @@ fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
             _ => todo!(),
         }
     }
-    path_str.push_str("\"");
+    path_str.push_str("\" ");
 
     //Loop attributes
     for att in fig.get_attributes() {
@@ -148,7 +168,7 @@ fn map_fig_att_to_svg_att(
             Value::Color(value1, value2, value3, value4) => {
                 if is_fig_closed {
                     return Ok(format!(
-                        "fill=\"rgba({},{},{},{})\"",
+                        "fill=\"rgba({},{},{},{})\" ",
                         value1.get_int()?,
                         value2.get_int()?,
                         value3.get_int()?,
@@ -161,14 +181,14 @@ fn map_fig_att_to_svg_att(
         },
         "thickness" => match att.1 {
             Value::Integer(value) => {
-                return Ok(format!("stroke-width=\"{}\"", value,));
+                return Ok(format!("stroke-width=\"{}\" ", value,));
             }
             _ => unreachable!(),
         },
         "stroke" => match att.1 {
             Value::Color(value1, value2, value3, value4) => {
                 return Ok(format!(
-                    "stroke=\"rgba({},{},{},{})\"",
+                    "stroke=\"rgba({},{},{},{})\" ",
                     value1.get_int()?,
                     value2.get_int()?,
                     value3.get_int()?,

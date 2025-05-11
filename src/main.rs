@@ -23,6 +23,9 @@ fn main() -> Result<(), Box<dyn Error>> {
             executable_name
         )
     })?;
+    let file_stem = file_to_parse.rsplitn(2, '.').last().unwrap();
+
+
     let output_generators: Vec<String> = args
         .next()
         .ok_or_else(|| {
@@ -109,17 +112,20 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     //Generate Files from draw array
-
-    let format = "svg";
-
-    if let Some(generator) = get_generator(format) {
-        if let Err(err) = generator.generate(program.ienvironment.darray_get()) {
-            println!("Failed to generate format: {}, err: {}", format, err);
+    for output_generator in output_generators {
+        if let Some(generator) = get_generator(&output_generator) {
+            if let Err(err) =
+                generator.generate(program.ienvironment.darray_get(), file_stem.into())
+            {
+                println!(
+                    "Failed to generate format: {}, err: {}",
+                    output_generator, err
+                );
+            }
+        } else {
+            println!("Unsupported format: {}", output_generator);
         }
-    } else {
-        println!("Unsupported format: {}", format);
     }
-
 
     //println!("{:#?}", program.ienvironment);
 

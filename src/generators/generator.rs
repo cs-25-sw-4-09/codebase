@@ -6,7 +6,7 @@ use super::svggenerator::SvgGenerator;
 
 
 pub trait Generator {
-    fn generate(&self, draw_array: &Vec<Figure>) -> Result<(), Box<dyn Error>>;
+    fn generate(&self, draw_array: &Vec<Figure>, file_name: String) -> Result<(), Box<dyn Error>>;
 }
 
 pub fn get_generator(format: &str) -> Option<Box<dyn Generator>> {
