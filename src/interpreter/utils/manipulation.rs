@@ -52,8 +52,10 @@ pub fn place_point_at(point_top_left: &Point, point: &Point, offset: &Point) -> 
 
 /*************************  Rotate ****************************/
 pub fn rotate(mut s: FigureArray, rotate_by: Value) -> FigureArray {
-    //todo: mangler stadig calc this
-    let rotate_around = Point::from((0,0));
+    let rotate_around = (
+        &(s.max_x() + s.min_x()) / &2.0.into(), //x
+        &(s.max_y() + s.min_y()) / &2.0.into()//y
+    ).into();
     s.get_mut_figures().iter_mut().for_each(|fig| {
         fig.get_mut_lines().iter_mut().for_each(|line| {
             line.get_mut_points().iter_mut().for_each(|point| {
@@ -69,31 +71,30 @@ pub fn rotate_point(p: &Point, rotate_around: &Point, degrees: &Value) -> Point 
     let (cos_theta, sin_theta) = calc_sin_theta(degrees);
     let transformed_dist: Point = (
         dist.get_x() * &cos_theta + dist.get_y() * &sin_theta, //x
-        dist.get_x() * &sin_theta - dist.get_y() * &cos_theta  //y
+        -(dist.get_x() * &sin_theta) + dist.get_y() * &cos_theta  //y
     ).into();
     &transformed_dist + rotate_around
 }
 
 /**Gives cleaner outpus for sin and cos*/
 fn calc_sin_theta(degrees: &Value) -> (Value, Value) {
-    use Value::*;
-    match degrees {
-        Integer(90) | Float(90.) => (0.into(), 1.into()),
-        Integer(60) | Float(60.) => (0.5.into(), 0.87.into()),
-        Integer(45) | Float(45.) => (0.71.into(), 0.71.into()),
-        Integer(30) | Float(30.) => (0.87.into(), 0.5.into()), 
-        Integer(0) | Float(0.) => (1.into(), 0.into()),
-        val => {
-            let radians = val * &(f64::consts::PI / 180.).into();
-            let (cos, sin) = (cos(&radians), sin(&radians));
-            //todo: add snap_zero check
-            (cos, sin)
-        }
-    }
-    
+    let radians = degrees * &(f64::consts::PI / 180.).into();
+    let (cos, sin) = (
+        snap_zero(cos(&radians), 1e-10), 
+        snap_zero(sin(&radians), 1e-10)
+    );
+    (cos, sin)
 }
 
-pub fn cos(theta: &Value) -> Value {
+fn snap_zero(x: Value, eps: f64) -> Value {
+    match x {
+        Value::Integer(_) => x,
+        Value::Float(v) => if v.abs() < eps { Value::Integer(0) } else { x },
+        _ => unreachable!()
+    }
+}
+
+fn cos(theta: &Value) -> Value {
     match theta {
         Value::Integer(v) => (*v as f64).cos().into(),
         Value::Float(v) => v.cos().into(),
@@ -101,7 +102,7 @@ pub fn cos(theta: &Value) -> Value {
     }   
 }
 
-pub fn sin(theta: &Value) -> Value {
+fn sin(theta: &Value) -> Value {
      match theta {
         Value::Integer(v) => (*v as f64).sin().into(),
         Value::Float(v) => v.sin().into(),

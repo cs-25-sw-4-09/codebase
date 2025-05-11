@@ -38,38 +38,14 @@ impl InterpretE for Expr {
                 let i2 = rhs.interpret(environment)?;
 
                 match operator {
-                    BinaryOperator::Add => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 + v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Float(v1 + v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Float(v1 + v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Float(v1 as f64 + v2),
-                        _ => unreachable!(),
-                    },
-                    BinaryOperator::Subtract => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 - v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Float(v1 - v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Float(v1 - v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Float(v1 as f64 - v2),
-                        _ => unreachable!(),
-                    },
-                    BinaryOperator::Multiply => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 * v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Float(v1 * v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Float(v1 * v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Float(v1 as f64 * v2),
-                        p => unreachable!("{:?}", p),
-                    },
+                    BinaryOperator::Add => &(i1 + i2),
+                    BinaryOperator::Subtract => &(i1 - i2),
+                    BinaryOperator::Multiply => &(&i1*&i2),
                     BinaryOperator::Divide => {
                         if i2 == Value::Integer(0) || i2 == Value::Float(0.0) {
                             return Err(errors::DivideByZero.into());
                         }
-                        match (i1, i2) {
-                            (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 / v2),
-                            (Value::Float(v1), Value::Float(v2)) => &Value::Float(v1 / v2),
-                            (Value::Float(v1), Value::Integer(v2)) => &Value::Float(v1 / v2 as f64),
-                            (Value::Integer(v1), Value::Float(v2)) => &Value::Float(v1 as f64 / v2),
-                            _ => unreachable!(),
-                        }
+                        &(&i1 / &i2) 
                     }
                     BinaryOperator::Modulus => match (i1, i2) {
                         (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 % v2),
@@ -128,11 +104,7 @@ impl InterpretE for Expr {
                 let i1 = expr.interpret(environment)?;
                 match operator {
                     UnaryOperator::Negate => &Value::Boolean(!i1.get_bool()?),
-                    UnaryOperator::Negative => match i1 {
-                        Value::Integer(v) => &Value::Integer(-v),
-                        Value::Float(v) => &Value::Float(-v),
-                        _ => unreachable!(),
-                    },
+                    UnaryOperator::Negative => &-i1
                 }
             }
             Expr::FCall { name, args } => {

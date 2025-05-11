@@ -252,22 +252,49 @@ fn test_scale_point() {
 
 
 /*********************************************** Rotate ****************************************/
-//todo: test rotate_point, test rotate
 #[test]
 fn rotate_point_test() {
+    // Rotates the point (0,5) around (0,0) clockwise and counter-clockwise
     let i1 = (0,0).into();
     let i2 = (0,5).into();
     let i3 = 90.into();
     let i4 = rotate_point(&i2, &i1, &i3);
-    assert_eq!(i4, (5,0).into());
-    let i3 = 90.0.into();
-    let i4 = rotate_point(&i2, &i1, &i3);
-    assert_eq!(i4, (5,0).into());
-}
+    assert_eq!(i4, (5.,0.).into());
+    let i4 = rotate_point(&i4, &i1, &i3);
+    assert_eq!(i4, (0.,-5.).into());
+    let i4 = rotate_point(&i4, &i1, &i3);
+    assert_eq!(i4, (-5.,0.).into());
+    let i4 = rotate_point(&i4, &i1, &i3);
+    assert_eq!(i4, (0.,5.).into());
 
+    let i3 = (-90).into();
+    let i4 = rotate_point(&i2, &i1, &i3);
+    assert_eq!(i4, (-5.,0.).into());
+    let i4 = rotate_point(&i4, &i1, &i3);
+    assert_eq!(i4, (0.,-5.).into());
+    let i4 = rotate_point(&i4, &i1, &i3);
+    assert_eq!(i4, (5.,0.).into());
+    let i4 = rotate_point(&i4, &i1, &i3);
+    assert_eq!(i4, (0.,5.).into());
+}
 
 
 #[test]
 fn rotate_test() {
-    
+    let square = basic_square().get_shape().unwrap();
+    let i1 = rotate(square, 45.into());
+    let epsilon = 1e-6;
+
+    let rotated_lines = vec![
+        Line::Straight(vec![(-0.20710678118654757, 0.5).into(), (0.5,-0.20710678118654757).into()]),
+        Line::Straight(vec![(0.5,-0.20710678118654757).into(), (1.20710678118654757,0.5).into()]),
+        Line::Straight(vec![(1.20710678118654757,0.5).into(), (0.5,1.20710678118654757).into()]),
+        Line::Straight(vec![(0.5,1.20710678118654757).into(),(-0.20710678118654757, 0.5).into()])
+    ];
+
+    i1.get_figures()[0].get_lines().iter().zip(rotated_lines.iter()).for_each(|(l1,l2)| 
+        l1.get_points().iter().zip(l2.get_points().iter()).for_each(
+            |(p1, p2)| assert!(p1.approx_eq(p2, epsilon), "Point mismatch: {:?} vs {:?}", p1, p2)
+        )
+    )    
 }
