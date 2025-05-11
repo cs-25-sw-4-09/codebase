@@ -1,6 +1,7 @@
 begin
 
 
+
 x: int[] = [1,2,3];
 y: int[] = remove(x,1);
 
@@ -13,4 +14,7 @@ z: shape = place y top(0,0) offset x;
 
 _ = ((1,2,3,4),(5,6));
 
+
+
+return 1;
 
