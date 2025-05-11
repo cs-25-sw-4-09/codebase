@@ -137,6 +137,11 @@ fn get_values() {
     assert!(i1.get_shape().is_ok());
     let i1 = Value::Integer(64);
     assert!(i1.get_shape().is_err());
+
+    let i1 = Value::Point((1,1).into());
+    assert!(i1.get_point().is_ok());
+    let i1 = Value::Integer(64);
+    assert!(i1.get_point().is_err());
 }
 
 #[test]
@@ -152,3 +157,30 @@ fn test_value_partial_cmp() {
     assert_eq!(Value::Float(10.0).partial_cmp(&Value::Integer(2)), Some(std::cmp::Ordering::Greater));
     assert_eq!(Value::Integer(7).partial_cmp(&Value::Float(6.9)), Some(std::cmp::Ordering::Greater));
 }
+
+
+    #[test]
+    fn test_add_values() {
+        let i1 = Value::Integer(2);
+        let i2 = Value::Integer(3);
+        let i3 = Value::Float(2.5);
+        let i4 = Value::Float(1.5);
+
+        assert_eq!(&i1 + &i2, Value::Integer(5));
+        assert_eq!(&i3 + &i4, Value::Float(4.0));
+        assert_eq!(&i3 + &i1, Value::Float(4.5));
+        assert_eq!(&i1 + &i3, Value::Float(4.5));
+    }
+
+    #[test]
+    fn test_sub_values() {
+        let i1 = Value::Integer(5);
+        let i2 = Value::Integer(3);
+        let i3 = Value::Float(4.5);
+        let i4 = Value::Float(1.5);
+
+        assert_eq!(&i1 - &i2, Value::Integer(2));
+        assert_eq!(&i3 - &i4, Value::Float(3.0));
+        assert_eq!(&i3 - &i1, Value::Float(-0.5));
+        assert_eq!(&i1 - &i3, Value::Float(0.5));
+    }
