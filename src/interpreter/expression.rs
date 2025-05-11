@@ -112,7 +112,13 @@ impl InterpretE for Expr {
                     "push" => { 
                         let t1 = args[0].interpret(environment)?;
                         let t2 = args[1].interpret(environment)?;
-                        &Value::Array(vec![Box::new(t1), Box::new(t2)])
+                        let mut array= match t1 {
+                            Value::Array(i) => Ok(i),
+                            _ => Err(errors::ArrayNonExcisting(name.to_string())).into(),
+                        };
+                        array.as_mut().unwrap().push(Box::new(t2));
+                        &Value::Array(array.unwrap())
+                        
                     }
                     "remove" => {  
                         let t1 = args[0].interpret(environment)?;
@@ -408,10 +414,8 @@ impl InterpretE for Expr {
                         _ => unreachable!(),
                     },
                     Value::Shape(figures) => match member_access.as_str() {
-                        "height" => &figures.get_figures().iter().map(|f| f.get_height()).max_by(|a, b| a.partial_cmp(b).unwrap())
-                            .ok_or_else(|| Box::new(errors::MaxCanNotBeFound))?,
-                        "width" => &figures.get_figures().iter().map(|f| f.get_width()).max()
-                            .ok_or_else(|| Box::new(errors::MaxCanNotBeFound))?,
+                        "height" => &figures.height(),
+                        "width" => &figures.width(),
                         _ => unreachable!(),
                     },
                     Value::Figure(figure) => match member_access.as_str() {
