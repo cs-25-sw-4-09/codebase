@@ -401,3 +401,27 @@ impl fmt::Display for ForkNotBooltypeError {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct ErrorInPush(pub Type, pub Type);
+impl Error for ErrorInPush {}
+impl fmt::Display for ErrorInPush {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Wrong parameters for push expected same type but in array: {:?} {:?}", self.0, self.1
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ErrorInRemove(pub Type, pub Type);
+impl Error for ErrorInRemove {}
+impl fmt::Display for ErrorInRemove {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Wrong parameters for remove expected array type (without empty) and int got: {:?} {:?}", self.0, self.1
+        )
+    }
+}
+
