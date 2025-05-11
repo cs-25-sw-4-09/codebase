@@ -170,17 +170,6 @@ impl Neg for Value {
     }
 }
 
-impl Neg for &Value {
-    type Output = Value;
-    fn neg(self) -> Self::Output {
-        match self {
-            Value::Integer(i) => Value::Integer(-(*i)),
-            Value::Float(i) => Value::Float(-(*i)),
-            _ => unreachable!()
-        }
-    }
-}
-
 impl Ord for Value {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         match (self, other) {

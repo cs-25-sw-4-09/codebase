@@ -65,18 +65,14 @@ impl InterpretS for Stmt {
             }
 
             Stmt::Draw { shape, point } => {
-                let Value::Shape(shape) = shape.interpret(environment)? else {
-                    unreachable!()
-                };
+                let shape = shape.interpret(environment)?.get_shape()?;
 
                 match point {
                     Some(point) => {
                         let p1 = point.interpret(environment)?.get_point()?;
-                        environment.darray_push(place_shape_at(shape, p1));
+                        environment.darray_push(place_shape_at(shape, p1))
                     }
-                    None => {
-                        environment.darray_push(shape);
-                    }
+                    None => environment.darray_push(shape)
                 }
             }
 
