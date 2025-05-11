@@ -137,5 +137,18 @@ fn get_values() {
     assert!(i1.get_shape().is_ok());
     let i1 = Value::Integer(64);
     assert!(i1.get_shape().is_err());
+}
 
+#[test]
+fn test_value_partial_cmp() {
+    assert_eq!(Value::Integer(5).partial_cmp(&Value::Float(5.0)), Some(std::cmp::Ordering::Equal));
+    assert_eq!(Value::Float(5.0).partial_cmp(&Value::Integer(5)), Some(std::cmp::Ordering::Equal));
+
+    // Less than
+    assert_eq!(Value::Integer(3).partial_cmp(&Value::Float(5.0)), Some(std::cmp::Ordering::Less));
+    assert_eq!(Value::Float(3.5).partial_cmp(&Value::Integer(4)), Some(std::cmp::Ordering::Less));
+
+    // Greater than
+    assert_eq!(Value::Float(10.0).partial_cmp(&Value::Integer(2)), Some(std::cmp::Ordering::Greater));
+    assert_eq!(Value::Integer(7).partial_cmp(&Value::Float(6.9)), Some(std::cmp::Ordering::Greater));
 }
