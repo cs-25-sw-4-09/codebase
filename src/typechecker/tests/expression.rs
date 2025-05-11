@@ -553,7 +553,7 @@ fn scall_default_path() {
 
     let t1 = Expr::SCall {
         name: None,
-        args: [("fill".into(), Expr::Color(
+        args: [("stroke".into(), Expr::Color(
             Expr::Integer(1).into(),
             Expr::Integer(1).into(),
             Expr::Integer(1).into(),
