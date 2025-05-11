@@ -1,9 +1,12 @@
 use crate::{
-    interpreter::{data_types::figure::Line, InterpretS},
+    interpreter::{data_types::line::Line, InterpretS},
     program::expression::Expr,
 };
 
-use super::{data_types::point::Point, errors, value::Value, InterpretE, InterpretP};
+use super::{data_types::{figurearray::FigureArray, point::Point}, errors, utils::manipulation::{
+        place, rotate, scale
+    }, value::Value, InterpretE, InterpretP
+};
 
 use crate::program::operators::{
     binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
@@ -35,38 +38,14 @@ impl InterpretE for Expr {
                 let i2 = rhs.interpret(environment)?;
 
                 match operator {
-                    BinaryOperator::Add => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 + v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Float(v1 + v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Float(v1 + v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Float(v1 as f64 + v2),
-                        _ => unreachable!(),
-                    },
-                    BinaryOperator::Subtract => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 - v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Float(v1 - v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Float(v1 - v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Float(v1 as f64 - v2),
-                        _ => unreachable!(),
-                    },
-                    BinaryOperator::Multiply => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 * v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Float(v1 * v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Float(v1 * v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Float(v1 as f64 * v2),
-                        p => unreachable!("{:?}", p),
-                    },
+                    BinaryOperator::Add => &(i1 + i2),
+                    BinaryOperator::Subtract => &(i1 - i2),
+                    BinaryOperator::Multiply => &(&i1*&i2),
                     BinaryOperator::Divide => {
                         if i2 == Value::Integer(0) || i2 == Value::Float(0.0) {
                             return Err(errors::DivideByZero.into());
                         }
-                        match (i1, i2) {
-                            (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 / v2),
-                            (Value::Float(v1), Value::Float(v2)) => &Value::Float(v1 / v2),
-                            (Value::Float(v1), Value::Integer(v2)) => &Value::Float(v1 / v2 as f64),
-                            (Value::Integer(v1), Value::Float(v2)) => &Value::Float(v1 as f64 / v2),
-                            _ => unreachable!(),
-                        }
+                        &(&i1 / &i2) 
                     }
                     BinaryOperator::Modulus => match (i1, i2) {
                         (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 % v2),
@@ -125,42 +104,65 @@ impl InterpretE for Expr {
                 let i1 = expr.interpret(environment)?;
                 match operator {
                     UnaryOperator::Negate => &Value::Boolean(!i1.get_bool()?),
-                    UnaryOperator::Negative => match i1 {
-                        Value::Integer(v) => &Value::Integer(-v),
-                        Value::Float(v) => &Value::Float(-v),
-                        _ => unreachable!(),
-                    },
+                    UnaryOperator::Negative => &-i1
                 }
             }
             Expr::FCall { name, args } => {
-                let mut params = Vec::new();
-                let function = environment.ftable_find(name.into()).unwrap().clone();
+                match name.as_str() {
+                    "push" => { 
+                        let t1 = args[0].interpret(environment)?;
+                        let t2 = args[1].interpret(environment)?;
+                        let mut array= match t1 {
+                            Value::Array(i) => Ok(i),
+                            _ => Err(errors::ArrayNonExcisting(name.to_string())).into(),
+                        };
+                        array.as_mut().unwrap().push(Box::new(t2));
+                        &Value::Array(array.unwrap())
+                        
+                    }
+                    "remove" => {  
+                        let t1 = args[0].interpret(environment)?;
+                        let t2 = args[1].interpret(environment)?;
+                        let index_to_remove = t2.get_int()? as usize;
+                        let mut array= match t1 {
+                            Value::Array(i) => Ok(i),
+                            _ => Err(errors::ArrayEmpty(name.to_string())).into(),
+                        };
+                        array.as_mut().unwrap().remove(index_to_remove);
+                        &Value::Array(array.unwrap())
+                        
+                    }
+                    _ => {
+                        let mut params = Vec::new();
+                        let function = environment.ftable_find(name.into()).unwrap().clone();
 
-                for i in 0..function.1.len() {
-                    let i1 = args[i].clone().interpret(environment)?;
-                    params.push((function.1[i].clone(), i1));
-                }
+                        for i in 0..function.1.len() {
+                            let i1 = args[i].clone().interpret(environment)?;
+                            params.push((function.1[i].clone(), i1));
+                        }
 
-                //Make new scope
-                let previous_stack = environment.vtable_clear();
+                        //Make new scope
+                        let previous_stack = environment.vtable_clear();
 
-                for (param_identifier, param_elem) in params {
-                    environment.vtable_push(param_identifier, param_elem);
-                }
+                        for (param_identifier, param_elem) in params {
+                            environment.vtable_push(param_identifier, param_elem);
+                        }
 
-                for f in function.0 {
-                    f.interpret(environment)?;
-                }
-                //todo: push ftable and pop
-                //Restore scope
-                environment.vtable_restore(previous_stack);
+                        for f in function.0 {
+                            f.interpret(environment)?;
+                        }
+                        //todo: push ftable and pop
+                        //Restore scope
+                        environment.vtable_restore(previous_stack);
 
-                if let Some(rvalue) = environment.rvalue_get() {
-                    environment.rvalue_clear();
-                    //todo: potentielt kom tilbage
-                    &rvalue.clone()
-                } else {
-                    return Err(errors::FunctionNotReturning(name.to_owned()).into());
+                        if let Some(rvalue) = environment.rvalue_get() {
+                            environment.rvalue_clear();
+                            //todo: potentielt kom tilbage
+                            &rvalue.clone()
+                        } else {
+                            return Err(errors::FunctionNotReturning(name.to_owned()).into());
+                        }
+                    }
                 }
             }
             Expr::PathOperation { lhs, rhs, operator } => {
@@ -374,7 +376,8 @@ impl InterpretE for Expr {
                             },
                         };
 
-                        &Value::Shape(draw_array.clone())
+
+                        &Value::Shape(FigureArray::from(draw_array.clone()))
                     }
                     (None, Some(path_poly)) => { //Shape call to path/polygon
                         let i1 = path_poly.interpret(environment)?;
@@ -387,7 +390,7 @@ impl InterpretE for Expr {
                             fig.set_attribute((arg_name, expr.interpret(environment)?));
                         }
 
-                        &Value::Shape(vec![fig])
+                        &Value::Shape(FigureArray::from(vec![fig]))
                     }
                     _ => unreachable!(),
                 }
@@ -406,22 +409,18 @@ impl InterpretE for Expr {
                         _ => unreachable!(),
                     },
                     Value::Point(point) => match member_access.as_str() {
-                        "x" => &point.x().clone(),
-                        "y" => &point.y().clone(),
+                        "x" => &point.get_x().clone(),
+                        "y" => &point.get_y().clone(),
                         _ => unreachable!(),
                     },
                     Value::Shape(figures) => match member_access.as_str() {
-                        "height" => &Value::Integer(
-                            figures.iter().map(|f| f.get_height()).max().unwrap_or(0),
-                        ),
-                        "width" => &Value::Integer(
-                            figures.iter().map(|f| f.get_width()).max().unwrap_or(0),
-                        ),
+                        "height" => &figures.height(),
+                        "width" => &figures.width(),
                         _ => unreachable!(),
                     },
                     Value::Figure(figure) => match member_access.as_str() {
-                        "height" => &Value::Integer(figure.get_height()),
-                        "width" => &Value::Integer(figure.get_width()),
+                        "height" => &figure.get_height(),
+                        "width" => &figure.get_width(),
                         _ => unreachable!(),
                     },
                     Value::Array(array) => match member_access.as_str() {
@@ -436,9 +435,37 @@ impl InterpretE for Expr {
                 second_shape,
                 place_at,
                 point,
-            } => todo!(),
-            Expr::Scale { base_shape, factor } => todo!(),
-            Expr::Rotate { base_shape, factor } => todo!(),
+            } => {
+                let (s1, s2, p, dir) = (
+                    base_shape.interpret(environment)?.get_shape()?, 
+                    second_shape.interpret(environment)?.get_shape()?, 
+                    match point {
+                        Some(exp) => exp.interpret(environment)?.get_point()?,
+                        None => (0,0).into(),
+                    }, 
+                    place_at.as_str().into()
+                );
+
+                let v = place(s1, s2, p, dir);
+
+                &Value::Shape(v)
+            },
+            Expr::Scale { base_shape, factor } => {
+                let Value::Shape(shape) = base_shape.interpret(environment)? else {
+                    unreachable!()
+                };
+                let factor = factor.interpret(environment)?;
+                let scaled_shape = scale(shape, factor)?;
+
+                &Value::Shape(scaled_shape)
+
+            },
+            Expr::Rotate { base_shape, factor } => {
+                let s = base_shape.interpret(environment)?.get_shape()?;
+                let i1 = factor.interpret(environment)?;
+                let v = rotate(s, i1);
+                &Value::Shape(v)
+            },
         };
 
         Ok(expr.clone())

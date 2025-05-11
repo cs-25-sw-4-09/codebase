@@ -65,6 +65,54 @@ pub struct NoLinesInFigure;
 impl Error for NoLinesInFigure {}
 impl fmt::Display for NoLinesInFigure {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f,"Last line is not defined in figure")
+        write!(f,"Figure is empty")
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct NoFiguresInFigureArray;
+impl Error for NoFiguresInFigureArray {}
+impl fmt::Display for NoFiguresInFigureArray {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"No figures found")
+    }
+}
+
+
+#[derive(Debug, Clone)]
+pub struct MinCanNotBeFound;
+impl Error for MinCanNotBeFound {}
+impl fmt::Display for MinCanNotBeFound {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"min can not be found")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MaxCanNotBeFound;
+impl Error for MaxCanNotBeFound {}
+impl fmt::Display for MaxCanNotBeFound {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"max can not be found")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ArrayOutOfBounds(pub String);
+impl Error for ArrayOutOfBounds {}
+impl fmt::Display for ArrayOutOfBounds {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"Array {} is out of bounds", self.0)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct InvalidArrayAccess(pub String);
+impl Error for InvalidArrayAccess {}
+impl fmt::Display for InvalidArrayAccess {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"{} is not an array", self.0)
+    }
+}
+
+

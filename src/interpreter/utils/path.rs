@@ -1,12 +1,10 @@
 
 use crate::{
     interpreter::{
-        environment::IEnvironment, InterpretE, 
-        data_types::{figure::{Figure, Line}, point::Point}
+        data_types::point::Point
     }, 
-    program::{expression::Expr, operators::pathoperator::PathOperator}};
-use crate::interpreter::value::Value;
 
+    
 #[derive(PartialEq)]
 enum ToAdd {
     Straight(Point),

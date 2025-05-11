@@ -1,6 +1,6 @@
-use crate::{interpreter::errors, program::expression::Expr};
+use crate::interpreter::errors;
 use std::{collections::HashMap, error::Error};
-use super::point::Point;
+use super::{line::Line, point::Point};
 use crate::interpreter::value::Value;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -61,52 +61,40 @@ impl Figure {
         self.lines.get_mut(idx)
     }
 
-    pub fn get_max_x(&self) -> i64 {
-        let mut max_x = self.lines.iter()
-       .flat_map(|line| line.get_points())
-       .filter_map(|point| match point.x(){
-        Value::Integer(i) => Some(*i),
-        _ => None,
-       }).max().unwrap_or(0);
-       max_x
+    pub fn get_mut_lines(&mut self) -> &mut Vec<Line> {
+        &mut self.lines
     }
 
-    pub fn get_min_x(&self) -> i64 { 
-        let mut min_x = self.lines.iter()
-       .flat_map(|line| line.get_points())
-       .filter_map(|point| match point.x(){
-        Value::Integer(i) => Some(*i),
-        _ => None,
-       }).min().unwrap_or(0);
-       min_x
+    pub fn get_max_x(&self) -> Value { 
+        self.lines.iter().flat_map(
+            |line| line.get_points().iter().map(|p| p.get_x())
+        ).max().unwrap_or(&Value::Integer(0)).clone()
     }
 
-    pub fn get_height(&self) -> i64 {
-       self.get_max_x() - self.get_min_x()
+
+    pub fn get_min_x(&self) -> Value { 
+        self.lines.iter().flat_map(
+            |line| line.get_points().iter().map(|p| p.get_x())
+        ).min().unwrap_or(&Value::Integer(0)).clone()
     }
 
-    pub fn get_max_y(&self) -> i64 {
-        let mut max_y = self.lines.iter()
-        .flat_map(|line| line.get_points())
-        .filter_map(|point| match point.y(){
-         Value::Integer(i) => Some(*i),
-         _ => None,
-        }).max().unwrap_or(0);
-        max_y
+    pub fn get_max_y(&self) -> Value { 
+        self.lines.iter().flat_map(
+            |line| line.get_points().iter().map(|p| p.get_y())
+        ).max().unwrap_or(&Value::Integer(0)).clone()
     }
 
-    pub fn get_min_y(&self) -> i64 {
-        let mut min_y = self.lines.iter()
-        .flat_map(|line| line.get_points())
-        .filter_map(|point| match point.y(){
-         Value::Integer(i) => Some(*i),
-         _ => None,
-        }).min().unwrap_or(0);
-
-        min_y
+    pub fn get_min_y(&self) -> Value { 
+        self.lines.iter().flat_map(
+            |line| line.get_points().iter().map(|p| p.get_y())
+        ).min().unwrap_or(&Value::Integer(0)).clone()
     }
 
-    pub fn get_width(&self) -> i64 {
+    pub fn get_height(&self) -> Value {
+        self.get_max_x() - self.get_min_x()
+    }
+
+    pub fn get_width(&self) -> Value {
         self.get_max_y() - self.get_min_y()
      }
 
@@ -129,47 +117,5 @@ impl Figure {
      }
 
 
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum Line {
-    Straight(Vec<Point>),
-    Curved(Vec<Point>)
-}
-impl Line {
-    pub fn get_points(&self) -> &Vec<Point> { match self {
-        Line::Straight(points) | 
-        Line::Curved(points) => &points,
-    }  }
-    pub fn push_point(&mut self, val: Point) { 
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.push(val),
-        } 
-    }
-    pub fn get_last_point(&self) -> Result<&Point, Box<dyn Error>> {
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.last().ok_or_else(|| errors::NoLinesInFigure.into())
-        }
-    }
-    pub fn get_first_point(&self) -> Result<&Point, Box<dyn Error>> {
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.first().ok_or_else(|| errors::NoLinesInFigure.into())
-        }
-    }
-    pub fn insert_point_first(&mut self, p: Point) {
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.insert(0, p),
-        }
-    }
-    pub fn insert_point_last(&mut self, p: Point) {
-        match self {
-            Line::Straight(points) | 
-            Line::Curved(points) => points.push(p)
-        }
-    }
 }
 
