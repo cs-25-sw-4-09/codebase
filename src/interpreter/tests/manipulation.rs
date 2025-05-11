@@ -1,4 +1,4 @@
-use crate::interpreter::{data_types::line::Line, value::Value};
+use crate::interpreter::{data_types::{line::Line, direction::Direction}, value::Value};
 
 use super::super::utils::manipulation::*;
 use super::*;
@@ -49,19 +49,19 @@ fn test_place_point() {
     let top_left = (0,0).into();
     let point = (2,0).into(); 
     let offset = (100,100).into();
-    let i1 = place_point_at(top_left, point, offset);
+    let i1 = place_point_at(&top_left, &point, &offset);
     assert_eq!(i1, (102, 100).into());
 
     let top_left = (-1,-1).into();
     let point = (2,0).into(); 
     let offset = (100,100).into();
-    let i1 = place_point_at(top_left, point, offset);
+    let i1 = place_point_at(&top_left, &point, &offset);
     assert_eq!(i1, (103, 101).into());
 
     let top_left = (5,5).into();
     let point = (100, 50).into(); 
     let offset = (100,100).into();
-    let i1 = place_point_at(top_left, point, offset);
+    let i1 = place_point_at(&top_left, &point, &offset);
     assert_eq!(i1, (195, 145).into());
 }
 
@@ -222,33 +222,52 @@ fn test_scale_point() {
     let i1 = (0,0).into();
     let i2 = (2,0).into(); 
     let i3 = 5.into();
-    let i4 = scale_point(i2,i1,i3);
+    let i4 = scale_point(&i2,&i1,&i3);
     assert_eq!(i4, (10,0).into());
 
     let i1 = (0,0).into();
     let i2 = (-2,0).into(); 
     let i3 = 5.into();
-    let i4 = scale_point(i2,i1,i3);
+    let i4 = scale_point(&i2,&i1,&i3);
     assert_eq!(i4, (-10,0).into());
 
     let i1 = (0,2).into(); 
     let i2 = (0,0).into();
     let i3 = 5.into();
-    let i4 = scale_point(i2,i1,i3);
+    let i4 = scale_point(&i2,&i1,&i3);
     assert_eq!(i4, (0,-8).into());
 
     let i1 = (0,-2).into(); 
     let i2 = (0,0).into();
     let i3 = 5.into();
-    let i4 = scale_point(i1, i2,i3);
+    let i4 = scale_point(&i1, &i2,&i3);
     assert_eq!(i4, (0,-10).into());
 
     let i1 = (0,2).into();
     let i2 = (2,0).into(); 
     let i3 = 5.into();
-    let i4 = scale_point(i2,i1,i3);
+    let i4 = scale_point(&i2,&i1,&i3);
     assert_eq!(i4, (10,-8).into());
 }
 
 
 /*********************************************** Rotate ****************************************/
+//todo: test rotate_point, test rotate
+#[test]
+fn rotate_point_test() {
+    let i1 = (0,0).into();
+    let i2 = (0,5).into();
+    let i3 = 90.into();
+    let i4 = rotate_point(&i2, &i1, &i3);
+    assert_eq!(i4, (5,0).into());
+    let i3 = 90.0.into();
+    let i4 = rotate_point(&i2, &i1, &i3);
+    assert_eq!(i4, (5,0).into());
+}
+
+
+
+#[test]
+fn rotate_test() {
+    
+}

@@ -40,56 +40,57 @@ impl TryFrom<(&Expr, &mut IEnvironment)> for Point {
 
 impl Point { 
     
-    pub fn get_x(&self) -> &Value{
-        &self.x
+    pub fn get_x(&self) -> &Value{ &self.x }
+
+    pub fn get_y(&self) -> &Value{ &self.y }
+
+    pub fn set_x(&mut self, value: Value) { self.x = Box::new(value);
     }
 
-    pub fn get_y(&self) -> &Value{
-        &self.y
-    }
-
-    pub fn set_x(&mut self, value: Value) {
-        self.x = Box::new(value);
-    }
-
-    pub fn set_y(&mut self, value: Value) {
-        self.y = Box::new(value);
-    }
+    pub fn set_y(&mut self, value: Value) { self.y = Box::new(value); }
 }
 
 impl ops::Add for Point {
     type Output = Point;
 
     fn add(self, rhs: Self) -> Self::Output {
-        let new_x = *self.x + *rhs.x;
-        let new_y = *self.y + *rhs.y;
         Self { 
-            x: Box::new(new_x),
-            y: Box::new(new_y)
+            x: Box::new(*self.x + *rhs.x),
+            y: Box::new(*self.y + *rhs.y)
         }
     }
 }
 
-impl ops::Sub for Point {
+impl ops::Add for &Point {
+    type Output = Point;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Point { 
+            x: Box::new(self.get_x() + rhs.get_x()),
+            y: Box::new(self.get_y() + rhs.get_y())
+        }
+    }
+}
+
+
+impl ops::Sub for &Point {
     type Output = Point;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        let new_x = *self.x - *rhs.x;
-        let new_y = *self.y - *rhs.y;
-        Self { 
-            x: Box::new(new_x),
-            y: Box::new(new_y)
+        Point { 
+            x: Box::new(self.get_x() - rhs.get_x()),
+            y: Box::new(self.get_y() - rhs.get_y())
         }
     }
 }
 
-impl Mul<Value> for Point {
+impl Mul<&Value> for Point {
     type Output = Point;
 
-    fn mul(self, rhs: Value) -> Self::Output {
+    fn mul(self, rhs: &Value) -> Self::Output {
         Self {
-            x: Box::new(*self.x * rhs.clone()),
-            y: Box::new(*self.y * rhs),
+            x: Box::new(self.get_x() * rhs),
+            y: Box::new(self.get_y() * rhs),
         }
     }
 }

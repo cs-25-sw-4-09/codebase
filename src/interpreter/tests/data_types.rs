@@ -13,7 +13,7 @@ fn point_addition() {
 fn point_subtraction() {
     let i1 = (5,5).into();
     let i2: Point = (20,20).into();
-    assert_eq!(i2-i1, (15,15).into())
+    assert_eq!(&i2 - &i1, (15,15).into())
 }
 
 

@@ -42,14 +42,14 @@ impl Value {
     pub fn get_shape(self) -> Result<FigureArray, Box<dyn Error>> {
         match self {
             Value::Shape(i) => Ok(i),
-            _ => Err(crate::program::errors::ExprParseAsBooleanError.into())
+            _ => Err(crate::program::errors::ExprParseAsShapeError.into())
         }
     }
 
     pub fn get_point(self) -> Result<Point, Box<dyn Error>> {
         match self {
             Value::Point(i) => Ok(i),
-            _ => Err(crate::program::errors::ExprParseAsBooleanError.into())
+            _ => Err(crate::program::errors::ExprParseAsPointError.into())
         }
     }
 }
@@ -94,6 +94,20 @@ impl Sub for Value {
     }
 }
 
+impl Add for &Value {
+    type Output = Value;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        match (self, rhs) {
+            (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 + v2),
+            (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 + v2),
+            (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 + *v2 as f64),
+            (Value::Integer(v1), Value::Float(v2)) => Value::Float(*v1 as f64 + v2),
+            _ => unreachable!()
+        }
+    }
+}
+
 impl Sub for &Value {
     type Output = Value;
 
@@ -109,15 +123,15 @@ impl Sub for &Value {
 }
 
 
-impl Mul for Value {
+impl Mul for &Value {
     type Output = Value;
 
     fn mul(self, rhs: Self) -> Self::Output {
         match (self, rhs) {
             (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 * v2),
             (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 * v2),
-            (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 * v2 as f64),
-            (Value::Integer(v1), Value::Float(v2)) => Value::Float(v1 as f64 * v2),
+            (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 * *v2 as f64),
+            (Value::Integer(v1), Value::Float(v2)) => Value::Float(*v1 as f64 * v2),
             _ => unreachable!()
         }
     }

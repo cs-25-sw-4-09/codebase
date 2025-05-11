@@ -1,6 +1,6 @@
 use crate::program::program::Program;
 
-use super::{data_types::{figure::Figure, figurearray::FigureArray}, environment::IEnvironment, InterpretP, InterpretS};
+use super::{data_types::figurearray::FigureArray, InterpretP, InterpretS};
 
 impl InterpretP for Program {
     fn interpret(&mut self) -> Result<&FigureArray, Box<dyn std::error::Error>> {
