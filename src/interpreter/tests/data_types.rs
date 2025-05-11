@@ -115,6 +115,27 @@ fn test_approx() {
 
     let (i1, i2): (Value,Value) = (0.0.into(), 0.0.into());
     assert!(i1.approx_eq(&i2, 10e-6));
+}
 
+#[test]
+fn get_values() {
+    let i1 = Value::Float(64.);
+    assert!(i1.get_float().is_ok());
+    let i1 = Value::Integer(64);
+    assert!(i1.get_float().is_ok());
+    let i1 = Value::Float(64.);
+    assert!(i1.get_float().is_ok());
+    let i1 = Value::Point((0,0).into());
+    assert!(i1.get_float().is_err());
+
+    let i1 = Value::Boolean(true);
+    assert!(i1.get_bool().is_ok());
+    let i1 = Value::Integer(64);
+    assert!(i1.get_bool().is_err());
+
+    let i1 = basic_house();
+    assert!(i1.get_shape().is_ok());
+    let i1 = Value::Integer(64);
+    assert!(i1.get_shape().is_err());
 
 }
