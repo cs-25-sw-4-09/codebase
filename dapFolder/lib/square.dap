@@ -1,8 +1,8 @@
 size: int;
-fill: color = (0,0,0,0);
-border_color: color = (0,0,0,0);
-line_size: int = 4;
+fill: color = (255,255,255,0);
+border_color: color = (255,0,0,255);
+line_size: int = 1;
 
 begin
 
-draw (0,0)--(size,0)--(size,size)--(0,size)--* (|fill = fill|);
+draw (0,0)--(size,0)--(size,size)--(0,size)--* (|thickness = line_size, stroke = border_color, fill = fill|);

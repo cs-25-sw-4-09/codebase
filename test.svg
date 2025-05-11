@@ -1,22 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
-    <!-- Sky background -->
-    <rect width="800" height="400" fill="skyblue"/>
-    
-    <!-- Sun -->
-    <circle cx="700" cy="50" r="40" fill="yellow"/>
-    <path d="M740,50 L 740,50" fill="black" stroke="black" stroke-width="black"/>
-    
-    <!-- House body -->
-    <rect x="300" y="150" width="200" height="150" fill="saddlebrown"/>
-    
-    <!-- Roof -->
-    <polygon points="300,150 500,150 400,75" fill="red"/>
-    
-    <!-- Door -->
-    <rect x="375" y="225" width="50" height="75" fill="black"/>
-    
-    <!-- Window -->
-    <rect x="325" y="175" width="40" height="40" fill="lightblue" stroke="black" stroke-width="2"/>
-    <path d="M 345,175 L 345,215 M 325,195 L 365,195" stroke="black" stroke-width="2"/>
+<svg viewBox="0 0 50 50">
+<path d="M0,0L50,0L50,50L0,50L0,0" fill="rgba(0,0,255,1)" stroke="rgba(255,0,0,1)" stroke-width="1" /> 
 </svg>

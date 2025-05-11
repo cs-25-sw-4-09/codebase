@@ -1,8 +1,14 @@
 use std::{env, error::Error, path::Path};
 
 use codebase::{
-    interpreter::{value::Value, InterpretE, InterpretP},
-    program::{expression::Expr, program::Program, statement::Stmt},
+    generators::generator::{self, get_generator},
+    interpreter::{InterpretE, InterpretP},
+    lexer_parser::{
+        grammar::cfg,
+        //valid_programs::get_programs
+        utils::tree_converter::stringify_tree,
+    },
+    program::{program::Program, statement::Stmt},
     typechecker::{TypeCheckE, TypeCheckP},
 };
 
@@ -26,6 +32,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .split(",")
         .map(str::to_string)
         .collect();
+    println!("ASDFGHJKJHGFDS {:?}",output_generators);
 
     let mut program = Program::from_file(Path::new(file_to_parse.as_str()))?;
 
@@ -93,11 +100,26 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     program.tenvironment.clear();
 
+    //Interpret
     match program.interpret() {
         Ok(_) => println!("[Interpreter] OK"),
         Err(err) => println!("[Interpreter] error: {}", err),
     }
 
-    println!("{:#?}", program.ienvironment);
+    //Generate Files from draw array
+
+    let format = "svg";
+
+    if let Some(generator) = get_generator(format) {
+        if let Err(err) = generator.generate(program.ienvironment.darray_get()) {
+            println!("Failed to generate format: {}, err: {}", format, err);
+        }
+    } else {
+        println!("Unsupported format: {}", format);
+    }
+
+
+    //println!("{:#?}", program.ienvironment);
+
     Ok(())
 }

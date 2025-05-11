@@ -1,7 +1,7 @@
 import square "./dapFolder/lib/square.dap";
 
 scale_size: int = 1; 
-border_color: color = (0,0,255,0); 
+border_color: color = (0,0,255,255); 
 square_count: int;
 
 begin

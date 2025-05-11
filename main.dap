@@ -1,7 +1,10 @@
 import fib "./dapFolder/fib.dap";
+import square "./dapFolder/lib/square.dap";
 
 begin
 
 x:int = 1;
 
-draw fib(|square_count = 5|);
+
+draw fib(|square_count = 10|);
+//draw square(|size = 50|);

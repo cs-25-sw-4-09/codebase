@@ -1,2 +1,20 @@
-begin
-return 1;
+begin 
+
+frame: shape = (0,0)--(10,0)--(10,10)--(0,10)--*(|fill = (255,255,255,100), stroke = (255,255,255,255), thickness = 4 |);
+central_star: shape = (5,0)--(6,3)--(9,3)--(6.5,5)--(7.5,7)--*(|fill = (255,255,255,100), stroke = (255,215,0,255), thickness = 2 |);
+circle1: shape = (5,5)--(5,8)--*(|fill = (255,255,255,100), stroke = (0,255,255,180), thickness = 3 |);
+inner_triangle: shape = (5,1)--(6,3)--(4,3)--*(|fill = (255,255,255,100), stroke = (0,255,0,255), thickness = 1 |);
+triangle_top_left: shape = (1,1)--(4,2)--(2,4)--*(|fill = (255,255,255,100),  stroke = (255,0,0,255), thickness = 2 |);
+triangle_bottom_right: shape = (6,6)--(8,8)--(9,7)--*(|fill = (255,255,255,100), stroke = (0,0,255,255), thickness = 2 |);
+arc1: shape = (1,3)--(3,3)--*(|fill = (255,255,255,100), stroke = (255,165,0,180), thickness = 2 |);
+arc2: shape = (7,3)--(9,3)--*(| fill = (255,255,255,100), stroke = (255,165,0,180), thickness = 2 |);
+big_circle: shape = (5,5)--(5,9)--*(|fill = (255,255,255,100), stroke = (255,255,255,100), thickness = 5 |); 
+draw frame; 
+draw central_star; 
+draw circle1; 
+draw inner_triangle; 
+draw triangle_top_left;
+draw triangle_bottom_right;
+draw arc1;
+draw arc2;
+draw big_circle;
