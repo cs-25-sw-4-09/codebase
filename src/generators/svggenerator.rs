@@ -18,7 +18,7 @@ impl Generator for SvgGenerator {
     fn generate(&self, draw_array: &FigureArray, file_name: String) -> Result<(), Box<dyn Error>> {
         let mut file = File::create(format!("{}.svg", file_name)).unwrap();
 
-        let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array.get_figures().clone())?;
+        let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array)?;
 
         writeln!(
             file,
@@ -36,7 +36,7 @@ impl Generator for SvgGenerator {
 }
 
 fn get_viewbox_coordiantes(
-    draw_array: Vec<Figure>,
+    draw_array: &FigureArray,
 ) -> Result<(f64, f64, f64, f64), Box<dyn Error>> {
     let mut x_min = f64::INFINITY;
     let mut y_min = f64::INFINITY;
@@ -44,7 +44,7 @@ fn get_viewbox_coordiantes(
     let mut y_max = f64::NEG_INFINITY;
     let mut line_thickness_max = 1;
 
-    for mut fig in draw_array {
+    for mut fig in draw_array.get_figures().clone() {
         if let Some(thickness_val) = fig.get_attributes().get("thickness") {
             if let Ok(thickness) = thickness_val.get_int() {
                 if thickness > line_thickness_max {
