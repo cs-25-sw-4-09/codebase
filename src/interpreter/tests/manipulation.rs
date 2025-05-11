@@ -1,4 +1,4 @@
-use crate::interpreter::{data_types::{line::Line, direction::Direction}, value::Value};
+use crate::interpreter::{data_types::{direction::Direction, line::Line, point::Point}, value::Value};
 
 use super::super::utils::manipulation::*;
 use super::*;
@@ -290,6 +290,28 @@ fn rotate_test() {
         Line::Straight(vec![(0.5,-0.20710678118654757).into(), (1.20710678118654757,0.5).into()]),
         Line::Straight(vec![(1.20710678118654757,0.5).into(), (0.5,1.20710678118654757).into()]),
         Line::Straight(vec![(0.5,1.20710678118654757).into(),(-0.20710678118654757, 0.5).into()])
+    ];
+
+    i1.get_figures()[0].get_lines().iter().zip(rotated_lines.iter()).for_each(|(l1,l2)| 
+        l1.get_points().iter().zip(l2.get_points().iter()).for_each(
+            |(p1, p2)| assert!(p1.approx_eq(p2, epsilon), "Point mismatch: {:?} vs {:?}", p1, p2)
+        )
+    ); 
+
+    let triangle = basic_triangle().get_shape().unwrap();
+
+    let rotate_around: Point = (
+        &(triangle.max_x() + triangle.min_x()) / &2.0.into(), //x
+        &(triangle.max_y() + triangle.min_y()) / &2.0.into() //y
+    ).into();
+
+    let i1 = rotate(triangle, (-90).into());
+    let epsilon = 1e-6;
+
+    let rotated_lines = vec![
+        Line::Straight(vec![(1.6666666667, -0.3333333333).into(), (1.6666666667, 1.6666666667).into()]),
+        Line::Straight(vec![(1.6666666667, 1.6666666667).into(), (-0.3333333333, 0.6666666667).into()]),
+        Line::Straight(vec![(-0.3333333333, 0.6666666667).into(), (1.6666666667, -0.3333333333).into()]),
     ];
 
     i1.get_figures()[0].get_lines().iter().zip(rotated_lines.iter()).for_each(|(l1,l2)| 
