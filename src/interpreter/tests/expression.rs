@@ -831,6 +831,93 @@ fn scale() {
 }
 
 #[test]
+fn place() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::Place {
+        base_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(600).into(), Expr::Integer(601).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(602).into(), Expr::Integer(603).into()).into(),
+                    operator: PathOperator::Line,
+                }.into(),
+            ),
+        }.into(),
+        second_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }.into(),
+            ),
+        }.into(),
+        place_at: "right".into(),
+        point: Some(Box::new(Expr::Point(Expr::Integer(3).into(), Expr::Integer(0).into()).into()))
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![vec![Line::Straight(vec![
+                (1,2).into(),
+                (3,4).into()
+            ])]
+            .into(),
+            vec![Line::Straight(vec![
+                (6,2).into(),
+                (8,4).into()
+            ])].into()
+            ]
+            .into(),
+        )
+    );
+}
+
+#[test]
+fn rotate() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::Rotate {
+        base_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        }
+        .into(),
+        factor: Expr::Integer(90).into(),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![vec![Line::Straight(vec![
+                (1.,4.).into(),
+                (3.,2.).into()
+            ])]
+            .into()]
+            .into(),
+        )
+    );
+}
+
+
+
+#[test]
 fn pathoperation_point_point() {
     let mut env = IEnvironment::new();
 

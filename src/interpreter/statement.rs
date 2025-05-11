@@ -2,7 +2,7 @@ use std::{env, path::Path};
 
 use crate::program::{expression::Expr, program::Program, statement::Stmt};
 
-use super::{errors, value::Value, InterpretE, InterpretS};
+use super::{errors, utils::manipulation::place_shape_at, value::Value, InterpretE, InterpretS};
 
 impl InterpretS for Stmt {
     fn interpret(
@@ -71,8 +71,8 @@ impl InterpretS for Stmt {
 
                 match point {
                     Some(point) => {
-                        let p1 = point.interpret(environment)?;
-                        todo!()
+                        let p1 = point.interpret(environment)?.get_point()?;
+                        environment.darray_push(place_shape_at(shape, p1));
                     }
                     None => {
                         environment.darray_push(shape);

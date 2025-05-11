@@ -196,6 +196,68 @@ fn draw_without_place() {
 }
 
 #[test]
+fn draw_with_place() {
+    let mut env = IEnvironment::new();
+
+    Stmt::Draw {
+        shape: Expr::SCall {
+            name: None,
+            args: vec![(
+                "stroke".to_owned(),
+                Expr::Color(
+                    Expr::Integer(255).into(),
+                    Expr::Integer(255).into(),
+                    Expr::Integer(255).into(),
+                    Expr::Integer(255).into(),
+                )
+                .into(),
+            )]
+            .into_iter()
+            .collect(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        },
+        point: Some(Expr::Point(Expr::Integer(4).into(), Expr::Integer(5).into()).into()),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        Value::Shape(env.darray_get().clone()),
+        Value::Shape(
+            vec![(
+                vec![Line::Straight(vec![
+                    (Value::Integer(4), Value::Integer(3)).into(),
+                    (Value::Integer(6), Value::Integer(5)).into()
+                ])]
+                .into(),
+                vec![(
+                    "stroke".to_owned(),
+                    Value::Color(
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into(),
+                        Value::Integer(255).into()
+                    )
+                    .into()
+                )]
+                .into_iter()
+                .collect()
+            )
+                .into()]
+            .into(),
+        )
+    )
+}
+
+
+#[test]
 fn import() {
     let mut env = IEnvironment::new();
     Stmt::Import {

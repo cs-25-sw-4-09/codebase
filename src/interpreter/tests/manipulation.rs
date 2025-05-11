@@ -299,19 +299,13 @@ fn rotate_test() {
     ); 
 
     let triangle = basic_triangle().get_shape().unwrap();
-
-    let rotate_around: Point = (
-        &(triangle.max_x() + triangle.min_x()) / &2.0.into(), //x
-        &(triangle.max_y() + triangle.min_y()) / &2.0.into() //y
-    ).into();
-
     let i1 = rotate(triangle, (-90).into());
     let epsilon = 1e-6;
 
     let rotated_lines = vec![
-        Line::Straight(vec![(1.6666666667, -0.3333333333).into(), (1.6666666667, 1.6666666667).into()]),
-        Line::Straight(vec![(1.6666666667, 1.6666666667).into(), (-0.3333333333, 0.6666666667).into()]),
-        Line::Straight(vec![(-0.3333333333, 0.6666666667).into(), (1.6666666667, -0.3333333333).into()]),
+        Line::Straight(vec![(2., 0.).into(), (2.,2.).into()]),
+        Line::Straight(vec![(2., 2.).into(), (0., 1.).into()]),
+        Line::Straight(vec![(0., 1.).into(), (2.,0.).into()]),
     ];
 
     i1.get_figures()[0].get_lines().iter().zip(rotated_lines.iter()).for_each(|(l1,l2)| 
