@@ -158,7 +158,6 @@ impl Div for &Value {
     }
 }
 
-
 impl Neg for Value {
     type Output = Value;
     fn neg(self) -> Self::Output {

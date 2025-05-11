@@ -101,3 +101,20 @@ fn height_width() {
     assert_eq!(i1.width(), 1.into());
 }
 
+/******* Value *******/
+#[test]
+fn test_approx() {
+    let (i1, i2): (Value,Value) = (0.into(), 0.into());
+    assert!(i1.approx_eq(&i2, 10e-6));
+
+    let (i1, i2): (Value,Value) = (0.0.into(), 0.into());
+    assert!(i1.approx_eq(&i2, 10e-6));
+
+    let (i1, i2): (Value,Value) = (0.into(), 0.0.into());
+    assert!(i1.approx_eq(&i2, 10e-6));
+
+    let (i1, i2): (Value,Value) = (0.0.into(), 0.0.into());
+    assert!(i1.approx_eq(&i2, 10e-6));
+
+
+}
