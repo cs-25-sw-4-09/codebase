@@ -359,7 +359,7 @@ impl InterpretE for Expr {
                             interpreted_args.push((arg_name, i1));
                         }
 
-                        let program = environment.stable_find(name.clone().unwrap()).unwrap();
+                        let mut program = environment.stable_find(name.clone().unwrap()).unwrap().clone();
 
                         for (arg_name, value) in interpreted_args {
                             program.ienvironment.vtable_push(arg_name.clone(), value);
