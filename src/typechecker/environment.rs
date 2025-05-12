@@ -35,11 +35,14 @@ impl TEnvironment {
 
     pub fn stable_init(&mut self){
         let mut path_param = HashMap::new();
-        path_param.insert("fill".to_string(), EType::DeclNonDefault(Type::Color));
+        path_param.insert("stroke".to_string(), EType::DeclDefault(Type::Color));
+        path_param.insert("thickness".to_string(), EType::DeclDefault(Type::Int));
         self.stable_set("Path".to_string(), path_param);
 
         let mut poly_param = HashMap::new();
-        poly_param.insert("fill".to_string(), EType::DeclNonDefault(Type::Color));
+        poly_param.insert("fill".to_string(), EType::DeclDefault(Type::Color));
+        poly_param.insert("stroke".to_string(), EType::DeclDefault(Type::Color));
+        poly_param.insert("thickness".to_string(), EType::DeclDefault(Type::Int));
         self.stable_set("Polygon".to_string(), poly_param);
     }
     

@@ -1,5 +1,0 @@
-r: int;
-z: int =56;
-
-begin
-x:int = 5;
