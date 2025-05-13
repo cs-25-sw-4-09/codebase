@@ -1617,9 +1617,7 @@ fn array_indexing_valid() {
     let i1 = Expr::ArrayIndex {
         identifier: Expr::Variable("x".to_string()).into(),
         index: Expr::Integer(1).into(),
-    }
-    .interpret(&mut env)
-    .unwrap();
+    }.interpret(&mut env).unwrap();
 
     assert_eq!(i1, Value::Integer(2))
 }
@@ -1639,8 +1637,7 @@ fn array_indexing_invalid() {
     let _ = Expr::ArrayIndex {
         identifier: Expr::Variable("x".to_string()).into(),
         index: Expr::Integer(4).into(),
-    }
-    .interpret(&mut env).unwrap_err();
+    }.interpret(&mut env).unwrap_err();
 
 }
 
@@ -1659,8 +1656,7 @@ fn array_indexing_invalid_2() {
     let _ = Expr::ArrayIndex {
         identifier: Expr::Variable("x".to_string()).into(),
         index: Expr::Integer(-1).into(),
-    }
-    .interpret(&mut env).unwrap_err();
+    }.interpret(&mut env).unwrap_err();
 
 }
 
@@ -1767,7 +1763,7 @@ pub fn fcall_push() {
         name: "push".into(),
         args: vec![
             Expr::Array(vec![Expr::Integer(1), Expr::Integer(2), Expr::Integer(3)]),
-            Expr::Integer(1),
+            Expr::Integer(4),
         ],
     }
     .interpret(&mut env)
@@ -1779,7 +1775,7 @@ pub fn fcall_push() {
             Box::new(Value::Integer(1)),
             Box::new(Value::Integer(2)),
             Box::new(Value::Integer(3)),
-            Box::new(Value::Integer(1))
+            Box::new(Value::Integer(4))
         ])
     )
 }
