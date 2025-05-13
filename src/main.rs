@@ -1,14 +1,9 @@
 use std::{env, error::Error, path::Path};
 
 use codebase::{
-    generators::generator::{self, get_generator},
-    interpreter::{value::Value, InterpretE, InterpretP},
-    lexer_parser::{
-        grammar::cfg,
-        //valid_programs::get_programs
-        utils::tree_converter::stringify_tree,
-    },
-    program::{expression::Expr, program::Program, statement::Stmt},
+    generators::generator::{get_generator},
+    interpreter::{InterpretE, InterpretP},
+    program::{program::Program, statement::Stmt},
     typechecker::{TypeCheckE, TypeCheckP},
 };
 
@@ -39,6 +34,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .collect();
 
     let mut program = Program::from_file(Path::new(file_to_parse.as_str()))?;
+
 
     if let Err(err) = program.type_check() {
         println!("[Typechecker] error: {}", err);

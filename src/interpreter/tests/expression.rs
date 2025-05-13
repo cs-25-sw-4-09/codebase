@@ -1,18 +1,23 @@
-use std::collections::HashMap;
 use super::*;
+use std::collections::HashMap;
 
 use crate::{
     interpreter::{
         data_types::line::Line,
         environment::IEnvironment,
         errors,
-        value::Value,
+        value::{self, Value},
         InterpretE, InterpretS,
     },
     program::{
-        expression::Expr, operators::{
-            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator, unaryoperator::UnaryOperator
-        }, program::Program, statement::Stmt, r#type::Type
+        expression::Expr,
+        operators::{
+            binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
+            unaryoperator::UnaryOperator,
+        },
+        program::Program,
+        r#type::Type,
+        statement::Stmt,
     },
 };
 
@@ -408,7 +413,6 @@ fn less_than_or_equals() {
     assert_eq!(i4, Value::Boolean(false));
 }
 
-
 #[test]
 fn less_than() {
     let mut env = IEnvironment::new();
@@ -449,7 +453,6 @@ fn less_than() {
     assert_eq!(i3, Value::Boolean(true));
     assert_eq!(i4, Value::Boolean(false));
 }
-
 
 #[test]
 fn greater_than() {
@@ -542,7 +545,6 @@ fn equals() {
     assert_eq!(i5, Value::Boolean(true));
 }
 
-
 #[test]
 fn not_equals() {
     let mut env = IEnvironment::new();
@@ -630,7 +632,6 @@ fn logical_and() {
     assert_eq!(i3, Value::Boolean(true));
     assert_eq!(i4, Value::Boolean(false));
 }
-
 
 #[test]
 fn logical_or() {
@@ -866,14 +867,7 @@ fn scale() {
 
     assert_eq!(
         i1,
-        Value::Shape(
-            vec![vec![Line::Straight(vec![
-                (1,-4).into(),
-                (9,4).into()
-            ])]
-            .into()]
-            .into(),
-        )
+        Value::Shape(vec![vec![Line::Straight(vec![(1, -4).into(), (9, 4).into()])].into()].into(),)
     );
 }
 
@@ -889,9 +883,11 @@ fn place() {
                     lhs: Expr::Point(Expr::Integer(600).into(), Expr::Integer(601).into()).into(),
                     rhs: Expr::Point(Expr::Integer(602).into(), Expr::Integer(603).into()).into(),
                     operator: PathOperator::Line,
-                }.into(),
+                }
+                .into(),
             ),
-        }.into(),
+        }
+        .into(),
         second_shape: Expr::SCall {
             name: None,
             args: HashMap::new(),
@@ -900,11 +896,15 @@ fn place() {
                     lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
                     rhs: Expr::Point(Expr::Integer(3).into(), Expr::Integer(4).into()).into(),
                     operator: PathOperator::Line,
-                }.into(),
+                }
+                .into(),
             ),
-        }.into(),
+        }
+        .into(),
         place_at: "right".into(),
-        point: Some(Box::new(Expr::Point(Expr::Integer(3).into(), Expr::Integer(0).into()).into()))
+        point: Some(Box::new(
+            Expr::Point(Expr::Integer(3).into(), Expr::Integer(0).into()).into(),
+        )),
     }
     .interpret(&mut env)
     .unwrap();
@@ -912,15 +912,9 @@ fn place() {
     assert_eq!(
         i1,
         Value::Shape(
-            vec![vec![Line::Straight(vec![
-                (1,2).into(),
-                (3,4).into()
-            ])]
-            .into(),
-            vec![Line::Straight(vec![
-                (6,2).into(),
-                (8,4).into()
-            ])].into()
+            vec![
+                vec![Line::Straight(vec![(1, 2).into(), (3, 4).into()])].into(),
+                vec![Line::Straight(vec![(6, 2).into(), (8, 4).into()])].into()
             ]
             .into(),
         )
@@ -952,17 +946,10 @@ fn rotate() {
     assert_eq!(
         i1,
         Value::Shape(
-            vec![vec![Line::Straight(vec![
-                (1.,4.).into(),
-                (3.,2.).into()
-            ])]
-            .into()]
-            .into(),
+            vec![vec![Line::Straight(vec![(1., 4.).into(), (3., 2.).into()])].into()].into(),
         )
     );
 }
-
-
 
 #[test]
 fn pathoperation_point_point() {
@@ -1594,8 +1581,7 @@ pub fn scall_pathpoly() {
                 vec![Line::Straight(vec![
                     (Value::Integer(1), Value::Integer(2)).into(),
                     (Value::Integer(3), Value::Integer(4)).into()
-                    ]
-                )]
+                ])]
                 .into(),
                 vec![(
                     "fill".to_owned(),
@@ -1604,11 +1590,74 @@ pub fn scall_pathpoly() {
                         Value::Integer(255).into(),
                         Value::Integer(255).into(),
                         Value::Integer(255).into()
-                    ).into()
-                )].into_iter().collect()
-            ).into()].into(),
+                    )
+                    .into()
+                )]
+                .into_iter()
+                .collect()
+            )
+                .into()]
+            .into(),
         )
     )
+}
+
+#[test]
+fn array_indexing_valid() {
+    let mut env = IEnvironment::new();
+    env.vtable_push(
+        "x".into(),
+        Value::Array(vec![
+            Value::Integer(1).into(),
+            Value::Integer(2).into(),
+            Value::Integer(3).into(),
+        ]),
+    );
+
+    let i1 = Expr::ArrayIndex {
+        identifier: Expr::Variable("x".to_string()).into(),
+        index: Expr::Integer(1).into(),
+    }.interpret(&mut env).unwrap();
+
+    assert_eq!(i1, Value::Integer(2))
+}
+
+#[test]
+fn array_indexing_invalid() {
+    let mut env = IEnvironment::new();
+    env.vtable_push(
+        "x".into(),
+        Value::Array(vec![
+            Value::Integer(1).into(),
+            Value::Integer(2).into(),
+            Value::Integer(3).into(),
+        ]),
+    );
+
+    let _ = Expr::ArrayIndex {
+        identifier: Expr::Variable("x".to_string()).into(),
+        index: Expr::Integer(4).into(),
+    }.interpret(&mut env).unwrap_err();
+
+}
+
+#[test]
+fn array_indexing_invalid_2() {
+    let mut env = IEnvironment::new();
+    env.vtable_push(
+        "x".into(),
+        Value::Array(vec![
+            Value::Integer(1).into(),
+            Value::Integer(2).into(),
+            Value::Integer(3).into(),
+        ]),
+    );
+
+    let _ = Expr::ArrayIndex {
+        identifier: Expr::Variable("x".to_string()).into(),
+        index: Expr::Integer(-1).into(),
+    }.interpret(&mut env).unwrap_err();
+
 }
 
 #[test]
@@ -1669,22 +1718,64 @@ pub fn scall_identifier() {
 pub fn fcall_remove() {
     let mut env = IEnvironment::new();
 
-     env.vtable_push("x".into(), Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(2)), Box::new(Value::Integer(3))]));
+    env.vtable_push(
+        "x".into(),
+        Value::Array(vec![
+            Box::new(Value::Integer(1)),
+            Box::new(Value::Integer(2)),
+            Box::new(Value::Integer(3)),
+        ]),
+    );
 
-    let i1 = Expr::FCall { name: "remove".into(), args: vec![Expr::Array(vec![Expr::Integer(1), Expr::Integer(2), Expr::Integer(3)]), Expr::Integer(1)] }.interpret(&mut env).unwrap();
+    let i1 = Expr::FCall {
+        name: "remove".into(),
+        args: vec![
+            Expr::Array(vec![Expr::Integer(1), Expr::Integer(2), Expr::Integer(3)]),
+            Expr::Integer(1),
+        ],
+    }
+    .interpret(&mut env)
+    .unwrap();
 
-    assert_eq!(i1, Value::Array(vec![Box::new(Value::Integer(1)),  Box::new(Value::Integer(3))]))
+    assert_eq!(
+        i1,
+        Value::Array(vec![
+            Box::new(Value::Integer(1)),
+            Box::new(Value::Integer(3))
+        ])
+    )
 }
 
 #[test]
 pub fn fcall_push() {
     let mut env = IEnvironment::new();
 
-     env.vtable_push("x".into(), Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(2)), Box::new(Value::Integer(3))]));
+    env.vtable_push(
+        "x".into(),
+        Value::Array(vec![
+            Box::new(Value::Integer(1)),
+            Box::new(Value::Integer(2)),
+            Box::new(Value::Integer(3)),
+        ]),
+    );
 
-    let i1 = Expr::FCall { name: "push".into(), args: vec![Expr::Array(vec![Expr::Integer(1), Expr::Integer(2), Expr::Integer(3)]), Expr::Integer(1)]}.interpret(&mut env).unwrap();
+    let i1 = Expr::FCall {
+        name: "push".into(),
+        args: vec![
+            Expr::Array(vec![Expr::Integer(1), Expr::Integer(2), Expr::Integer(3)]),
+            Expr::Integer(4),
+        ],
+    }
+    .interpret(&mut env)
+    .unwrap();
 
-    assert_eq!(i1, Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(2)), Box::new(Value::Integer(3)), Box::new(Value::Integer(1))]))
+    assert_eq!(
+        i1,
+        Value::Array(vec![
+            Box::new(Value::Integer(1)),
+            Box::new(Value::Integer(2)),
+            Box::new(Value::Integer(3)),
+            Box::new(Value::Integer(4))
+        ])
+    )
 }
-
-

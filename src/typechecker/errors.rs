@@ -228,6 +228,19 @@ impl fmt::Display for ArrayIndexTypeError {
 }
 
 #[derive(Debug, Clone)]
+pub struct NotAnArrayToIndex(pub Type);
+impl Error for NotAnArrayToIndex {}
+impl fmt::Display for NotAnArrayToIndex {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Can not array index a the type \"{:?}\", can only array index array types",
+            self.0
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct NotAMemberType(pub Type);
 impl Error for NotAMemberType {}
 impl fmt::Display for NotAMemberType {

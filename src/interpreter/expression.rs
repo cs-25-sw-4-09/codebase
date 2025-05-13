@@ -1,11 +1,15 @@
+
 use crate::{
     interpreter::{data_types::line::Line, InterpretS},
     program::expression::Expr,
 };
 
-use super::{data_types::{figurearray::FigureArray, point::Point}, errors, utils::manipulation::{
-        place, rotate, scale
-    }, value::Value, InterpretE, InterpretP
+use super::{
+    data_types::{figurearray::FigureArray, point::Point},
+    errors,
+    utils::manipulation::{place, rotate, scale},
+    value::Value,
+    InterpretE, InterpretP,
 };
 
 use crate::program::operators::{
@@ -40,12 +44,12 @@ impl InterpretE for Expr {
                 match operator {
                     BinaryOperator::Add => &(i1 + i2),
                     BinaryOperator::Subtract => &(i1 - i2),
-                    BinaryOperator::Multiply => &(&i1*&i2),
+                    BinaryOperator::Multiply => &(&i1 * &i2),
                     BinaryOperator::Divide => {
                         if i2 == Value::Integer(0) || i2 == Value::Float(0.0) {
                             return Err(errors::DivideByZero.into());
                         }
-                        &(&i1 / &i2) 
+                        &(&i1 / &i2)
                     }
                     BinaryOperator::Modulus => match (i1, i2) {
                         (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 % v2),
@@ -104,33 +108,31 @@ impl InterpretE for Expr {
                 let i1 = expr.interpret(environment)?;
                 match operator {
                     UnaryOperator::Negate => &Value::Boolean(!i1.get_bool()?),
-                    UnaryOperator::Negative => &-i1
+                    UnaryOperator::Negative => &-i1,
                 }
             }
             Expr::FCall { name, args } => {
                 match name.as_str() {
-                    "push" => { 
+                    "push" => {
                         let t1 = args[0].interpret(environment)?;
                         let t2 = args[1].interpret(environment)?;
-                        let mut array= match t1 {
+                        let mut array = match t1 {
                             Value::Array(i) => Ok(i),
                             _ => Err(errors::ArrayNonExcisting(name.to_string())).into(),
                         };
                         array.as_mut().unwrap().push(Box::new(t2));
                         &Value::Array(array.unwrap())
-                        
                     }
-                    "remove" => {  
+                    "remove" => {
                         let t1 = args[0].interpret(environment)?;
                         let t2 = args[1].interpret(environment)?;
                         let index_to_remove = t2.get_int()? as usize;
-                        let mut array= match t1 {
+                        let mut array = match t1 {
                             Value::Array(i) => Ok(i),
                             _ => Err(errors::ArrayEmpty(name.to_string())).into(),
                         };
                         array.as_mut().unwrap().remove(index_to_remove);
                         &Value::Array(array.unwrap())
-                        
                     }
                     _ => {
                         let mut params = Vec::new();
@@ -359,7 +361,10 @@ impl InterpretE for Expr {
                             interpreted_args.push((arg_name, i1));
                         }
 
-                        let mut program = environment.stable_find(name.clone().unwrap()).unwrap().clone();
+                        let mut program = environment
+                            .stable_find(name.clone().unwrap())
+                            .unwrap()
+                            .clone();
 
                         for (arg_name, value) in interpreted_args {
                             program.ienvironment.vtable_push(arg_name.clone(), value);
@@ -367,25 +372,31 @@ impl InterpretE for Expr {
 
                         let draw_array = match program.interpret() {
                             Ok(draw_array) => {
-                                println!("[Interpreter] Constructor Call: {} - OK", name.clone().unwrap());
+                                println!(
+                                    "[Interpreter] Constructor Call: {} - OK",
+                                    name.clone().unwrap()
+                                );
                                 draw_array
-                            },
+                            }
                             Err(err) => {
-                                println!("[Interpreter] Constructor Call: {} - ERROR", name.clone().unwrap());
+                                println!(
+                                    "[Interpreter] Constructor Call: {} - ERROR",
+                                    name.clone().unwrap()
+                                );
                                 return Err(err);
-                            },
+                            }
                         };
-
 
                         &Value::Shape(FigureArray::from(draw_array.clone()))
                     }
-                    (None, Some(path_poly)) => { //Shape call to path/polygon
+                    (None, Some(path_poly)) => {
+                        //Shape call to path/polygon
                         let i1 = path_poly.interpret(environment)?;
-                        
+
                         let Value::Figure(mut fig) = i1 else {
                             unreachable!()
                         };
-                        
+
                         for (arg_name, expr) in args.clone() {
                             fig.set_attribute((arg_name, expr.interpret(environment)?));
                         }
@@ -437,19 +448,19 @@ impl InterpretE for Expr {
                 point,
             } => {
                 let (s1, s2, p, dir) = (
-                    base_shape.interpret(environment)?.get_shape()?, 
-                    second_shape.interpret(environment)?.get_shape()?, 
+                    base_shape.interpret(environment)?.get_shape()?,
+                    second_shape.interpret(environment)?.get_shape()?,
                     match point {
                         Some(exp) => exp.interpret(environment)?.get_point()?,
-                        None => (0,0).into(),
-                    }, 
-                    place_at.as_str().into()
+                        None => (0, 0).into(),
+                    },
+                    place_at.as_str().into(),
                 );
 
                 let v = place(s1, s2, p, dir);
 
                 &Value::Shape(v)
-            },
+            }
             Expr::Scale { base_shape, factor } => {
                 let Value::Shape(shape) = base_shape.interpret(environment)? else {
                     unreachable!()
@@ -458,13 +469,19 @@ impl InterpretE for Expr {
                 let scaled_shape = scale(shape, factor)?;
 
                 &Value::Shape(scaled_shape)
-
-            },
+            }
             Expr::Rotate { base_shape, factor } => {
                 let s = base_shape.interpret(environment)?.get_shape()?;
                 let i1 = factor.interpret(environment)?;
                 let v = rotate(s, i1);
                 &Value::Shape(v)
+            }
+            Expr::ArrayIndex { identifier, index } => {
+                let v1 = identifier.interpret(environment)?.get_array()?;
+                let v2 = index.interpret(environment)?.get_int()?;
+
+                let idx: usize = v2.try_into().map_err(|_| errors::ArrayOutOfBoundsWithNumbers(v1.len(), v2))?;
+                &v1.get(idx).ok_or_else(|| errors::ArrayOutOfBoundsWithNumbers(v1.len(), v2))?.clone()
             },
         };
 

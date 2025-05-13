@@ -8,6 +8,7 @@ grammar cfg
   }
   terminals
   {
+    // Src for comments: https://cenotelie.fr/projects/hime/referenceLangOptions
     WHITE_SPACE -> U+0020 | U+0009 | U+000B | U+000C | U+000A
                   | U+000D | U+0085 | U+2028 | U+2029 | U+0009;
 
@@ -15,15 +16,15 @@ grammar cfg
     COMMENT_SINGLE -> '//' [^\r\n]* ;
     SEPARATOR   -> WHITE_SPACE+ | COMMENT_MULTI | COMMENT_SINGLE;
 
-    CONST       -> [0-9];
-    INTEGER -> [1-9] CONST* | '0';
+    NUM       -> [0-9];
+    INTEGER -> [1-9] NUM* | '0';
 
-    FLOAT       -> INTEGER? '.' CONST+;
+    FLOAT       -> INTEGER? '.' NUM+;
     LETTER      -> [A-Za-z];
 
 
-    IDENTIFIER -> (LETTER | '_') (LETTER | CONST | '_')*;
-    STRING -> '"'(LETTER | '\\' | '/' | CONST | '.')*'"';
+    IDENTIFIER -> (LETTER | '_') (LETTER | NUM | '_')*;
+    STRING -> '"'(LETTER | '\\' | '/' | NUM | '.')*'"';
     BOOLEAN -> 'true' | 'false';
 
   }

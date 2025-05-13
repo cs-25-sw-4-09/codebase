@@ -10,6 +10,7 @@ impl fmt::Display for FunctionNotReturning {
     }
 }
 
+
 #[derive(Debug, Clone)]
 pub struct DeclValueNotSpecified(pub String);
 impl Error for DeclValueNotSpecified {}
@@ -103,6 +104,15 @@ impl Error for ArrayOutOfBounds {}
 impl fmt::Display for ArrayOutOfBounds {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f,"Array {} is out of bounds", self.0)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ArrayOutOfBoundsWithNumbers(pub usize, pub i64);
+impl Error for ArrayOutOfBoundsWithNumbers {}
+impl fmt::Display for ArrayOutOfBoundsWithNumbers {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"Array indexing with {} not possible on array size {}", self.0, self.1)
     }
 }
 

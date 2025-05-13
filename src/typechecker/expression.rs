@@ -402,6 +402,26 @@ impl TypeCheckE for Expr {
                     Err(errors::ManipulationRotateTypeFault(t1, t2).into())
                 }
             }
+            Expr::ArrayIndex { identifier, index } => {
+                let t1 = identifier.type_check(environment)?;
+                let t2 = index.type_check(environment)?;
+
+                if t2 != Type::Int {
+                    return Err(errors::ArrayIndexTypeError(t2).into());
+                }
+
+                match t1 {
+                    Type::IntArray => Ok(Type::Int),
+                    Type::BoolArray => Ok(Type::Bool),
+                    Type::FloatArray => Ok(Type::Float),
+                    Type::ShapeArray => Ok(Type::Shape),
+                    Type::PointArray => Ok(Type::Point),
+                    Type::ColorArray => Ok(Type::Color),
+                    Type::PathArray => Ok(Type::Path),
+                    Type::PolygonArray => Ok(Type::Polygon),
+                    _ => return Err(errors::NotAnArrayToIndex(t1).into()),
+                }
+            }
         }
     }
 }

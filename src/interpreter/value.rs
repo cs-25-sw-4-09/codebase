@@ -31,6 +31,13 @@ impl Value {
         }
     }
 
+    pub fn get_array(&self) -> Result<Vec<Box<Value>>, Box<dyn Error>> {
+        match self {
+            Value::Array(i) => Ok(i.clone()),
+            _ => Err(crate::program::errors::ExprParseAsFloatError.into())
+        }
+    }
+
 
     pub fn get_bool(&self) -> Result<bool, Box<dyn Error>> {
         match self {
