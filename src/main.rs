@@ -44,7 +44,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         println!("[Typechecker] error: {}", err);
         return Err(err);
     }
-    println!("[Typechecker] OK");
     let mut checkprogramargs = String::from("begin\n");
     while let (Some(mut arg_name), Some(arg_value)) = (args.next(), args.next()) {
         if arg_name.starts_with("-") {
@@ -73,7 +72,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                         // Add the interpreted expression to the interpreter environment before execution.
                         let i1 = expr.interpret(&mut program.ienvironment).or_else(|_| {
                             return Err(format!(
-                            "Command line argument with name {}'s value could not be interpreted.",
+                            "[Typechecker] Command line argument with name {}'s value could not be interpreted.",
                             identifier
                         ));
                         })?;
@@ -81,7 +80,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     }
                     false => {
                         return Err(format!(
-                            "Command line argument with name {}'s value is not of the correct type: {:?}.",
+                            "[Typechecker] Command line argument with name {}'s value is not of the correct type: {:?}.",
                             identifier, program_argument_type
                         )
                         .into());
@@ -89,7 +88,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 },
                 Err(_) => {
                     return Err(format!(
-                        "Command line argument with name {}'s value could not be type checked.",
+                        "[Typechecker] Command line argument with name {}'s value could not be type checked.",
                         identifier
                     )
                     .into());
@@ -97,7 +96,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             },
             Err(_) => {
                 return Err(
-                    format!("Command line argument with name {} not allowed", identifier).into(),
+                    format!("[Typechecker] Command line argument with name {} not allowed", identifier).into(),
                 );
             }
         }
@@ -108,7 +107,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     //Interpret
     match program.interpret() {
         Ok(_) => println!("[Interpreter] OK"),
-        Err(err) => println!("[Interpreter] error: {}", err),
+        Err(err) => {
+            return Err(format!("[Interpreter] error: {}", err).into())
+        }
     }
 
     program.ienvironment.darray_get_mut().flip_y();
@@ -127,8 +128,6 @@ fn main() -> Result<(), Box<dyn Error>> {
             println!("Unsupported format: {}", output_generator);
         }
     }
-
-    //println!("{:#?}", program.ienvironment);
 
     Ok(())
 }

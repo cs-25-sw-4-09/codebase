@@ -5,7 +5,7 @@ use super::stack::Stack;
 use super::value::Value;
 use crate::program::{program::Program, statement::Stmt};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct IEnvironment {
     v_table: Stack<Value>,
     f_table: Stack<(Vec<Stmt>, Vec<String>)>,

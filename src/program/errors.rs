@@ -85,4 +85,14 @@ impl fmt::Display for ExprParseAsPointError {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct HimeParseMalfunction;
+impl Error for HimeParseMalfunction {}
+impl fmt::Display for HimeParseMalfunction {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Could not parse the program source code")
+    }
+}
+
+
 
