@@ -18,6 +18,8 @@ impl Generator for SvgGenerator {
     fn generate(&self, draw_array: &FigureArray, file_name: String) -> Result<(), Box<dyn Error>> {
         let mut file = File::create(format!("{}.svg", file_name)).unwrap();
 
+
+
         let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array)?;
 
         writeln!(
@@ -25,6 +27,8 @@ impl Generator for SvgGenerator {
             "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"{} {} {} {}\">",
             x1, y1, x2, y2
         )?;
+
+
 
         for fig in draw_array.get_figures() {
             writeln!(file, "{}", figure_to_path_str(fig.clone())?)?;

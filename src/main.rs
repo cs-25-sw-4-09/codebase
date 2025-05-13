@@ -111,6 +111,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         Err(err) => println!("[Interpreter] error: {}", err),
     }
 
+    program.ienvironment.darray_get_mut().flip_y();
     //Generate Files from draw array
     for output_generator in output_generators {
         if let Some(generator) = get_generator(&output_generator) {

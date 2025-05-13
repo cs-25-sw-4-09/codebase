@@ -68,6 +68,11 @@ impl IEnvironment {
         &self.d_array
     }
 
+        pub fn darray_get_mut(&mut self) -> &mut FigureArray {
+        &mut self.d_array
+    }
+
+
     pub fn darray_push(&mut self, shape: FigureArray){
         self.d_array.extend(shape);
     }
