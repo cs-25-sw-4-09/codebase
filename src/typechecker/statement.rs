@@ -114,7 +114,6 @@ impl TypeCheckS for Stmt {
                     Type::ColorArray => array_type = Type::Color,
                     Type::PathArray => array_type = Type::Path,
                     Type::PolygonArray => array_type = Type::Polygon,
-                    Type::Empty => todo!(),
                     _ => unreachable!() //return Err(errors::AssignTypesNoMatch(t1, t2).into())
                 }
 

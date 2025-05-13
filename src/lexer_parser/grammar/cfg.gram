@@ -8,6 +8,7 @@ grammar cfg
   }
   terminals
   {
+    // Src for comments: https://cenotelie.fr/projects/hime/referenceLangOptions
     WHITE_SPACE -> U+0020 | U+0009 | U+000B | U+000C | U+000A
                   | U+000D | U+0085 | U+2028 | U+2029 | U+0009;
 
