@@ -1,12 +1,17 @@
 use std::{collections::HashMap, vec};
 
 use codebase::{
-    interpreter::InterpretE, program::{
-        expression::Expr, operators::{
+    program::{
+        expression::Expr,
+        operators::{
             binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
             unaryoperator::UnaryOperator,
-        }, program, statement::Stmt, r#type::Type
-    }, typechecker::TypeCheckP
+        },
+        program,
+        r#type::Type,
+        statement::Stmt,
+    },
+    typechecker::TypeCheckP,
 };
 
 //----------------------------------------------------
@@ -1822,22 +1827,23 @@ fn test_program_array_indexing() {
     x = x[2];";
 
     let program = program::Program::new(&code.to_string()).unwrap();
-    let mut env = program.ienvironment;
+
     assert_eq!(program.stmts.len(), 1);
 
     let Stmt::Assign {
         name: _,
         value,
-    } = &program.stmts[0] else { panic!() };
-    
-    
-
-    let Expr::ArrayIndex { identifier: _, index } = value else {
+    } = &program.stmts[0] else {
         panic!()
     };
     
-    assert_eq!(index.interpret(&mut env).unwrap().get_int().unwrap(), 2);
+    let Expr::ArrayIndex { identifier, index } = value else {
+        panic!()
+    };
+    assert_eq!(identifier, &Expr::Variable("x".into()).into());
+    assert_eq!(index, &Expr::Integer(2).into());
 
+    
 }
 
 //-----------------------------------
