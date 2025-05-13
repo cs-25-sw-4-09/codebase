@@ -44,6 +44,16 @@ impl FigureArray {
         .unwrap_or(0.into())
     }
 
+    pub fn flip_y(&mut self) {
+        self.0.iter_mut().for_each(|fig| 
+            fig.get_mut_lines().iter_mut().for_each(|l|
+                l.get_mut_points().iter_mut().for_each(|p|
+                    p.set_y(-p.get_y())
+                )
+            )
+        );
+    }
+
     //todo: optimize
     pub fn height(&self) -> Value {
         self.max_y() -  self.min_y()
