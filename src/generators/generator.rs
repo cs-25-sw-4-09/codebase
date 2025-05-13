@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use crate::{interpreter::data_types::{figure::Figure, figurearray::FigureArray}, program::program::Program};
+use crate::interpreter::data_types::figurearray::FigureArray;
 
 use super::svggenerator::SvgGenerator;
 

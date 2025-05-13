@@ -1,7 +1,5 @@
-use std::{env, path::Path};
-
-use crate::program::{expression::Expr, program::Program, statement::Stmt};
-
+use std::path::Path;
+use crate::program::{program::Program, statement::Stmt};
 use super::{errors, utils::manipulation::place_shape_at, value::Value, InterpretE, InterpretS};
 
 impl InterpretS for Stmt {

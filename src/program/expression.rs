@@ -7,7 +7,7 @@ use super::{
     operators::{
         binaryoperator::BinaryOperator, pathoperator::PathOperator, polyoperator::PolyOperator,
         unaryoperator::UnaryOperator,
-    }
+    },
 };
 
 #[derive(Debug, PartialEq, Clone)]
@@ -22,6 +22,10 @@ pub enum Expr {
         lhs: Box<Expr>,
         rhs: Box<Expr>,
         operator: PathOperator,
+    },
+    ArrayIndex {
+        identifier: Box<Expr>,
+        index: Box<Expr>,
     },
     PolygonOperation {
         path: Box<Expr>,
@@ -140,6 +144,17 @@ impl Expr {
                     .map(|arg| Expr::new(arg))
                     .collect::<Result<Vec<_>, _>>()?,
             ),
+            "arrayIdx" => {
+                if expr.children_count() != 2 {
+                    return Err(
+                        errors::ASTNodeChildrenCountInvalid(2, expr.children_count()).into(),
+                    );
+                }
+                Expr::ArrayIndex {
+                    identifier: Box::new(Expr::new(expr.child(0))?),
+                    index: Box::new(Expr::new(expr.child(1))?),
+                }
+            }
             "color" => {
                 if expr.children_count() != 4 {
                     return Err(
@@ -294,7 +309,7 @@ impl Expr {
                 match to_match.as_str() {
                     "place" => {
                         let first_shape = Box::new(Expr::new(expr.child(0).child(0))?);
-                        
+
                         let placement = expr.child(0).child(1).get_symbol().to_string();
                         if expr.child(0).children_count() == 4 {
                             let second_shape = Box::new(Expr::new(expr.child(0).child(3))?);

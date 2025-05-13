@@ -1,14 +1,12 @@
-use std::{error::Error, fs::File, io::Write, path};
+use std::{error::Error, fs::File, io::Write};
 
 use crate::interpreter::{
-    data_types::{
-        figure::{self, Figure}, figurearray::FigureArray, point::{self, Point}
-    },
+    data_types::{figure::Figure, figurearray::FigureArray, point::Point},
     value::Value,
 };
 
 use super::{
-    errors::{self, AttributeNotValid},
+    errors::{self},
     generator::Generator,
 };
 
@@ -18,8 +16,6 @@ impl Generator for SvgGenerator {
     fn generate(&self, draw_array: &FigureArray, file_name: String) -> Result<(), Box<dyn Error>> {
         let mut file = File::create(format!("{}.svg", file_name)).unwrap();
 
-
-
         let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array)?;
 
         writeln!(
@@ -27,8 +23,6 @@ impl Generator for SvgGenerator {
             "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"{} {} {} {}\">",
             x1, y1, x2, y2
         )?;
-
-
 
         for fig in draw_array.get_figures() {
             writeln!(file, "{}", figure_to_path_str(fig.clone())?)?;
@@ -87,12 +81,12 @@ fn get_viewbox_coordiantes(
         }
     }
 
-   Ok((
-    x_min - line_thickness_max as f64,
-    y_min - line_thickness_max as f64,
-    (x_max - x_min) + 2.0 * line_thickness_max as f64,
-    (y_max - y_min) + 2.0 * line_thickness_max as f64,
-))
+    Ok((
+        x_min - line_thickness_max as f64,
+        y_min - line_thickness_max as f64,
+        (x_max - x_min) + 2.0 * line_thickness_max as f64,
+        (y_max - y_min) + 2.0 * line_thickness_max as f64,
+    ))
 }
 
 fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {

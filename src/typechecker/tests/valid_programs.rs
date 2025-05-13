@@ -1,4 +1,5 @@
 
+#[allow(dead_code)]
 pub fn get_programs() -> Vec<&'static str> {
     vec![
         PROGRAM1 , 
