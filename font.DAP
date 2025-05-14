@@ -1,4 +1,63 @@
-import dotted "./dotted.DAP";
+str: int[];
+letterSize:int = 20;
+fontColor: color = (0,0,0,255);
+
 begin
 
-draw dotted(|from = (10,10)|);
+main: shape = (0,0)--(0,1)(||);
+
+
+for i in 0 to str.size{
+    curLetter: shape = (0,0)--(0,1)(||);
+    fork{
+        /*number 0*/
+        (str[i] == 0) -> {
+            curLetter =  place (0,0)--(letterSize/2,0)(|stroke=fontColor|) ontop curLetter;
+            curLetter = place (letterSize/2,0)--(letterSize/2,letterSize)(|stroke=fontColor|) right curLetter;
+            curLetter = place (letterSize/2,letterSize)--(0,letterSize)(|stroke=fontColor|) bottom curLetter;
+            curLetter = place (0,letterSize)--(0,0)(|stroke=fontColor|) left curLetter;
+        }
+
+        /*number 1*/
+          (str[i] == 1) -> {
+            curLetter =  place (0,letterSize)--(letterSize/2,letterSize)(|stroke=fontColor|) ontop curLetter;
+            curLetter =  place (letterSize/4,0)--(letterSize/4,letterSize)(|stroke=fontColor|) top (letterSize/4,0) offset curLetter;
+            curLetter =  place (letterSize/4,0)--(0,-letterSize/8)(|stroke=fontColor|) ontop curLetter;
+        }
+
+         /*number 2*/
+          (str[i] == 2) -> {
+            curLetter =  place (0,0)--(letterSize/2,0)(|stroke=fontColor|) ontop curLetter;
+            curLetter =  place (0,0)--(0,letterSize/2)(|stroke=fontColor|) bottom (0,letterSize/10.0) offset curLetter;
+            curLetter =  place (0,0)--(letterSize/2,0)(|stroke=fontColor|) bottom curLetter;
+            curLetter =  place (0,0)--(0,letterSize/2)(|stroke=fontColor|) ontop (letterSize/2, letterSize/2.2) offset curLetter;
+            curLetter =  place (0,0)--(letterSize/2,0)(|stroke=fontColor|) top  curLetter;
+        }
+
+        /*Parentheses left*/
+        (str[i] == 10) -> {
+            curLetter =  place (letterSize/2,0)--(0,0)(|stroke=fontColor|) ontop curLetter;
+            curLetter = place (0,0)--(0,letterSize)(|stroke=fontColor|) ontop curLetter;
+            curLetter = place (0,letterSize)--(letterSize/2,letterSize)(|stroke=fontColor|) bottom curLetter;
+        }
+        
+        /*Parentheses right*/
+        (str[i] == 11) -> {
+            curLetter =  place (0,0)--(letterSize/2,0)(|stroke=fontColor|) ontop curLetter;
+            curLetter = place (letterSize/2,0)--(letterSize/2,letterSize)(|stroke=fontColor|) right curLetter;
+            curLetter = place (letterSize/2,letterSize)--(0,letterSize)(|stroke=fontColor|) bottom curLetter;
+        }
+
+        /*comma*/
+        (str[i] == 12) -> {
+            curLetter =  place (0,-letterSize/7.0)--(letterSize/7.0,0)(|stroke=fontColor|) ontop curLetter;
+            curLetter =  place (0,0)--(letterSize/2,0)(|stroke=(0,0,0,0)|) top curLetter;
+            curLetter =  place (0,0)--(0, letterSize)(|stroke=(0,0,0,0)|) top curLetter;
+        }
+    }
+
+    main = place curLetter right (letterSize/5, 0) offset main;
+}
+
+
+draw main;
