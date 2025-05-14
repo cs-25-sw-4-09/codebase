@@ -1,0 +1,17 @@
+main_color: color = (0,0,0,255);
+background_color: color = (0,0,0,0);
+blocks: bool[];
+
+import square "./letters/#basesquare.dap";
+
+begin
+
+x: shape = (0,0)--(0,0)(||);
+for i in 0 to blocks.size {
+    fork {
+        (blocks[i]) -> {x = place square(|fill_color = main_color|) top x;}
+        (otherwise) -> {x = place square(|fill_color = background_color|) top x;}
+    }
+}
+
+draw x;

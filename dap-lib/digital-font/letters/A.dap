@@ -1,0 +1,18 @@
+main_color: color = (0,0,0,255);
+background_color: color = (0,0,0,0);
+scale_size:int = 1;
+
+import col "./letters/#rowmaker.dap";
+
+begin
+
+c1: bool[] = [true,true,true,true,false];
+c2: bool[] = [false,true,false,false,true];
+c3: bool[] = [false,true,false,false,true];
+c4: bool[] = [true,true,true,true,false];
+
+x: shape = col(|blocks = c1, background_color = background_color, main_color=main_color|);
+x = place col(|blocks = c2, background_color = background_color, main_color=main_color|) right x;
+x = place col(|blocks = c3, background_color = background_color, main_color=main_color|) right x;
+x = place col(|blocks = c4, background_color = background_color, main_color=main_color|) right x;
+draw x;

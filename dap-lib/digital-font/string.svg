@@ -1,0 +1,407 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 92 7">
+<path d="M0,0L0,0" />
+<path d="M1,5L1,5" />
+<path d="M1,5L2,5L2,4L1,4L1,5" fill="rgba(255,0,255,1)" />
+<path d="M1,4L2,4L2,3L1,3L1,4" fill="rgba(255,0,255,1)" />
+<path d="M1,3L2,3L2,2L1,2L1,3" fill="rgba(255,0,255,1)" />
+<path d="M1,2L2,2L2,1L1,1L1,2" fill="rgba(255,0,255,1)" />
+<path d="M1,1L2,1L2,0L1,0L1,1" fill="rgba(255,0,255,1)" />
+<path d="M2,5L2,5" />
+<path d="M2,5L3,5L3,4L2,4L2,5" fill="rgba(255,0,255,1)" />
+<path d="M2,4L3,4L3,3L2,3L2,4" fill="rgba(0,0,0,0)" />
+<path d="M2,3L3,3L3,2L2,2L2,3" fill="rgba(0,0,0,0)" />
+<path d="M2,2L3,2L3,1L2,1L2,2" fill="rgba(0,0,0,0)" />
+<path d="M2,1L3,1L3,0L2,0L2,1" fill="rgba(255,0,255,1)" />
+<path d="M3,5L3,5" />
+<path d="M3,5L4,5L4,4L3,4L3,5" fill="rgba(255,0,255,1)" />
+<path d="M3,4L4,4L4,3L3,3L3,4" fill="rgba(0,0,0,0)" />
+<path d="M3,3L4,3L4,2L3,2L3,3" fill="rgba(0,0,0,0)" />
+<path d="M3,2L4,2L4,1L3,1L3,2" fill="rgba(0,0,0,0)" />
+<path d="M3,1L4,1L4,0L3,0L3,1" fill="rgba(255,0,255,1)" />
+<path d="M4,5L4,5" />
+<path d="M4,5L5,5L5,4L4,4L4,5" fill="rgba(0,0,0,0)" />
+<path d="M4,4L5,4L5,3L4,3L4,4" fill="rgba(255,0,255,1)" />
+<path d="M4,3L5,3L5,2L4,2L4,3" fill="rgba(255,0,255,1)" />
+<path d="M4,2L5,2L5,1L4,1L4,2" fill="rgba(255,0,255,1)" />
+<path d="M4,1L5,1L5,0L4,0L4,1" fill="rgba(0,0,0,0)" />
+<path d="M6,5L6,5" />
+<path d="M6,5L7,5L7,4L6,4L6,5" fill="rgba(255,0,255,1)" />
+<path d="M6,4L7,4L7,3L6,3L6,4" fill="rgba(255,0,255,1)" />
+<path d="M6,3L7,3L7,2L6,2L6,3" fill="rgba(255,0,255,1)" />
+<path d="M6,2L7,2L7,1L6,1L6,2" fill="rgba(255,0,255,1)" />
+<path d="M6,1L7,1L7,0L6,0L6,1" fill="rgba(255,0,255,1)" />
+<path d="M7,5L7,5" />
+<path d="M7,5L8,5L8,4L7,4L7,5" fill="rgba(0,0,0,0)" />
+<path d="M7,4L8,4L8,3L7,3L7,4" fill="rgba(0,0,0,0)" />
+<path d="M7,3L8,3L8,2L7,2L7,3" fill="rgba(255,0,255,1)" />
+<path d="M7,2L8,2L8,1L7,1L7,2" fill="rgba(0,0,0,0)" />
+<path d="M7,1L8,1L8,0L7,0L7,1" fill="rgba(255,0,255,1)" />
+<path d="M8,5L8,5" />
+<path d="M8,5L9,5L9,4L8,4L8,5" fill="rgba(0,0,0,0)" />
+<path d="M8,4L9,4L9,3L8,3L8,4" fill="rgba(255,0,255,1)" />
+<path d="M8,3L9,3L9,2L8,2L8,3" fill="rgba(255,0,255,1)" />
+<path d="M8,2L9,2L9,1L8,1L8,2" fill="rgba(0,0,0,0)" />
+<path d="M8,1L9,1L9,0L8,0L8,1" fill="rgba(255,0,255,1)" />
+<path d="M9,5L9,5" />
+<path d="M9,5L10,5L10,4L9,4L9,5" fill="rgba(255,0,255,1)" />
+<path d="M9,4L10,4L10,3L9,3L9,4" fill="rgba(0,0,0,0)" />
+<path d="M9,3L10,3L10,2L9,2L9,3" fill="rgba(255,0,255,1)" />
+<path d="M9,2L10,2L10,1L9,1L9,2" fill="rgba(255,0,255,1)" />
+<path d="M9,1L10,1L10,0L9,0L9,1" fill="rgba(255,0,255,1)" />
+<path d="M11,5L11,5" />
+<path d="M11,5L12,5L12,4L11,4L11,5" fill="rgba(255,0,255,1)" />
+<path d="M11,4L12,4L12,3L11,3L11,4" fill="rgba(255,0,255,1)" />
+<path d="M11,3L12,3L12,2L11,2L11,3" fill="rgba(255,0,255,1)" />
+<path d="M11,2L12,2L12,1L11,1L11,2" fill="rgba(255,0,255,1)" />
+<path d="M11,1L12,1L12,0L11,0L11,1" fill="rgba(0,0,0,0)" />
+<path d="M12,5L12,5" />
+<path d="M12,5L13,5L13,4L12,4L12,5" fill="rgba(0,0,0,0)" />
+<path d="M12,4L13,4L13,3L12,3L12,4" fill="rgba(255,0,255,1)" />
+<path d="M12,3L13,3L13,2L12,2L12,3" fill="rgba(0,0,0,0)" />
+<path d="M12,2L13,2L13,1L12,1L12,2" fill="rgba(0,0,0,0)" />
+<path d="M12,1L13,1L13,0L12,0L12,1" fill="rgba(255,0,255,1)" />
+<path d="M13,5L13,5" />
+<path d="M13,5L14,5L14,4L13,4L13,5" fill="rgba(0,0,0,0)" />
+<path d="M13,4L14,4L14,3L13,3L13,4" fill="rgba(255,0,255,1)" />
+<path d="M13,3L14,3L14,2L13,2L13,3" fill="rgba(0,0,0,0)" />
+<path d="M13,2L14,2L14,1L13,1L13,2" fill="rgba(0,0,0,0)" />
+<path d="M13,1L14,1L14,0L13,0L13,1" fill="rgba(255,0,255,1)" />
+<path d="M14,5L14,5" />
+<path d="M14,5L15,5L15,4L14,4L14,5" fill="rgba(255,0,255,1)" />
+<path d="M14,4L15,4L15,3L14,3L14,4" fill="rgba(255,0,255,1)" />
+<path d="M14,3L15,3L15,2L14,2L14,3" fill="rgba(255,0,255,1)" />
+<path d="M14,2L15,2L15,1L14,1L14,2" fill="rgba(255,0,255,1)" />
+<path d="M14,1L15,1L15,0L14,0L14,1" fill="rgba(0,0,0,0)" />
+<path d="M16,5L16,5" />
+<path d="M16,5L17,5L17,4L16,4L16,5" fill="rgba(0,0,0,0)" />
+<path d="M16,4L17,4L17,3L16,3L16,4" fill="rgba(255,0,255,1)" />
+<path d="M16,3L17,3L17,2L16,2L16,3" fill="rgba(255,0,255,1)" />
+<path d="M16,2L17,2L17,1L16,1L16,2" fill="rgba(255,0,255,1)" />
+<path d="M16,1L17,1L17,0L16,0L16,1" fill="rgba(255,0,255,1)" />
+<path d="M17,5L17,5" />
+<path d="M17,5L18,5L18,4L17,4L17,5" fill="rgba(255,0,255,1)" />
+<path d="M17,4L18,4L18,3L17,3L17,4" fill="rgba(0,0,0,0)" />
+<path d="M17,3L18,3L18,2L17,2L17,3" fill="rgba(0,0,0,0)" />
+<path d="M17,2L18,2L18,1L17,1L17,2" fill="rgba(0,0,0,0)" />
+<path d="M17,1L18,1L18,0L17,0L17,1" fill="rgba(0,0,0,0)" />
+<path d="M18,5L18,5" />
+<path d="M18,5L19,5L19,4L18,4L18,5" fill="rgba(255,0,255,1)" />
+<path d="M18,4L19,4L19,3L18,3L18,4" fill="rgba(255,0,255,1)" />
+<path d="M18,3L19,3L19,2L18,2L18,3" fill="rgba(255,0,255,1)" />
+<path d="M18,2L19,2L19,1L18,1L18,2" fill="rgba(255,0,255,1)" />
+<path d="M18,1L19,1L19,0L18,0L18,1" fill="rgba(255,0,255,1)" />
+<path d="M19,5L19,5" />
+<path d="M19,5L20,5L20,4L19,4L19,5" fill="rgba(255,0,255,1)" />
+<path d="M19,4L20,4L20,3L19,3L19,4" fill="rgba(0,0,0,0)" />
+<path d="M19,3L20,3L20,2L19,2L19,3" fill="rgba(0,0,0,0)" />
+<path d="M19,2L20,2L20,1L19,1L19,2" fill="rgba(0,0,0,0)" />
+<path d="M19,1L20,1L20,0L19,0L19,1" fill="rgba(0,0,0,0)" />
+<path d="M20,5L20,5" />
+<path d="M20,5L21,5L21,4L20,4L20,5" fill="rgba(0,0,0,0)" />
+<path d="M20,4L21,4L21,3L20,3L20,4" fill="rgba(255,0,255,1)" />
+<path d="M20,3L21,3L21,2L20,2L20,3" fill="rgba(255,0,255,1)" />
+<path d="M20,2L21,2L21,1L20,1L20,2" fill="rgba(255,0,255,1)" />
+<path d="M20,1L21,1L21,0L20,0L20,1" fill="rgba(255,0,255,1)" />
+<path d="M21,1L21,1" />
+<path d="M21,1L22,1L22,0L21,0L21,1" fill="rgba(0,0,0,0)" />
+<path d="M24,1L24,1" />
+<path d="M24,1L25,1L25,0L24,0L24,1" fill="rgba(0,0,0,0)" />
+<path d="M26,5L26,5" />
+<path d="M26,5L27,5L27,4L26,4L26,5" fill="rgba(255,0,255,1)" />
+<path d="M26,4L27,4L27,3L26,3L26,4" fill="rgba(255,0,255,1)" />
+<path d="M26,3L27,3L27,2L26,2L26,3" fill="rgba(255,0,255,1)" />
+<path d="M26,2L27,2L27,1L26,1L26,2" fill="rgba(255,0,255,1)" />
+<path d="M26,1L27,1L27,0L26,0L26,1" fill="rgba(0,0,0,0)" />
+<path d="M27,5L27,5" />
+<path d="M27,5L28,5L28,4L27,4L27,5" fill="rgba(0,0,0,0)" />
+<path d="M27,4L28,4L28,3L27,3L27,4" fill="rgba(255,0,255,1)" />
+<path d="M27,3L28,3L28,2L27,2L27,3" fill="rgba(0,0,0,0)" />
+<path d="M27,2L28,2L28,1L27,1L27,2" fill="rgba(0,0,0,0)" />
+<path d="M27,1L28,1L28,0L27,0L27,1" fill="rgba(255,0,255,1)" />
+<path d="M28,5L28,5" />
+<path d="M28,5L29,5L29,4L28,4L28,5" fill="rgba(0,0,0,0)" />
+<path d="M28,4L29,4L29,3L28,3L28,4" fill="rgba(255,0,255,1)" />
+<path d="M28,3L29,3L29,2L28,2L28,3" fill="rgba(0,0,0,0)" />
+<path d="M28,2L29,2L29,1L28,1L28,2" fill="rgba(0,0,0,0)" />
+<path d="M28,1L29,1L29,0L28,0L28,1" fill="rgba(255,0,255,1)" />
+<path d="M29,5L29,5" />
+<path d="M29,5L30,5L30,4L29,4L29,5" fill="rgba(255,0,255,1)" />
+<path d="M29,4L30,4L30,3L29,3L29,4" fill="rgba(255,0,255,1)" />
+<path d="M29,3L30,3L30,2L29,2L29,3" fill="rgba(255,0,255,1)" />
+<path d="M29,2L30,2L30,1L29,1L29,2" fill="rgba(255,0,255,1)" />
+<path d="M29,1L30,1L30,0L29,0L29,1" fill="rgba(0,0,0,0)" />
+<path d="M31,5L31,5" />
+<path d="M31,5L32,5L32,4L31,4L31,5" fill="rgba(255,0,255,1)" />
+<path d="M31,4L32,4L32,3L31,3L31,4" fill="rgba(0,0,0,0)" />
+<path d="M31,3L32,3L32,2L31,2L31,3" fill="rgba(255,0,255,1)" />
+<path d="M31,2L32,2L32,1L31,1L31,2" fill="rgba(255,0,255,1)" />
+<path d="M31,1L32,1L32,0L31,0L31,1" fill="rgba(0,0,0,0)" />
+<path d="M32,5L32,5" />
+<path d="M32,5L33,5L33,4L32,4L32,5" fill="rgba(255,0,255,1)" />
+<path d="M32,4L33,4L33,3L32,3L32,4" fill="rgba(0,0,0,0)" />
+<path d="M32,3L33,3L33,2L32,2L32,3" fill="rgba(255,0,255,1)" />
+<path d="M32,2L33,2L33,1L32,1L32,2" fill="rgba(0,0,0,0)" />
+<path d="M32,1L33,1L33,0L32,0L32,1" fill="rgba(255,0,255,1)" />
+<path d="M33,5L33,5" />
+<path d="M33,5L34,5L34,4L33,4L33,5" fill="rgba(255,0,255,1)" />
+<path d="M33,4L34,4L34,3L33,3L33,4" fill="rgba(0,0,0,0)" />
+<path d="M33,3L34,3L34,2L33,2L33,3" fill="rgba(255,0,255,1)" />
+<path d="M33,2L34,2L34,1L33,1L33,2" fill="rgba(0,0,0,0)" />
+<path d="M33,1L34,1L34,0L33,0L33,1" fill="rgba(255,0,255,1)" />
+<path d="M34,5L34,5" />
+<path d="M34,5L35,5L35,4L34,4L34,5" fill="rgba(255,0,255,1)" />
+<path d="M34,4L35,4L35,3L34,3L34,4" fill="rgba(255,0,255,1)" />
+<path d="M34,3L35,3L35,2L34,2L34,3" fill="rgba(255,0,255,1)" />
+<path d="M34,2L35,2L35,1L34,1L34,2" fill="rgba(0,0,0,0)" />
+<path d="M34,1L35,1L35,0L34,0L34,1" fill="rgba(255,0,255,1)" />
+<path d="M35,1L35,1" />
+<path d="M35,1L36,1L36,0L35,0L35,1" fill="rgba(0,0,0,0)" />
+<path d="M38,1L38,1" />
+<path d="M38,1L39,1L39,0L38,0L38,1" fill="rgba(0,0,0,0)" />
+<path d="M40,5L40,5" />
+<path d="M40,5L41,5L41,4L40,4L40,5" fill="rgba(255,0,255,1)" />
+<path d="M40,4L41,4L41,3L40,3L40,4" fill="rgba(255,0,255,1)" />
+<path d="M40,3L41,3L41,2L40,2L40,3" fill="rgba(255,0,255,1)" />
+<path d="M40,2L41,2L41,1L40,1L40,2" fill="rgba(255,0,255,1)" />
+<path d="M40,1L41,1L41,0L40,0L40,1" fill="rgba(255,0,255,1)" />
+<path d="M41,5L41,5" />
+<path d="M41,5L42,5L42,4L41,4L41,5" fill="rgba(0,0,0,0)" />
+<path d="M41,4L42,4L42,3L41,3L41,4" fill="rgba(0,0,0,0)" />
+<path d="M41,3L42,3L42,2L41,2L41,3" fill="rgba(255,0,255,1)" />
+<path d="M41,2L42,2L42,1L41,1L41,2" fill="rgba(0,0,0,0)" />
+<path d="M41,1L42,1L42,0L41,0L41,1" fill="rgba(255,0,255,1)" />
+<path d="M42,5L42,5" />
+<path d="M42,5L43,5L43,4L42,4L42,5" fill="rgba(0,0,0,0)" />
+<path d="M42,4L43,4L43,3L42,3L42,4" fill="rgba(0,0,0,0)" />
+<path d="M42,3L43,3L43,2L42,2L42,3" fill="rgba(255,0,255,1)" />
+<path d="M42,2L43,2L43,1L42,1L42,2" fill="rgba(255,0,255,1)" />
+<path d="M42,1L43,1L43,0L42,0L42,1" fill="rgba(255,0,255,1)" />
+<path d="M44,5L44,5" />
+<path d="M44,5L45,5L45,4L44,4L44,5" fill="rgba(255,0,255,1)" />
+<path d="M44,4L45,4L45,3L44,3L44,4" fill="rgba(255,0,255,1)" />
+<path d="M44,3L45,3L45,2L44,2L44,3" fill="rgba(255,0,255,1)" />
+<path d="M44,2L45,2L45,1L44,1L44,2" fill="rgba(255,0,255,1)" />
+<path d="M44,1L45,1L45,0L44,0L44,1" fill="rgba(255,0,255,1)" />
+<path d="M45,5L45,5" />
+<path d="M45,5L46,5L46,4L45,4L45,5" fill="rgba(0,0,0,0)" />
+<path d="M45,4L46,4L46,3L45,3L45,4" fill="rgba(0,0,0,0)" />
+<path d="M45,3L46,3L46,2L45,2L45,3" fill="rgba(255,0,255,1)" />
+<path d="M45,2L46,2L46,1L45,1L45,2" fill="rgba(0,0,0,0)" />
+<path d="M45,1L46,1L46,0L45,0L45,1" fill="rgba(255,0,255,1)" />
+<path d="M46,5L46,5" />
+<path d="M46,5L47,5L47,4L46,4L46,5" fill="rgba(0,0,0,0)" />
+<path d="M46,4L47,4L47,3L46,3L46,4" fill="rgba(255,0,255,1)" />
+<path d="M46,3L47,3L47,2L46,2L46,3" fill="rgba(255,0,255,1)" />
+<path d="M46,2L47,2L47,1L46,1L46,2" fill="rgba(0,0,0,0)" />
+<path d="M46,1L47,1L47,0L46,0L46,1" fill="rgba(255,0,255,1)" />
+<path d="M47,5L47,5" />
+<path d="M47,5L48,5L48,4L47,4L47,5" fill="rgba(255,0,255,1)" />
+<path d="M47,4L48,4L48,3L47,3L47,4" fill="rgba(0,0,0,0)" />
+<path d="M47,3L48,3L48,2L47,2L47,3" fill="rgba(255,0,255,1)" />
+<path d="M47,2L48,2L48,1L47,1L47,2" fill="rgba(255,0,255,1)" />
+<path d="M47,1L48,1L48,0L47,0L47,1" fill="rgba(255,0,255,1)" />
+<path d="M49,5L49,5" />
+<path d="M49,5L50,5L50,4L49,4L49,5" fill="rgba(0,0,0,0)" />
+<path d="M49,4L50,4L50,3L49,3L49,4" fill="rgba(255,0,255,1)" />
+<path d="M49,3L50,3L50,2L49,2L49,3" fill="rgba(255,0,255,1)" />
+<path d="M49,2L50,2L50,1L49,1L49,2" fill="rgba(255,0,255,1)" />
+<path d="M49,1L50,1L50,0L49,0L49,1" fill="rgba(0,0,0,0)" />
+<path d="M50,5L50,5" />
+<path d="M50,5L51,5L51,4L50,4L50,5" fill="rgba(255,0,255,1)" />
+<path d="M50,4L51,4L51,3L50,3L50,4" fill="rgba(0,0,0,0)" />
+<path d="M50,3L51,3L51,2L50,2L50,3" fill="rgba(0,0,0,0)" />
+<path d="M50,2L51,2L51,1L50,1L50,2" fill="rgba(0,0,0,0)" />
+<path d="M50,1L51,1L51,0L50,0L50,1" fill="rgba(255,0,255,1)" />
+<path d="M51,5L51,5" />
+<path d="M51,5L52,5L52,4L51,4L51,5" fill="rgba(255,0,255,1)" />
+<path d="M51,4L52,4L52,3L51,3L51,4" fill="rgba(0,0,0,0)" />
+<path d="M51,3L52,3L52,2L51,2L51,3" fill="rgba(0,0,0,0)" />
+<path d="M51,2L52,2L52,1L51,1L51,2" fill="rgba(0,0,0,0)" />
+<path d="M51,1L52,1L52,0L51,0L51,1" fill="rgba(255,0,255,1)" />
+<path d="M52,5L52,5" />
+<path d="M52,5L53,5L53,4L52,4L52,5" fill="rgba(0,0,0,0)" />
+<path d="M52,4L53,4L53,3L52,3L52,4" fill="rgba(255,0,255,1)" />
+<path d="M52,3L53,3L53,2L52,2L52,3" fill="rgba(255,0,255,1)" />
+<path d="M52,2L53,2L53,1L52,1L52,2" fill="rgba(255,0,255,1)" />
+<path d="M52,1L53,1L53,0L52,0L52,1" fill="rgba(0,0,0,0)" />
+<path d="M54,5L54,5" />
+<path d="M54,5L55,5L55,4L54,4L54,5" fill="rgba(255,0,255,1)" />
+<path d="M54,4L55,4L55,3L54,3L54,4" fill="rgba(255,0,255,1)" />
+<path d="M54,3L55,3L55,2L54,2L54,3" fill="rgba(255,0,255,1)" />
+<path d="M54,2L55,2L55,1L54,1L54,2" fill="rgba(255,0,255,1)" />
+<path d="M54,1L55,1L55,0L54,0L54,1" fill="rgba(0,0,0,0)" />
+<path d="M55,5L55,5" />
+<path d="M55,5L56,5L56,4L55,4L55,5" fill="rgba(255,0,255,1)" />
+<path d="M55,4L56,4L56,3L55,3L55,4" fill="rgba(0,0,0,0)" />
+<path d="M55,3L56,3L56,2L55,2L55,3" fill="rgba(0,0,0,0)" />
+<path d="M55,2L56,2L56,1L55,1L55,2" fill="rgba(0,0,0,0)" />
+<path d="M55,1L56,1L56,0L55,0L55,1" fill="rgba(255,0,255,1)" />
+<path d="M56,5L56,5" />
+<path d="M56,5L57,5L57,4L56,4L56,5" fill="rgba(255,0,255,1)" />
+<path d="M56,4L57,4L57,3L56,3L56,4" fill="rgba(0,0,0,0)" />
+<path d="M56,3L57,3L57,2L56,2L56,3" fill="rgba(255,0,255,1)" />
+<path d="M56,2L57,2L57,1L56,1L56,2" fill="rgba(0,0,0,0)" />
+<path d="M56,1L57,1L57,0L56,0L56,1" fill="rgba(255,0,255,1)" />
+<path d="M57,5L57,5" />
+<path d="M57,5L58,5L58,4L57,4L57,5" fill="rgba(255,0,255,1)" />
+<path d="M57,4L58,4L58,3L57,3L57,4" fill="rgba(255,0,255,1)" />
+<path d="M57,3L58,3L58,2L57,2L57,3" fill="rgba(255,0,255,1)" />
+<path d="M57,2L58,2L58,1L57,1L57,2" fill="rgba(0,0,0,0)" />
+<path d="M57,1L58,1L58,0L57,0L57,1" fill="rgba(255,0,255,1)" />
+<path d="M59,5L59,5" />
+<path d="M59,5L60,5L60,4L59,4L59,5" fill="rgba(255,0,255,1)" />
+<path d="M59,4L60,4L60,3L59,3L59,4" fill="rgba(255,0,255,1)" />
+<path d="M59,3L60,3L60,2L59,2L59,3" fill="rgba(255,0,255,1)" />
+<path d="M59,2L60,2L60,1L59,1L59,2" fill="rgba(255,0,255,1)" />
+<path d="M59,1L60,1L60,0L59,0L59,1" fill="rgba(255,0,255,1)" />
+<path d="M60,5L60,5" />
+<path d="M60,5L61,5L61,4L60,4L60,5" fill="rgba(0,0,0,0)" />
+<path d="M60,4L61,4L61,3L60,3L60,4" fill="rgba(0,0,0,0)" />
+<path d="M60,3L61,3L61,2L60,2L60,3" fill="rgba(255,0,255,1)" />
+<path d="M60,2L61,2L61,1L60,1L60,2" fill="rgba(0,0,0,0)" />
+<path d="M60,1L61,1L61,0L60,0L60,1" fill="rgba(255,0,255,1)" />
+<path d="M61,5L61,5" />
+<path d="M61,5L62,5L62,4L61,4L61,5" fill="rgba(0,0,0,0)" />
+<path d="M61,4L62,4L62,3L61,3L61,4" fill="rgba(255,0,255,1)" />
+<path d="M61,3L62,3L62,2L61,2L61,3" fill="rgba(255,0,255,1)" />
+<path d="M61,2L62,2L62,1L61,1L61,2" fill="rgba(0,0,0,0)" />
+<path d="M61,1L62,1L62,0L61,0L61,1" fill="rgba(255,0,255,1)" />
+<path d="M62,5L62,5" />
+<path d="M62,5L63,5L63,4L62,4L62,5" fill="rgba(255,0,255,1)" />
+<path d="M62,4L63,4L63,3L62,3L62,4" fill="rgba(0,0,0,0)" />
+<path d="M62,3L63,3L63,2L62,2L62,3" fill="rgba(255,0,255,1)" />
+<path d="M62,2L63,2L63,1L62,1L62,2" fill="rgba(255,0,255,1)" />
+<path d="M62,1L63,1L63,0L62,0L62,1" fill="rgba(255,0,255,1)" />
+<path d="M64,5L64,5" />
+<path d="M64,5L65,5L65,4L64,4L64,5" fill="rgba(255,0,255,1)" />
+<path d="M64,4L65,4L65,3L64,3L64,4" fill="rgba(255,0,255,1)" />
+<path d="M64,3L65,3L65,2L64,2L64,3" fill="rgba(255,0,255,1)" />
+<path d="M64,2L65,2L65,1L64,1L64,2" fill="rgba(255,0,255,1)" />
+<path d="M64,1L65,1L65,0L64,0L64,1" fill="rgba(0,0,0,0)" />
+<path d="M65,5L65,5" />
+<path d="M65,5L66,5L66,4L65,4L65,5" fill="rgba(0,0,0,0)" />
+<path d="M65,4L66,4L66,3L65,3L65,4" fill="rgba(255,0,255,1)" />
+<path d="M65,3L66,3L66,2L65,2L65,3" fill="rgba(0,0,0,0)" />
+<path d="M65,2L66,2L66,1L65,1L65,2" fill="rgba(0,0,0,0)" />
+<path d="M65,1L66,1L66,0L65,0L65,1" fill="rgba(255,0,255,1)" />
+<path d="M66,5L66,5" />
+<path d="M66,5L67,5L67,4L66,4L66,5" fill="rgba(0,0,0,0)" />
+<path d="M66,4L67,4L67,3L66,3L66,4" fill="rgba(255,0,255,1)" />
+<path d="M66,3L67,3L67,2L66,2L66,3" fill="rgba(0,0,0,0)" />
+<path d="M66,2L67,2L67,1L66,1L66,2" fill="rgba(0,0,0,0)" />
+<path d="M66,1L67,1L67,0L66,0L66,1" fill="rgba(255,0,255,1)" />
+<path d="M67,5L67,5" />
+<path d="M67,5L68,5L68,4L67,4L67,5" fill="rgba(255,0,255,1)" />
+<path d="M67,4L68,4L68,3L67,3L67,4" fill="rgba(255,0,255,1)" />
+<path d="M67,3L68,3L68,2L67,2L67,3" fill="rgba(255,0,255,1)" />
+<path d="M67,2L68,2L68,1L67,1L67,2" fill="rgba(255,0,255,1)" />
+<path d="M67,1L68,1L68,0L67,0L67,1" fill="rgba(0,0,0,0)" />
+<path d="M69,5L69,5" />
+<path d="M69,5L70,5L70,4L69,4L69,5" fill="rgba(255,0,255,1)" />
+<path d="M69,4L70,4L70,3L69,3L69,4" fill="rgba(255,0,255,1)" />
+<path d="M69,3L70,3L70,2L69,2L69,3" fill="rgba(255,0,255,1)" />
+<path d="M69,2L70,2L70,1L69,1L69,2" fill="rgba(255,0,255,1)" />
+<path d="M69,1L70,1L70,0L69,0L69,1" fill="rgba(255,0,255,1)" />
+<path d="M70,5L70,5" />
+<path d="M70,5L71,5L71,4L70,4L70,5" fill="rgba(0,0,0,0)" />
+<path d="M70,4L71,4L71,3L70,3L70,4" fill="rgba(0,0,0,0)" />
+<path d="M70,3L71,3L71,2L70,2L70,3" fill="rgba(0,0,0,0)" />
+<path d="M70,2L71,2L71,1L70,1L70,2" fill="rgba(255,0,255,1)" />
+<path d="M70,1L71,1L71,0L70,0L70,1" fill="rgba(0,0,0,0)" />
+<path d="M71,5L71,5" />
+<path d="M71,5L72,5L72,4L71,4L71,5" fill="rgba(0,0,0,0)" />
+<path d="M71,4L72,4L72,3L71,3L71,4" fill="rgba(0,0,0,0)" />
+<path d="M71,3L72,3L72,2L71,2L71,3" fill="rgba(255,0,255,1)" />
+<path d="M71,2L72,2L72,1L71,1L71,2" fill="rgba(0,0,0,0)" />
+<path d="M71,1L72,1L72,0L71,0L71,1" fill="rgba(0,0,0,0)" />
+<path d="M72,5L72,5" />
+<path d="M72,5L73,5L73,4L72,4L72,5" fill="rgba(0,0,0,0)" />
+<path d="M72,4L73,4L73,3L72,3L72,4" fill="rgba(0,0,0,0)" />
+<path d="M72,3L73,3L73,2L72,2L72,3" fill="rgba(0,0,0,0)" />
+<path d="M72,2L73,2L73,1L72,1L72,2" fill="rgba(255,0,255,1)" />
+<path d="M72,1L73,1L73,0L72,0L72,1" fill="rgba(0,0,0,0)" />
+<path d="M73,5L73,5" />
+<path d="M73,5L74,5L74,4L73,4L73,5" fill="rgba(255,0,255,1)" />
+<path d="M73,4L74,4L74,3L73,3L73,4" fill="rgba(255,0,255,1)" />
+<path d="M73,3L74,3L74,2L73,2L73,3" fill="rgba(255,0,255,1)" />
+<path d="M73,2L74,2L74,1L73,1L73,2" fill="rgba(255,0,255,1)" />
+<path d="M73,1L74,1L74,0L73,0L73,1" fill="rgba(255,0,255,1)" />
+<path d="M75,5L75,5" />
+<path d="M75,5L76,5L76,4L75,4L75,5" fill="rgba(255,0,255,1)" />
+<path d="M75,4L76,4L76,3L75,3L75,4" fill="rgba(255,0,255,1)" />
+<path d="M75,3L76,3L76,2L75,2L75,3" fill="rgba(255,0,255,1)" />
+<path d="M75,2L76,2L76,1L75,1L75,2" fill="rgba(255,0,255,1)" />
+<path d="M75,1L76,1L76,0L75,0L75,1" fill="rgba(255,0,255,1)" />
+<path d="M76,5L76,5" />
+<path d="M76,5L77,5L77,4L76,4L76,5" fill="rgba(0,0,0,0)" />
+<path d="M76,4L77,4L77,3L76,3L76,4" fill="rgba(0,0,0,0)" />
+<path d="M76,3L77,3L77,2L76,2L76,3" fill="rgba(0,0,0,0)" />
+<path d="M76,2L77,2L77,1L76,1L76,2" fill="rgba(255,0,255,1)" />
+<path d="M76,1L77,1L77,0L76,0L76,1" fill="rgba(0,0,0,0)" />
+<path d="M77,5L77,5" />
+<path d="M77,5L78,5L78,4L77,4L77,5" fill="rgba(0,0,0,0)" />
+<path d="M77,4L78,4L78,3L77,3L77,4" fill="rgba(0,0,0,0)" />
+<path d="M77,3L78,3L78,2L77,2L77,3" fill="rgba(255,0,255,1)" />
+<path d="M77,2L78,2L78,1L77,1L77,2" fill="rgba(0,0,0,0)" />
+<path d="M77,1L78,1L78,0L77,0L77,1" fill="rgba(0,0,0,0)" />
+<path d="M78,5L78,5" />
+<path d="M78,5L79,5L79,4L78,4L78,5" fill="rgba(0,0,0,0)" />
+<path d="M78,4L79,4L79,3L78,3L78,4" fill="rgba(0,0,0,0)" />
+<path d="M78,3L79,3L79,2L78,2L78,3" fill="rgba(0,0,0,0)" />
+<path d="M78,2L79,2L79,1L78,1L78,2" fill="rgba(255,0,255,1)" />
+<path d="M78,1L79,1L79,0L78,0L78,1" fill="rgba(0,0,0,0)" />
+<path d="M79,5L79,5" />
+<path d="M79,5L80,5L80,4L79,4L79,5" fill="rgba(255,0,255,1)" />
+<path d="M79,4L80,4L80,3L79,3L79,4" fill="rgba(255,0,255,1)" />
+<path d="M79,3L80,3L80,2L79,2L79,3" fill="rgba(255,0,255,1)" />
+<path d="M79,2L80,2L80,1L79,1L79,2" fill="rgba(255,0,255,1)" />
+<path d="M79,1L80,1L80,0L79,0L79,1" fill="rgba(255,0,255,1)" />
+<path d="M81,5L81,5" />
+<path d="M81,5L82,5L82,4L81,4L81,5" fill="rgba(255,0,255,1)" />
+<path d="M81,4L82,4L82,3L81,3L81,4" fill="rgba(255,0,255,1)" />
+<path d="M81,3L82,3L82,2L81,2L81,3" fill="rgba(255,0,255,1)" />
+<path d="M81,2L82,2L82,1L81,1L81,2" fill="rgba(255,0,255,1)" />
+<path d="M81,1L82,1L82,0L81,0L81,1" fill="rgba(255,0,255,1)" />
+<path d="M82,5L82,5" />
+<path d="M82,5L83,5L83,4L82,4L82,5" fill="rgba(255,0,255,1)" />
+<path d="M82,4L83,4L83,3L82,3L82,4" fill="rgba(0,0,0,0)" />
+<path d="M82,3L83,3L83,2L82,2L82,3" fill="rgba(255,0,255,1)" />
+<path d="M82,2L83,2L83,1L82,1L82,2" fill="rgba(0,0,0,0)" />
+<path d="M82,1L83,1L83,0L82,0L82,1" fill="rgba(255,0,255,1)" />
+<path d="M83,5L83,5" />
+<path d="M83,5L84,5L84,4L83,4L83,5" fill="rgba(255,0,255,1)" />
+<path d="M83,4L84,4L84,3L83,3L83,4" fill="rgba(0,0,0,0)" />
+<path d="M83,3L84,3L84,2L83,2L83,3" fill="rgba(255,0,255,1)" />
+<path d="M83,2L84,2L84,1L83,1L83,2" fill="rgba(0,0,0,0)" />
+<path d="M83,1L84,1L84,0L83,0L83,1" fill="rgba(255,0,255,1)" />
+<path d="M84,5L84,5" />
+<path d="M84,5L85,5L85,4L84,4L84,5" fill="rgba(255,0,255,1)" />
+<path d="M84,4L85,4L85,3L84,3L84,4" fill="rgba(0,0,0,0)" />
+<path d="M84,3L85,3L85,2L84,2L84,3" fill="rgba(255,0,255,1)" />
+<path d="M84,2L85,2L85,1L84,1L84,2" fill="rgba(0,0,0,0)" />
+<path d="M84,1L85,1L85,0L84,0L84,1" fill="rgba(255,0,255,1)" />
+<path d="M86,5L86,5" />
+<path d="M86,5L87,5L87,4L86,4L86,5" fill="rgba(255,0,255,1)" />
+<path d="M86,4L87,4L87,3L86,3L86,4" fill="rgba(255,0,255,1)" />
+<path d="M86,3L87,3L87,2L86,2L86,3" fill="rgba(255,0,255,1)" />
+<path d="M86,2L87,2L87,1L86,1L86,2" fill="rgba(255,0,255,1)" />
+<path d="M86,1L87,1L87,0L86,0L86,1" fill="rgba(255,0,255,1)" />
+<path d="M87,5L87,5" />
+<path d="M87,5L88,5L88,4L87,4L87,5" fill="rgba(0,0,0,0)" />
+<path d="M87,4L88,4L88,3L87,3L87,4" fill="rgba(0,0,0,0)" />
+<path d="M87,3L88,3L88,2L87,2L87,3" fill="rgba(255,0,255,1)" />
+<path d="M87,2L88,2L88,1L87,1L87,2" fill="rgba(0,0,0,0)" />
+<path d="M87,1L88,1L88,0L87,0L87,1" fill="rgba(255,0,255,1)" />
+<path d="M88,5L88,5" />
+<path d="M88,5L89,5L89,4L88,4L88,5" fill="rgba(0,0,0,0)" />
+<path d="M88,4L89,4L89,3L88,3L88,4" fill="rgba(255,0,255,1)" />
+<path d="M88,3L89,3L89,2L88,2L88,3" fill="rgba(255,0,255,1)" />
+<path d="M88,2L89,2L89,1L88,1L88,2" fill="rgba(0,0,0,0)" />
+<path d="M88,1L89,1L89,0L88,0L88,1" fill="rgba(255,0,255,1)" />
+<path d="M89,5L89,5" />
+<path d="M89,5L90,5L90,4L89,4L89,5" fill="rgba(255,0,255,1)" />
+<path d="M89,4L90,4L90,3L89,3L89,4" fill="rgba(0,0,0,0)" />
+<path d="M89,3L90,3L90,2L89,2L89,3" fill="rgba(255,0,255,1)" />
+<path d="M89,2L90,2L90,1L89,1L89,2" fill="rgba(255,0,255,1)" />
+<path d="M89,1L90,1L90,0L89,0L89,1" fill="rgba(255,0,255,1)" />
+</svg>
