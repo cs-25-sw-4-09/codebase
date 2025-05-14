@@ -6,7 +6,8 @@ pub enum Direction {
     Bottom, 
     Right,
     Left, 
-    Ontop
+    Ontop,
+    Center
 }
 
 impl From<&str> for Direction {
@@ -18,6 +19,7 @@ impl From<&str> for Direction {
             "right" => Right,
             "left" => Left,
             "ontop" => Ontop,
+            "center" => Center,
             _ => unreachable!()
         }
     }
@@ -31,6 +33,14 @@ impl Direction {
             Direction::Left => (-s1.width(), Value::Integer(0)),
             Direction::Right => (s2.width(), Value::Integer(0)),
             Direction::Ontop => (Value::Integer(0), Value::Integer(0)),
+            Direction::Center => {
+                let cx1 = s1.min_x()-s1.max_x();
+                let cy1 = s1.min_y()-s1.max_y();
+                let cx2 = s2.min_x()-s2.max_x();
+                let cy2 = s2.min_y()-s2.max_y();
+                
+                (Value::Float((cx1-cx2).get_float().unwrap() / 2.0), Value::Float((cy2-cy1).get_float().unwrap() / 2.0))
+            },
         }.into()
     }
 }

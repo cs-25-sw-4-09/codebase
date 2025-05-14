@@ -72,7 +72,7 @@ grammar cfg
     scale -> 'scale'! exprT 'by'! exprV;
     rotate -> 'rotate'! exprT 'by'! exprV;
     place -> 'place'! exprT pos (exprV 'offset'!)? exprT ;
-        pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop')^;
+        pos -> ('left' | 'right' | 'top' | 'bottom' | 'ontop' | 'center')^;
     SCall -> (IDENTIFIER | path | polygon) '(|'! attrS '|)'!;
         attrS -> (attr (','! attr)*)? ;
         attr -> IDENTIFIER '='! exprT;

@@ -1,8 +1,9 @@
 begin
-x: int[] = [];
+x: shape = (0,0)--(1,0)--(1,1)--(0,1)--*(||);
+y: shape = rotate (1,1)--(2,1)--(2,2)--(1,2)--*(|fill = (255,0,0,255)|) by 45;
+z: shape = rotate (0,0)--(1,0)--(1,1)--(0,1)--*(|fill = (255,0,0,255)|) by 45;
 
-y: int[] = remove(x,1);
-
+draw place x center z;
 
 
 
