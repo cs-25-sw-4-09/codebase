@@ -52,9 +52,9 @@ impl fmt::Display for ArrayEmpty {
 }
 
 #[derive(Debug, Clone)]
-pub struct ArrayNonExcisting(pub String);
-impl Error for ArrayNonExcisting {}
-impl fmt::Display for ArrayNonExcisting {
+pub struct ArrayNonExisting(pub String);
+impl Error for ArrayNonExisting {}
+impl fmt::Display for ArrayNonExisting {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f,"Array {} is not declared", self.0)
     }

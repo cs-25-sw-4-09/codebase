@@ -114,25 +114,19 @@ impl InterpretE for Expr {
             Expr::FCall { name, args } => {
                 match name.as_str() {
                     "push" => {
-                        let t1 = args[0].interpret(environment)?;
-                        let t2 = args[1].interpret(environment)?;
-                        let mut array = match t1 {
-                            Value::Array(i) => Ok(i),
-                            _ => Err(errors::ArrayNonExcisting(name.to_string())).into(),
-                        };
-                        array.as_mut().unwrap().push(Box::new(t2));
-                        &Value::Array(array.unwrap())
+                        let i1 = args[0].interpret(environment)?;
+                        let i2 = args[1].interpret(environment)?;
+                        let mut array = i1.get_array()?;
+                        array.push(Box::new(i2));
+                        &Value::Array(array)
                     }
                     "remove" => {
-                        let t1 = args[0].interpret(environment)?;
-                        let t2 = args[1].interpret(environment)?;
-                        let index_to_remove = t2.get_int()? as usize;
-                        let mut array = match t1 {
-                            Value::Array(i) => Ok(i),
-                            _ => Err(errors::ArrayEmpty(name.to_string())).into(),
-                        };
-                        array.as_mut().unwrap().remove(index_to_remove);
-                        &Value::Array(array.unwrap())
+                        let i1 = args[0].interpret(environment)?;
+                        let i2 = args[1].interpret(environment)?;
+                        let index_to_remove = i2.get_int()? as usize;
+                        let mut array = i1.get_array()?;
+                        array.remove(index_to_remove);
+                        &Value::Array(array)
                     }
                     _ => {
                         let mut params = Vec::new();
