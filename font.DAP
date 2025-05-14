@@ -1,0 +1,4 @@
+import dotted "./dotted.DAP";
+begin
+
+draw dotted(|from = (10,10)|);

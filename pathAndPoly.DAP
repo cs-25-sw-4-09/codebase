@@ -1,0 +1,13 @@
+import circle "./circle.DAP";
+import dottedLine "./dottedLine.DAP";
+
+begin
+
+triangleC1: shape = (0,-100)--(100,-100)(|stroke= (0,0,0,255)|);
+triangleC2: shape = (100,-100)--(100,0)(|stroke= (0,0,0,255)|);
+
+triangle: shape = place triangleC1 left (0, -triangleC2.height) offset triangleC2;
+
+triangle = place dottedLine(|fromPoint = (0,-100), toPoint = (100,0), lineAmount = 30|) ontop triangle;
+
+draw triangle;

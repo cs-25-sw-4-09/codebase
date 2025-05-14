@@ -1,0 +1,6 @@
+size: int;
+fill: color = (255,0,0,255);
+
+begin
+
+draw (0,0)--(size,0)--(size,size)--(0,size)--* (|fill = fill, thickness = 2, stroke = (0,0,0,255)|);
