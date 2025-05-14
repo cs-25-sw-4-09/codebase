@@ -1,10 +1,7 @@
 use std::{env, error::Error, path::Path};
 
 use codebase::{
-    generators::generator::{get_generator},
-    interpreter::{InterpretE, InterpretP},
-    program::{program::Program, statement::Stmt},
-    typechecker::{TypeCheckE, TypeCheckP},
+    generators::generator::get_generator, interpreter::{InterpretE, InterpretP}, program::{program::Program, statement::Stmt}, typechecker::{TypeCheckE, TypeCheckP}
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -51,7 +48,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     checkprogramargs.extend("return 0;".to_string().chars());
 
-    let mut checkprogramargs = Program::new(&checkprogramargs)?;
+    let mut checkprogramargs = Program::new(&checkprogramargs).map_err(|err| format!("[Typechecker] {}", err))?;
     checkprogramargs.stmts.pop();
     for stmt in &checkprogramargs.stmts {
         let Stmt::Assign {
