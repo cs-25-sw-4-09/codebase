@@ -16,7 +16,7 @@ c12: shape = (10,10)--(10,20)--(20,20)--(20,10)--*(|fill = (255,0,0,100)|);
 
 //draw place x1 center rotate c1 by 45;
 
-draw place y center x;
+draw place y center x
 
 
 

@@ -1,7 +1,10 @@
 use std::{env, error::Error, path::Path};
 
 use codebase::{
-    generators::generator::get_generator, interpreter::{InterpretE, InterpretP}, program::{program::Program, statement::Stmt}, typechecker::{TypeCheckE, TypeCheckP}
+    generators::generator::get_generator,
+    interpreter::{InterpretE, InterpretP},
+    program::{program::Program, statement::Stmt},
+    typechecker::{TypeCheckE, TypeCheckP},
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -17,7 +20,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     })?;
     let file_stem = file_to_parse.rsplitn(2, '.').last().unwrap();
 
-
     let output_generators: Vec<String> = args
         .next()
         .ok_or_else(|| {
@@ -30,8 +32,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(str::to_string)
         .collect();
 
-    let mut program = Program::from_file(Path::new(file_to_parse.as_str()))?;
-
+    let mut program = Program::from_file(Path::new(file_to_parse.as_str())).map_err(|err| format!("[Lexer/Parser] {}", err))?;
 
     if let Err(err) = program.type_check() {
         println!("[Typechecker] error: {}", err);
@@ -48,7 +49,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     checkprogramargs.extend("return 0;".to_string().chars());
 
-    let mut checkprogramargs = Program::new(&checkprogramargs).map_err(|err| format!("[Typechecker] {}", err))?;
+    let mut checkprogramargs = Program::new(&checkprogramargs)
+        .map_err(|err| format!("[Lexer/Parser] {}", err))?;
     checkprogramargs.stmts.pop();
     for stmt in &checkprogramargs.stmts {
         let Stmt::Assign {
@@ -88,9 +90,11 @@ fn main() -> Result<(), Box<dyn Error>> {
                 }
             },
             Err(_) => {
-                return Err(
-                    format!("[Typechecker] Command line argument with name {} not allowed", identifier).into(),
-                );
+                return Err(format!(
+                    "[Typechecker] Command line argument with name {} not allowed",
+                    identifier
+                )
+                .into());
             }
         }
     }
@@ -100,9 +104,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     //Interpret
     match program.interpret() {
         Ok(_) => println!("[Interpreter] OK"),
-        Err(err) => {
-            return Err(format!("[Interpreter] error: {}", err).into())
-        }
+        Err(err) => return Err(format!("[Interpreter] error: {}", err).into()),
     }
 
     program.ienvironment.darray_get_mut().flip_y();
