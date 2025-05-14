@@ -921,6 +921,8 @@ fn place() {
     );
 }
 
+
+
 #[test]
 fn rotate() {
     let mut env = IEnvironment::new();
