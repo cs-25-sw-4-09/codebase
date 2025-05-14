@@ -1,0 +1,32 @@
+
+import square "./square.DAP";
+
+scale_size: int; 
+border_color: color = (100,120,200,255); 
+square_count: int;
+
+begin
+
+spiral: shape = square(|size=1, fill=border_color|);
+
+fib_1: int = 1;
+fib_2: int = 1;
+
+for i in 1 to square_count {
+    next_fib: int = fib_1 + fib_2;
+    fib_1 = fib_2;
+    fib_2 = next_fib;
+
+    cur_square: shape = square(|size=next_fib, fill=border_color|);
+
+    fork {
+        (i % 4 == 0) -> { spiral = place cur_square right spiral;}
+        (i % 4 == 1) -> { spiral = place cur_square bottom spiral; }
+        (i % 4 == 2) -> { spiral = place cur_square left spiral; }
+        (i % 4 == 3) -> { spiral = place cur_square top spiral; }
+    }
+}
+
+spiral = scale spiral by scale_size;
+
+draw spiral;
