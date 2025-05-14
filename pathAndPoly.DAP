@@ -1,13 +1,25 @@
 import circle "./circle.DAP";
 import dottedLine "./dottedLine.DAP";
+import arrow "./arrow.DAP";
 
 begin
 
 triangleC1: shape = (0,-100)--(100,-100)(|stroke= (0,0,0,255)|);
 triangleC2: shape = (100,-100)--(100,0)(|stroke= (0,0,0,255)|);
-
 triangle: shape = place triangleC1 left (0, -triangleC2.height) offset triangleC2;
-
 triangle = place dottedLine(|fromPoint = (0,-100), toPoint = (100,0), lineAmount = 30|) ontop triangle;
 
-draw triangle;
+arrow1: shape = arrow(|fromPoint = (0,0), toPoint = (30,0)|);
+
+squareC1: shape = (0, -100)--(100,-100)(|stroke= (0,0,0,255)|);
+squareC2: shape = (100,-100)--(100,0)(|stroke= (0,0,0,255)|);
+squareC3: shape = (100,0)--(0,0)(|stroke= (0,0,0,255)|);
+
+square: shape = place squareC2 right (0, squareC2.height) offset squareC1;
+square = place squareC3 top square;
+square = place dottedLine(|fromPoint = (0, -100), toPoint = (0, 0), lineAmount = 30|) ontop square;
+
+main: shape = place arrow1 right (20, -triangle.height/2 + arrow1.height/2) offset triangle;
+main = place square right (20,0) offset main;
+
+draw main;
