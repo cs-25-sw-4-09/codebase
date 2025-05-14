@@ -42,6 +42,11 @@ fn direction_offset() {
     let i3 = Direction::from("right").offset(&i1, &i2);
     assert_eq!(i2.width(), 2.into());
     assert_eq!(i3, (2,0).into());
+
+    let i3 = Direction::from("center").offset(&i1, &i2);
+    assert_eq!(i2.get_center(), (1.,1.).into());
+    assert_eq!(i1.get_center(), (0.5,0.5).into());
+    assert_eq!(i3, (0.5,-0.5).into());
 }
 
 #[test]
