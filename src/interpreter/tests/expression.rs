@@ -922,6 +922,57 @@ fn place() {
 }
 
 #[test]
+fn place_center() {
+    let mut env = IEnvironment::new();
+    let i1 = Expr::Place {
+        base_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(600).into(), Expr::Integer(600).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(600).into(), Expr::Integer(600).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        }
+        .into(),
+        second_shape: Expr::SCall {
+            name: None,
+            args: HashMap::new(),
+            path_poly: Some(
+                Expr::PathOperation {
+                    lhs: Expr::Point(Expr::Integer(0).into(), Expr::Integer(0).into()).into(),
+                    rhs: Expr::Point(Expr::Integer(0).into(), Expr::Integer(0).into()).into(),
+                    operator: PathOperator::Line,
+                }
+                .into(),
+            ),
+        }
+        .into(),
+        place_at: "center".into(),
+        point: Some(Box::new(
+            Expr::Point(Expr::Integer(0).into(), Expr::Integer(0).into()).into(),
+        )),
+    }
+    .interpret(&mut env)
+    .unwrap();
+
+    assert_eq!(
+        i1,
+        Value::Shape(
+            vec![
+                vec![Line::Straight(vec![(0, 0).into(), (0, 0).into()])].into(),
+                vec![Line::Straight(vec![(0, 0).into(), (0, 0).into()])].into()
+            ]
+            .into(),
+        )
+    );
+}
+
+
+#[test]
 fn rotate() {
     let mut env = IEnvironment::new();
     let i1 = Expr::Rotate {

@@ -1,13 +1,13 @@
-use super::{figurearray::FigureArray, point::Point, super::Value};
+use super::{super::Value, figurearray::FigureArray, point::Point};
 
 #[derive(PartialEq, Debug)]
 pub enum Direction {
-    Top, 
-    Bottom, 
+    Top,
+    Bottom,
     Right,
-    Left, 
+    Left,
     Ontop,
-    Center
+    Center,
 }
 
 impl From<&str> for Direction {
@@ -20,7 +20,7 @@ impl From<&str> for Direction {
             "left" => Left,
             "ontop" => Ontop,
             "center" => Center,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -28,19 +28,17 @@ impl From<&str> for Direction {
 impl Direction {
     pub fn offset(&self, s1: &FigureArray, s2: &FigureArray) -> Point {
         match self {
-            Direction::Top => (Value::Integer(0), s1.height()),
-            Direction::Bottom => (Value::Integer(0), -s2.height()),
-            Direction::Left => (-s1.width(), Value::Integer(0)),
-            Direction::Right => (s2.width(), Value::Integer(0)),
-            Direction::Ontop => (Value::Integer(0), Value::Integer(0)),
+            Direction::Top => (Value::Integer(0), s1.height()).into(),
+            Direction::Bottom => (Value::Integer(0), -s2.height()).into(),
+            Direction::Left => (-s1.width(), Value::Integer(0)).into(),
+            Direction::Right => (s2.width(), Value::Integer(0)).into(),
+            Direction::Ontop => (Value::Integer(0), Value::Integer(0)).into(),
             Direction::Center => {
-                let cx1 = s1.min_x()-s1.max_x();
-                let cy1 = s1.min_y()-s1.max_y();
-                let cx2 = s2.min_x()-s2.max_x();
-                let cy2 = s2.min_y()-s2.max_y();
-                
-                (Value::Float((cx1-cx2).get_float().unwrap() / 2.0), Value::Float((cy2-cy1).get_float().unwrap() / 2.0))
-            },
-        }.into()
+                let v1 = &s1.get_top_left() - &s1.get_center();
+                let v2 = &s2.get_top_left() - &s2.get_center();
+                &v1 - &v2
+            }
+        }
+        
     }
 }

@@ -34,19 +34,7 @@ pub fn place(
     direction: Direction,
 ) -> FigureArray {
     //s1 is placed in relation to s2, so the updated s1 is added to s2
-    let p_offset: Point = match direction {
-        Direction::Top
-        | Direction::Bottom
-        | Direction::Right
-        | Direction::Left
-        | Direction::Ontop => offset + s2.get_top_left() + direction.offset(&s1, &s2),
-        Direction::Center => {
-
-            let p = offset + ((s1.get_center().get_x().get_float().unwrap() - s2.get_center().get_x().get_float().unwrap()) - s1.get_top_left().get_x().get_float().unwrap(), (s1.get_center().get_y().get_float().unwrap() - s2.get_center().get_y().get_float().unwrap()) + s1.get_top_left().get_y().get_float().unwrap() ).into();
-            println!("{:?}",p);
-            p
-        }
-    };
+    let p_offset: Point = offset + s2.get_top_left() + direction.offset(&s1, &s2);
 
     let fig_new = place_shape_at(s1, p_offset);
     s2.extend(fig_new);
