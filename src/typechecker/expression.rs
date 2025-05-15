@@ -55,13 +55,7 @@ impl TypeCheckE for Expr {
                         | (Type::Path, Type::Path)
                         | (Type::Point, Type::Path)
                         | (Type::Path, Type::Point) => Ok(Type::Path),
-                        //implementation of typing rule "extendPoly"
-                        (Type::Polygon, Type::Point)
-                        | (Type::Polygon, Type::Path)
-                        | (Type::Polygon, Type::Polygon)
-                        | (Type::Path, Type::Polygon)
-                        | (Type::Point, Type::Polygon) => Ok(Type::Polygon),
-                        (t1, t2) => Err(errors::PathOperationTypeNotCompatible(t1, t2).into()),
+                        _ => Err(errors::PathOperationTypeNotCompatible(t1, t2).into()),
                     },
                 }
             }
