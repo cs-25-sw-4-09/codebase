@@ -1,31 +1,31 @@
-import A "./letters/A.dap";
-import B "./letters/B.dap";
-import C "./letters/C.dap";
-import D "./letters/D.dap";
-import E "./letters/E.dap";
-import F "./letters/F.dap";
-import G "./letters/G.dap";
-import H "./letters/H.dap";
-import I "./letters/I.dap";
-import J "./letters/J.dap";
-import K "./letters/K.dap";
-import L "./letters/L.dap";
-import M "./letters/M.dap";
-import N "./letters/N.dap";
-import O "./letters/O.dap";
-import P "./letters/P.dap";
-import Q "./letters/Q.dap";
-import R "./letters/R.dap";
-import S "./letters/S.dap";
-import T "./letters/T.dap";
-import U "./letters/U.dap";
-import V "./letters/V.dap";
-import W "./letters/W.dap";
-import X "./letters/X.dap";
-import Y "./letters/Y.dap";
-import Z "./letters/Z.dap";
+import A "./dap-lib/digital-font/letters/A.dap";
+import B "./dap-lib/digital-font/letters/B.dap";
+import C "./dap-lib/digital-font/letters/C.dap";
+import D "./dap-lib/digital-font/letters/D.dap";
+import E "./dap-lib/digital-font/letters/E.dap";
+import F "./dap-lib/digital-font/letters/F.dap";
+import G "./dap-lib/digital-font/letters/G.dap";
+import H "./dap-lib/digital-font/letters/H.dap";
+import I "./dap-lib/digital-font/letters/I.dap";
+import J "./dap-lib/digital-font/letters/J.dap";
+import K "./dap-lib/digital-font/letters/K.dap";
+import L "./dap-lib/digital-font/letters/L.dap";
+import M "./dap-lib/digital-font/letters/M.dap";
+import N "./dap-lib/digital-font/letters/N.dap";
+import O "./dap-lib/digital-font/letters/O.dap";
+import P "./dap-lib/digital-font/letters/P.dap";
+import Q "./dap-lib/digital-font/letters/Q.dap";
+import R "./dap-lib/digital-font/letters/R.dap";
+import S "./dap-lib/digital-font/letters/S.dap";
+import T "./dap-lib/digital-font/letters/T.dap";
+import U "./dap-lib/digital-font/letters/U.dap";
+import V "./dap-lib/digital-font/letters/V.dap";
+import W "./dap-lib/digital-font/letters/W.dap";
+import X "./dap-lib/digital-font/letters/X.dap";
+import Y "./dap-lib/digital-font/letters/Y.dap";
+import Z "./dap-lib/digital-font/letters/Z.dap";
 
-import col "./letters/#rowmaker.dap";
+import col "./dap-lib/digital-font/letters/rowmaker.dap";
 
 string: int[] = [
   68, 82, 65, 87,    // D R A W
@@ -34,8 +34,12 @@ string: int[] = [
   32,               // space
   80, 82, 79, 71, 82, 65, 77, 77, 69, 82  // P R O G R A M M E R
 ];
+/*string: int[] = [
+  65, 67, 67, 69, 80, 84, 65, 78, 67, 69, 32, 84, 69, 83, 84
+];*/
 
-main_color: color = (255,0,255,255);
+
+main_color: color = (0,0,100,255);
 background_color: color = (0,0,0,0);
 scale_size:int = 1;
 
@@ -77,8 +81,6 @@ letter_string: shape = (0,0)--(0,0)(||);
         (string[cur] == 90) -> {letter_string = place Z(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (otherwise) -> {letter_string = place space right letter_string;}
     }
-
-
 }
 
 draw letter_string;
