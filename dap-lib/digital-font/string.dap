@@ -1,3 +1,14 @@
+import ZERO "./dap-lib/digital-font/letters/0.dap";
+import ONE "./dap-lib/digital-font/letters/1.dap";
+import TWO "./dap-lib/digital-font/letters/2.dap";
+import THREE "./dap-lib/digital-font/letters/3.dap";
+import FOUR "./dap-lib/digital-font/letters/4.dap";
+import FIVE "./dap-lib/digital-font/letters/5.dap";
+import SIX "./dap-lib/digital-font/letters/6.dap";
+import NINE "./dap-lib/digital-font/letters/9.dap";
+import COMMA "./dap-lib/digital-font/letters/COMMA.dap";
+import LEFTPAREN "./dap-lib/digital-font/letters/LEFTPAREN.dap";
+import RIGHTPAREN "./dap-lib/digital-font/letters/RIGHTPAREN.dap";
 import A "./dap-lib/digital-font/letters/A.dap";
 import B "./dap-lib/digital-font/letters/B.dap";
 import C "./dap-lib/digital-font/letters/C.dap";
@@ -53,6 +64,17 @@ space: shape = place col(|blocks = space_blocks|) right (2,0) offset col(|blocks
 letter_string: shape = (0,0)--(0,0)(||);
     for cur in 0 to string.size {
         fork {
+        (string[cur] == 0) -> {letter_string = place ZERO(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 1) -> {letter_string = place ONE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 2) -> {letter_string = place TWO(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 3) -> {letter_string = place THREE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 4) -> {letter_string = place FOUR(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 5) -> {letter_string = place FIVE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 6) -> {letter_string = place SIX(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 9) -> {letter_string = place NINE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 40) -> {letter_string = place LEFTPAREN(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 41) -> {letter_string = place RIGHTPAREN(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 44) -> {letter_string = place COMMA(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 65) -> {letter_string = place A(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 66) -> {letter_string = place B(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 67) -> {letter_string = place C(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
@@ -83,4 +105,4 @@ letter_string: shape = (0,0)--(0,0)(||);
     }
 }
 
-draw letter_string;
+draw scale letter_string by scale_size;
