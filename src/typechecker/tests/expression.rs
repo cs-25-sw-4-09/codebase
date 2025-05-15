@@ -211,6 +211,48 @@ fn array_invalid() {
 }
 
 #[test]
+fn array_index_valid() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::IntArray);
+    let t1 = Expr::ArrayIndex {
+        identifier: Expr::Variable("x".into()).into(),
+        index: Expr::Integer(5).into(),
+    }
+    .type_check(&mut env).unwrap();
+    assert_eq!(t1, Type::Int)
+}
+
+#[test]
+fn array_index_invalidindex() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::IntArray);
+    let invalid = Expr::ArrayIndex {
+        identifier: Expr::Variable("x".into()).into(),
+        index: Expr::Float(5.0).into(),
+    }
+        .type_check(&mut env);
+    assert!(invalid
+        .unwrap_err()
+        .downcast_ref::<errors::ArrayIndexTypeError>()
+        .is_some());
+}
+
+#[test]
+fn array_index_invalidarray() {
+    let mut env = TEnvironment::new();
+    env.vtable_set("x".into(), Type::Int);
+    let invalid = Expr::ArrayIndex {
+        identifier: Expr::Variable("x".into()).into(),
+        index: Expr::Integer(5).into(),
+    }
+        .type_check(&mut env);
+    assert!(invalid
+        .unwrap_err()
+        .downcast_ref::<errors::NotAnArrayToIndex>()
+        .is_some());
+}
+
+#[test]
 fn variable() {
     let mut env = TEnvironment::new();
     env.vtable_set("x".into(), Type::Int);
@@ -370,8 +412,6 @@ fn fcall() {
     assert_eq!(t1, Type::Bool);
 }
 
-
-
 #[test]
 fn fcall_invalid_identifier() {
     let mut env = TEnvironment::new();
@@ -421,7 +461,7 @@ fn fcall_push_intarray() {
     let mut env = TEnvironment::new();
     let t1 = Expr::FCall {
         name: "push".into(),
-        args: vec![Expr::Array(vec![Expr::Integer(5)]),Expr::Integer(5)],
+        args: vec![Expr::Array(vec![Expr::Integer(5)]), Expr::Integer(5)],
     }
     .type_check(&mut env)
     .unwrap();
@@ -433,7 +473,7 @@ fn fcall_push_empty() {
     let mut env = TEnvironment::new();
     let t1 = Expr::FCall {
         name: "push".into(),
-        args: vec![Expr::Array(vec![]),Expr::Integer(5)],
+        args: vec![Expr::Array(vec![]), Expr::Integer(5)],
     }
     .type_check(&mut env)
     .unwrap();
@@ -445,7 +485,7 @@ fn fcall_push_typeconflict() {
     let mut env = TEnvironment::new();
     let invalid_identifier = Expr::FCall {
         name: "push".into(),
-        args: vec![Expr::Array(vec![Expr::Integer(5)]),Expr::Float(5.0)],
+        args: vec![Expr::Array(vec![Expr::Integer(5)]), Expr::Float(5.0)],
     }
     .type_check(&mut env);
     assert!(invalid_identifier
@@ -459,7 +499,7 @@ fn fcall_push_empty_array_with_array() {
     let mut env = TEnvironment::new();
     let invalid_identifier = Expr::FCall {
         name: "push".into(),
-        args: vec![Expr::Array(vec![]),Expr::Array(vec![Expr::Integer(5)])],
+        args: vec![Expr::Array(vec![]), Expr::Array(vec![Expr::Integer(5)])],
     }
     .type_check(&mut env);
     assert!(invalid_identifier
@@ -468,13 +508,12 @@ fn fcall_push_empty_array_with_array() {
         .is_some());
 }
 
-
 #[test]
 fn fcall_push_not_array() {
     let mut env = TEnvironment::new();
     let invalid_identifier = Expr::FCall {
         name: "push".into(),
-        args: vec![Expr::Integer(5),Expr::Integer(5)],
+        args: vec![Expr::Integer(5), Expr::Integer(5)],
     }
     .type_check(&mut env);
     assert!(invalid_identifier
@@ -488,7 +527,7 @@ fn fcall_remove_intarray() {
     let mut env = TEnvironment::new();
     let t1 = Expr::FCall {
         name: "remove".into(),
-        args: vec![Expr::Array(vec![Expr::Integer(5)]),Expr::Integer(5)],
+        args: vec![Expr::Array(vec![Expr::Integer(5)]), Expr::Integer(5)],
     }
     .type_check(&mut env)
     .unwrap();
@@ -500,7 +539,7 @@ fn fcall_remove_empty_array() {
     let mut env = TEnvironment::new();
     let invalid_identifier = Expr::FCall {
         name: "remove".into(),
-        args: vec![Expr::Array(vec![]),Expr::Integer(5)],
+        args: vec![Expr::Array(vec![]), Expr::Integer(5)],
     }
     .type_check(&mut env);
     assert!(invalid_identifier
@@ -514,7 +553,7 @@ fn fcall_remove_not_int_index() {
     let mut env = TEnvironment::new();
     let invalid_identifier = Expr::FCall {
         name: "remove".into(),
-        args: vec![Expr::Array(vec![Expr::Integer(5)]),Expr::Float(5.0)],
+        args: vec![Expr::Array(vec![Expr::Integer(5)]), Expr::Float(5.0)],
     }
     .type_check(&mut env);
     assert!(invalid_identifier
@@ -522,11 +561,6 @@ fn fcall_remove_not_int_index() {
         .downcast_ref::<errors::ErrorInRemove>()
         .is_some());
 }
-
-
-
-
-
 
 #[test]
 fn scall() {
@@ -553,17 +587,25 @@ fn scall_default_path() {
 
     let t1 = Expr::SCall {
         name: None,
-        args: [("fill".into(), Expr::Color(
-            Expr::Integer(1).into(),
-            Expr::Integer(1).into(),
-            Expr::Integer(1).into(),
-            Expr::Integer(1).into()
-        ))].into_iter().collect(),
-        path_poly: Some(Expr::PathOperation {
-            lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
-            rhs: Expr::Point(Expr::Integer(2).into(), Expr::Integer(3).into()).into(),
-            operator: PathOperator::Line
-        }.into()),
+        args: [(
+            "stroke".into(),
+            Expr::Color(
+                Expr::Integer(1).into(),
+                Expr::Integer(1).into(),
+                Expr::Integer(1).into(),
+                Expr::Integer(1).into(),
+            ),
+        )]
+        .into_iter()
+        .collect(),
+        path_poly: Some(
+            Expr::PathOperation {
+                lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
+                rhs: Expr::Point(Expr::Integer(2).into(), Expr::Integer(3).into()).into(),
+                operator: PathOperator::Line,
+            }
+            .into(),
+        ),
     }
     .type_check(&mut env)
     .unwrap();
@@ -576,22 +618,29 @@ fn scall_default_polygon() {
 
     let t1 = Expr::SCall {
         name: None,
-        args: [("fill".into(), Expr::Color(
-            Expr::Integer(1).into(),
-            Expr::Integer(1).into(),
-            Expr::Integer(1).into(),
-            Expr::Integer(1).into()
-        ))].into_iter().collect(),
-        path_poly : Some(
+        args: [(
+            "fill".into(),
+            Expr::Color(
+                Expr::Integer(1).into(),
+                Expr::Integer(1).into(),
+                Expr::Integer(1).into(),
+                Expr::Integer(1).into(),
+            ),
+        )]
+        .into_iter()
+        .collect(),
+        path_poly: Some(
             Expr::PolygonOperation {
                 path: Expr::PathOperation {
                     lhs: Expr::Point(Expr::Integer(1).into(), Expr::Integer(2).into()).into(),
                     rhs: Expr::Point(Expr::Integer(2).into(), Expr::Integer(3).into()).into(),
-                    operator: PathOperator::Line
-                }.into(),
-                operator: PolyOperator::Straight
-            }.into()
-        )
+                    operator: PathOperator::Line,
+                }
+                .into(),
+                operator: PolyOperator::Straight,
+            }
+            .into(),
+        ),
     }
     .type_check(&mut env)
     .unwrap();

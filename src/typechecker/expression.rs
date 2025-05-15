@@ -55,13 +55,7 @@ impl TypeCheckE for Expr {
                         | (Type::Path, Type::Path)
                         | (Type::Point, Type::Path)
                         | (Type::Path, Type::Point) => Ok(Type::Path),
-                        //implementation of typing rule "extendPoly"
-                        (Type::Polygon, Type::Point)
-                        | (Type::Polygon, Type::Path)
-                        | (Type::Polygon, Type::Polygon)
-                        | (Type::Path, Type::Polygon)
-                        | (Type::Point, Type::Polygon) => Ok(Type::Polygon),
-                        (t1, t2) => Err(errors::PathOperationTypeNotCompatible(t1, t2).into()),
+                        _ => Err(errors::PathOperationTypeNotCompatible(t1, t2).into()),
                     },
                 }
             }
@@ -400,6 +394,26 @@ impl TypeCheckE for Expr {
                     Ok(Type::Shape)
                 } else {
                     Err(errors::ManipulationRotateTypeFault(t1, t2).into())
+                }
+            }
+            Expr::ArrayIndex { identifier, index } => {
+                let t1 = identifier.type_check(environment)?;
+                let t2 = index.type_check(environment)?;
+
+                if t2 != Type::Int {
+                    return Err(errors::ArrayIndexTypeError(t2).into());
+                }
+
+                match t1 {
+                    Type::IntArray => Ok(Type::Int),
+                    Type::BoolArray => Ok(Type::Bool),
+                    Type::FloatArray => Ok(Type::Float),
+                    Type::ShapeArray => Ok(Type::Shape),
+                    Type::PointArray => Ok(Type::Point),
+                    Type::ColorArray => Ok(Type::Color),
+                    Type::PathArray => Ok(Type::Path),
+                    Type::PolygonArray => Ok(Type::Polygon),
+                    _ => return Err(errors::NotAnArrayToIndex(t1).into()),
                 }
             }
         }

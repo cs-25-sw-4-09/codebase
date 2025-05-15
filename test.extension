@@ -1,5 +1,0 @@
-import main "main.extension";
-
-begin
-
-x: int = 2;

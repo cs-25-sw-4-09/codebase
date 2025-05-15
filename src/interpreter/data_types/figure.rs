@@ -6,7 +6,7 @@ use crate::interpreter::value::Value;
 #[derive(Debug, PartialEq, Clone)]
 pub struct Figure {
     lines: Vec<Line>,
-    attributes: HashMap<String, Value> 
+    attributes: HashMap<String, Value>,
 }
 
 impl From<Vec<Line>> for Figure {
@@ -30,12 +30,16 @@ impl Figure {
     pub fn new() -> Self {
         Self {
             lines: Vec::new(),
-            attributes: HashMap::new()
+            attributes: HashMap::new(),
         }
     }
 
     pub fn set_attribute(&mut self, attribute: (String, Value)) {
         self.attributes.insert(attribute.0, attribute.1);
+    }
+
+    pub fn get_attributes(&mut self) -> &HashMap<String, Value> {
+        &self.attributes
     }
 
     pub fn push_points(&mut self, ps: Vec<Point>) {
@@ -96,26 +100,46 @@ impl Figure {
 
     pub fn get_width(&self) -> Value {
         self.get_max_y() - self.get_min_y()
-     }
+    }
 
-     pub fn get_last_line(&mut self) -> Result<&mut Line, Box<dyn Error>> {
-         self.lines.last_mut().ok_or_else(|| errors::NoLinesInFigure.into())
-     }
-     pub fn get_first_line(&mut self) -> Result<&mut Line, Box<dyn Error>> {
-         self.lines.first_mut().ok_or_else(|| errors::NoLinesInFigure.into())
-     }
- 
-     pub fn pop_first_line(&mut self) -> Result<Line, Box<dyn Error>>{
-         if self.lines.is_empty() {
-             Err(errors::NoLinesInFigure.into())
-         } else {
-             Ok(self.lines.remove(0))
-         }
-     }
-     pub fn pop_last_line(&mut self) -> Result<Line, Box<dyn Error>>  {
-         self.lines.pop().ok_or_else(|| errors::NoLinesInFigure.into())
-     }
+    pub fn get_last_line(&mut self) -> Result<&mut Line, Box<dyn Error>> {
+        self.lines
+            .last_mut()
+            .ok_or_else(|| errors::NoLinesInFigure.into())
+    }
+    pub fn get_first_line(&mut self) -> Result<&mut Line, Box<dyn Error>> {
+        self.lines
+            .first_mut()
+            .ok_or_else(|| errors::NoLinesInFigure.into())
+    }
 
+    pub fn pop_first_line(&mut self) -> Result<Line, Box<dyn Error>> {
+        if self.lines.is_empty() {
+            Err(errors::NoLinesInFigure.into())
+        } else {
+            Ok(self.lines.remove(0))
+        }
+    }
+    pub fn pop_last_line(&mut self) -> Result<Line, Box<dyn Error>> {
+        self.lines
+            .pop()
+            .ok_or_else(|| errors::NoLinesInFigure.into())
+    }
 
+    pub fn is_closed(mut self) -> Result<bool, Box<dyn Error>> {
+        let first_point = {
+            let line_ref = self.get_first_line()?;
+            let point_ref = line_ref.get_first_point()?;
+            point_ref.clone()
+        };
+
+        let last_point = {
+            let line_ref = self.get_last_line()?;
+            let point_ref = line_ref.get_last_point()?;
+            point_ref.clone()
+        };
+
+        Ok(first_point == last_point)
+    }
 }
 

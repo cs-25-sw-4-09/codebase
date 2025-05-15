@@ -1,9 +1,9 @@
 use std::{error::Error, fs, path::Path};
 use hime_redist::symbols::SemanticElementTrait;
 use crate::{interpreter::environment::IEnvironment, lexer_parser::grammar::cfg, typechecker::environment::TEnvironment};
-use super::statement::Stmt;
+use super::{errors, statement::Stmt};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Program {
     pub decl_f: Vec<Stmt>,
     pub stmts: Vec<Stmt>,
@@ -19,6 +19,9 @@ impl Program {
         let ienvironment = IEnvironment::new();
 
         let parsed = cfg::parse_string(programstr.into());
+        if !parsed.is_success() {
+            return Err(errors::HimeParseMalfunction.into());
+        }
         let ast = parsed.get_ast();
         let root_node = ast.get_root();
 

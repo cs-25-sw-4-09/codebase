@@ -168,7 +168,7 @@ impl fmt::Display for PathOperationTypeNotCompatible {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
-            "The values of path {:?},{:?} doesn't match type: Path or Point",
+            "The part of the path cannot be created, got {:?} and {:?}. Should be a Path or Point type",
             self.0, self.1
         )
     }
@@ -222,6 +222,19 @@ impl fmt::Display for ArrayIndexTypeError {
         write!(
             f,
             "Can not index a array with type {:?}, can only with type Int",
+            self.0
+        )
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct NotAnArrayToIndex(pub Type);
+impl Error for NotAnArrayToIndex {}
+impl fmt::Display for NotAnArrayToIndex {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "Can not array index a the type \"{:?}\", can only array index array types",
             self.0
         )
     }

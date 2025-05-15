@@ -95,6 +95,17 @@ impl ops::Sub for &Point {
     }
 }
 
+impl ops::Div<&Value> for &Point {
+    type Output = Point;
+
+    fn div(self, rhs: &Value) -> Self::Output {
+        Point {
+            x: Box::new(self.get_x() / rhs),
+            y: Box::new(self.get_y() / rhs),
+        }
+    }
+}
+
 impl Mul<&Value> for Point {
     type Output = Point;
 

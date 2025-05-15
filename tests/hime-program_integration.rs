@@ -1821,6 +1821,31 @@ fn test_program_array_assign() {
     }
 }
 
+#[test]
+fn test_program_array_indexing() {
+    let code = "begin
+    x = x[2];";
+
+    let program = program::Program::new(&code.to_string()).unwrap();
+
+    assert_eq!(program.stmts.len(), 1);
+
+    let Stmt::Assign {
+        name: _,
+        value,
+    } = &program.stmts[0] else {
+        panic!()
+    };
+    
+    let Expr::ArrayIndex { identifier, index } = value else {
+        panic!()
+    };
+    assert_eq!(identifier, &Expr::Variable("x".into()).into());
+    assert_eq!(index, &Expr::Integer(2).into());
+
+    
+}
+
 //-----------------------------------
 //Tests of for in construction field
 //-----------------------------------

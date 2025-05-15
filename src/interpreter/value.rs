@@ -1,6 +1,9 @@
-
 use super::data_types::{figure::Figure, figurearray::FigureArray, point::Point};
-use std::{cmp::Ordering, error::Error, ops::{Add, Div, Mul, Neg, Sub}};
+use std::{
+    cmp::Ordering,
+    error::Error,
+    ops::{Add, Div, Mul, Neg, Sub},
+};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
@@ -12,14 +15,14 @@ pub enum Value {
     Color(Box<Value>, Box<Value>, Box<Value>, Box<Value>),
     Shape(FigureArray),
     Figure(Figure),
-    Array(Vec<Box<Value>>)
+    Array(Vec<Box<Value>>),
 }
 
 impl Value {
     pub fn get_int(&self) -> Result<i64, Box<dyn Error>> {
         match self {
             Value::Integer(i) => Ok(*i),
-            _ => Err(crate::program::errors::ExprParseAsIntegerError.into())
+            _ => Err(crate::program::errors::ExprParseAsIntegerError.into()),
         }
     }
 
@@ -27,45 +30,49 @@ impl Value {
         match self {
             Value::Integer(i) => Ok(*i as f64),
             Value::Float(f) => Ok(*f),
-            _ => Err(crate::program::errors::ExprParseAsFloatError.into())
+            _ => Err(crate::program::errors::ExprParseAsFloatError.into()),
         }
     }
 
+    pub fn get_array(&self) -> Result<Vec<Box<Value>>, Box<dyn Error>> {
+        match self {
+            Value::Array(i) => Ok(i.clone()),
+            _ => Err(crate::program::errors::ExprParseAsFloatError.into()),
+        }
+    }
 
     pub fn get_bool(&self) -> Result<bool, Box<dyn Error>> {
         match self {
             Value::Boolean(i) => Ok(*i),
-            _ => Err(crate::program::errors::ExprParseAsBooleanError.into())
+            _ => Err(crate::program::errors::ExprParseAsBooleanError.into()),
         }
     }
 
     pub fn get_shape(self) -> Result<FigureArray, Box<dyn Error>> {
         match self {
             Value::Shape(i) => Ok(i),
-            _ => Err(crate::program::errors::ExprParseAsShapeError.into())
+            _ => Err(crate::program::errors::ExprParseAsShapeError.into()),
         }
     }
 
     pub fn get_point(self) -> Result<Point, Box<dyn Error>> {
         match self {
             Value::Point(i) => Ok(i),
-            _ => Err(crate::program::errors::ExprParseAsPointError.into())
+            _ => Err(crate::program::errors::ExprParseAsPointError.into()),
         }
     }
 
-   
     pub fn approx_eq(&self, other: &Value, epsilon: f64) -> bool {
         let (i1, i2) = match (self, other) {
             (Value::Integer(v1), Value::Integer(v2)) => (*v1 as f64, *v2 as f64),
             (Value::Float(v1), Value::Float(v2)) => (*v1, *v2),
             (Value::Float(v1), Value::Integer(v2)) => (*v1, *v2 as f64),
             (Value::Integer(v1), Value::Float(v2)) => (*v1 as f64, *v2),
-            _ => unreachable!()
+            _ => unreachable!(),
         };
         (i1 - i2).abs() < epsilon
     }
 }
-
 
 impl From<i64> for Value {
     fn from(value: i64) -> Self {
@@ -78,7 +85,6 @@ impl From<f64> for Value {
     }
 }
 
-
 impl Add for Value {
     type Output = Value;
     fn add(self, rhs: Self) -> Self::Output {
@@ -87,7 +93,7 @@ impl Add for Value {
             (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 + v2),
             (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 + v2 as f64),
             (Value::Integer(v1), Value::Float(v2)) => Value::Float(v1 as f64 + v2),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -96,11 +102,11 @@ impl Sub for Value {
     type Output = Value;
     fn sub(self, rhs: Self) -> Self::Output {
         match (self, rhs) {
-        (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 - v2),
-        (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 - v2),
-        (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 - v2 as f64),
-        (Value::Integer(v1), Value::Float(v2)) => Value::Float(v1 as f64 - v2),
-        _ => unreachable!()
+            (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 - v2),
+            (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 - v2),
+            (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 - v2 as f64),
+            (Value::Integer(v1), Value::Float(v2)) => Value::Float(v1 as f64 - v2),
+            _ => unreachable!(),
         }
     }
 }
@@ -113,7 +119,7 @@ impl Add for &Value {
             (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 + v2),
             (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 + *v2 as f64),
             (Value::Integer(v1), Value::Float(v2)) => Value::Float(*v1 as f64 + v2),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -122,15 +128,14 @@ impl Sub for &Value {
     type Output = Value;
     fn sub(self, rhs: Self) -> Self::Output {
         match (self, rhs) {
-        (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 - v2),
-        (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 - v2),
-        (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 - *v2 as f64),
-        (Value::Integer(v1), Value::Float(v2)) => Value::Float(*v1 as f64 - v2),
-        _ => unreachable!()
+            (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 - v2),
+            (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 - v2),
+            (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 - *v2 as f64),
+            (Value::Integer(v1), Value::Float(v2)) => Value::Float(*v1 as f64 - v2),
+            _ => unreachable!(),
         }
     }
 }
-
 
 impl Mul for &Value {
     type Output = Value;
@@ -140,7 +145,7 @@ impl Mul for &Value {
             (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 * v2),
             (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 * *v2 as f64),
             (Value::Integer(v1), Value::Float(v2)) => Value::Float(*v1 as f64 * v2),
-            p => unreachable!("{:?}", p)
+            p => unreachable!("{:?}", p),
         }
     }
 }
@@ -164,7 +169,18 @@ impl Neg for Value {
         match self {
             Value::Integer(i) => Value::Integer(-i),
             Value::Float(i) => Value::Float(-i),
-            _ => unreachable!()
+            _ => unreachable!(),
+        }
+    }
+}
+
+impl Neg for &Value {
+    type Output = Value;
+    fn neg(self) -> Self::Output {
+        match self {
+            Value::Integer(i) => Value::Integer(-i),
+            Value::Float(i) => Value::Float(-i),
+            _ => unreachable!(),
         }
     }
 }
@@ -176,14 +192,14 @@ impl Ord for Value {
             (Value::Float(v1), Value::Float(v2)) => v1.partial_cmp(v2).unwrap(),
             (Value::Float(v1), Value::Integer(v2)) => v1.partial_cmp(&(*v2 as f64)).unwrap(),
             (Value::Integer(v1), Value::Float(v2)) => (&(*v1 as f64)).partial_cmp(v2).unwrap(),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
 
 impl PartialOrd for Value {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other)) 
+        Some(self.cmp(other))
     }
 }
 

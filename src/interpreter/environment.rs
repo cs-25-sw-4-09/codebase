@@ -5,7 +5,7 @@ use super::stack::Stack;
 use super::value::Value;
 use crate::program::{program::Program, statement::Stmt};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct IEnvironment {
     v_table: Stack<Value>,
     f_table: Stack<(Vec<Stmt>, Vec<String>)>,
@@ -67,6 +67,11 @@ impl IEnvironment {
     pub fn darray_get(&self) -> &FigureArray {
         &self.d_array
     }
+
+        pub fn darray_get_mut(&mut self) -> &mut FigureArray {
+        &mut self.d_array
+    }
+
 
     pub fn darray_push(&mut self, shape: FigureArray){
         self.d_array.extend(shape);

@@ -57,6 +57,15 @@ impl fmt::Display for ExprParseAsFloatError {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct ExprParseAsArrayError;
+impl Error for ExprParseAsArrayError {}
+impl fmt::Display for ExprParseAsArrayError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Expression could not be parsed as array")
+    }
+}
+
 
 #[derive(Debug, Clone)]
 pub struct ExprParseAsBooleanError;
@@ -82,6 +91,15 @@ impl Error for ExprParseAsPointError {}
 impl fmt::Display for ExprParseAsPointError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "Expression could not be parsed as a shape")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct HimeParseMalfunction;
+impl Error for HimeParseMalfunction {}
+impl fmt::Display for HimeParseMalfunction {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Could not parse the program source code")
     }
 }
 
