@@ -1,0 +1,11 @@
+width: float;
+height: float;
+fill: color = (0,0,0,255);
+stroke_color: color = (0,0,0,0);
+thickness:int  = 1;
+
+begin
+
+triangle: shape = (0,0)--(width, 0)--(width/2,height)--*(|thickness = thickness, fill = fill, stroke = stroke_color|);
+
+draw triangle;

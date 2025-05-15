@@ -1,0 +1,25 @@
+import circle "./dap-lib/basic-shapes/circle.dap";
+import dottedLine "./dap-lib/lines/dottedLine.dap";
+import string "./dap-lib/digital-font/string.dap";
+import arrow "./arrow.DAP";
+begin
+
+main: shape = (0,0)--(0,0)(||);
+
+circleOne: shape = circle(|stroke = (255,0,0,255), fill = (0,0,0,0), radius = 20|);
+circleOne = place dottedLine(|fromPoint = (0,0), toPoint =(0,circleOne.height), linesColor = (0,255,0,255), lineAmount = 10|) left circleOne;
+circleOne = place dottedLine(|fromPoint = (0,0), toPoint =(0,circleOne.height), linesColor = (0,255,0,255), lineAmount = 10|) right circleOne;
+circleOne = place dottedLine(|fromPoint = (0,0), toPoint =(circleOne.width,0), linesColor = (0,255,0,255), lineAmount = 10|) bottom circleOne;
+circleOne = place dottedLine(|fromPoint = (0,0), toPoint =(circleOne.width,0), linesColor = (0,255,0,255), lineAmount = 10|) top circleOne;
+
+
+
+main = place arrow(|fromPoint = (0,0), toPoint = (30,0)|) right (10, -circleOne.height/2 + 5) offset circleOne;
+main = place scale circleOne by 0.5 right (10, -main.height/4) offset main;
+main = place (0,0)--(0,main.height)(|stroke= (0,0,0,255)|) left (-5, 0) offset main;
+main = place (0,0)--(0,main.height/2)(|stroke= (0,0,0,255)|) right (5, -main.height/4) offset main;
+
+main = place string(|string = [2], main_color = (0,0,0,255)|) left (-3, -main.height/2) offset main;
+main = place string(|string = [1], main_color = (0,0,0,255)|) right (3, -main.height/2.5) offset main;
+
+draw main;

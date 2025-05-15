@@ -1,0 +1,21 @@
+
+
+fromPoint: point;
+toPoint: point;
+lineAmount: int = 20;
+linesColor: color = (0,0,0,255);
+
+begin
+
+for i in 0 to lineAmount {
+    t1: float = i / (lineAmount * 1.0);
+    t2: float = (i + 0.5) / (lineAmount * 1.0);
+
+    x1: float = fromPoint.x + (toPoint.x - fromPoint.x) * t1;
+    y1: float = fromPoint.y + (toPoint.y - fromPoint.y) * t1;
+    x2: float = fromPoint.x + (toPoint.x - fromPoint.x) * t2;
+    y2: float = fromPoint.y + (toPoint.y - fromPoint.y) * t2;
+
+    dotLine: shape = (x1, y1)--(x2, y2) (|stroke=linesColor|);
+    draw dotLine;
+}

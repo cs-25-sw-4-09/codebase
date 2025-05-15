@@ -1,0 +1,35 @@
+import circle "./dap-lib/basic-shapes/circle.dap";
+import dottedLine "./dap-lib/lines/dottedLine.dap";
+import string "./dap-lib/digital-font/string.dap";
+import arrow "./arrow.DAP";
+begin
+
+main: shape = (0,0)--(0,0)(||);
+
+line1: shape = place (0,0)--(0,4)(|stroke = (0,0,0,255)|) left (0,2) offset (0,0)--(20,0)(|stroke = (0,0,0,255)|);
+line1 = place (0,0)--(0,4)(|stroke = (0,0,0,255)|) right line1;
+
+circles1: shape = place line1 center (21,0) offset circle(|stroke = (255,0,0,255), fill = (0,0,0,0), radius = 10|);
+circles1 = place circle(|stroke = (255,0,0,255), fill = (0,0,0,0), radius = 10|) right (1, 0) offset circles1;
+circles1 = place dottedLine(|fromPoint = (0,0), toPoint =(0,circles1.height), linesColor = (0,255,0,255), lineAmount = 6|) left circles1;
+circles1 = place dottedLine(|fromPoint = (0,0), toPoint =(0,circles1.height), linesColor = (0,255,0,255), lineAmount = 6|) right circles1;
+circles1 = place dottedLine(|fromPoint = (0,0), toPoint =(circles1.width,0), linesColor = (0,255,0,255), lineAmount = 20|) bottom circles1;
+circles1 = place dottedLine(|fromPoint = (0,0), toPoint =(circles1.width,0), linesColor = (0,255,0,255), lineAmount = 20|) top circles1;
+circles1 = place (0,0)--(circles1.width,0)(| stroke = (0,0,0,255)|) bottom (0,-3) offset circles1;
+
+circles2: shape = scale circles1 by 2;
+
+
+main = place arrow(|fromPoint = (0,0), toPoint = (30,0)|) right (10, circles1.height/2 - circles1.height/2 -5) offset circles1;
+main = place circles2 right (10, circles2.height/2 - circles1.height/2) offset main;
+
+main = place (0,0)--(0,20)(|stroke= (0,0,0,255)|) left (-5, -main.height/4) offset main;
+main = place (0,0)--(0,40)(|stroke= (0,0,0,255)|) right (5, 0) offset main;
+
+main = place string(|string = [1], main_color = (0,0,0,255)|) left (-3, -main.height/2.5) offset main;
+main = place string(|string = [2], main_color = (0,0,0,255)|) right (3, -main.height/2.5) offset main;
+main = place string(|string = [3], main_color = (0,0,0,255)|) bottom (39, 6) offset main;
+main = place string(|string = [6], main_color = (0,0,0,255)|) bottom (182, -5) offset main;
+
+
+draw main;
