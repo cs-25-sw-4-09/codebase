@@ -1,5 +1,8 @@
-import string "./dap-lib/digital-font/letters/string.dap";
-
 begin
+begin: shape = (0,0)--(0,1)--(1,1)--(1,0)--* (|fill = blue|);
 
-draw string(||);
+
+s1: shape = path(||);
+
+
+draw begin;

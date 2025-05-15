@@ -1,0 +1,8 @@
+fill_color: color = (0, 255, 0, 255);
+
+begin
+
+// Zealand (Sjælland) island outline
+draw (16.78, 8.00) -- (17.89, 13.00) -- (25.16, 15.00) 
+  -- (26.28, 12.00) -- (24.05, 8.00) -- (21.25, 5.00)
+  --* (| fill = fill_color |);
