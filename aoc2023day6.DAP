@@ -1,0 +1,62 @@
+import string "./dap-lib/digital-font/string.dap";
+import dotSquare "./dap-lib/lines/dottedSqaure.dap";
+
+begin
+
+//input for day 6 
+time: int[] = [7,15,30];
+distance: int[] = [9,40,200];
+
+part1(time: int[], distance:int[]): int -> {
+    total_sum: int = 1;
+    for race in 0 to time.size {
+        sum: int = 0;
+        t: int = time[race];
+        d: int = distance[race];
+        for i in 1 to t+1 {
+            fork {
+                ((t - i) * i > d) -> { sum = sum + 1; }
+            }
+        }
+
+        total_sum = total_sum * sum;
+    }
+    return total_sum;
+}
+
+intToArr(x: int): int[] -> {
+    intToRevArr(toAdd: int[], x: int): int[] -> {
+        fork {
+            (x < 10) -> { return push(toAdd, x); }
+            (otherwise) -> { 
+                return intToRevArr(
+                    push(toAdd, x % 10), 
+                    x / 10
+                ); 
+            }
+        }
+        
+    }
+    reverseNum: int[] = [];
+    reverseNum = intToRevArr(reverseNum, x);
+
+    nums: int[] = [];
+    for i in 0 to reverseNum.size {
+        nums = push(nums, reverseNum[reverseNum.size - (i + 1)]);
+    }
+    return nums;
+}
+
+intArrToAscii(x: int[]): int[] -> {
+    for i in 0 to x.size {
+        x[i] = x[i] + 48;
+    }
+    return x;
+}
+
+
+res1: int = part1(time, distance);
+//draw string(|string = intToArr(res1) |);
+text: shape = string(|string = [2, 8, 8] |);
+
+draw dotSquare(|baseShape = scale text by 5|);
