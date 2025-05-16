@@ -124,7 +124,9 @@ fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
                     point1.0, point1.1, point2.0, point2.1, point3.0, point3.1
                 ));
             }
-            _ => todo!(),
+            num => {
+                return Err(Box::new(errors::TooManyPoints(num.to_string())));
+            }
         }
     }
     path_str.push_str("\" ");
