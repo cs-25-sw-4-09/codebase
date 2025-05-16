@@ -168,7 +168,7 @@ impl fmt::Display for PathOperationTypeNotCompatible {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
-            "The values of path {:?},{:?} doesn't match type: Path or Point",
+            "The part of the path cannot be created, got {:?} and {:?}. Should be a Path or Point type",
             self.0, self.1
         )
     }

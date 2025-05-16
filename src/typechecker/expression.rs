@@ -55,13 +55,7 @@ impl TypeCheckE for Expr {
                         | (Type::Path, Type::Path)
                         | (Type::Point, Type::Path)
                         | (Type::Path, Type::Point) => Ok(Type::Path),
-                        //implementation of typing rule "extendPoly"
-                        (Type::Polygon, Type::Point)
-                        | (Type::Polygon, Type::Path)
-                        | (Type::Polygon, Type::Polygon)
-                        | (Type::Path, Type::Polygon)
-                        | (Type::Point, Type::Polygon) => Ok(Type::Polygon),
-                        (t1, t2) => Err(errors::PathOperationTypeNotCompatible(t1, t2).into()),
+                        _ => Err(errors::PathOperationTypeNotCompatible(t1, t2).into()),
                     },
                 }
             }
@@ -335,6 +329,8 @@ impl TypeCheckE for Expr {
                     Type::Shape => match member_access.as_str() {
                         "width" => Ok(Type::Float),
                         "height" => Ok(Type::Float),
+                        "x" => Ok(Type::Float),
+                        "y" => Ok(Type::Float),
                         _ => Err(errors::MemberAccessShape().into()),
                     },
                     Type::Point => match member_access.as_str() {
