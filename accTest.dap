@@ -1,0 +1,12 @@
+import string "./dap-lib/digital-font/string.dap";
+import dotSquare "./dap-lib/lines/dottedSqaure.dap";
+
+begin
+
+charString: int[] = [
+  65, 67, 67, 69, 80, 84, 65, 78, 67, 69, 32, 84, 69, 83, 84
+];
+
+text: shape = string(|string = charString|);
+
+draw dotSquare(|baseShape = text|);

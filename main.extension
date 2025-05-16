@@ -1,8 +1,9 @@
 begin
-begin: shape = (0,0)--(0,1)--(1,1)--(1,0)--* (|fill = blue|);
 
+myFunc2(b: bool): int -> {
+    fork{
+      (b) -> {return 4;}
+    }
+  }
 
-s1: shape = path(||);
-
-
-draw begin;
+ b: int = myFunc2(true);

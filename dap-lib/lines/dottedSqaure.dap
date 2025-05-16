@@ -1,0 +1,13 @@
+import dotLine "./dap-lib/lines/dottedLine.dap";
+baseShape: shape;
+
+begin
+
+topLeft: point = (baseShape.x,baseShape.y);
+bottomRight: point = (baseShape.x + baseShape.width, baseShape.y - baseShape.height);
+
+topLine: shape = dotLine(|toPoint = topLeft, fromPoint = (bottomRight.x, topLeft.y)|);
+
+baseShape = place topLine top baseShape;
+
+draw baseShape;
