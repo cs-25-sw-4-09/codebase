@@ -5,6 +5,8 @@ import THREE "./dap-lib/digital-font/letters/3.dap";
 import FOUR "./dap-lib/digital-font/letters/4.dap";
 import FIVE "./dap-lib/digital-font/letters/5.dap";
 import SIX "./dap-lib/digital-font/letters/6.dap";
+import SEVEN "./dap-lib/digital-font/letters/7.dap";
+import EIGHT "./dap-lib/digital-font/letters/8.dap";
 import NINE "./dap-lib/digital-font/letters/9.dap";
 import COMMA "./dap-lib/digital-font/letters/COMMA.dap";
 import LEFTPAREN "./dap-lib/digital-font/letters/LEFTPAREN.dap";
@@ -70,6 +72,8 @@ fork {
   (string[0] == 4) -> {letter_string =  FOUR(|main_color = main_color, background_color = background_color|);}
   (string[0] == 5) -> {letter_string =  FIVE(|main_color = main_color, background_color = background_color|);}
   (string[0] == 6) -> {letter_string =  SIX(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 7) -> {letter_string =  SEVEN(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 8) -> {letter_string =  EIGHT(|main_color = main_color, background_color = background_color|);}
   (string[0] == 9) -> {letter_string =  NINE(|main_color = main_color, background_color = background_color|);}
   (string[0] == 40) -> {letter_string =  LEFTPAREN(|main_color = main_color, background_color = background_color|);}
   (string[0] == 41) -> {letter_string =  RIGHTPAREN(|main_color = main_color, background_color = background_color|);}
@@ -112,6 +116,8 @@ for cur in 1 to string.size {
         (string[cur] == 4) -> {letter_string = place FOUR(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 5) -> {letter_string = place FIVE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 6) -> {letter_string = place SIX(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 7) -> {letter_string = place SEVEN(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
+        (string[cur] == 8) -> {letter_string = place EIGHT(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 9) -> {letter_string = place NINE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 40) -> {letter_string = place LEFTPAREN(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 41) -> {letter_string = place RIGHTPAREN(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
