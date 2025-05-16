@@ -62,8 +62,49 @@ space_blocks: bool[] = [false];
 space: shape = place col(|blocks = space_blocks|) right (2,0) offset col(|blocks = space_blocks|);
 
 letter_string: shape = (0,0)--(0,0)(||);
-    for cur in 0 to string.size {
-        fork {
+fork {
+  (string[0] == 0) -> {letter_string =  ZERO(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 1) -> {letter_string =  ONE(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 2) -> {letter_string =  TWO(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 3) -> {letter_string =  THREE(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 4) -> {letter_string =  FOUR(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 5) -> {letter_string =  FIVE(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 6) -> {letter_string =  SIX(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 9) -> {letter_string =  NINE(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 40) -> {letter_string =  LEFTPAREN(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 41) -> {letter_string =  RIGHTPAREN(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 44) -> {letter_string =  COMMA(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 65) -> {letter_string =  A(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 66) -> {letter_string =  B(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 67) -> {letter_string =  C(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 68) -> {letter_string =  D(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 69) -> {letter_string =  E(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 70) -> {letter_string =  F(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 71) -> {letter_string =  G(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 72) -> {letter_string =  H(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 73) -> {letter_string =  I(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 74) -> {letter_string =  J(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 75) -> {letter_string =  K(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 76) -> {letter_string =  L(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 77) -> {letter_string =  M(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 78) -> {letter_string =  N(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 79) -> {letter_string =  O(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 80) -> {letter_string =  P(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 81) -> {letter_string =  Q(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 82) -> {letter_string =  R(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 83) -> {letter_string =  S(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 84) -> {letter_string =  T(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 85) -> {letter_string =  U(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 86) -> {letter_string =  V(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 87) -> {letter_string =  W(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 88) -> {letter_string =  X(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 89) -> {letter_string =  Y(|main_color = main_color, background_color = background_color|);}
+  (string[0] == 90) -> {letter_string =  Z(|main_color = main_color, background_color = background_color|);}
+  (otherwise) -> {letter_string =  space;}
+}
+
+for cur in 1 to string.size {
+      fork {
         (string[cur] == 0) -> {letter_string = place ZERO(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 1) -> {letter_string = place ONE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
         (string[cur] == 2) -> {letter_string = place TWO(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}

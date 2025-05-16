@@ -8,8 +8,8 @@ begin
 number_of_dots_sides: float = baseShape.height / dotline_width;
 number_of_dots_len: float = baseShape.width / dotline_width;
 
-topLeft: point = (baseShape.x * 2,baseShape.y * 2);
-bottomRight: point = (baseShape.x * 2 + baseShape.width, baseShape.y * 2 - baseShape.height);
+topLeft: point = (baseShape.x,baseShape.y);
+bottomRight: point = (baseShape.x + baseShape.width, baseShape.y - baseShape.height);
 
 topLine: shape = dotLine(|toPoint = topLeft, fromPoint = (bottomRight.x, topLeft.y), thickness = 1, lineAmount = number_of_dots_len, linesColor = fill|);
 bottomLine: shape = dotLine(|toPoint = (topLeft.x, bottomRight.y), fromPoint = bottomRight, thickness = 1, lineAmount = number_of_dots_len, linesColor = fill|);
