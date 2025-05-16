@@ -1,0 +1,34 @@
+fromPoint: point;
+toPoint: point;
+lineAmount: float = 20.0;
+linesColor: color = (0,0,0,255);
+thickness: int = 2;
+
+begin
+
+
+
+drawSegmentLine(i: int, lineAmount: float, thickness: int, linesColor:color, fromPoint: point, toPoint: point): bool -> {
+    fork {
+        (i + 0.0 >= lineAmount) -> { return false; }
+        (true) -> {
+            t1: float = i / (lineAmount * 1.0);
+            t2: float = (i + 0.5) / (lineAmount * 1.0);
+
+            x1: float = fromPoint.x + (toPoint.x - fromPoint.x) * t1;
+            y1: float = fromPoint.y + (toPoint.y - fromPoint.y) * t1;
+            x2: float = fromPoint.x + (toPoint.x - fromPoint.x) * t2;
+            y2: float = fromPoint.y + (toPoint.y - fromPoint.y) * t2;
+
+            dotLine: shape = (x1, y1)--(x2, y2)(| stroke = linesColor, thickness = thickness |);
+            
+            draw dotLine;
+
+            _: bool = drawSegmentLine(i + 1, lineAmount, thickness, linesColor, fromPoint, toPoint);
+            return true;
+        }
+    }
+}
+
+
+dotShape: bool = drawSegmentLine(0, lineAmount, thickness, linesColor, fromPoint, toPoint); 

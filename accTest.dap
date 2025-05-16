@@ -3,10 +3,17 @@ import dotSquare "./dap-lib/lines/dottedSqaure.dap";
 
 begin
 
-charString: int[] = [
-  65, 67, 67, 69, 80, 84, 65, 78, 67, 69, 32, 84, 69, 83, 84
+charString1: int[] = [
+  65, 67, 67, 69, 80, 84, 65, 78, 67, 69  
 ];
 
-text: shape = string(|string = charString|);
+charString2: int[] = [
+  84, 69, 83, 84
+];
 
-draw dotSquare(|baseShape = text|);
+text1: shape = string(|string = charString1|);
+text2: shape = string(|string = charString2|);
+
+text: shape = place text1 center (0,text1.height *1.2) offset text2;
+
+draw dotSquare(|baseShape = scale text by 5, fill = (150,0,0,255) |);
