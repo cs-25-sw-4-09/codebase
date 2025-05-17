@@ -1,6 +1,5 @@
 import string "./dap-lib/digital-font/string.dap";
-import dotSquare "./dap-lib/lines/dottedSqaure.dap";
-
+import box "./dap-lib/lines/filledSqaure.dap";
 heap: int[] = [];
 
 begin
@@ -114,4 +113,4 @@ heap = insert(heap, 4);
 heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
 
 
-draw heapShape;
+draw box(|baseShape = heapShape, fill = (0,255,0,255)|);
