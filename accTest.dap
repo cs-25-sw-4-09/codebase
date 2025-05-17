@@ -15,6 +15,4 @@ text1: shape = string(|string = charString1|);
 text2: shape = string(|string = charString2|);
 
 text: shape = place text1 center (0,text1.height *1.2) offset text2;
-
-draw dotSquare(|baseShape = scale text by 5, fill = (0,255,0,255) |);
-draw dotSquare(|baseShape = scale text by 5, fill = (150,0,0,255) |) at (-1000,-1000);
+draw dotSquare(|baseShape = scale text by 5, fill = (0,255,0, 255) |);

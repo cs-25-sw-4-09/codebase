@@ -1,0 +1,44 @@
+import string "./dap-lib/digital-font/string.dap";
+import dotSquare "./dap-lib/lines/dottedSqaure.dap";
+
+heap: int[] = [];
+
+begin
+
+// Helper functions
+parent(i: int): int -> {return i-1;}
+leftchild(i: int): int -> {return 2 * i + 1;}
+rightchild(i: int): int -> {return 2 * i + 1;}
+swap(heap: int[], i: int, j: int):int[] -> {
+    temp: int = heap[i];
+    heap[i] = heap[j];
+    heap[j] = temp;
+    return heap;
+}
+
+heapifyUp(i: int, heap: int[]): int[] -> {
+    fork {
+        (i == 0) -> {return heap;}
+        (otherwise) -> {
+            p: int = parent(i);
+            fork {
+                (heap[i] < heap[p]) -> {
+                    heap = swap(heap, i, p);
+                    return heapifyUp(p, heap);
+                }
+                (otherwise) -> {return heap;}
+            }
+        }
+    }
+}
+
+insert(value: int, heap: int[]): int[] -> {
+    heap = push(heap, value);
+    return heapifyUp(heap.size -1, heap);
+}
+
+
+
+charString2: int[] = [84, 69, 83, 84];
+text1: shape = string(|string = charString2|);
+draw text1;

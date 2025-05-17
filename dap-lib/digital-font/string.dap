@@ -11,6 +11,8 @@ import NINE "./dap-lib/digital-font/letters/9.dap";
 import COMMA "./dap-lib/digital-font/letters/COMMA.dap";
 import LEFTPAREN "./dap-lib/digital-font/letters/LEFTPAREN.dap";
 import RIGHTPAREN "./dap-lib/digital-font/letters/RIGHTPAREN.dap";
+import LEFTBRACKET "./dap-lib/digital-font/letters/LEFTBRACKET.dap";
+import RIGHTBRACKET "./dap-lib/digital-font/letters/RIGHTBRACKET.dap";
 import A "./dap-lib/digital-font/letters/A.dap";
 import B "./dap-lib/digital-font/letters/B.dap";
 import C "./dap-lib/digital-font/letters/C.dap";
@@ -59,97 +61,64 @@ scale_size:int = 1;
 
 // SRC: https://suncatcherstudio.com/lettering-fonts/cross-stitch-letters/
 begin
-
-space_blocks: bool[] = [false];
-space: shape = place col(|blocks = space_blocks|) right (2,0) offset col(|blocks = space_blocks|);
-
-letter_string: shape = (0,0)--(0,0)(||);
-fork {
-  (string[0] == 0) -> {letter_string =  ZERO(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 1) -> {letter_string =  ONE(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 2) -> {letter_string =  TWO(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 3) -> {letter_string =  THREE(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 4) -> {letter_string =  FOUR(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 5) -> {letter_string =  FIVE(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 6) -> {letter_string =  SIX(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 7) -> {letter_string =  SEVEN(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 8) -> {letter_string =  EIGHT(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 9) -> {letter_string =  NINE(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 40) -> {letter_string =  LEFTPAREN(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 41) -> {letter_string =  RIGHTPAREN(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 44) -> {letter_string =  COMMA(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 65) -> {letter_string =  A(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 66) -> {letter_string =  B(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 67) -> {letter_string =  C(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 68) -> {letter_string =  D(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 69) -> {letter_string =  E(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 70) -> {letter_string =  F(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 71) -> {letter_string =  G(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 72) -> {letter_string =  H(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 73) -> {letter_string =  I(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 74) -> {letter_string =  J(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 75) -> {letter_string =  K(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 76) -> {letter_string =  L(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 77) -> {letter_string =  M(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 78) -> {letter_string =  N(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 79) -> {letter_string =  O(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 80) -> {letter_string =  P(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 81) -> {letter_string =  Q(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 82) -> {letter_string =  R(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 83) -> {letter_string =  S(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 84) -> {letter_string =  T(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 85) -> {letter_string =  U(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 86) -> {letter_string =  V(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 87) -> {letter_string =  W(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 88) -> {letter_string =  X(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 89) -> {letter_string =  Y(|main_color = main_color, background_color = background_color|);}
-  (string[0] == 90) -> {letter_string =  Z(|main_color = main_color, background_color = background_color|);}
-  (otherwise) -> {letter_string =  space;}
+drawLetter(code: int, main_color: color, background_color: color): shape -> {
+  space_blocks: bool[] = [false];
+  space: shape = place col(|blocks = space_blocks|) right (2,0) offset col(|blocks = space_blocks|);
+  fork {
+    (code == 0)  -> { return ZERO(|main_color = main_color, background_color = background_color|); }
+    (code == 1)  -> { return ONE(|main_color = main_color, background_color = background_color|); }
+    (code == 2)  -> { return TWO(|main_color = main_color, background_color = background_color|); }
+    (code == 3)  -> { return THREE(|main_color = main_color, background_color = background_color|); }
+    (code == 4)  -> { return FOUR(|main_color = main_color, background_color = background_color|); }
+    (code == 5)  -> { return FIVE(|main_color = main_color, background_color = background_color|); }
+    (code == 6)  -> { return SIX(|main_color = main_color, background_color = background_color|); }
+    (code == 7)  -> { return SEVEN(|main_color = main_color, background_color = background_color|); }
+    (code == 8)  -> { return EIGHT(|main_color = main_color, background_color = background_color|); }
+    (code == 9)  -> { return NINE(|main_color = main_color, background_color = background_color|); }
+    (code == 40) -> { return LEFTPAREN(|main_color = main_color, background_color = background_color|); }
+    (code == 41) -> { return RIGHTPAREN(|main_color = main_color, background_color = background_color|); }
+    (code == 44) -> { return COMMA(|main_color = main_color, background_color = background_color|); }
+    (code == 91) -> { return LEFTBRACKET(|main_color = main_color, background_color = background_color|); }
+    (code == 93) -> { return RIGHTBRACKET(|main_color = main_color, background_color = background_color|); }
+    (code == 65) -> { return A(|main_color = main_color, background_color = background_color|); }
+    (code == 66) -> { return B(|main_color = main_color, background_color = background_color|); }
+    (code == 67) -> { return C(|main_color = main_color, background_color = background_color|); }
+    (code == 68) -> { return D(|main_color = main_color, background_color = background_color|); }
+    (code == 69) -> { return E(|main_color = main_color, background_color = background_color|); }
+    (code == 70) -> { return F(|main_color = main_color, background_color = background_color|); }
+    (code == 71) -> { return G(|main_color = main_color, background_color = background_color|); }
+    (code == 72) -> { return H(|main_color = main_color, background_color = background_color|); }
+    (code == 73) -> { return I(|main_color = main_color, background_color = background_color|); }
+    (code == 74) -> { return J(|main_color = main_color, background_color = background_color|); }
+    (code == 75) -> { return K(|main_color = main_color, background_color = background_color|); }
+    (code == 76) -> { return L(|main_color = main_color, background_color = background_color|); }
+    (code == 77) -> { return M(|main_color = main_color, background_color = background_color|); }
+    (code == 78) -> { return N(|main_color = main_color, background_color = background_color|); }
+    (code == 79) -> { return O(|main_color = main_color, background_color = background_color|); }
+    (code == 80) -> { return P(|main_color = main_color, background_color = background_color|); }
+    (code == 81) -> { return Q(|main_color = main_color, background_color = background_color|); }
+    (code == 82) -> { return R(|main_color = main_color, background_color = background_color|); }
+    (code == 83) -> { return S(|main_color = main_color, background_color = background_color|); }
+    (code == 84) -> { return T(|main_color = main_color, background_color = background_color|); }
+    (code == 85) -> { return U(|main_color = main_color, background_color = background_color|); }
+    (code == 86) -> { return V(|main_color = main_color, background_color = background_color|); }
+    (code == 87) -> { return W(|main_color = main_color, background_color = background_color|); }
+    (code == 88) -> { return X(|main_color = main_color, background_color = background_color|); }
+    (code == 89) -> { return Y(|main_color = main_color, background_color = background_color|); }
+    (code == 90) -> { return Z(|main_color = main_color, background_color = background_color|); }
+    (otherwise) -> { return space; }
+  }
 }
 
+
+
+
+// Start string with first letter
+letter_string: shape = drawLetter(string[0], main_color, background_color);
+
+// Add the rest
 for cur in 1 to string.size {
-      fork {
-        (string[cur] == 0) -> {letter_string = place ZERO(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 1) -> {letter_string = place ONE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 2) -> {letter_string = place TWO(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 3) -> {letter_string = place THREE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 4) -> {letter_string = place FOUR(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 5) -> {letter_string = place FIVE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 6) -> {letter_string = place SIX(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 7) -> {letter_string = place SEVEN(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 8) -> {letter_string = place EIGHT(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 9) -> {letter_string = place NINE(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 40) -> {letter_string = place LEFTPAREN(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 41) -> {letter_string = place RIGHTPAREN(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 44) -> {letter_string = place COMMA(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 65) -> {letter_string = place A(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 66) -> {letter_string = place B(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 67) -> {letter_string = place C(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 68) -> {letter_string = place D(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 69) -> {letter_string = place E(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 70) -> {letter_string = place F(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 71) -> {letter_string = place G(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 72) -> {letter_string = place H(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 73) -> {letter_string = place I(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 74) -> {letter_string = place J(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 75) -> {letter_string = place K(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 76) -> {letter_string = place L(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 77) -> {letter_string = place M(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 78) -> {letter_string = place N(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 79) -> {letter_string = place O(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 80) -> {letter_string = place P(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 81) -> {letter_string = place Q(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 82) -> {letter_string = place R(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 83) -> {letter_string = place S(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 84) -> {letter_string = place T(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 85) -> {letter_string = place U(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 86) -> {letter_string = place V(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 87) -> {letter_string = place W(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 88) -> {letter_string = place X(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 89) -> {letter_string = place Y(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (string[cur] == 90) -> {letter_string = place Z(|main_color = main_color, background_color = background_color|) right (1,0) offset letter_string;}
-        (otherwise) -> {letter_string = place space right letter_string;}
-    }
+  letter_string = place drawLetter(string[cur], main_color, background_color) right (1,0) offset letter_string;
 }
 
 draw scale letter_string by scale_size;
