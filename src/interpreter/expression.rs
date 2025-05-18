@@ -22,93 +22,93 @@ impl InterpretE for Expr {
         &self,
         environment: &mut super::environment::IEnvironment,
     ) -> Result<Value, Box<dyn std::error::Error>> {
-        let expr = match self {
-            Expr::Integer(val) => &Value::Integer(*val),
-            Expr::Boolean(val) => &Value::Boolean(*val),
-            Expr::Float(val) => &Value::Float(*val),
-            Expr::Color(r, g, b, a) => &Value::Color(
+        let val = match self {
+            Expr::Integer(val) => Value::Integer(*val),
+            Expr::Boolean(val) => Value::Boolean(*val),
+            Expr::Float(val) => Value::Float(*val),
+            Expr::Color(r, g, b, a) => Value::Color(
                 Box::new(r.interpret(environment)?),
                 Box::new(g.interpret(environment)?),
                 Box::new(b.interpret(environment)?),
                 Box::new(a.interpret(environment)?),
             ),
-            Expr::Point(x, y) => &Value::Point(Point::from((
+            Expr::Point(x, y) => Value::Point(Point::from((
                 x.interpret(environment)?,
                 y.interpret(environment)?,
             ))),
-            Expr::Variable(identifier) => environment.vtable_find(identifier.to_owned()).unwrap(),
+            Expr::Variable(identifier) => environment.vtable_find(identifier.to_owned()).unwrap().clone(),
             Expr::BinaryOperation { lhs, rhs, operator } => {
                 let i1 = lhs.interpret(environment)?;
                 let i2 = rhs.interpret(environment)?;
 
                 match operator {
-                    BinaryOperator::Add => &(i1 + i2),
-                    BinaryOperator::Subtract => &(i1 - i2),
-                    BinaryOperator::Multiply => &(&i1 * &i2),
+                    BinaryOperator::Add => i1 + i2,
+                    BinaryOperator::Subtract => i1 - i2,
+                    BinaryOperator::Multiply =>  &i1 * &i2,
                     BinaryOperator::Divide => {
                         if i2 == Value::Integer(0) || i2 == Value::Float(0.0) {
                             return Err(errors::DivideByZero.into());
                         }
-                        &(&i1 / &i2)
+                        &i1 / &i2
                     }
                     BinaryOperator::Modulus => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Integer(v1 % v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Float(v1 % v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Float(v1 % v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Float(v1 as f64 % v2),
+                        (Value::Integer(v1), Value::Integer(v2)) => Value::Integer(v1 % v2),
+                        (Value::Float(v1), Value::Float(v2)) => Value::Float(v1 % v2),
+                        (Value::Float(v1), Value::Integer(v2)) => Value::Float(v1 % v2 as f64),
+                        (Value::Integer(v1), Value::Float(v2)) => Value::Float(v1 as f64 % v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::GreaterThanOrEquals => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Boolean(v1 >= v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Boolean(v1 >= v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Boolean(v1 >= v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Boolean(v1 as f64 >= v2),
+                        (Value::Integer(v1), Value::Integer(v2)) => Value::Boolean(v1 >= v2),
+                        (Value::Float(v1), Value::Float(v2)) => Value::Boolean(v1 >= v2),
+                        (Value::Float(v1), Value::Integer(v2)) => Value::Boolean(v1 >= v2 as f64),
+                        (Value::Integer(v1), Value::Float(v2)) => Value::Boolean(v1 as f64 >= v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::LessThanOrEquals => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Boolean(v1 <= v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Boolean(v1 <= v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Boolean(v1 <= v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Boolean(v1 as f64 <= v2),
+                        (Value::Integer(v1), Value::Integer(v2)) => Value::Boolean(v1 <= v2),
+                        (Value::Float(v1), Value::Float(v2)) => Value::Boolean(v1 <= v2),
+                        (Value::Float(v1), Value::Integer(v2)) => Value::Boolean(v1 <= v2 as f64),
+                        (Value::Integer(v1), Value::Float(v2)) => Value::Boolean(v1 as f64 <= v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::LessThan => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Boolean(v1 < v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Boolean(v1 < v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Boolean(v1 < v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Boolean((v1 as f64) < v2),
+                        (Value::Integer(v1), Value::Integer(v2)) => Value::Boolean(v1 < v2),
+                        (Value::Float(v1), Value::Float(v2)) => Value::Boolean(v1 < v2),
+                        (Value::Float(v1), Value::Integer(v2)) => Value::Boolean(v1 < v2 as f64),
+                        (Value::Integer(v1), Value::Float(v2)) => Value::Boolean((v1 as f64) < v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::GreaterThan => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Boolean(v1 > v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Boolean(v1 > v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Boolean(v1 > v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Boolean(v1 as f64 > v2),
+                        (Value::Integer(v1), Value::Integer(v2)) => Value::Boolean(v1 > v2),
+                        (Value::Float(v1), Value::Float(v2)) => Value::Boolean(v1 > v2),
+                        (Value::Float(v1), Value::Integer(v2)) => Value::Boolean(v1 > v2 as f64),
+                        (Value::Integer(v1), Value::Float(v2)) => Value::Boolean(v1 as f64 > v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::Equals => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Boolean(v1 == v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Boolean(v1 == v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Boolean(v1 == v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Boolean(v1 as f64 == v2),
+                        (Value::Integer(v1), Value::Integer(v2)) => Value::Boolean(v1 == v2),
+                        (Value::Float(v1), Value::Float(v2)) => Value::Boolean(v1 == v2),
+                        (Value::Float(v1), Value::Integer(v2)) => Value::Boolean(v1 == v2 as f64),
+                        (Value::Integer(v1), Value::Float(v2)) => Value::Boolean(v1 as f64 == v2),
                         _ => unreachable!(),
                     },
                     BinaryOperator::NotEquals => match (i1, i2) {
-                        (Value::Integer(v1), Value::Integer(v2)) => &Value::Boolean(v1 != v2),
-                        (Value::Float(v1), Value::Float(v2)) => &Value::Boolean(v1 != v2),
-                        (Value::Float(v1), Value::Integer(v2)) => &Value::Boolean(v1 != v2 as f64),
-                        (Value::Integer(v1), Value::Float(v2)) => &Value::Boolean(v1 as f64 != v2),
+                        (Value::Integer(v1), Value::Integer(v2)) => Value::Boolean(v1 != v2),
+                        (Value::Float(v1), Value::Float(v2)) => Value::Boolean(v1 != v2),
+                        (Value::Float(v1), Value::Integer(v2)) => Value::Boolean(v1 != v2 as f64),
+                        (Value::Integer(v1), Value::Float(v2)) => Value::Boolean(v1 as f64 != v2),
                         _ => unreachable!(),
                     },
-                    BinaryOperator::LogicalAnd => &Value::Boolean(i1.get_bool()? && i2.get_bool()?),
-                    BinaryOperator::LogicalOr => &Value::Boolean(i1.get_bool()? || i2.get_bool()?),
+                    BinaryOperator::LogicalAnd => Value::Boolean(i1.get_bool()? && i2.get_bool()?),
+                    BinaryOperator::LogicalOr => Value::Boolean(i1.get_bool()? || i2.get_bool()?),
                 }
             }
             Expr::UnaryOperation { operator, expr } => {
                 let i1 = expr.interpret(environment)?;
                 match operator {
-                    UnaryOperator::Negate => &Value::Boolean(!i1.get_bool()?),
-                    UnaryOperator::Negative => &-i1,
+                    UnaryOperator::Negate => Value::Boolean(!i1.get_bool()?),
+                    UnaryOperator::Negative => -i1,
                 }
             }
             Expr::FCall { name, args } => {
@@ -118,7 +118,7 @@ impl InterpretE for Expr {
                         let i2 = args[1].interpret(environment)?;
                         let mut array = i1.get_array()?;
                         array.push(Box::new(i2));
-                        &Value::Array(array)
+                        Value::Array(array)
                     }
                     "remove" => {
                         let i1 = args[0].interpret(environment)?;
@@ -126,7 +126,7 @@ impl InterpretE for Expr {
                         let index_to_remove = i2.get_int()? as usize;
                         let mut array = i1.get_array()?;
                         array.remove(index_to_remove);
-                        &Value::Array(array)
+                        Value::Array(array)
                     }
                     _ => {
                         let mut params = Vec::new();
@@ -137,27 +137,26 @@ impl InterpretE for Expr {
                             params.push((function.1[i].clone(), i1));
                         }
 
-                        //Make new scope
+                        //Make new vtable and save the old
                         let previous_stack = environment.vtable_clear();
 
                         for (param_identifier, param_elem) in params {
                             environment.vtable_push(param_identifier, param_elem);
                         }
 
+                        environment.push_function_scope();
                         for f in function.0 {
                             f.interpret(environment)?;
                         }
-                        //todo: push ftable and pop
                         //Restore scope
                         environment.vtable_restore(previous_stack);
+                        environment.pop_function_scope();
 
-                        if let Some(rvalue) = environment.rvalue_get() {
-                            environment.rvalue_clear();
-                            //todo: potentielt kom tilbage
-                            &rvalue.clone()
-                        } else {
-                            return Err(errors::FunctionNotReturning(name.to_owned()).into());
-                        }
+                        let rvalue = environment.rvalue_get()
+                        .ok_or_else(|| errors::FunctionNotReturning(name.to_owned()))?
+                        .clone();
+                        environment.rvalue_clear();
+                        rvalue
                     }
                 }
             }
@@ -180,14 +179,14 @@ impl InterpretE for Expr {
                                     fig2_first_line.get_first_point()?.clone(),
                                 ]));
                                 fig1.push_lines(fig2.get_lines().clone());
-                                &Value::Figure(fig1)
+                                Value::Figure(fig1)
                             }
                             (PathOperator::Curve, Line::Straight(_), Line::Curved(_)) => {
                                 fig2_first_line
                                     .insert_point_first(fig1_last_line.get_last_point()?.clone());
 
                                 fig1.push_lines(fig2.get_lines().clone());
-                                &Value::Figure(fig1)
+                                Value::Figure(fig1)
                             }
                             (PathOperator::Curve, Line::Curved(_), Line::Curved(_)) => {
                                 let fig1_last_line = fig1.pop_last_line()?;
@@ -203,14 +202,14 @@ impl InterpretE for Expr {
                                 ));
 
                                 fig1.push_lines(fig2.get_lines().clone());
-                                &Value::Figure(fig1)
+                                Value::Figure(fig1)
                             }
                             (PathOperator::Curve, Line::Curved(_), Line::Straight(_)) => {
                                 fig1_last_line
                                     .insert_point_last(fig2_first_line.get_first_point()?.clone());
 
                                 fig1.push_lines(fig2.get_lines().clone());
-                                &Value::Figure(fig1)
+                                Value::Figure(fig1)
                             }
                         }
                     }
@@ -224,11 +223,11 @@ impl InterpretE for Expr {
                                     p.clone(),
                                     line_first.get_first_point()?.clone(),
                                 ]));
-                                &Value::Figure(fig)
+                                Value::Figure(fig)
                             }
                             (PathOperator::Curve, Line::Curved(_)) => {
                                 line_first.insert_point_first(p);
-                                &Value::Figure(fig)
+                                Value::Figure(fig)
                             }
                             (PathOperator::Curve, Line::Straight(_)) => {
                                 let line_first = line_first.clone();
@@ -236,7 +235,7 @@ impl InterpretE for Expr {
                                     p.clone(),
                                     line_first.get_first_point()?.clone(),
                                 ]));
-                                &Value::Figure(fig)
+                                Value::Figure(fig)
                             }
                         }
                     }
@@ -250,11 +249,11 @@ impl InterpretE for Expr {
                                     line_last.get_last_point()?.clone(),
                                     p.clone(),
                                 ]));
-                                &Value::Figure(fig)
+                                Value::Figure(fig)
                             }
                             (PathOperator::Curve, Line::Curved(_)) => {
                                 line_last.insert_point_last(p);
-                                &Value::Figure(fig)
+                                Value::Figure(fig)
                             }
                             (PathOperator::Curve, Line::Straight(_)) => {
                                 let line_last = line_last.clone();
@@ -262,17 +261,17 @@ impl InterpretE for Expr {
                                     line_last.get_last_point()?.clone(),
                                     p.clone(),
                                 ]));
-                                &Value::Figure(fig)
+                                Value::Figure(fig)
                             }
                         }
                     }
                     //point-point
                     (Value::Point(p1), Value::Point(p2)) => match operator {
-                        PathOperator::Line => &Value::Figure(
+                        PathOperator::Line => Value::Figure(
                             vec![Line::Straight(vec![p1.clone(), p2.clone()])].into(),
                         ),
                         PathOperator::Curve => {
-                            &Value::Figure(vec![Line::Curved(vec![p1.clone(), p2.clone()])].into())
+                            Value::Figure(vec![Line::Curved(vec![p1.clone(), p2.clone()])].into())
                         }
                     },
                     _ => unreachable!(),
@@ -292,7 +291,7 @@ impl InterpretE for Expr {
                     (PolyOperator::Curved, Line::Straight(_), Line::Curved(_)) => {
                         // Case 1
                         line_last.insert_point_last(line_first.get_first_point()?.clone());
-                        &Value::Figure(fig)
+                        Value::Figure(fig)
                     }
                     (PolyOperator::Curved, Line::Curved(_), Line::Straight(_)) => {
                         // NY CASE: istedet for at have den ved case 2 hvor e.g. (a,b)~~(c,d)--(e,f)~~* => (c,d)--(e,f) ville blive konverteret til (c,d)~~(e,f)
@@ -300,7 +299,7 @@ impl InterpretE for Expr {
                         line_first
                             .insert_point_first(fig.get_last_line()?.get_last_point()?.clone());
                         fig.push_line_after(line_first);
-                        &Value::Figure(fig)
+                        Value::Figure(fig)
                     }
 
                     (PolyOperator::Curved, Line::Curved(_), Line::Curved(_)) => {
@@ -321,7 +320,7 @@ impl InterpretE for Expr {
                             let point_first = fig.get_first_line()?.get_first_point()?.clone();
                             fig.get_first_line()?.insert_point_last(point_first);
                         }
-                        &Value::Figure(fig)
+                        Value::Figure(fig)
                     }
                     (PolyOperator::Straight, _, _)
                     | (PolyOperator::Curved, Line::Straight(_), Line::Straight(_)) => {
@@ -331,7 +330,7 @@ impl InterpretE for Expr {
                             line_last.get_last_point()?.clone(),
                             line_first.get_first_point()?.clone(),
                         ]));
-                        &Value::Figure(fig)
+                        Value::Figure(fig)
                     }
                 }
             }
@@ -340,7 +339,7 @@ impl InterpretE for Expr {
                 for expr in exprs {
                     values.push(Box::new(expr.interpret(environment)?));
                 }
-                &Value::Array(values)
+                Value::Array(values)
             }
             Expr::SCall {
                 name,
@@ -381,7 +380,7 @@ impl InterpretE for Expr {
                             }
                         };
 
-                        &Value::Shape(FigureArray::from(draw_array.clone()))
+                        Value::Shape(FigureArray::from(draw_array.clone()))
                     }
                     (None, Some(path_poly)) => {
                         //Shape call to path/polygon
@@ -395,7 +394,7 @@ impl InterpretE for Expr {
                             fig.set_attribute((arg_name, expr.interpret(environment)?));
                         }
 
-                        &Value::Shape(FigureArray::from(vec![fig]))
+                        Value::Shape(FigureArray::from(vec![fig]))
                     }
                     _ => unreachable!(),
                 }
@@ -407,31 +406,31 @@ impl InterpretE for Expr {
                 let t1 = environment.vtable_find(identifier.into()).unwrap().clone();
                 match t1 {
                     Value::Color(r, g, b, a) => match member_access.as_str() {
-                        "r" => &r.clone(),
-                        "g" => &g.clone(),
-                        "b" => &b.clone(),
-                        "a" => &a.clone(),
+                        "r" => *r,
+                        "g" => *g,
+                        "b" => *b,
+                        "a" => *a,
                         _ => unreachable!(),
                     },
                     Value::Point(point) => match member_access.as_str() {
-                        "x" => &point.get_x().clone(),
-                        "y" => &point.get_y().clone(),
+                        "x" => point.get_x().clone(),
+                        "y" => point.get_y().clone(),
                         _ => unreachable!(),
                     },
                     Value::Shape(figures) => match member_access.as_str() {
-                        "height" => &figures.height(),
-                        "width" => &figures.width(),
-                        "x" => &figures.get_top_left().get_x().clone(),
-                        "y" => &figures.get_top_left().get_y().clone(),
+                        "height" => figures.height(),
+                        "width" => figures.width(),
+                        "x" => figures.get_top_left().get_x().clone(),
+                        "y" => figures.get_top_left().get_y().clone(),
                         _ => unreachable!(),
                     },
                     Value::Figure(figure) => match member_access.as_str() {
-                        "height" => &figure.get_height(),
-                        "width" => &figure.get_width(),
+                        "height" => figure.get_height(),
+                        "width" => figure.get_width(),
                         _ => unreachable!(),
                     },
                     Value::Array(array) => match member_access.as_str() {
-                        "size" => &Value::Integer(array.len() as i64),
+                        "size" => Value::Integer(array.len() as i64),
                         _ => unreachable!(),
                     },
                     _ => unreachable!(),
@@ -455,7 +454,7 @@ impl InterpretE for Expr {
 
                 let v = place(s1, s2, p, dir);
 
-                &Value::Shape(v)
+                Value::Shape(v)
             }
             Expr::Scale { base_shape, factor } => {
                 let Value::Shape(shape) = base_shape.interpret(environment)? else {
@@ -464,23 +463,23 @@ impl InterpretE for Expr {
                 let factor = factor.interpret(environment)?;
                 let scaled_shape = scale(shape, factor)?;
 
-                &Value::Shape(scaled_shape)
+                Value::Shape(scaled_shape)
             }
             Expr::Rotate { base_shape, factor } => {
                 let s = base_shape.interpret(environment)?.get_shape()?;
                 let i1 = factor.interpret(environment)?;
                 let v = rotate(s, i1);
-                &Value::Shape(v)
+                Value::Shape(v)
             }
             Expr::ArrayIndex { identifier, index } => {
                 let v1 = identifier.interpret(environment)?.get_array()?;
                 let v2 = index.interpret(environment)?.get_int()?;
 
                 let idx: usize = v2.try_into().map_err(|_| errors::ArrayOutOfBoundsWithNumbers(v1.len(), v2))?;
-                &v1.get(idx).ok_or_else(|| errors::ArrayOutOfBoundsWithNumbers(v1.len(), v2))?.clone()
+                *v1.get(idx).ok_or_else(|| errors::ArrayOutOfBoundsWithNumbers(v1.len(), v2))?.clone()
             },
         };
 
-        Ok(expr.clone())
+        Ok(val)
     }
 }

@@ -91,7 +91,7 @@ fn get_viewbox_coordiantes(
 
 fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
     let mut path_str = "<path d=\"".to_string();
-    let is_fig_closed = fig.clone().is_closed()?;
+    let is_fig_closed = fig.is_closed()?;
     //Loop lines
     for (index, line) in fig.get_lines().iter().enumerate() {
         if index == 0 {

@@ -87,6 +87,14 @@ impl IEnvironment {
         self.f_table.pop_scope();
     }
 
+    pub fn push_function_scope(&mut self) {
+        self.f_table.push_scope();
+    }
+
+    pub fn pop_function_scope(&mut self) {
+        self.f_table.pop_scope();
+    }
+
     pub fn rvalue_set(&mut self, value: Value) {
         self.r_value = Some(value);
     }
@@ -95,8 +103,8 @@ impl IEnvironment {
         self.r_value = None;
     }
 
-    pub fn rvalue_get(&self) -> Option<Value> {
-        self.r_value.clone()
+    pub fn rvalue_get(&self) -> Option<&Value> {
+        self.r_value.as_ref()
     }
 
 

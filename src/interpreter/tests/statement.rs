@@ -51,7 +51,8 @@ fn func_decl_no_return() {
     assert!(i1
         .unwrap_err()
         .downcast_ref::<errors::FunctionNotReturning>()
-        .is_some())
+        .is_some()
+    )
 }
 
 #[test]
