@@ -15,7 +15,7 @@ impl TypeCheckS for Stmt {
                                         return Err(errors::ImportAlreadyDeclared(name.to_owned()).into());
                                     }
             
-                                    let mut subprogram = Program::from_file(Path::new(path))?;
+                                    let mut subprogram = Program::from_file(Path::new(path)).map_err(|err| format!("{}", err))?;
             
                                     match subprogram.type_check() {
                                         Ok(subprogram_environment) => {

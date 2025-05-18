@@ -421,6 +421,8 @@ impl InterpretE for Expr {
                     Value::Shape(figures) => match member_access.as_str() {
                         "height" => &figures.height(),
                         "width" => &figures.width(),
+                        "x" => &figures.get_top_left().get_x().clone(),
+                        "y" => &figures.get_top_left().get_y().clone(),
                         _ => unreachable!(),
                     },
                     Value::Figure(figure) => match member_access.as_str() {
