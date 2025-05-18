@@ -1,0 +1,88 @@
+import string "./dap-lib/digital-font/string.dap";
+import box "./dap-lib/lines/filledSqaure.dap";
+import background "./dap-lib/backgrounds/solid-sqaure.dap";
+
+
+tree: int[] = [10000, 1, 2, 6, 4, 5, 3, 9, 8, 7];
+//tree: int[] = [0, 1, 2];
+
+
+box_color: color = (0,255,0,255);
+text_color: color = (255, 0,0,255);
+
+
+begin
+
+intToArr(x: int): int[] -> {
+    intToRevArr(toAdd: int[], x: int): int[] -> {
+        fork {
+            (x < 10) -> { return push(toAdd, x); }
+            (otherwise) -> { 
+                return intToRevArr(
+                    push(toAdd, x % 10), 
+                    x / 10
+                ); 
+            }
+        }
+        
+    }
+    reverseNum: int[] = [];
+    reverseNum = intToRevArr(reverseNum, x);
+
+    nums: int[] = [];
+    for i in 0 to reverseNum.size {
+        nums = push(nums, reverseNum[reverseNum.size - (i + 1)]);
+    }
+    return nums;
+}
+parent(i: int): int -> {return (i-1)/2;}
+leftchild(i: int): int -> {return 2 * i + 1;}
+rightchild(i: int): int -> { return 2 * i + 2; }
+
+
+makeNode(v: int, box_color: color, text_color: color): shape -> {
+    string: shape = string(|string = intToArr(v), main_color = text_color|);
+    return background(|baseShape = string, fill = box_color, margin = 5.0|);
+}
+
+makeNodeWithLine(node: shape, len: float, upDown: bool, box_color: color): shape -> {
+    fork {
+        (upDown) -> {return place (0, 0)--(0, len)(|stroke = box_color|) top (node.width / 2.0, 0) offset node;}
+        (otherwise) -> {return place (0, 0)--(0, len)(|stroke = box_color|) bottom (node.width / 2.0, 0) offset node;}
+    }
+    
+}
+
+connectNodes(lNode: shape, rNode: shape, pNode: shape, box_color: color): shape -> {
+    //lNode = place (0, 0)--(0, pNode.height / 2)(|stroke = box_color|) center (0, lNode.height * 0.75 - pNode.height / 2) offset lNode;
+    //rNode = place (0, 0)--(0, pNode.height / 2)(|stroke = box_color|) center (0, pNode.height - pNode.height / 2) offset rNode;
+    //pNode = place (0, 0)--(0, pNode.height / 2)(|stroke = box_color|) center (0, -pNode.height + pNode.height / 2) offset pNode;
+
+    len: float = pNode.height / 2.0;
+    lNode = makeNodeWithLine(lNode, len, true, box_color);
+    rNode = makeNodeWithLine(rNode, len, true, box_color);
+    pNode = makeNodeWithLine(pNode, len, false, box_color);
+
+    childs: shape = place lNode left (-3,0) offset rNode;
+    line: shape = (0,0)--(childs.width - (lNode.width+rNode.width)/2 + 1, 0)(|stroke = box_color|);
+    childs = place line center (-rNode.width / 4.0 + lNode.width / 4.0, childs.height / 2) offset childs;
+    return place pNode top ((lNode.width+rNode.width)/2, 0) offset childs;
+}
+
+drawTree(tree: int[], node: int, box_color: color, text_color: color): shape -> {
+    size: int = tree.size;
+    fork {
+        (node >= size) -> {return (0,0)--(0,0)(|stroke = (0,0,0,255)|);}
+        (leftchild(node) >= size && rightchild(node) >= size) -> {return makeNode(tree[node], box_color, text_color);}
+        (otherwise) -> {
+            leftShape: shape = drawTree(tree, leftchild(node), box_color, text_color);
+            rightShape: shape = drawTree(tree, rightchild(node), box_color, text_color);
+
+            mainShape: shape = makeNode(tree[node], box_color, text_color);
+
+            return connectNodes(leftShape, rightShape,mainShape, box_color);
+        }
+    }
+}
+
+draw drawTree(tree, 0, box_color, text_color);
