@@ -61,11 +61,10 @@ impl FigureArray {
         });
     }
 
-    //todo: optimize
     pub fn height(&self) -> Value {
         self.max_y() - self.min_y()
     }
-    //todo: optimize
+
     pub fn width(&self) -> Value {
         self.max_x() - self.min_x()
     }

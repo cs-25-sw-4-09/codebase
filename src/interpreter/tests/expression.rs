@@ -6,7 +6,7 @@ use crate::{
         data_types::line::Line,
         environment::IEnvironment,
         errors,
-        value::{self, Value},
+        value::Value,
         InterpretE, InterpretS,
     },
     program::{
