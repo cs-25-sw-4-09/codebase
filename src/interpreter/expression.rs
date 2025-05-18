@@ -42,9 +42,9 @@ impl InterpretE for Expr {
                 let i2 = rhs.interpret(environment)?;
 
                 match operator {
-                    BinaryOperator::Add => (i1 + i2),
-                    BinaryOperator::Subtract => (i1 - i2),
-                    BinaryOperator::Multiply =>  (&i1 * &i2),
+                    BinaryOperator::Add => i1 + i2,
+                    BinaryOperator::Subtract => i1 - i2,
+                    BinaryOperator::Multiply =>  &i1 * &i2,
                     BinaryOperator::Divide => {
                         if i2 == Value::Integer(0) || i2 == Value::Float(0.0) {
                             return Err(errors::DivideByZero.into());
@@ -153,7 +153,7 @@ impl InterpretE for Expr {
                         environment.pop_function_scope();
 
                         let rvalue = environment.rvalue_get()
-                        .ok_or_else(|| Box::new(errors::FunctionNotReturning(name.to_owned())))?
+                        .ok_or_else(|| errors::FunctionNotReturning(name.to_owned()))?
                         .clone();
                         environment.rvalue_clear();
                         rvalue

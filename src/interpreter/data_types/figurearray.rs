@@ -76,8 +76,8 @@ impl FigureArray {
 
     pub fn get_center(&self) -> Point {
         (
-            Value::Float(self.min_x().get_float().unwrap() + self.width().get_float().unwrap() / 2.0),
-            Value::Float(self.min_y().get_float().unwrap() + self.height().get_float().unwrap() / 2.0) ,
+            self.min_x() + &self.width() / &2.0.into(),
+            self.min_y() + &self.height() / &2.0.into(),
         )
             .into()
     }

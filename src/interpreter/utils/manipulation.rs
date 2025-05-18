@@ -60,11 +60,12 @@ pub fn place_point_at(point_top_left: &Point, point: &Point, offset: &Point) -> 
 /*************************  Rotate ****************************/
 pub fn rotate(mut s: FigureArray, rotate_by: Value) -> FigureArray {
     //todo: Bedre Formel
-    let rotate_around = (
+    let rotate_around = s.get_center();
+    /*let rotate_around = (
         &(s.max_x() + s.min_x()) / &2.0.into(), //x
         &(s.max_y() + s.min_y()) / &2.0.into(), //y
     )
-        .into();
+        .into();*/
     s.get_mut_figures().iter_mut().for_each(|fig| {
         fig.get_mut_lines().iter_mut().for_each(|line| {
             line.get_mut_points()
