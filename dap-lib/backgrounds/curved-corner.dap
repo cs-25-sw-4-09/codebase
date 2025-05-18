@@ -1,13 +1,14 @@
-/*baseShape: shape;
+baseShape: shape;
 fill: color = (0,0,0,0);
 stroke: color = (0,0,0,0);
 thickness: int = 1;
 margin: float = 0.0;
-curve: float = 0.0;*/
+curve: float = 0.0;
 
 begin
-l = 2;
-/*
+
+
+
 w: float = baseShape.width;
 h: float = baseShape.height;
 m: float = margin;
@@ -34,15 +35,15 @@ O: point = (w+m,0-m);
 N: point = (w+m,h+m);
 P: point = (0-m,h+m);
 
-m: path = F~~M~~E;
-o: path = G~~O~~H;
-n: path = J~~N~~I;
-p: path = K~~P~~L;
+mCorner: path = F~~M~~E;
+oCorner: path = G~~O~~H;
+nCorner: path = J~~N~~I;
+pCorner: path = K~~P~~L;
 
-totalPoly: polygon = p--f--m--g--o--i--n--j--*;
+totalPoly: polygon = pCorner--f--mCorner--g--oCorner--i--nCorner--j--*;
 
-s2: shape = totalPoly(|fill = fill, stroke = stroke, thickness = thickness|);
+s2: shape = pCorner--f--mCorner--g--oCorner--i--nCorner--j--*(|fill = fill, stroke = stroke, thickness = thickness|);
 
 baseShape = place baseShape center s2;
 
-draw baseShape;*/
+draw baseShape;

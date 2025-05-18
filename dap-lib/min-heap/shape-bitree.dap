@@ -1,15 +1,16 @@
 import string "./dap-lib/digital-font/string.dap";
 import box "./dap-lib/lines/filledSqaure.dap";
-import background "./dap-lib/backgrounds/solid-sqaure.dap";
-//import background2 "./dap-lib/backgrounds/curved-corner-sqaure.dap";
+//import background "./dap-lib/backgrounds/solid-sqaure.dap";
+
+import background "./dap-lib/backgrounds/curved-corner.dap";
 
 
 tree: int[] = [10000, 123, 2, 6, 4, 5, 3, 9, 8, 7];
 //tree: int[] = [0, 1, 2];
 
 
-box_color: color = (0,255,0,255);
-text_color: color = (255, 0,0,255);
+box_color: color = (255,255,255,255);
+text_color: color = (150,0,50,255);
 
 
 begin
@@ -43,7 +44,7 @@ rightchild(i: int): int -> { return 2 * i + 2; }
 
 makeNode(v: int, box_color: color, text_color: color): shape -> {
     string: shape = string(|string = intToArr(v), main_color = text_color|);
-    return background(|baseShape = string, fill = box_color, margin = 5.0|);
+    return background(|baseShape = string, fill = box_color, margin = 5.0, stroke = text_color|);
 }
 
 makeNodeWithLine(node: shape, len: float, upDown: bool, box_color: color): shape -> {
@@ -55,10 +56,6 @@ makeNodeWithLine(node: shape, len: float, upDown: bool, box_color: color): shape
 }
 
 connectNodes(lNode: shape, rNode: shape, pNode: shape, box_color: color): shape -> {
-    //lNode = place (0, 0)--(0, pNode.height / 2)(|stroke = box_color|) center (0, lNode.height * 0.75 - pNode.height / 2) offset lNode;
-    //rNode = place (0, 0)--(0, pNode.height / 2)(|stroke = box_color|) center (0, pNode.height - pNode.height / 2) offset rNode;
-    //pNode = place (0, 0)--(0, pNode.height / 2)(|stroke = box_color|) center (0, -pNode.height + pNode.height / 2) offset pNode;
-
     len: float = pNode.height / 2.0;
     lNode = makeNodeWithLine(lNode, len, true, box_color);
     rNode = makeNodeWithLine(rNode, len, true, box_color);
@@ -81,7 +78,7 @@ drawTree(tree: int[], node: int, box_color: color, text_color: color): shape -> 
 
             mainShape: shape = makeNode(tree[node], box_color, text_color);
 
-            return connectNodes(leftShape, rightShape,mainShape, box_color);
+            return connectNodes(leftShape, rightShape,mainShape, text_color);
         }
     }
 }
