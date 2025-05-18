@@ -1,0 +1,9 @@
+height: float;
+width: float;
+fill: color = (0,0,0,255);
+stroke: color = (0,0,0,255);
+thickness: int  = 1;
+
+begin
+
+draw (0,0)--(width,0)--(width,height)--(0,height)--* (|fill = fill, thickness = thickness, stroke = stroke|);

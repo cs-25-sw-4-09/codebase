@@ -1,0 +1,48 @@
+/*baseShape: shape;
+fill: color = (0,0,0,0);
+stroke: color = (0,0,0,0);
+thickness: int = 1;
+margin: float = 0.0;
+curve: float = 0.0;*/
+
+begin
+l = 2;
+/*
+w: float = baseShape.width;
+h: float = baseShape.height;
+m: float = margin;
+
+// Stright lines
+E: point = (0,0-m);
+F: point = (0-m,0);
+G: point = (w,0-m);
+H: point = (w+m,0);
+I: point = (w,h+m);
+J: point = (w+m,h);
+K: point = (0,h+m);
+L: point = (0-m,h);
+
+f: path = L--F;
+g: path = E--G;
+i: path = H--J;
+j: path = I--K;
+
+
+// Corners
+M: point = (0-m,0-m);
+O: point = (w+m,0-m);
+N: point = (w+m,h+m);
+P: point = (0-m,h+m);
+
+m: path = F~~M~~E;
+o: path = G~~O~~H;
+n: path = J~~N~~I;
+p: path = K~~P~~L;
+
+totalPoly: polygon = p--f--m--g--o--i--n--j--*;
+
+s2: shape = totalPoly(|fill = fill, stroke = stroke, thickness = thickness|);
+
+baseShape = place baseShape center s2;
+
+draw baseShape;*/
