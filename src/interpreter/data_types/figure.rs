@@ -126,19 +126,20 @@ impl Figure {
             .ok_or_else(|| errors::NoLinesInFigure.into())
     }
 
-    pub fn get_first_point(&self) -> Option<&Point> {
-        self.lines.first().map(|line| line.get_first_point().ok()).flatten()
+    pub fn get_first_point(&self) -> Result<&Point, Box<dyn Error>> {
+        self.lines.first()
+        .ok_or_else(|| errors::NoLinesInFigure)?
+        .get_first_point()
     }
 
-    pub fn get_last_point(&self) -> Option<&Point> {
-        self.lines.last().map(|line| line.get_last_point().ok()).flatten()
+    pub fn get_last_point(&self) -> Result<&Point, Box<dyn Error>> {
+        self.lines.last()
+        .ok_or_else(|| errors::NoLinesInFigure)?
+        .get_last_point()
     }
 
     pub fn is_closed(&mut self) -> Result<bool, Box<dyn Error>> {
-        self.get_first_point()
-        .zip(self.get_last_point())
-        .map(|(p1, p2)| p1 == p2)
-        .ok_or_else(|| errors::NoPointsFound.into())
+        Ok(self.get_first_point()? ==  self.get_last_point()? )
     }
 }
 

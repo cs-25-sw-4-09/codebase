@@ -95,8 +95,8 @@ impl IEnvironment {
         self.r_value = None;
     }
 
-    pub fn rvalue_get(&self) -> Option<Value> {
-        self.r_value.clone()
+    pub fn rvalue_get(&self) -> Option<&Value> {
+        self.r_value.as_ref()
     }
 
 
