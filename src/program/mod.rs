@@ -4,3 +4,5 @@ pub mod statement;
 pub mod operators;
 pub mod r#type;
 pub mod errors;
+
+pub mod tests;
