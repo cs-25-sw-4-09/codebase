@@ -126,7 +126,7 @@ impl fmt::Display for InvalidArrayAccess {
 }
 
 #[derive(Debug, Clone)]
-pub struct NoPointsFound(); 
+pub struct NoPointsFound; 
 impl Error for NoPointsFound {}
 impl fmt::Display for NoPointsFound {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

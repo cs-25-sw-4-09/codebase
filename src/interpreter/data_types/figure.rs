@@ -138,7 +138,7 @@ impl Figure {
         self.get_first_point()
         .zip(self.get_last_point())
         .map(|(p1, p2)| p1 == p2)
-        .ok_or_else(|| errors::NoLinesInFigure.into())
+        .ok_or_else(|| errors::NoPointsFound.into())
     }
 }
 
