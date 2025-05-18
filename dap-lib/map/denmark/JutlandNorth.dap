@@ -1,0 +1,7 @@
+fill_color: color = (0, 255, 0, 255);
+
+begin
+
+// North Jutlandic Island outline
+draw (1.12, 23.00) -- (2.80, 26.00) -- (13.98, 32.00) -- (13.98, 29.00)
+  -- (12.86, 25.00) -- (6.71, 25.00) --* (| fill = fill_color |);

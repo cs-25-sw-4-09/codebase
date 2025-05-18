@@ -1,0 +1,8 @@
+fill_color: color = (0, 255, 0, 255);  // Green fill (RGBA)
+
+begin
+
+// Main Jutland Peninsula outline (straight-line segments between key coastal points)
+draw (3.63, 4.50)  -- (0.56, 10.50)  -- (1.12, 22.00)  -- (5.59, 25.00)
+  -- (12.86, 25.00) -- (16.22, 19.00) -- (11.18, 15.00) -- (10.62, 3.00)
+  --* (| fill = fill_color |);

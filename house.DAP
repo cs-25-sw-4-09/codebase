@@ -1,0 +1,28 @@
+import triangle "./triangle.DAP";
+import rectangle "./rectangle.DAP";
+import window "./window.DAP";
+import circle "./circle.DAP";
+
+width: int;
+height: int;
+color_roof: color;
+color_base: color;
+
+begin
+
+background: shape = rectangle(|height=height*3, width=width*4, fill=(173, 216, 230,255)|);
+sun: shape = circle(|radius = 50, fill = (255,234,0,255)|);
+
+base: shape = rectangle(|height=height, width=width, fill = color_base|);
+roof: shape = triangle(|width=width, height=height/2, fill = color_roof|);
+window: shape = window(|width = height/4, fill=(173, 216, 230,255), border= (0,0,0,255)|);
+door: shape = rectangle(|height=height/2, width=width/4, fill = (0,0,0,255)|);
+
+background =  place sun ontop (background.width-sun.width-20, -20) offset background;
+base = place window ontop (width/7, -height/4) offset base;
+base = place door ontop (base.width/2-door.width/2, -base.height+door.height) offset base;
+house: shape = place roof top base;
+house = place house ontop (background.width/2 - house.width/2, -background.height/2 + house.height/2) offset background;
+
+draw house;
+

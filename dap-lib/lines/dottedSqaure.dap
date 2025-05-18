@@ -1,0 +1,24 @@
+import dotLine "./dap-lib/lines/dottedLine-rec.dap";
+baseShape: shape;
+dotline_width: float = 5.0;
+fill:color = (0,0,0,255);
+
+begin
+
+number_of_dots_sides: float = baseShape.height / dotline_width;
+number_of_dots_len: float = baseShape.width / dotline_width;
+
+topLeft: point = (baseShape.x,baseShape.y);
+bottomRight: point = (baseShape.x + baseShape.width, baseShape.y - baseShape.height);
+
+topLine: shape = dotLine(|toPoint = topLeft, fromPoint = (bottomRight.x, topLeft.y), thickness = 1, lineAmount = number_of_dots_len, linesColor = fill|);
+bottomLine: shape = dotLine(|toPoint = (topLeft.x, bottomRight.y), fromPoint = bottomRight, thickness = 1, lineAmount = number_of_dots_len, linesColor = fill|);
+rightLine: shape = dotLine(|toPoint = (bottomRight.x, topLeft.y), fromPoint = bottomRight, thickness = 1, lineAmount = number_of_dots_sides, linesColor = fill|);
+leftLine: shape = dotLine(|toPoint = topLeft, fromPoint = (topLeft.x, bottomRight.y), thickness = 1, lineAmount = number_of_dots_sides, linesColor = fill|);
+
+baseShape = place topLine top baseShape;
+baseShape = place bottomLine bottom baseShape;
+baseShape = place leftLine left baseShape;
+baseShape = place rightLine right baseShape;
+
+draw baseShape;

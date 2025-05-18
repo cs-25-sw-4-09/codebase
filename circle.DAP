@@ -1,0 +1,18 @@
+radius: int = 1;
+fill: color = (0,0,0,255);
+stroke: color = (0,0,0,0);
+
+begin 
+
+a: float = 1.00005519;
+b: float = 0.55342686;
+c: float = 0.99873585;
+
+c1: path = (0,radius * a)~~(b*radius, c*radius)~~(c*radius, b*radius)~~(a*radius,0);
+c2: path = (a*radius,0)~~(c*radius, -b*radius)~~(b*radius, -c*radius)~~(0, -a*radius);
+c3: path = (0, -a*radius)~~(-b*radius, -c*radius)~~(-c*radius, -b*radius)~~(-a*radius,0);
+c4: path = (-a*radius,0)~~(-c*radius, b*radius)~~(-b*radius, c*radius)~~(0, a*radius);
+
+
+
+draw c1--c2--c3--c4--*(|fill = fill|);

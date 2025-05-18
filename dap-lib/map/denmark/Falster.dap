@@ -1,0 +1,7 @@
+fill_color: color = (0, 255, 0, 255);
+
+begin
+
+// Falster island outline
+draw (21.81, 3.00) -- (22.93, 4.00) -- (22.09, 0.60)
+  -- (20.69, 1.50) --* (| fill = fill_color |);

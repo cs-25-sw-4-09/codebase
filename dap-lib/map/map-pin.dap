@@ -1,0 +1,8 @@
+import circle "./circle.dap";
+
+color: color = (255,0,0,255);
+size: int = 1;
+
+begin
+
+pin: path = (0,0)~~()

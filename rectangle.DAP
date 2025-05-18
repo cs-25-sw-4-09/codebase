@@ -1,0 +1,7 @@
+width: int;
+height: int;
+fill: color = (255,0,0,255);
+
+begin
+
+draw (0,0)--(width,0)--(width,height)--(0,height)--* (|fill = fill |);

@@ -1,0 +1,51 @@
+import circle "./circle.DAP";
+import dottedLine "./dottedLine.DAP";
+import arrow "./arrow.DAP";
+import font "./font.DAP";
+
+begin
+
+triangleC1: shape = (0,-100)--(100,-100)(|stroke= (0,0,0,255)|);
+triangleC2: shape = (100,-100)--(100,0)(|stroke= (0,0,0,255)|);
+triangle: shape = place triangleC1 left (0, -triangleC2.height) offset triangleC2;
+triangle = place dottedLine(|fromPoint = (0,-100), toPoint = (100,0), lineAmount = 30|) ontop triangle;
+triangle = place circle(|fill = (200,29,51, 255)|) ontop (0, -98) offset triangle;
+triangle = place circle(|fill = (200,29,51, 255)|) ontop (99,-98) offset triangle;
+triangle = place circle(|fill = (200,29,51, 255)|) ontop (99,0) offset triangle;
+
+arrow1: shape = arrow(|fromPoint = (0,0), toPoint = (30,0)|);
+
+squareC1: shape = (0, -100)--(100,-100)(|stroke= (0,0,0,255)|);
+squareC2: shape = (100,-100)--(100,0)(|stroke= (0,0,0,255)|);
+squareC3: shape = (100,0)--(0,0)(|stroke= (0,0,0,255)|);
+square: shape = place squareC2 right (0, squareC2.height) offset squareC1;
+square = place squareC3 top square;
+square = place dottedLine(|fromPoint = (0, -100), toPoint = (0, 0), lineAmount = 30|) ontop square;
+square = place circle(|fill = (200,29,51, 255)|) ontop (-1,-100) offset square;
+square = place circle(|fill = (200,29,51, 255)|) ontop (100,-100) offset square;
+square = place circle(|fill = (200,29,51, 255)|) ontop (100,0) offset square;
+square = place circle(|fill = (200,29,51, 255)|) ontop (0,0) offset square;
+
+
+
+main: shape = place arrow1 right (20, -triangle.height/2 + arrow1.height/2) offset triangle;
+main = place square right (20,0) offset main;
+
+str1: int[] = [10,2,12,2,11];
+str2: int[] = [10,2,12,0,11];
+str3: int[] = [10,0,12,0,11];
+
+str4: int[] = [10,0,12,2,11];
+str5: int[] = [10,2,12,2,11];
+str6: int[] = [10,0,12,0,11];
+str7: int[] = [10,2,12,0,11];
+main = place font(|str = str1, letterSize = 5, fontColor = (200,29,51, 255)|) ontop ( 100,10) offset main;
+main = place font(|str = str2, letterSize = 5, fontColor = (200,29,51, 255)|) ontop ( 100,-115) offset main;
+main = place font(|str = str3, letterSize = 5, fontColor = (200,29,51, 255)|) ontop (-10,-115) offset main;
+main = place font(|str = str4, letterSize = 5, fontColor = (200,29,51, 255)|) ontop (170, 0) offset main;
+main = place font(|str = str5, letterSize = 5, fontColor = (200,29,51, 255)|) ontop (275,0) offset main;
+main = place font(|str = str6, letterSize = 5, fontColor = (200,29,51, 255)|) ontop (170,-115) offset main;
+main = place font(|str = str7, letterSize = 5, fontColor = (200,29,51, 255)|) ontop (275,-115) offset main;
+
+
+draw main;

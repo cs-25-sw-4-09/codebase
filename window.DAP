@@ -1,0 +1,14 @@
+width: int;
+fill: color;
+border: color;
+
+begin
+
+borderRect: shape = (0,0)--(width, 0)--(width, width)--(0,width)--(0,-0.5)--*(|fill = fill, stroke = border, thickness = 2|);
+cross1: shape = (width/2,0)--(width/2,width)(|stroke = border, thickness = 2|);
+cross2: shape = (0,width/2)--(width,width/2)(|stroke = border, thickness = 2|);
+
+window: shape = place cross1 ontop (width/2, width/2) offset cross2;
+window = place window ontop borderRect;
+
+draw window;

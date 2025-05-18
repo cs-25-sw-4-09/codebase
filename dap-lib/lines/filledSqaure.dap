@@ -1,0 +1,21 @@
+import dotLine "./dap-lib/lines/dottedLine-rec.dap";
+baseShape: shape;
+fill:color = (0,0,0,255);
+thickness: int = 1;
+
+begin
+
+topLeft: point = (baseShape.x,baseShape.y);
+bottomRight: point = (baseShape.x + baseShape.width, baseShape.y - baseShape.height);
+
+topLine: shape = topLeft--(bottomRight.x, topLeft.y)(|thickness = thickness, stroke = fill|);
+bottomLine: shape = (topLeft.x, bottomRight.y)--bottomRight(|thickness = thickness, stroke = fill|);
+rightLine: shape = (bottomRight.x, topLeft.y)--bottomRight(|thickness = thickness, stroke = fill|);
+leftLine: shape = topLeft--(topLeft.x, bottomRight.y)(|thickness = thickness, stroke = fill|);
+
+baseShape = place topLine top baseShape;
+baseShape = place bottomLine bottom baseShape;
+baseShape = place leftLine left baseShape;
+baseShape = place rightLine right baseShape;
+
+draw baseShape;
