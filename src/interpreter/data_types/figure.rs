@@ -126,20 +126,19 @@ impl Figure {
             .ok_or_else(|| errors::NoLinesInFigure.into())
     }
 
-    pub fn is_closed(mut self) -> Result<bool, Box<dyn Error>> {
-        let first_point = {
-            let line_ref = self.get_first_line()?;
-            let point_ref = line_ref.get_first_point()?;
-            point_ref.clone()
-        };
+    pub fn get_first_point(&self) -> Option<&Point> {
+        self.lines.first().map(|line| line.get_first_point().ok()).flatten()
+    }
 
-        let last_point = {
-            let line_ref = self.get_last_line()?;
-            let point_ref = line_ref.get_last_point()?;
-            point_ref.clone()
-        };
+    pub fn get_last_point(&self) -> Option<&Point> {
+        self.lines.last().map(|line| line.get_last_point().ok()).flatten()
+    }
 
-        Ok(first_point == last_point)
+    pub fn is_closed(&mut self) -> Result<bool, Box<dyn Error>> {
+        self.get_first_point()
+        .zip(self.get_last_point())
+        .map(|(p1, p2)| p1 == p2)
+        .ok_or_else(|| errors::NoLinesInFigure.into())
     }
 }
 
