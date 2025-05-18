@@ -137,19 +137,20 @@ impl InterpretE for Expr {
                             params.push((function.1[i].clone(), i1));
                         }
 
-                        //Make new scope
+                        //Make new vtable and save the old
                         let previous_stack = environment.vtable_clear();
 
                         for (param_identifier, param_elem) in params {
                             environment.vtable_push(param_identifier, param_elem);
                         }
 
+                        environment.push_function_scope();
                         for f in function.0 {
                             f.interpret(environment)?;
                         }
-                        //todo: push ftable and pop
                         //Restore scope
                         environment.vtable_restore(previous_stack);
+                        environment.pop_function_scope();
 
                         let rvalue = environment.rvalue_get()
                         .ok_or_else(|| Box::new(errors::FunctionNotReturning(name.to_owned())))?
