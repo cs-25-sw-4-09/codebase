@@ -1,7 +1,5 @@
 import string "./dap-lib/digital-font/string.dap";
 import box "./dap-lib/lines/filledSqaure.dap";
-//import background "./dap-lib/backgrounds/solid-sqaure.dap";
-
 import background "./dap-lib/backgrounds/curved-corner.dap";
 
 

@@ -1,11 +1,14 @@
 import string "./dap-lib/digital-font/string.dap";
-import dotSquare "./dap-lib/lines/dottedSqaure.dap";
+import background "./dap-lib/backgrounds/curved-corner.dap";
 
 begin
 
 //input for day 6 
 time: int[] = [7,15,30];
 distance: int[] = [9,40,200];
+text_color: color = (150,0,50,255);
+background_color: color = (255,255,255,255);
+
 
 part1(time: int[], distance:int[]): int -> {
     total_sum: int = 1;
@@ -47,16 +50,7 @@ intToArr(x: int): int[] -> {
     return nums;
 }
 
-intArrToAscii(x: int[]): int[] -> {
-    for i in 0 to x.size {
-        x[i] = x[i] + 48;
-    }
-    return x;
-}
-
-
 res1: int = part1(time, distance);
-//draw string(|string = intToArr(res1) |);
-text: shape = string(|string = [2, 8, 8] |);
+text: shape = string(|string = [2, 8, 8], main_color = text_color|);
 
-draw dotSquare(|baseShape = scale text by 5|);
+draw background(|baseShape = scale text by 5, margin = 5.0, fill = background_color, stroke = text_color|);

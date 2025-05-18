@@ -1,112 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -6 72 27">
-<path d="M0,20L0,20" />
-<path d="M0,20L5,20L5,15L0,15L0,20" fill="rgba(0,0,100,1)" />
-<path d="M0,15L5,15L5,10L0,10L0,15" fill="rgba(0,0,0,0)" />
-<path d="M0,10L5,10L5,5L0,5L0,10" fill="rgba(0,0,0,0)" />
-<path d="M0,5L5,5L5,0L0,0L0,5" fill="rgba(0,0,100,1)" />
-<path d="M0,0L5,0L5,-5L0,-5L0,0" fill="rgba(0,0,0,0)" />
-<path d="M5,20L5,20" />
-<path d="M5,20L10,20L10,15L5,15L5,20" fill="rgba(0,0,100,1)" />
-<path d="M5,15L10,15L10,10L5,10L5,15" fill="rgba(0,0,100,1)" />
-<path d="M5,10L10,10L10,5L5,5L5,10" fill="rgba(0,0,0,0)" />
-<path d="M5,5L10,5L10,0L5,0L5,5" fill="rgba(0,0,0,0)" />
-<path d="M5,0L10,0L10,-5L5,-5L5,0" fill="rgba(0,0,100,1)" />
-<path d="M10,20L10,20" />
-<path d="M10,20L15,20L15,15L10,15L10,20" fill="rgba(0,0,100,1)" />
-<path d="M10,15L15,15L15,10L10,10L10,15" fill="rgba(0,0,0,0)" />
-<path d="M10,10L15,10L15,5L10,5L10,10" fill="rgba(0,0,100,1)" />
-<path d="M10,5L15,5L15,0L10,0L10,5" fill="rgba(0,0,0,0)" />
-<path d="M10,0L15,0L15,-5L10,-5L10,0" fill="rgba(0,0,100,1)" />
-<path d="M15,20L15,20" />
-<path d="M15,20L20,20L20,15L15,15L15,20" fill="rgba(0,0,100,1)" />
-<path d="M15,15L20,15L20,10L15,10L15,15" fill="rgba(0,0,0,0)" />
-<path d="M15,10L20,10L20,5L15,5L15,10" fill="rgba(0,0,0,0)" />
-<path d="M15,5L20,5L20,0L15,0L15,5" fill="rgba(0,0,100,1)" />
-<path d="M15,0L20,0L20,-5L15,-5L15,0" fill="rgba(0,0,0,0)" />
-<path d="M25,20L25,20" />
-<path d="M25,20L30,20L30,15L25,15L25,20" fill="rgba(0,0,0,0)" />
-<path d="M25,15L30,15L30,10L25,10L25,15" fill="rgba(0,0,100,1)" />
-<path d="M25,10L30,10L30,5L25,5L25,10" fill="rgba(0,0,0,0)" />
-<path d="M25,5L30,5L30,0L25,0L25,5" fill="rgba(0,0,100,1)" />
-<path d="M25,0L30,0L30,-5L25,-5L25,0" fill="rgba(0,0,0,0)" />
-<path d="M30,20L30,20" />
-<path d="M30,20L35,20L35,15L30,15L30,20" fill="rgba(0,0,100,1)" />
-<path d="M30,15L35,15L35,10L30,10L30,15" fill="rgba(0,0,0,0)" />
-<path d="M30,10L35,10L35,5L30,5L30,10" fill="rgba(0,0,100,1)" />
-<path d="M30,5L35,5L35,0L30,0L30,5" fill="rgba(0,0,0,0)" />
-<path d="M30,0L35,0L35,-5L30,-5L30,0" fill="rgba(0,0,100,1)" />
-<path d="M35,20L35,20" />
-<path d="M35,20L40,20L40,15L35,15L35,20" fill="rgba(0,0,100,1)" />
-<path d="M35,15L40,15L40,10L35,10L35,15" fill="rgba(0,0,0,0)" />
-<path d="M35,10L40,10L40,5L35,5L35,10" fill="rgba(0,0,100,1)" />
-<path d="M35,5L40,5L40,0L35,0L35,5" fill="rgba(0,0,0,0)" />
-<path d="M35,0L40,0L40,-5L35,-5L35,0" fill="rgba(0,0,100,1)" />
-<path d="M40,20L40,20" />
-<path d="M40,20L45,20L45,15L40,15L40,20" fill="rgba(0,0,0,0)" />
-<path d="M40,15L45,15L45,10L40,10L40,15" fill="rgba(0,0,100,1)" />
-<path d="M40,10L45,10L45,5L40,5L40,10" fill="rgba(0,0,0,0)" />
-<path d="M40,5L45,5L45,0L40,0L40,5" fill="rgba(0,0,100,1)" />
-<path d="M40,0L45,0L45,-5L40,-5L40,0" fill="rgba(0,0,0,0)" />
-<path d="M50,20L50,20" />
-<path d="M50,20L55,20L55,15L50,15L50,20" fill="rgba(0,0,0,0)" />
-<path d="M50,15L55,15L55,10L50,10L50,15" fill="rgba(0,0,100,1)" />
-<path d="M50,10L55,10L55,5L50,5L50,10" fill="rgba(0,0,0,0)" />
-<path d="M50,5L55,5L55,0L50,0L50,5" fill="rgba(0,0,100,1)" />
-<path d="M50,0L55,0L55,-5L50,-5L50,0" fill="rgba(0,0,0,0)" />
-<path d="M55,20L55,20" />
-<path d="M55,20L60,20L60,15L55,15L55,20" fill="rgba(0,0,100,1)" />
-<path d="M55,15L60,15L60,10L55,10L55,15" fill="rgba(0,0,0,0)" />
-<path d="M55,10L60,10L60,5L55,5L55,10" fill="rgba(0,0,100,1)" />
-<path d="M55,5L60,5L60,0L55,0L55,5" fill="rgba(0,0,0,0)" />
-<path d="M55,0L60,0L60,-5L55,-5L55,0" fill="rgba(0,0,100,1)" />
-<path d="M60,20L60,20" />
-<path d="M60,20L65,20L65,15L60,15L60,20" fill="rgba(0,0,100,1)" />
-<path d="M60,15L65,15L65,10L60,10L60,15" fill="rgba(0,0,0,0)" />
-<path d="M60,10L65,10L65,5L60,5L60,10" fill="rgba(0,0,100,1)" />
-<path d="M60,5L65,5L65,0L60,0L60,5" fill="rgba(0,0,0,0)" />
-<path d="M60,0L65,0L65,-5L60,-5L60,0" fill="rgba(0,0,100,1)" />
-<path d="M65,20L65,20" />
-<path d="M65,20L70,20L70,15L65,15L65,20" fill="rgba(0,0,0,0)" />
-<path d="M65,15L70,15L70,10L65,10L65,15" fill="rgba(0,0,100,1)" />
-<path d="M65,10L70,10L70,5L65,5L65,10" fill="rgba(0,0,0,0)" />
-<path d="M65,5L70,5L70,0L65,0L65,5" fill="rgba(0,0,100,1)" />
-<path d="M65,0L70,0L70,-5L65,-5L65,0" fill="rgba(0,0,0,0)" />
-<path d="M67.5,-5L65,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M62.5,-5L60,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M57.5,-5L55,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M52.5,-5L50,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M47.5,-5L45,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M42.5,-5L40,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M37.5,-5L35,-5" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M32.5,-5L30,-5" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M27.5,-5L25,-5" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M22.5,-5L20,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M17.5,-5L15,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M12.5,-5L10,-5" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M7.5,-5L5,-5" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M2.5,-5L0,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M67.5,20L65,20" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M62.5,20L60,20" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M57.5,20L55,20" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M52.5,20L50,20" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M47.5,20L45,20" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M42.5,20L40,20" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M37.5,20L35,20" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M32.5,20L30,20" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M27.5,20L25,20" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M22.5,20L20,20" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M17.5,20L15,20" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M12.5,20L10,20" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M7.5,20L5,20" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M2.5,20L0,20" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M0,17.5L0,15" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M0,12.5L0,10" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M0,7.5L0,5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M0,2.5L0,-0" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M0,-2.5L0,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M70,17.5L70,15" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M70,12.5L70,10" stroke="rgba(0,0,0,1)" stroke-width="1" />
-<path d="M70,7.5L70,5" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M70,2.5L70,-0" stroke-width="1" stroke="rgba(0,0,0,1)" />
-<path d="M70,-2.5L70,-5" stroke-width="1" stroke="rgba(0,0,0,1)" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -31 82 37">
+<path d="M0,-30Q-5,-30 -5,-25L-5,-25L-5,0L-5,0Q-5,5 0,5L0,5L70,5L70,5Q75,5 75,0L75,0L75,-25L75,-25Q75,-30 70,-30L70,-30L0,-30L0,-30" stroke="rgba(150,0,50,1)" stroke-width="1" fill="rgba(255,255,255,1)" />
+<path d="M0,-0L0,-0" />
+<path d="M0,-0L5,-0L5,-5L0,-5L0,-0" fill="rgba(150,0,50,1)" />
+<path d="M0,-5L5,-5L5,-10L0,-10L0,-5" fill="rgba(0,0,0,0)" />
+<path d="M0,-10L5,-10L5,-15L0,-15L0,-10" fill="rgba(0,0,0,0)" />
+<path d="M0,-15L5,-15L5,-20L0,-20L0,-15" fill="rgba(150,0,50,1)" />
+<path d="M0,-20L5,-20L5,-25L0,-25L0,-20" fill="rgba(0,0,0,0)" />
+<path d="M5,-0L5,-0" />
+<path d="M5,-0L10,-0L10,-5L5,-5L5,-0" fill="rgba(150,0,50,1)" />
+<path d="M5,-5L10,-5L10,-10L5,-10L5,-5" fill="rgba(150,0,50,1)" />
+<path d="M5,-10L10,-10L10,-15L5,-15L5,-10" fill="rgba(0,0,0,0)" />
+<path d="M5,-15L10,-15L10,-20L5,-20L5,-15" fill="rgba(0,0,0,0)" />
+<path d="M5,-20L10,-20L10,-25L5,-25L5,-20" fill="rgba(150,0,50,1)" />
+<path d="M10,-0L10,-0" />
+<path d="M10,-0L15,-0L15,-5L10,-5L10,-0" fill="rgba(150,0,50,1)" />
+<path d="M10,-5L15,-5L15,-10L10,-10L10,-5" fill="rgba(0,0,0,0)" />
+<path d="M10,-10L15,-10L15,-15L10,-15L10,-10" fill="rgba(150,0,50,1)" />
+<path d="M10,-15L15,-15L15,-20L10,-20L10,-15" fill="rgba(0,0,0,0)" />
+<path d="M10,-20L15,-20L15,-25L10,-25L10,-20" fill="rgba(150,0,50,1)" />
+<path d="M15,-0L15,-0" />
+<path d="M15,-0L20,-0L20,-5L15,-5L15,-0" fill="rgba(150,0,50,1)" />
+<path d="M15,-5L20,-5L20,-10L15,-10L15,-5" fill="rgba(0,0,0,0)" />
+<path d="M15,-10L20,-10L20,-15L15,-15L15,-10" fill="rgba(0,0,0,0)" />
+<path d="M15,-15L20,-15L20,-20L15,-20L15,-15" fill="rgba(150,0,50,1)" />
+<path d="M15,-20L20,-20L20,-25L15,-25L15,-20" fill="rgba(0,0,0,0)" />
+<path d="M25,-0L25,-0" />
+<path d="M25,-0L30,-0L30,-5L25,-5L25,-0" fill="rgba(0,0,0,0)" />
+<path d="M25,-5L30,-5L30,-10L25,-10L25,-5" fill="rgba(150,0,50,1)" />
+<path d="M25,-10L30,-10L30,-15L25,-15L25,-10" fill="rgba(0,0,0,0)" />
+<path d="M25,-15L30,-15L30,-20L25,-20L25,-15" fill="rgba(150,0,50,1)" />
+<path d="M25,-20L30,-20L30,-25L25,-25L25,-20" fill="rgba(0,0,0,0)" />
+<path d="M30,-0L30,-0" />
+<path d="M30,-0L35,-0L35,-5L30,-5L30,-0" fill="rgba(150,0,50,1)" />
+<path d="M30,-5L35,-5L35,-10L30,-10L30,-5" fill="rgba(0,0,0,0)" />
+<path d="M30,-10L35,-10L35,-15L30,-15L30,-10" fill="rgba(150,0,50,1)" />
+<path d="M30,-15L35,-15L35,-20L30,-20L30,-15" fill="rgba(0,0,0,0)" />
+<path d="M30,-20L35,-20L35,-25L30,-25L30,-20" fill="rgba(150,0,50,1)" />
+<path d="M35,-0L35,-0" />
+<path d="M35,-0L40,-0L40,-5L35,-5L35,-0" fill="rgba(150,0,50,1)" />
+<path d="M35,-5L40,-5L40,-10L35,-10L35,-5" fill="rgba(0,0,0,0)" />
+<path d="M35,-10L40,-10L40,-15L35,-15L35,-10" fill="rgba(150,0,50,1)" />
+<path d="M35,-15L40,-15L40,-20L35,-20L35,-15" fill="rgba(0,0,0,0)" />
+<path d="M35,-20L40,-20L40,-25L35,-25L35,-20" fill="rgba(150,0,50,1)" />
+<path d="M40,-0L40,-0" />
+<path d="M40,-0L45,-0L45,-5L40,-5L40,-0" fill="rgba(0,0,0,0)" />
+<path d="M40,-5L45,-5L45,-10L40,-10L40,-5" fill="rgba(150,0,50,1)" />
+<path d="M40,-10L45,-10L45,-15L40,-15L40,-10" fill="rgba(0,0,0,0)" />
+<path d="M40,-15L45,-15L45,-20L40,-20L40,-15" fill="rgba(150,0,50,1)" />
+<path d="M40,-20L45,-20L45,-25L40,-25L40,-20" fill="rgba(0,0,0,0)" />
+<path d="M50,-0L50,-0" />
+<path d="M50,-0L55,-0L55,-5L50,-5L50,-0" fill="rgba(0,0,0,0)" />
+<path d="M50,-5L55,-5L55,-10L50,-10L50,-5" fill="rgba(150,0,50,1)" />
+<path d="M50,-10L55,-10L55,-15L50,-15L50,-10" fill="rgba(0,0,0,0)" />
+<path d="M50,-15L55,-15L55,-20L50,-20L50,-15" fill="rgba(150,0,50,1)" />
+<path d="M50,-20L55,-20L55,-25L50,-25L50,-20" fill="rgba(0,0,0,0)" />
+<path d="M55,-0L55,-0" />
+<path d="M55,-0L60,-0L60,-5L55,-5L55,-0" fill="rgba(150,0,50,1)" />
+<path d="M55,-5L60,-5L60,-10L55,-10L55,-5" fill="rgba(0,0,0,0)" />
+<path d="M55,-10L60,-10L60,-15L55,-15L55,-10" fill="rgba(150,0,50,1)" />
+<path d="M55,-15L60,-15L60,-20L55,-20L55,-15" fill="rgba(0,0,0,0)" />
+<path d="M55,-20L60,-20L60,-25L55,-25L55,-20" fill="rgba(150,0,50,1)" />
+<path d="M60,-0L60,-0" />
+<path d="M60,-0L65,-0L65,-5L60,-5L60,-0" fill="rgba(150,0,50,1)" />
+<path d="M60,-5L65,-5L65,-10L60,-10L60,-5" fill="rgba(0,0,0,0)" />
+<path d="M60,-10L65,-10L65,-15L60,-15L60,-10" fill="rgba(150,0,50,1)" />
+<path d="M60,-15L65,-15L65,-20L60,-20L60,-15" fill="rgba(0,0,0,0)" />
+<path d="M60,-20L65,-20L65,-25L60,-25L60,-20" fill="rgba(150,0,50,1)" />
+<path d="M65,-0L65,-0" />
+<path d="M65,-0L70,-0L70,-5L65,-5L65,-0" fill="rgba(0,0,0,0)" />
+<path d="M65,-5L70,-5L70,-10L65,-10L65,-5" fill="rgba(150,0,50,1)" />
+<path d="M65,-10L70,-10L70,-15L65,-15L65,-10" fill="rgba(0,0,0,0)" />
+<path d="M65,-15L70,-15L70,-20L65,-20L65,-15" fill="rgba(150,0,50,1)" />
+<path d="M65,-20L70,-20L70,-25L65,-25L65,-20" fill="rgba(0,0,0,0)" />
 </svg>

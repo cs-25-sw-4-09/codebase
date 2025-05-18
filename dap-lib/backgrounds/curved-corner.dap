@@ -3,11 +3,8 @@ fill: color = (0,0,0,0);
 stroke: color = (0,0,0,0);
 thickness: int = 1;
 margin: float = 0.0;
-curve: float = 0.0;
 
 begin
-
-
 
 w: float = baseShape.width;
 h: float = baseShape.height;
