@@ -1,2 +1,7 @@
 begin
-c:color = (1000,0,0,0);
+
+x(y:int[]): int -> { 
+    return 0;
+}
+temp: int[] = [];
+y: int = x(temp);
