@@ -1,3 +1,7 @@
 begin
-myPoly : polygon = (0,0)--(2,0)--(2,2)--*;
-myPoly = myPoly--(0,2);
+
+x(y:int[]): int -> { 
+    return 0;
+}
+temp: int[] = [];
+y: int = x(temp);

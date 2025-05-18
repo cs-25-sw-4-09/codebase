@@ -1,0 +1,7 @@
+fill_color: color = (0, 255, 0, 255);
+
+begin
+
+// Lolland island outline
+draw (16.78, 3.00) -- (21.81, 3.00) -- (22.37, 1.00)
+  -- (16.78, 1.00) --* (| fill = fill_color |);

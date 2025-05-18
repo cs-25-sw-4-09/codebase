@@ -1,0 +1,21 @@
+import triangle "./dap-lib/basic-shapes/triangle.dap";
+import square "./dap-lib/basic-shapes/square.dap";
+import circle "./dap-lib/basic-shapes/circle.dap";
+import dottedLine "./dap-lib/lines/dottedLine.dap";
+
+begin
+
+main: shape = (0,0)--(0,0)(||);
+
+main = place square(|size = 100, stroke = (0,0,0,255), fill = (0,0,0,0), thickness = 3|) left (-30,0) offset triangle(|width =120, height= 100, stroke_color = (0,0,0,255), fill = (0,0,0,0), thickness = 3|);
+main = place circle(|radius = 2, fill = (200,0,0,255)|) center main;
+
+main = rotate main by 90;
+
+main = place dottedLine(|fromPoint = (0,0), toPoint=(main.width, 0), linesColor = (0,150,0,255), lineAmount = 8|) top (0,2) offset main;
+main = place dottedLine(|fromPoint = (0,0), toPoint=(main.width, 0), linesColor = (0,150,0,255), lineAmount = 8|) bottom (0, -2) offset main;
+main = place dottedLine(|fromPoint = (0,0), toPoint=(0, main.height), linesColor = (0,150,0,255)|) left (-2, 0) offset main;
+main = place dottedLine(|fromPoint = (0,0), toPoint=(0, main.height), linesColor = (0,150,0,255)|) right (2,0) offset main;
+
+
+draw main;

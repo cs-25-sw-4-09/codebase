@@ -329,6 +329,8 @@ impl TypeCheckE for Expr {
                     Type::Shape => match member_access.as_str() {
                         "width" => Ok(Type::Float),
                         "height" => Ok(Type::Float),
+                        "x" => Ok(Type::Float),
+                        "y" => Ok(Type::Float),
                         _ => Err(errors::MemberAccessShape().into()),
                     },
                     Type::Point => match member_access.as_str() {
