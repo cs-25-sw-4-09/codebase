@@ -1,5 +1,6 @@
 import string "./dap-lib/digital-font/string.dap";
 import box "./dap-lib/lines/filledSqaure.dap";
+import treeCon "./dap-lib/min-heap/shapeBitree.dap";
 heap: int[] = [];
 
 begin
@@ -76,41 +77,58 @@ peekMin(heap: int[]): int -> {
     return heap[0];
 }
 
+
+
+pushNumberAsAscii(num: int, acc: int[]): int[] -> {
+    fork {
+        (num < 0) -> {
+            acc = push(acc, 45); // ASCII '-'
+            return pushNumberAsAscii(-num, acc);
+        }
+        (num < 10) -> {
+            return push(acc, num ); 
+        }
+        (otherwise) -> {
+            acc = pushNumberAsAscii(num / 10, acc);
+            return push(acc, (num % 10) );
+        }
+    }
+}
+
 heapToString(heap: int[]): int[] -> {
     string: int[] = [91];
     for i in 0 to (heap.size) {
+        string = pushNumberAsAscii(heap[i], string);
         fork {
-            (i == heap.size -1) -> {string = push(string, heap[i]);}
-            (otherwise) -> {
-                string = push(string, heap[i]);
-                string = push(string, 44);
-            }
-        }
-        
+            (i < heap.size -1) -> {string = push(string, 44);}
+        }     
     }
     return push(string,93);
 }
 
-heap = insert(heap,3);
-heapShape: shape = string(|string = heapToString(heap)|);
+heap = insert(heap, 3);
 heap = insert(heap, 7);
-heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
 heap = insert(heap, 1);
-heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
 heap = insert(heap, 9);
-heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
 heap = insert(heap, 0);
-heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
 heap = insert(heap, 5);
-heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
 heap = insert(heap, 2);
-heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
 heap = insert(heap, 8);
-heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
 heap = insert(heap, 6);
-heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
 heap = insert(heap, 4);
-heapShape = place string(|string = heapToString(heap)|) bottom (0,-1) offset heapShape;
+
+// Now add non-digit and negative values
+heap = insert(heap, -3);
+heap = insert(heap, 12);
+heap = insert(heap, -10);
+heap = insert(heap, 25);
+heap = insert(heap, -1);
+heap = insert(heap, -9);
+heap = insert(heap, 100);
+
+heapArrayShape: shape = scale string(|string = heapToString(heap), main_color = (255,255,255,255)|) by 1.25;
+heapTreeShape: shape = treeCon(|tree = heap, text_color = (0,0,255,255)|);
 
 
-draw box(|baseShape = heapShape, fill = (0,255,0,255)|);
+
+draw place heapArrayShape center (0, (heapArrayShape.height + heapTreeShape.height)/2 + 5) offset heapTreeShape;

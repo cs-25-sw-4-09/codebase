@@ -13,6 +13,7 @@ import LEFTPAREN "./dap-lib/digital-font/letters/LEFTPAREN.dap";
 import RIGHTPAREN "./dap-lib/digital-font/letters/RIGHTPAREN.dap";
 import LEFTBRACKET "./dap-lib/digital-font/letters/LEFTBRACKET.dap";
 import RIGHTBRACKET "./dap-lib/digital-font/letters/RIGHTBRACKET.dap";
+import NEGATIVE "./dap-lib/digital-font/letters/NEGATIVE.dap";
 import A "./dap-lib/digital-font/letters/A.dap";
 import B "./dap-lib/digital-font/letters/B.dap";
 import C "./dap-lib/digital-font/letters/C.dap";
@@ -78,6 +79,7 @@ drawLetter(code: int, main_color: color, background_color: color): shape -> {
     (code == 40) -> { return LEFTPAREN(|main_color = main_color, background_color = background_color|); }
     (code == 41) -> { return RIGHTPAREN(|main_color = main_color, background_color = background_color|); }
     (code == 44) -> { return COMMA(|main_color = main_color, background_color = background_color|); }
+    (code == 45) -> { return NEGATIVE(|main_color = main_color, background_color = background_color|); }
     (code == 91) -> { return LEFTBRACKET(|main_color = main_color, background_color = background_color|); }
     (code == 93) -> { return RIGHTBRACKET(|main_color = main_color, background_color = background_color|); }
     (code == 65) -> { return A(|main_color = main_color, background_color = background_color|); }

@@ -13,27 +13,20 @@ text_color: color = (150,0,50,255);
 
 begin
 
-intToArr(x: int): int[] -> {
-    intToRevArr(toAdd: int[], x: int): int[] -> {
-        fork {
-            (x < 10) -> { return push(toAdd, x); }
-            (otherwise) -> { 
-                return intToRevArr(
-                    push(toAdd, x % 10), 
-                    x / 10
-                ); 
-            }
+intToArr(num: int, acc: int[]): int[] -> {
+    fork {
+        (num < 0) -> {
+            acc = push(acc, 45); // ASCII '-'
+            return intToArr(-num, acc);
         }
-        
+        (num < 10) -> {
+            return push(acc, num ); 
+        }
+        (otherwise) -> {
+            acc = intToArr(num / 10, acc);
+            return push(acc, (num % 10) );
+        }
     }
-    reverseNum: int[] = [];
-    reverseNum = intToRevArr(reverseNum, x);
-
-    nums: int[] = [];
-    for i in 0 to reverseNum.size {
-        nums = push(nums, reverseNum[reverseNum.size - (i + 1)]);
-    }
-    return nums;
 }
 parent(i: int): int -> {return (i-1)/2;}
 leftchild(i: int): int -> {return 2 * i + 1;}
@@ -41,7 +34,8 @@ rightchild(i: int): int -> { return 2 * i + 2; }
 
 
 makeNode(v: int, box_color: color, text_color: color): shape -> {
-    string: shape = string(|string = intToArr(v), main_color = text_color|);
+    acc: int[] = [];
+    string: shape = string(|string = intToArr(v, acc), main_color = text_color|);
     return background(|baseShape = string, fill = box_color, margin = 5.0, stroke = text_color|);
 }
 
