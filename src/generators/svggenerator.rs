@@ -16,7 +16,7 @@ impl Generator for SvgGenerator {
     fn generate(&self, draw_array: &FigureArray, file_name: String) -> Result<(), Box<dyn Error>> {
         let mut file = File::create(format!("{}.svg", file_name)).unwrap();
 
-        let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array)?;
+        let (x1, y1, x2, y2) = get_viewbox_coordinates(draw_array)?;
 
         writeln!(
             file,
@@ -33,7 +33,7 @@ impl Generator for SvgGenerator {
     }
 }
 
-fn get_viewbox_coordiantes(
+fn get_viewbox_coordinates(
     draw_array: &FigureArray,
 ) -> Result<(f64, f64, f64, f64), Box<dyn Error>> {
     let mut x_min = f64::INFINITY;
