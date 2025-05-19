@@ -36,10 +36,10 @@ impl Generator for SvgGenerator {
 fn get_viewbox_coordiantes(
     draw_array: &FigureArray,
 ) -> Result<(f64, f64, f64, f64), Box<dyn Error>> {
-    let mut x_min = f64::INFINITY;
-    let mut y_min = f64::INFINITY;
-    let mut x_max = f64::NEG_INFINITY;
-    let mut y_max = f64::NEG_INFINITY;
+    let mut x_min = f64::MAX;
+    let mut y_min = f64::MAX;
+    let mut x_max = f64::MIN;
+    let mut y_max = f64::MIN;
     let mut line_thickness_max = 1;
 
     for mut fig in draw_array.get_figures().clone() {
