@@ -93,41 +93,23 @@ fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
     let mut path_str = "<path d=\"".to_string();
     let is_fig_closed = fig.is_closed()?;
     //Loop lines
-    for (index, line) in fig.get_lines().iter().enumerate() {
-        if index == 0 {
-            let point = to_f64_coords(line.get_first_point()?);
-            path_str.push_str(&format!("M{},{}", point.0, point.1));
-        }
 
-        let points = line.get_points();
-        match points.len() {
-            2 => {
-                let point = to_f64_coords(line.get_last_point()?);
-                path_str.push_str(&format!("L{},{}", point.0, point.1));
+    let line = fig.get_lines().first().ok_or_else(|| Box::new(errors::NoLines))?;
+    path_str.push_str(
+        &format!("M{}", line.get_first_point()?.svg_format())
+    );
+
+    for points in fig.get_lines().iter().skip(1).map(|line| line.get_points().as_slice()) {
+        println!("points: {:?}", points);
+
+        path_str.push_str(
+            &match points {
+                [_, p2] => format!("L{}", p2.svg_format()),
+                [_, p2, p3] => format!("Q{} {}", p2.svg_format(), p3.svg_format()), 
+                [_, p2, p3, p4] => format!("C{} {} {}", p2.svg_format(), p3.svg_format(), p4.svg_format()),
+                _ => return Err(Box::new(errors::TooManyPoints(points.len().to_string())))
             }
-            3 => {
-                let points = line.get_points();
-                let point1 = to_f64_coords(&points[1]);
-                let point2 = to_f64_coords(&points[2]);
-                path_str.push_str(&format!(
-                    "Q{},{} {},{}",
-                    point1.0, point1.1, point2.0, point2.1
-                ));
-            }
-            4 => {
-                let points = line.get_points();
-                let point1 = to_f64_coords(&points[1]);
-                let point2 = to_f64_coords(&points[2]);
-                let point3 = to_f64_coords(&points[3]);
-                path_str.push_str(&format!(
-                    "C{},{} {},{} {},{}",
-                    point1.0, point1.1, point2.0, point2.1, point3.0, point3.1
-                ));
-            }
-            num => {
-                return Err(Box::new(errors::TooManyPoints(num.to_string())));
-            }
-        }
+        );
     }
     path_str.push_str("\" ");
 
@@ -138,24 +120,6 @@ fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
 
     path_str.push_str("/>");
     Ok(path_str)
-}
-
-fn to_f64_coords(point: &Point) -> (f64, f64) {
-    use crate::interpreter::value::Value;
-
-    let x = match point.get_x() {
-        Value::Integer(x) => *x as f64,
-        Value::Float(x) => *x,
-        _ => unreachable!(),
-    };
-
-    let y = match point.get_y() {
-        Value::Integer(y) => *y as f64,
-        Value::Float(y) => *y,
-        _ => unreachable!(),
-    };
-
-    (x, y)
 }
 
 fn map_fig_att_to_svg_att(

@@ -18,3 +18,12 @@ impl fmt::Display for TooManyPoints {
         write!(f, "SVG only supports bezier curves with a maximum of 4 points. Amount used: {}", self.0)
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct NoLines;
+impl Error for NoLines {}
+impl fmt::Display for NoLines {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "No lines available in path")
+    }
+}
