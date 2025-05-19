@@ -3,8 +3,6 @@ use std::error::Error;
 
 use crate::program::r#type::Type;
 
-//type Result<T> = std::result::Result<T, IdentifierNotFound>; //TODO: Finde ud af om den her linje vil have nogen effekt.
-
 #[derive(Debug, Clone)]
 pub struct IdentifierNotFound(pub String);
 impl Error for IdentifierNotFound {}
