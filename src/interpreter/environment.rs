@@ -77,6 +77,16 @@ impl IEnvironment {
         self.d_array.extend(shape);
     }
 
+    pub fn darray_clear(&mut self) -> FigureArray {
+        let darray = self.d_array.clone();
+        self.d_array.clear();
+        darray
+    }
+
+    pub fn darray_restore(&mut self, darray: FigureArray) {
+        self.d_array = darray;
+    }
+
     pub fn push_scope(&mut self) {
         self.v_table.push_scope();
         self.f_table.push_scope();

@@ -1,4 +1,6 @@
 
+use std::env;
+
 use crate::{
     interpreter::{data_types::line::Line, InterpretS},
     program::expression::Expr,
@@ -139,6 +141,7 @@ impl InterpretE for Expr {
 
                         //Make new vtable and save the old
                         let previous_stack = environment.vtable_clear();
+                        let saved_darray = environment.darray_clear();
 
                         for (param_identifier, param_elem) in params {
                             environment.vtable_push(param_identifier, param_elem);
@@ -150,6 +153,7 @@ impl InterpretE for Expr {
                         }
                         //Restore scope
                         environment.vtable_restore(previous_stack);
+                        environment.darray_restore(saved_darray);
                         environment.pop_function_scope();
 
                         let rvalue = environment.rvalue_get()

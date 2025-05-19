@@ -13,6 +13,11 @@ impl FigureArray {
         &mut self.0
     }
 
+    pub fn clear(&mut self) {
+        self.0.clear();
+    }
+
+
     pub fn get_figures(&self) -> &Vec<Figure> {
         &self.0
     }
