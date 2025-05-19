@@ -90,18 +90,18 @@ fn get_viewbox_coordiantes(
 }
 
 fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
-    let mut path_str = "<path d=\"".to_string();
     let is_fig_closed = fig.is_closed()?;
     //Loop lines
-
     let line = fig.get_lines().first().ok_or_else(|| Box::new(errors::NoLines))?;
+
+    //Define String the path will be added to
+    let mut path_str = String::new();
+    //Define M
     path_str.push_str(
         &format!("M{}", line.get_first_point()?.svg_format())
     );
-
-    for points in fig.get_lines().iter().skip(1).map(|line| line.get_points().as_slice()) {
-        println!("points: {:?}", points);
-
+    //Define the rest
+    for points in fig.get_lines().iter().map(|line| line.get_points().as_slice()) {
         path_str.push_str(
             &match points {
                 [_, p2] => format!("L{}", p2.svg_format()),
@@ -111,15 +111,14 @@ fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
             }
         );
     }
-    path_str.push_str("\" ");
-
-    //Loop attributes
+    //Define attributes
+    let mut attr_str = String::new();
     for att in fig.get_attributes() {
-        path_str.push_str(&map_fig_att_to_svg_att(att, is_fig_closed)?);
+        attr_str.push_str(&map_fig_att_to_svg_att(att, is_fig_closed)?);
     }
-
-    path_str.push_str("/>");
-    Ok(path_str)
+    Ok(
+        format!("<path d=\"{}\" {}/>", path_str, attr_str)
+    )
 }
 
 fn map_fig_att_to_svg_att(
