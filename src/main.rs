@@ -109,20 +109,18 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     program.ienvironment.darray_get_mut().flip_y();
     //Generate Files from draw array
-    for output_generator in output_generators {
-        if let Some(generator) = get_generator(&output_generator) {
-            if let Err(err) =
-                generator.generate(program.ienvironment.darray_get(), file_stem.into())
-            {
-                println!(
-                    "Failed to generate format: {}, err: {}",
-                    output_generator, err
-                );
-            }
-        } else {
-            println!("Unsupported format: {}", output_generator);
+    output_generators.into_iter().filter_map(|gen_name| {
+        let generator = get_generator(&gen_name);
+        if generator.is_none() { 
+            println!("Unsupported format: {}", gen_name); 
         }
-    }
+        Some(gen_name).zip(generator)
+    }).for_each(|(gen_name, generator)| {
+        let is_success = generator.generate(program.ienvironment.darray_get(), file_stem.into());
+        if let Err(err) = is_success { 
+            println!("Failed to generate format: {}, err: {}", gen_name, err); 
+        }
+    });
 
     Ok(())
 }
