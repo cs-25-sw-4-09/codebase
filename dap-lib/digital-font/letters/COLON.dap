@@ -1,0 +1,14 @@
+main_color: color = (0,0,0,255);
+background_color: color = (0,0,0,0);
+scale_size:int = 1;
+
+import col "./dap-lib/digital-font/letters/rowmaker.dap";
+
+begin
+
+c1: bool[] = [false,true,false,true,false];
+
+
+x: shape = col(|blocks = c1, background_color = background_color, main_color=main_color|);
+
+draw x;
