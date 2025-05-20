@@ -1,7 +1,3 @@
 begin
 
-x(y:int[]): int -> { 
-    return 0;
-}
-temp: int[] = [];
-y: int = x(temp);
+x:bool = true ==true;

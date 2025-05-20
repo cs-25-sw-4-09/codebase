@@ -15,7 +15,7 @@ floatToInt(f:float, i: int): int -> {
     }
 }
 
-for i in 0 to floatToInt(lineAmount,0); {
+for i in 0 to floatToInt(lineAmount,0) {
     t1: float = i / (lineAmount * 1.0);
     t2: float = (i + 0.5) / (lineAmount * 1.0);
 
