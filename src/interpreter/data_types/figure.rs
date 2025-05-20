@@ -141,5 +141,6 @@ impl Figure {
     pub fn is_closed(&self) -> Result<bool, Box<dyn Error>> {
         Ok(self.get_first_point()? ==  self.get_last_point()? )
     }
+    
 }
 
