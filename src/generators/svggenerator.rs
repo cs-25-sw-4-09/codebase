@@ -10,11 +10,13 @@ use super::{errors, generator::Generator};
 impl Generator for SvgGenerator {
     fn generate(
         &mut self,
-        draw_array: &FigureArray,
+        mut draw_array: FigureArray,
         file_name: String,
     ) -> Result<(), Box<dyn Error>> {
-        self.calc_viewbox(draw_array)?;
-        self.calc_paths(draw_array)?;
+        draw_array.flip_y();
+        
+        self.calc_viewbox(&draw_array)?;
+        self.calc_paths(&draw_array)?;
 
         let mut file = File::create(format!("{}.svg", file_name))?;
         writeln!(file, "{}", self.svg_string().as_str()).map_err(|e| e.to_string())?;

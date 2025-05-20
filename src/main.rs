@@ -107,7 +107,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         Err(err) => return Err(format!("[Interpreter] error: {}", err).into()),
     }
 
-    program.ienvironment.darray_get_mut().flip_y();
     //Generate Files from draw array
     output_generators.into_iter().filter_map(|gen_name| {
         let generator = get_generator(&gen_name);
@@ -116,7 +115,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
         Some(gen_name).zip(generator)
     }).for_each(|(gen_name, mut generator)| {
-        let is_success = generator.generate(program.ienvironment.darray_get(), file_stem.into());
+        let is_success = generator.generate(program.ienvironment.darray_get().clone(), file_stem.into());
         if let Err(err) = is_success { 
             println!("Failed to generate format: {}, err: {}", gen_name, err); 
         }
