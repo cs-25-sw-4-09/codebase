@@ -26,7 +26,7 @@ fn straight_line() {
 <path d="M0,0L1,0" />
 </svg>"#;
 
-    let gen = Box::new(SvgGenerator);
+    let mut gen = Box::new(SvgGenerator::new());
     let _ = gen.generate(&i1, "straightLineTest".into());
 
     // Read the generated file
@@ -49,7 +49,7 @@ fn q_bezier() {
 <path d="M0,0Q10,0 10,10" />
 </svg>"#;
 
-    let gen = Box::new(SvgGenerator);
+    let mut gen = Box::new(SvgGenerator::new());
     let _ = gen.generate(&i1, "qLineTest".into());
 
     // Read the generated file
@@ -72,7 +72,7 @@ fn c_bezier() {
 <path d="M0,0C10,0 10,10 10,20" />
 </svg>"#;
 
-    let gen = Box::new(SvgGenerator);
+    let mut gen = Box::new(SvgGenerator::new());
     let _ = gen.generate(&i1, "cLineTest".into());
 
     // Read the generated file
@@ -95,7 +95,7 @@ fn stroke() {
 <path d="M0,0C10,0 10,10 10,20" stroke="rgba(255,255,255,1)" />
 </svg>"#;
 
-    let gen = Box::new(SvgGenerator);
+    let mut gen = Box::new(SvgGenerator::new());
     let _ = gen.generate(&i1, "strokeTest".into());
 
     // Read the generated file
@@ -118,7 +118,7 @@ fn thickness() {
 <path d="M0,0C10,0 10,10 10,20" stroke-width="1" />
 </svg>"#;
 
-    let gen = Box::new(SvgGenerator);
+    let mut gen = Box::new(SvgGenerator::new());
     let _ = gen.generate(&i1, "thicknessTest".into());
 
     // Read the generated file
@@ -141,7 +141,7 @@ fn fill() {
 <path d="M0,0C10,0 10,10 0,0" fill="rgba(255,255,255,1)" />
 </svg>"#;
 
-    let gen = Box::new(SvgGenerator);
+    let mut gen = Box::new(SvgGenerator::new());
     let _ = gen.generate(&i1, "fillTest".into());
 
     // Read the generated file

@@ -1,97 +1,128 @@
 use std::{error::Error, fs::File, io::Write};
 
 use crate::interpreter::{
-    data_types::{figure::Figure, figurearray::FigureArray, point::Point},
+    data_types::{figure::Figure, figurearray::FigureArray},
     value::Value,
 };
 
 use super::{
-    errors::{self},
+    errors,
     generator::Generator,
 };
 
-pub struct SvgGenerator;
+
 
 impl Generator for SvgGenerator {
-    fn generate(&self, draw_array: &FigureArray, file_name: String) -> Result<(), Box<dyn Error>> {
+
+    fn generate(&mut self, draw_array: &FigureArray, file_name: String) -> Result<(), Box<dyn Error>> {
         let mut file = File::create(format!("{}.svg", file_name)).unwrap();
+        
+        self.calc_viewbox(draw_array)?;
+        self.calc_paths(draw_array)?;
 
-        let (x1, y1, x2, y2) = get_viewbox_coordiantes(draw_array)?;
-
-        writeln!(
-            file,
-            "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"{} {} {} {}\">",
-            x1, y1, x2, y2
-        )?;
-
-        for fig in draw_array.get_figures() {
-            writeln!(file, "{}", figure_to_path_str(fig.clone())?)?;
-        }
-
-        writeln!(file, "</svg>").map_err(|e| e.to_string())?;
+        writeln!(file, "{}", self.svg_string().as_str()).map_err(|e| e.to_string())?;
         Ok(())
     }
 }
 
-fn get_viewbox_coordiantes(
-    draw_array: &FigureArray,
-) -> Result<(f64, f64, f64, f64), Box<dyn Error>> {
-    let mut x_min = f64::MAX;
-    let mut y_min = f64::MAX;
-    let mut x_max = f64::MIN;
-    let mut y_max = f64::MIN;
-    let mut line_thickness_max = 1;
+pub struct SvgGenerator {
+    view_box: String,
+    paths: Vec<String>
+}
 
-    for mut fig in draw_array.get_figures().clone() {
-        if let Some(thickness_val) = fig.get_attributes().get("thickness") {
-            if let Ok(thickness) = thickness_val.get_int() {
-                if thickness > line_thickness_max {
-                    line_thickness_max = thickness;
-                }
-            }
-        }
-
-        for line in fig.get_lines() {
-            for point in line.get_points() {
-                let x_val = match point.get_x() {
-                    crate::interpreter::value::Value::Integer(x) => *x as f64,
-                    crate::interpreter::value::Value::Float(x) => *x,
-                    _ => unreachable!(),
-                };
-
-                let y_val = match point.get_y() {
-                    crate::interpreter::value::Value::Integer(y) => *y as f64,
-                    crate::interpreter::value::Value::Float(y) => *y,
-                    _ => unreachable!(),
-                };
-
-                if x_val < x_min {
-                    x_min = x_val;
-                }
-                if y_val < y_min {
-                    y_min = y_val;
-                }
-                if x_val > x_max {
-                    x_max = x_val;
-                }
-                if y_val > y_max {
-                    y_max = y_val;
-                }
-            }
+impl SvgGenerator {
+    pub fn new() -> Self {
+        Self {
+            view_box: String::new(),
+            paths: Vec::new()
         }
     }
 
-    Ok((
-        x_min - line_thickness_max as f64,
-        y_min - line_thickness_max as f64,
-        (x_max - x_min) + 2.0 * line_thickness_max as f64,
-        (y_max - y_min) + 2.0 * line_thickness_max as f64,
-    ))
+    pub fn calc_viewbox(&mut self, draw_array: &FigureArray) -> Result<(), Box<dyn Error>> {
+        let mut x_min = f64::MAX;
+        let mut y_min = f64::MAX;
+        let mut x_max = f64::MIN;
+        let mut y_max = f64::MIN;
+        let mut line_thickness_max = 1;
+
+        for fig in draw_array.get_figures().iter() {
+            if let Some(thickness_val) = fig.get_attributes().get("thickness") {
+                if let Ok(thickness) = thickness_val.get_int() {
+                    if thickness > line_thickness_max {
+                        line_thickness_max = thickness;
+                    }
+                }
+            }
+
+            for line in fig.get_lines() {
+                for point in line.get_points() {
+                    let x_val = match point.get_x() {
+                        crate::interpreter::value::Value::Integer(x) => *x as f64,
+                        crate::interpreter::value::Value::Float(x) => *x,
+                        _ => unreachable!(),
+                    };
+
+                    let y_val = match point.get_y() {
+                        crate::interpreter::value::Value::Integer(y) => *y as f64,
+                        crate::interpreter::value::Value::Float(y) => *y,
+                        _ => unreachable!(),
+                    };
+
+                    if x_val < x_min {
+                        x_min = x_val;
+                    }
+                    if y_val < y_min {
+                        y_min = y_val;
+                    }
+                    if x_val > x_max {
+                        x_max = x_val;
+                    }
+                    if y_val > y_max {
+                        y_max = y_val;
+                    }
+                }
+            }
+        }
+
+
+        self.view_box = format!("{} {} {} {}", 
+            x_min - line_thickness_max as f64, 
+            y_min - line_thickness_max as f64, 
+            (x_max - x_min) + 2.0 * line_thickness_max as f64, 
+            (y_max - y_min) + 2.0 * line_thickness_max as f64
+        );
+        Ok(())
+    }
+
+    pub fn calc_paths(&mut self, draw_array: &FigureArray) -> Result<(), Box<dyn Error>>{
+        let paths = draw_array.get_figures().iter().map(|fig| figure_to_path_str(fig));
+        for path in paths {
+            self.paths.push(path?);
+        }
+        Ok(())
+    }
+
+    pub fn svg_string(&self) -> String {
+        format!("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"{}\">\n{}\n</svg>",
+            self.view_box,
+            self.paths.join("\n")
+        )
+    }
+
+
 }
 
-fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
-    let is_fig_closed = fig.is_closed()?;
-    //Loop lines
+
+fn figure_to_path_str(fig: &Figure) -> Result<String, Box<dyn Error>> {
+    let path_str = map_points_to_svg_path(fig)?;
+    let attr_str = map_attributes_svg_att(fig)?;
+    
+    Ok( format!("<path d=\"{}\" {}/>", path_str, attr_str) )
+}
+
+fn map_points_to_svg_path(
+    fig: &Figure
+) -> Result<String, Box<dyn Error>> {
     let line = fig.get_lines().first().ok_or_else(|| Box::new(errors::NoLines))?;
 
     //Define String the path will be added to
@@ -111,14 +142,21 @@ fn figure_to_path_str(mut fig: Figure) -> Result<String, Box<dyn Error>> {
             }
         );
     }
-    //Define attributes
+    Ok(path_str)
+}
+
+
+fn map_attributes_svg_att(fig: &Figure) -> Result<String, Box<dyn Error>> {
+    let is_fig_closed = fig.is_closed()?;
+    let attributes = fig.get_attributes().iter()
+    .map(|attr| map_fig_att_to_svg_att(attr, is_fig_closed));
+    
+    
     let mut attr_str = String::new();
-    for att in fig.get_attributes() {
-        attr_str.push_str(&map_fig_att_to_svg_att(att, is_fig_closed)?);
+    for att in attributes {
+        attr_str.push_str(att?.as_str());
     }
-    Ok(
-        format!("<path d=\"{}\" {}/>", path_str, attr_str)
-    )
+    Ok(attr_str)
 }
 
 fn map_fig_att_to_svg_att(

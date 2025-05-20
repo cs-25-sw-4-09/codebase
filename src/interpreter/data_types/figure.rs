@@ -38,7 +38,7 @@ impl Figure {
         self.attributes.insert(attribute.0, attribute.1);
     }
 
-    pub fn get_attributes(&mut self) -> &HashMap<String, Value> {
+    pub fn get_attributes(&self) -> &HashMap<String, Value> {
         &self.attributes
     }
 
@@ -138,7 +138,7 @@ impl Figure {
         .get_last_point()
     }
 
-    pub fn is_closed(&mut self) -> Result<bool, Box<dyn Error>> {
+    pub fn is_closed(&self) -> Result<bool, Box<dyn Error>> {
         Ok(self.get_first_point()? ==  self.get_last_point()? )
     }
 }

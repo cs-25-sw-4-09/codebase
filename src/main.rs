@@ -115,7 +115,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             println!("Unsupported format: {}", gen_name); 
         }
         Some(gen_name).zip(generator)
-    }).for_each(|(gen_name, generator)| {
+    }).for_each(|(gen_name, mut generator)| {
         let is_success = generator.generate(program.ienvironment.darray_get(), file_stem.into());
         if let Err(err) = is_success { 
             println!("Failed to generate format: {}, err: {}", gen_name, err); 
