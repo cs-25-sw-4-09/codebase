@@ -13,8 +13,11 @@ impl Generator for SvgGenerator {
         mut draw_array: FigureArray,
         file_name: String,
     ) -> Result<(), Box<dyn Error>> {
-        draw_array.flip_y();
         
+        //Flips all y-values for the drawArray
+        draw_array.flip_y();
+
+        //Two primary algorithms: View Box Calculation Algorithm and Path Conversion Algorithm. 
         self.calc_viewbox(&draw_array)?;
         self.calc_paths(&draw_array)?;
 
@@ -38,6 +41,7 @@ impl SvgGenerator {
     }
 
     pub fn calc_viewbox(&mut self, draw_array: &FigureArray) -> Result<(), Box<dyn Error>> {
+        //Calc Max_Line_Width
         let line_thickness_max = draw_array.get_figures().iter().fold(1, |max_line, fig| {
             fig.get_attributes()
                 .get("thickness")
@@ -47,6 +51,7 @@ impl SvgGenerator {
                 .max(max_line)
         });
 
+        //Get all points in the form (x, y)
         let x_y_cords = draw_array
         .get_figures()
         .iter()
@@ -54,6 +59,7 @@ impl SvgGenerator {
         .flat_map(|line| line.get_points())
         .map(|point| (point.get_x_f64(), point.get_y_f64()));
 
+        //Calc maxX, minX, maxY, minY
         let mut x_min = f64::MAX;
         let mut y_min = f64::MAX;
         let mut x_max = f64::MIN;
@@ -65,6 +71,11 @@ impl SvgGenerator {
             y_max = y_max.max(y_val);
         }
 
+        //Format viewbox and does calculations for: 
+        //viewBoxX 
+        //viewBoxY
+        //width
+        //height
         self.view_box = format!(
             "{} {} {} {}",
             x_min - line_thickness_max as f64,
@@ -76,6 +87,7 @@ impl SvgGenerator {
     }
 
     pub fn calc_paths(&mut self, draw_array: &FigureArray) -> Result<(), Box<dyn Error>> {
+        
         let paths = draw_array
             .get_figures()
             .iter()
@@ -96,6 +108,7 @@ impl SvgGenerator {
 }
 
 fn figure_to_path_str(fig: &Figure) -> Result<String, Box<dyn Error>> {
+    //linesToPath Operation
     let path_str = map_points_to_svg_path(fig)?;
     let attr_str = map_attributes_svg_att(fig)?;
 
@@ -108,16 +121,16 @@ fn map_points_to_svg_path(fig: &Figure) -> Result<String, Box<dyn Error>> {
         .first()
         .ok_or_else(|| Box::new(errors::NoLines))?;
 
-    //Define String the path will be added to
-    let mut path_str = String::new();
-    //Define M
-    path_str.push_str(&format!("M{}", line.get_first_point()?.svg_format()));
-    //Define the rest
-    for points in fig
+    //This will be the string all points are concatenated with, starts with call to M from design
+    let mut path_str = format!("M{}", line.get_first_point()?.svg_format());
+    
+    let lines_points = fig
         .get_lines()
         .iter()
-        .map(|line| line.get_points().as_slice())
-    {
+        .map(|line| line.get_points().as_slice());
+
+    //addPoints function from design with the three cases illustrated (Contains error handling)
+    for points in lines_points {
         path_str.push_str(
             match points {
                 [_, p2] => format!("L{}", p2.svg_format()),
