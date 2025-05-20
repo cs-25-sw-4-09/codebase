@@ -15,11 +15,10 @@ use super::{
 impl Generator for SvgGenerator {
 
     fn generate(&mut self, draw_array: &FigureArray, file_name: String) -> Result<(), Box<dyn Error>> {
-        let mut file = File::create(format!("{}.svg", file_name)).unwrap();
-        
         self.calc_viewbox(draw_array)?;
         self.calc_paths(draw_array)?;
 
+        let mut file = File::create(format!("{}.svg", file_name))?;
         writeln!(file, "{}", self.svg_string().as_str()).map_err(|e| e.to_string())?;
         Ok(())
     }
@@ -134,12 +133,12 @@ fn map_points_to_svg_path(
     //Define the rest
     for points in fig.get_lines().iter().map(|line| line.get_points().as_slice()) {
         path_str.push_str(
-            &match points {
+            match points {
                 [_, p2] => format!("L{}", p2.svg_format()),
                 [_, p2, p3] => format!("Q{} {}", p2.svg_format(), p3.svg_format()), 
                 [_, p2, p3, p4] => format!("C{} {} {}", p2.svg_format(), p3.svg_format(), p4.svg_format()),
                 _ => return Err(Box::new(errors::TooManyPoints(points.len().to_string())))
-            }
+            }.as_str()
         );
     }
     Ok(path_str)
