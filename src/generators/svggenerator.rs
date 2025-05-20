@@ -91,7 +91,7 @@ impl SvgGenerator {
         let paths = draw_array
             .get_figures()
             .iter()
-            .map(|fig| SvgGenerator::figure_to_path_str(fig));
+            .map(|fig| SvgGenerator::map_path(fig));
         for path in paths {
             self.paths.push(path?);
         }
@@ -107,15 +107,15 @@ impl SvgGenerator {
     }
 
 
-    fn figure_to_path_str(fig: &Figure) -> Result<String, Box<dyn Error>> {
+    fn map_path(fig: &Figure) -> Result<String, Box<dyn Error>> {
     //linesToPath Operation
-    let path_str = SvgGenerator::map_path(fig)?;
+    let path_str = SvgGenerator::map_points(fig)?;
     let attr_str = SvgGenerator::map_all_attributes(fig)?;
 
     Ok(format!("<path d=\"{}\" {}/>", path_str, attr_str))
 }
 
-fn map_path(fig: &Figure) -> Result<String, Box<dyn Error>> {
+fn map_points(fig: &Figure) -> Result<String, Box<dyn Error>> {
     let line = fig
         .get_lines()
         .first()
