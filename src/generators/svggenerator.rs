@@ -91,7 +91,7 @@ impl SvgGenerator {
         let paths = draw_array
             .get_figures()
             .iter()
-            .map(|fig| figure_to_path_str(fig));
+            .map(|fig| SvgGenerator::figure_to_path_str(fig));
         for path in paths {
             self.paths.push(path?);
         }
@@ -105,17 +105,17 @@ impl SvgGenerator {
             self.paths.join("\n")
         )
     }
-}
 
-fn figure_to_path_str(fig: &Figure) -> Result<String, Box<dyn Error>> {
+
+    fn figure_to_path_str(fig: &Figure) -> Result<String, Box<dyn Error>> {
     //linesToPath Operation
-    let path_str = map_points_to_svg_path(fig)?;
-    let attr_str = map_attributes_svg_att(fig)?;
+    let path_str = SvgGenerator::map_path(fig)?;
+    let attr_str = SvgGenerator::map_all_attributes(fig)?;
 
     Ok(format!("<path d=\"{}\" {}/>", path_str, attr_str))
 }
 
-fn map_points_to_svg_path(fig: &Figure) -> Result<String, Box<dyn Error>> {
+fn map_path(fig: &Figure) -> Result<String, Box<dyn Error>> {
     let line = fig
         .get_lines()
         .first()
@@ -149,12 +149,12 @@ fn map_points_to_svg_path(fig: &Figure) -> Result<String, Box<dyn Error>> {
     Ok(path_str)
 }
 
-fn map_attributes_svg_att(fig: &Figure) -> Result<String, Box<dyn Error>> {
+fn map_all_attributes(fig: &Figure) -> Result<String, Box<dyn Error>> {
     let attributes = fig
         .get_attributes()
         .iter()
         .zip(Some(fig.is_closed()?))
-        .map(|(attr, is_closed)| map_fig_att_to_svg_att(attr, is_closed));
+        .map(|(attr, is_closed)| SvgGenerator::map_attribute(attr, is_closed));
 
     let mut attr_str = String::new();
     for att in attributes {
@@ -163,7 +163,7 @@ fn map_attributes_svg_att(fig: &Figure) -> Result<String, Box<dyn Error>> {
     Ok(attr_str)
 }
 
-fn map_fig_att_to_svg_att(
+fn map_attribute(
     att: (&String, &Value),
     is_fig_closed: bool,
 ) -> Result<String, Box<dyn Error>> {
@@ -204,3 +204,8 @@ fn map_fig_att_to_svg_att(
         attribute => Err(Box::new(errors::AttributeNotValid(attribute.into()))),
     }
 }
+
+
+
+}
+
