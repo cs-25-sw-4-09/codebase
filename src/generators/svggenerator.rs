@@ -46,7 +46,7 @@ impl SvgGenerator {
                 .get("thickness")
                 .map(|thick| thick.get_int().ok())
                 .flatten()
-                .unwrap_or(max_line)
+                .unwrap_or(1)
                 .max(max_line)
         });
 
