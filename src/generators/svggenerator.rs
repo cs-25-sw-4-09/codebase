@@ -79,8 +79,8 @@ impl SvgGenerator {
             "{} {} {} {}",
             x_min - line_thickness_max as f64,
             y_min - line_thickness_max as f64,
-            (x_max - x_min) + 2.0 * line_thickness_max as f64,
-            (y_max - y_min) + 2.0 * line_thickness_max as f64
+            (x_max - x_min).abs() + 2.0 * line_thickness_max as f64,
+            (y_max - y_min).abs() + 2.0 * line_thickness_max as f64
         );
         Ok(())
     }
