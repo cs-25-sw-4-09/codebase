@@ -1,3 +1,5 @@
+a: int;
+
 begin
 
-x:bool = true ==true;
+x:bool = 1 == 1;
