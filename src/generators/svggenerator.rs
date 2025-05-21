@@ -147,11 +147,11 @@ impl SvgGenerator {
     }
 
     fn map_all_attributes(fig: &Figure) -> Result<String, Box<dyn Error>> {
+        let is_closed = fig.is_closed()?;
         let attributes = fig
             .get_attributes()
             .iter()
-            .zip(Some(fig.is_closed()?))
-            .map(|(attr, is_closed)| SvgGenerator::map_attribute(attr, is_closed));
+            .map(|attr| SvgGenerator::map_attribute(attr, is_closed));
 
         let mut attr_str = String::new();
         for att in attributes {
