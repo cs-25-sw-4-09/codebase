@@ -109,7 +109,7 @@ impl InterpretE for Expr {
             Expr::UnaryOperation { operator, expr } => {
                 let i1 = expr.interpret(environment)?;
                 match operator {
-                    UnaryOperator::Negate => Value::Boolean(!i1.get_bool()?),
+                    UnaryOperator::Negate => !i1,
                     UnaryOperator::Negative => -i1,
                 }
             }
