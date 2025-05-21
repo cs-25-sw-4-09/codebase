@@ -1,5 +1,17 @@
 begin
 
-s: shape = (2,2)--(6,2)--(6,3)--(2,3)--*(|fill = (240,200,200,200)|);
-draw s at (7,7);
-draw rotate s by 90 at (5,5);
+
+/*heart_base: shape = (0,0)--(4,0)--(4,4)--(0,4)--*(|thickness = 2, fill = (128,0,0, 255)|);
+heart_top: shape = (0,0)~~(0,2)~~(2,2)--(2,2)~~(4,2)~~(4,0)--*(|thickness = 2, fill = (128,0,0,255)|);
+
+heart: shape = place heart_top top heart_base;
+heart = place rotate heart_top by -90 left (0,-2) offset heart;
+heart = rotate heart by 45;
+draw heart;*/
+
+
+ice_cream_base: shape = (0,0)--(4,0)--(2,-6)--*(|fill = (210, 166, 121,255), thickness = 2|);
+
+ice_cream_top: shape = (0,0)--(4,0)~~(4,2)~~(2,2)--(2,2)~~(0,2)~~*(|fill = (229, 115, 115,255), thickness = 2|);
+
+draw place ice_cream_top top ice_cream_base at (50,50);
