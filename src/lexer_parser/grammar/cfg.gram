@@ -24,7 +24,7 @@ grammar cfg
 
 
     IDENTIFIER -> (LETTER | '_') (LETTER | NUM | '_')*;
-    STRING -> '"'(LETTER | '\\' | '/' | NUM | '.')*'"';
+    STRING -> '"'(LETTER | '\\' | '/' | NUM | '.')+'"';
     BOOLEAN -> 'true' | 'false';
 
   }
