@@ -43,6 +43,32 @@ impl Point {
         self.get_x().approx_eq(other.get_x(), epsilon) &&
         self.get_y().approx_eq(other.get_y(), epsilon)
     }
+
+    pub fn get_x_f64(&self) -> f64 {
+        match self.x.as_ref() {
+            Value::Integer(x) => *x as f64,
+            Value::Float(x) => *x,
+            _ => unreachable!()
+        }
+    }
+    pub fn get_y_f64(&self) -> f64 {
+        match self.y.as_ref() {
+            Value::Integer(y) => *y as f64,
+            Value::Float(y) => *y,
+            _ => unreachable!()
+        }
+    }
+
+    pub fn svg_format(&self) -> String {
+        let (x, y) = match (self.get_x(), self.get_y()) {
+        (Value::Integer(x), Value::Integer(y)) => (*x as f64, *y as f64),
+        (Value::Integer(x), Value::Float(y)) => (*x as f64, *y),
+        (Value::Float(x), Value::Integer(y)) => (*x, *y as f64),
+        (Value::Float(x), Value::Float(y)) => (*x, *y),
+        _ => unreachable!(),
+        };
+        format!("{},{}", x, y)
+    }
 }
 
 impl ops::Add for Point {
