@@ -131,7 +131,7 @@ impl TEnvironment {
 
     pub fn clone(&self) -> Self {
         let mut new = Clone::clone(self);
-        new.v_table.clear(); // TODO: Should this reset more? E.g. return type
+        new.v_table.clear();
         new
     }
 

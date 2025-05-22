@@ -44,7 +44,6 @@ makeNodeWithLine(node: shape, len: float, upDown: bool, box_color: color): shape
         (upDown) -> {return place (0, 0)--(0, len)(|stroke = box_color|) top (node.width / 2.0, 0) offset node;}
         (otherwise) -> {return place (0, 0)--(0, len)(|stroke = box_color|) bottom (node.width / 2.0, 0) offset node;}
     }
-    
 }
 
 connectNodes(lNode: shape, rNode: shape, pNode: shape, box_color: color): shape -> {
