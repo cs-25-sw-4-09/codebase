@@ -2,7 +2,7 @@ use std::{env, error::Error, path::Path};
 
 use codebase::{
     generators::generator::get_generator,
-    interpreter::{InterpretE, InterpretP},
+    interpreter::{value::Value, InterpretE, InterpretP},
     program::{program::Program, statement::Stmt},
     typechecker::{TypeCheckE, TypeCheckP},
 };
@@ -105,6 +105,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     match program.interpret() {
         Ok(_) => println!("[Interpreter] OK"),
         Err(err) => return Err(format!("[Interpreter] error: {}", err).into()),
+    }
+
+    if program.ienvironment.rvalue_get().is_some() && program.ienvironment.rvalue_get().unwrap().get_int()? != 0 {
+        return Err(format!("[Interpreter] exited with error code: {}", program.ienvironment.rvalue_get().unwrap().get_int()?).into());
     }
 
     //Generate Files from draw array
