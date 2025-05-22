@@ -18,12 +18,7 @@ pub fn scale(mut shape: FigureArray, factor: Value) -> Result<FigureArray, Box<d
 }
 
 pub fn scale_point(p: &Point, top_left: &Point, factor: &Value) -> Point {
-    let dist: Point = (
-        p.get_x() - top_left.get_x(),    //x
-        -(top_left.get_y() - p.get_y()), //y
-    )
-        .into();
-    &(dist * factor) + top_left
+    &((p - top_left) * factor) + top_left
 }
 
 /*************************  Place ****************************/
