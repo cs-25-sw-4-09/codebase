@@ -1,0 +1,59 @@
+import font "./dap-lib/digital-font/string.dap";
+import background "./dap-lib/backgrounds/curved-corner.dap";
+
+begin
+text_color3: color = (153, 143, 220,255);
+text_color2: color = (33, 26, 102, 255);
+text_color: color = (33, 26, 102, 210);
+background_color: color = (255,255,255,255);
+
+TERMINAL: int[] = [67, 79, 77, 77, 65, 78, 68, 58];//[67, 77, 68];//[84, 69, 82, 77, 73, 78, 65, 76];
+LEXER_PARSER: int[] = [45 ,76, 69, 88, 69, 82, 32, 80, 65, 82, 83, 69, 82];
+PROGRAM: int[] = [45, 80, 82, 79, 71, 82, 65, 77];
+TYPE_CHECKER: int[] = [45, 84, 89, 80, 69, 32, 67, 72, 69, 67, 75, 69, 82];
+FRONTEND: int[] = [70, 82, 79, 78, 84, 69, 78, 68, 58];
+BACKEND: int[] = [66, 65, 67, 75, 69, 78, 68, 58];
+INTERPRETER: int[] = [45, 73, 78, 84, 69, 82, 80, 82, 69, 84, 69, 82];
+GENERATORS: int[] = [45, 71, 69, 78, 69, 82, 65, 84, 79, 82, 83];
+OUTPUT_FILES: int[] = [79, 85, 84, 80, 85, 84, 32, 70, 73, 76, 69, 83, 58];
+TERMINALSHAPE: shape = font(|string = TERMINAL, main_color = text_color|);
+FRONTENDSHAPE: shape = font(|string = FRONTEND, main_color = text_color2|);
+LEXER_PARSERSHAPE: shape = font(|string = LEXER_PARSER, main_color = text_color|);
+PROGRAMSHAPE: shape = font(|string = PROGRAM, main_color = text_color|);
+TYPE_CHECKERSHAPE: shape = font(|string = TYPE_CHECKER, main_color = text_color|);
+FRONTENDSHAPE = place LEXER_PARSERSHAPE bottom (0,-2) offset FRONTENDSHAPE;
+FRONTENDSHAPE = place PROGRAMSHAPE bottom (0,-2) offset FRONTENDSHAPE;
+FRONTENDSHAPE = place TYPE_CHECKERSHAPE bottom (0,-2) offset FRONTENDSHAPE;
+FRONTENDSHAPE = background(|baseShape = scale FRONTENDSHAPE by 2, margin = 10.0, fill = background_color, stroke = text_color, thickness = 2|);
+BACKENDSHAPE: shape = font(|string = BACKEND, main_color = text_color2|);
+INTERPRETERSHAPE: shape = font(|string = INTERPRETER, main_color = text_color|);
+GENERATORSSHAPE: shape = font(|string = GENERATORS, main_color = text_color|);
+BACKENDSHAPE = place INTERPRETERSHAPE bottom (0,-2) offset BACKENDSHAPE;
+BACKENDSHAPE = place GENERATORSSHAPE bottom (0,-2) offset BACKENDSHAPE;
+BACKENDSHAPE = background(|baseShape = scale BACKENDSHAPE by 2, margin = 10.0, fill = background_color, stroke = text_color, thickness = 2|);
+OUTPUT_FILESSHAPE: shape = font(|string = OUTPUT_FILES, main_color = text_color|);
+
+makeNodeWithLine(node: shape, len: float, upDown: bool, box_color: color): shape -> {
+    fork {
+        (upDown) -> {return place (0, 0)--(len,0)(|stroke = box_color, thickness = 2|) left (0, -node.height / 2.0) offset node;}
+        (otherwise) -> {return place (0, 0)--(len,0)(|stroke = box_color, thickness = 2|) right (0, -node.height / 2.0) offset node;}
+    }
+}
+
+makeNodeWithLine2(node: shape, len: float, upDown: bool, box_color: color): shape -> {
+    fork {
+        (upDown) -> {return place (0, 0)--(0, len)(|stroke = box_color, thickness = 2|) top (node.width / 2.0, 0) offset node;}
+        (otherwise) -> {return place (0, 0)--(0, len)(|stroke = box_color, thickness = 2|) bottom (node.width / 2.0, 0) offset node;}
+    }
+}
+
+FRONTENDSHAPE2: shape = makeNodeWithLine2(FRONTENDSHAPE, 15.0, false, text_color2);
+frontAndEnd: shape = place FRONTENDSHAPE2 center (0, (FRONTENDSHAPE2.height + BACKENDSHAPE.height) / 2) offset BACKENDSHAPE;
+OUTPUT_FILESSHAPE = makeNodeWithLine(scale OUTPUT_FILESSHAPE by 2, 15.0, false, text_color2);
+frontAndEnd = place OUTPUT_FILESSHAPE left (7, -frontAndEnd.height + BACKENDSHAPE.height / 2) offset frontAndEnd;
+
+TERMINALSHAPE = makeNodeWithLine(scale TERMINALSHAPE by 2, 15.0, false, text_color2);
+
+frontAndEnd = place TERMINALSHAPE left (OUTPUT_FILESSHAPE.width -7, -FRONTENDSHAPE.height / 2) offset frontAndEnd;
+
+draw frontAndEnd;

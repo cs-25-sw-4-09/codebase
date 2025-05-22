@@ -1,0 +1,23 @@
+import font "./dap-lib/digital-font/string.dap";
+import background "./dap-lib/backgrounds/curved-corner.dap";
+import dottedBorder "./dap-lib/lines/dottedSqaure.dap";
+import biTree "./dap-lib/min-heap/shapeBitree.dap";
+
+begin
+
+// Colour comes from: https://www.its.aau.dk/vejledninger/webdesign-og-umbraco-cms/alle-vejledninger/vejledning-til-moduler-i-umbraco/farver
+c1: color = (0,127,163,255); // Safirblå
+c2: color = (0,139,178,200); // Azurblå
+c3: color = (204,68,91,255); // Vandmelonrød
+c4: color = (14,133,99,255); // Petroleumgrøn
+
+headLineText: int[] = [66, 73, 78, 65, 82, 89, 32, 84, 82, 69, 69]; // BINARY TREE
+headLine: shape = font(|string = headLineText, main_color = c4|);
+
+treeArray: int[] = [4,89,21,-67,123,0,54,-1,-100];
+tree: shape = biTree(|tree = treeArray, box_color = (255,255,255,255), text_color = c3|);
+
+tree = dottedBorder(|baseShape = tree, fill = c4|);
+mainShape: shape = place scale headLine by (tree.width / headLine.width) top (0,1) offset tree;
+
+draw background(|baseShape = mainShape, margin = 10.0, fill = (255,255,255,255), stroke = c2, thickness = 2|);

@@ -400,6 +400,45 @@ fn unary_operation_noncompatible() {
 }
 
 #[test]
+fn unary_operation_negative_int() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::UnaryOperation {
+        expr: Expr::Integer(5).into(),
+        operator: UnaryOperator::Negative,
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::Int);
+}
+
+#[test]
+fn unary_operation_negative_float() {
+    let mut env = TEnvironment::new();
+    let t1 = Expr::UnaryOperation {
+        expr: Expr::Float(5.0).into(),
+        operator: UnaryOperator::Negative,
+    }
+    .type_check(&mut env)
+    .unwrap();
+    assert_eq!(t1, Type::Float);
+}
+
+#[test]
+fn unary_operation_negative_noncompatible() {
+    let mut env = TEnvironment::new();
+
+    let not_compatible = Expr::UnaryOperation {
+        expr: Expr::Boolean(true).into(),
+        operator: UnaryOperator::Negative,
+    }
+    .type_check(&mut env);
+    assert!(not_compatible
+        .unwrap_err()
+        .downcast_ref::<errors::UnaryOperationTypeNotCompatible>()
+        .is_some());
+}
+
+#[test]
 fn fcall() {
     let mut env = TEnvironment::new();
     env.ftable_set("x".into(), vec![Type::Int], Type::Bool);
