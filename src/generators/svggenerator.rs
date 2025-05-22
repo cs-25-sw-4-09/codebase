@@ -48,7 +48,7 @@ impl SvgGenerator {
                 .flatten()
                 .unwrap_or(1)
                 .max(max_line)
-        });
+        }) as f64;
 
         //Get all points in the form (x, y)
         let x_y_cords = draw_array
@@ -77,10 +77,10 @@ impl SvgGenerator {
         //height
         self.view_box = format!(
             "{} {} {} {}",
-            x_min - line_thickness_max as f64,
-            y_min - line_thickness_max as f64,
-            (x_max - x_min).abs() + 2.0 * line_thickness_max as f64,
-            (y_max - y_min).abs() + 2.0 * line_thickness_max as f64
+            x_min - line_thickness_max / 2.,
+            y_min - line_thickness_max / 2.,
+            (x_max - x_min).abs() + line_thickness_max,
+            (y_max - y_min).abs() + line_thickness_max
         );
         Ok(())
     }
