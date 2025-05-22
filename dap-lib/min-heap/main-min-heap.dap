@@ -1,0 +1,132 @@
+import string "./dap-lib/digital-font/string.dap";
+import box "./dap-lib/lines/filledSqaure.dap";
+import treeCon "./dap-lib/min-heap/shapeBitree.dap";
+heap: int[] = [];
+
+begin
+
+// Helper functions
+parent(i: int): int -> {return (i-1)/2;}
+leftchild(i: int): int -> {return 2 * i + 1;}
+rightchild(i: int): int -> { return 2 * i + 2; }
+swap(heap: int[], i: int, j: int):int[] -> {
+    temp: int = heap[i];
+    heap[i] = heap[j];
+    heap[j] = temp;
+    return heap;
+}
+
+heapifyUp(i: int, heap: int[]): int[] -> {
+    fork {
+        (i == 0) -> {return heap;}
+        (otherwise) -> {
+            p: int = parent(i);
+            fork {
+                (heap[i] < heap[p]) -> {
+                    heap = swap(heap, i, p);
+                    return heapifyUp(p, heap);
+                }
+                (otherwise) -> {return heap;}
+            }
+        }
+    }
+}
+
+heapifyDown(i: int, heap: int[]): int[] -> {
+    l: int = leftchild(i);
+    r: int = rightchild(i);
+    smallest: int = i;
+
+    fork {
+        (l < heap.size && heap[l] < heap[smallest]) -> {smallest = l;}
+    }
+
+    fork {
+        (r < heap.size && heap[r] < heap[smallest]) -> {smallest = r;}
+    }
+
+    fork {
+        (smallest != i) -> {
+            heap = swap(heap, i, smallest);
+            return heapifyDown(smallest, heap);
+        }
+        (otherwise) -> {return heap;}
+    }
+}
+
+insert(heap: int[], value: int): int[] -> {
+    heap = push(heap, value);
+    return heapifyUp(heap.size -1, heap);
+}
+
+popMin(heap: int[]): int[] -> {
+    // if the heap size is 0 an runtime error will happen
+    fork {
+        (heap.size == 0) -> {x: int = 123;}
+        (otherwise) -> {
+            min: int = heap[0];
+            heap[0] = heap[heap.size - 1];
+            heap = remove(heap, heap.size - 1);
+            heap = heapifyDown(0, heap);
+            return heap;
+        }
+    }
+}
+
+peekMin(heap: int[]): int -> {
+    return heap[0];
+}
+
+
+
+pushNumberAsAscii(num: int, acc: int[]): int[] -> {
+    fork {
+        (num < 0) -> {
+            acc = push(acc, 45); // ASCII '-'
+            return pushNumberAsAscii(-num, acc);
+        }
+        (num < 10) -> {
+            return push(acc, num ); 
+        }
+        (otherwise) -> {
+            acc = pushNumberAsAscii(num / 10, acc);
+            return push(acc, (num % 10) );
+        }
+    }
+}
+
+heapToString(heap: int[]): int[] -> {
+    string: int[] = [91];
+    for i in 0 to (heap.size) {
+        string = pushNumberAsAscii(heap[i], string);
+        fork {
+            (i < heap.size -1) -> {string = push(string, 44);}
+        }     
+    }
+    return push(string,93);
+}
+
+heap = insert(heap, 3);
+heap = insert(heap, 7);
+heap = insert(heap, 1);
+heap = insert(heap, 9);
+heap = insert(heap, 0);
+heap = insert(heap, 5);
+heap = insert(heap, 2);
+heap = insert(heap, 8);
+heap = insert(heap, 6);
+heap = insert(heap, 4);
+
+// Now add non-digit and negative values
+heap = insert(heap, -3);
+heap = insert(heap, 12);
+heap = insert(heap, -10);
+heap = insert(heap, 25);
+heap = insert(heap, -1);
+heap = insert(heap, -9);
+heap = insert(heap, 100);
+
+heapArrayShape: shape = scale string(|string = heapToString(heap), main_color = (0,0,255,255)|) by 1.25;
+heapTreeShape: shape = treeCon(|tree = heap, text_color = (0,0,255,255)|);
+
+draw place heapArrayShape center (0, (heapArrayShape.height + heapTreeShape.height)/2 + 5) offset heapTreeShape;

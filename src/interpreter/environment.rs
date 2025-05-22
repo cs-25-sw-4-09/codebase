@@ -77,6 +77,16 @@ impl IEnvironment {
         self.d_array.extend(shape);
     }
 
+    pub fn darray_clear(&mut self) -> FigureArray {
+        let darray = self.d_array.clone();
+        self.d_array.clear();
+        darray
+    }
+
+    pub fn darray_restore(&mut self, darray: FigureArray) {
+        self.d_array = darray;
+    }
+
     pub fn push_scope(&mut self) {
         self.v_table.push_scope();
         self.f_table.push_scope();
@@ -84,6 +94,14 @@ impl IEnvironment {
 
     pub fn pop_scope(&mut self) {
         self.v_table.pop_scope();
+        self.f_table.pop_scope();
+    }
+
+    pub fn push_function_scope(&mut self) {
+        self.f_table.push_scope();
+    }
+
+    pub fn pop_function_scope(&mut self) {
         self.f_table.pop_scope();
     }
 
@@ -95,8 +113,8 @@ impl IEnvironment {
         self.r_value = None;
     }
 
-    pub fn rvalue_get(&self) -> Option<Value> {
-        self.r_value.clone()
+    pub fn rvalue_get(&self) -> Option<&Value> {
+        self.r_value.as_ref()
     }
 
 

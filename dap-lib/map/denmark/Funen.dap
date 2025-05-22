@@ -1,0 +1,7 @@
+fill_color: color = (0, 255, 0, 255);
+
+begin
+
+// Funen (Fyn) island outline
+draw (10.07, 10.00) -- (11.18, 6.00) -- (14.54, 5.00) 
+  -- (15.66, 9.00) -- (14.54, 11.00) --* (| fill = fill_color |);

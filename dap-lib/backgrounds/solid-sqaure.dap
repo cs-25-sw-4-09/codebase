@@ -1,0 +1,15 @@
+import dotLine "./dap-lib/lines/dottedLine-rec.dap";
+import rectangle "./dap-lib/basic-shapes/rectangle.dap";
+
+baseShape: shape;
+fill:color = (0,0,0,0);
+stroke: color = (0,0,0,0);
+margin: float = 0.0;
+
+begin
+
+s2: shape = rectangle(|height = (baseShape.height + margin), width = (baseShape.width + margin), fill = fill, stroke = stroke|);
+
+baseShape = place baseShape center s2;
+
+draw baseShape;

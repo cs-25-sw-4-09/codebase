@@ -1,0 +1,26 @@
+import circle "./dap-lib/basic-shapes/triangle.dap";
+import dottedLine "./dap-lib/lines/dottedLine.dap";
+import string "./dap-lib/digital-font/string.dap";
+import arrow "./arrow.DAP";
+import dotSquare "./dap-lib/lines/dottedSqaure.dap";
+begin
+
+
+circles1: shape = circle(|stroke_color = (255,0,0,255), fill = (0,0,0,0), height = 20.0, width = 20.0|);
+circles2: shape = scale circles1 by -1;
+
+circles1 = dotSquare(|baseShape = circles1, fill = (0,255,0, 255) , dotline_width=3.0|);
+circles2 = dotSquare(|baseShape = circles2, fill = (0,255,0, 255) , dotline_width=3.0|);
+
+
+main:shape = place arrow(|fromPoint = (0,0), toPoint = (30,0)|) right (10, circles1.height/2 - circles1.height/2 -5) offset circles1;
+main = place circles2 right (10, circles2.height/2 - circles1.height/2) offset main;
+
+main = place (0,0)--(0,20)(|stroke= (0,0,0,255)|) left (-5, 0) offset main;
+main = place (0,0)--(0,20)(|stroke= (0,0,0,255)|) right (5, 0) offset main;
+
+main = place string(|string = [1], main_color = (0,0,0,255)|) left (-3, -main.height/2.5) offset main;
+main = place string(|string = [1], main_color = (0,0,0,255)|) right (3, -main.height/2.5) offset main;
+
+
+draw main;

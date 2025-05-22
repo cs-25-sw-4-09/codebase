@@ -1,0 +1,46 @@
+fromPoint: point;
+toPoint: point;
+arrowSize: float = 10.0;
+strokeColor: color = (0, 0, 0, 255);
+fillColor: color = strokeColor;
+
+begin
+
+line: shape = fromPoint--toPoint(|stroke=strokeColor|);
+
+dx: float = (toPoint.x * 1.0) - (fromPoint.x * 1.0);
+dy: float = (toPoint.y * 1.0) - (fromPoint.y * 1.0);
+adx: float = dx;
+ady: float = dy;
+
+fork {
+    (dx < 0) -> {
+        adx = -dx;
+    }
+}
+fork {
+    (dy < 0) -> {
+        ady = -dy;
+    }
+}
+
+len: float = adx + ady;
+ux: float = dx / len;
+uy: float = dy / len;
+
+perpX: float = -uy;
+perpY: float = ux;
+
+tipBackX: float = toPoint.x - ux * arrowSize;
+tipBackY: float = toPoint.y - uy * arrowSize;
+
+leftWingX: float = tipBackX + perpX * arrowSize * 0.5;
+leftWingY: float = tipBackY + perpY * arrowSize * 0.5;
+
+rightWingX: float = tipBackX - perpX * arrowSize * 0.5;
+rightWingY: float = tipBackY - perpY * arrowSize * 0.5;
+
+arrowHead: shape = (toPoint.x, toPoint.y)--(leftWingX, leftWingY)--(rightWingX, rightWingY)--*(|fill=fillColor, stroke=strokeColor|);
+
+draw line;
+draw arrowHead;

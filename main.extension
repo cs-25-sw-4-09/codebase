@@ -1,3 +1,5 @@
+a: int;
+
 begin
-myPoly : polygon = (0,0)--(2,0)--(2,2)--*;
-myPoly = myPoly--(0,2);
+
+x:bool = 1 == 1;

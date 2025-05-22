@@ -1,0 +1,24 @@
+import rotate1 "./rotateExample1.dap";
+import rotate2 "./rotateExample2.dap";
+import arrow "./dap-lib/lines/arrow.dap";
+import string "./dap-lib/digital-font/string.dap";
+
+begin
+
+main: shape = (0,0)--(0,0)(||);
+
+r1: shape = rotate1(||);
+r2: shape = rotate2(||);
+arrow1: shape = arrow(|fromPoint = (0,0), toPoint = (50,0), thickness = 2|);
+
+main = place r1 left (-30, r1.height/2 - arrow1.height/2) offset arrow1;
+main = place r2 right (30, -main.height/2 + r2.height/2) offset main;
+
+main = place arrow(|toPoint =(0,0), fromPoint=(-20,70), strokeColor=(200,0,0,255), fillColor=(200,0,0,255), thickness=2, arrowSize = 13.0|) ontop (104,-50) offset main;
+main = place arrow(|toPoint =(0,0), fromPoint=(60,40), strokeColor=(200,0,0,255), fillColor=(200,0,0,255), thickness=2, arrowSize = 13.0|) right (-45,-83) offset main;
+
+main = place string(|string = [40,88,44,89,41], main_color = (200,0,0,255), scale_size = 3|) ontop (70, -30) offset main;
+main = place string(|string = [40,88,44,89,41], main_color = (200,0,0,255), scale_size = 3|) right (0, -60) offset main;
+main = place string(|string = [82, 79, 84,65, 84, 69, 128, 9,0], main_color = (0,0,0,255), scale_size = 2|) center (35, 20) offset main;
+
+draw main;

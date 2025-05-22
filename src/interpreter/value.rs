@@ -2,7 +2,7 @@ use super::data_types::{figure::Figure, figurearray::FigureArray, point::Point};
 use std::{
     cmp::Ordering,
     error::Error,
-    ops::{Add, Div, Mul, Neg, Sub},
+    ops::{Add, Div, Mul, Neg, Not, Sub},
 };
 
 #[derive(Debug, Clone, PartialEq)]
@@ -181,6 +181,16 @@ impl Neg for &Value {
             Value::Integer(i) => Value::Integer(-i),
             Value::Float(i) => Value::Float(-i),
             _ => unreachable!(),
+        }
+    }
+}
+
+impl Not for Value {
+    type Output = Value;
+    fn not(self) -> Self::Output {
+        match self {
+            Value::Boolean(b) => Value::Boolean(!b),
+            _ => unreachable!()
         }
     }
 }

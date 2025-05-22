@@ -1,0 +1,13 @@
+import triangle "./dap-lib/basic-shapes/triangle.dap";
+import square "./dap-lib/basic-shapes/square.dap";
+import dottedLine "./dap-lib/lines/dottedLine.dap";
+
+begin
+
+main: shape = place triangle(|width = 100.0, height = 50.0, stroke_color = (255,0,0,255), fill = (0,0,0,0)|) top square(|size = 100, fill = (0,0,0,0), stroke = (0,0,255,255)|);
+main = place dottedLine(|fromPoint = (0,0), toPoint = (100,0), linesColor = (0,255,0,255), lineAmount = 15|) top main;
+main = place dottedLine(|fromPoint = (0,0), toPoint = (100,0), linesColor = (0,255,0,255), lineAmount = 15|) bottom main;
+main = place dottedLine(|fromPoint = (0,0), toPoint = (0,150), linesColor = (0,255,0,255), lineAmount = 30|) left main;
+main = place dottedLine(|fromPoint = (0,0), toPoint = (0,150), linesColor = (0,255,0,255), lineAmount = 30|) right main;
+
+draw main;

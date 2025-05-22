@@ -1,0 +1,20 @@
+import scale1 "./scaleExample1.dap";
+import scale2 "./scaleExample2.dap";
+import scale3 "./scaleExample3.dap";
+import string "./dap-lib/digital-font/string.dap";
+
+begin
+
+s1: shape = scale1(||);
+s2: shape = scale2(||);
+s3: shape = scale3(||);
+
+main: shape = place s1 top (-s1.width/2 + s2.width/2, 10) offset s2;
+main = place string(|string = [83, 67, 65,76, 69, 128, 2], main_color =(0,0,0,255)|) ontop (80,-10) offset main;
+main = place string(|string = [83, 67, 65,76, 69, 128, 0,44,5], main_color =(0,0,0,255)|) ontop (120,-73) offset main;
+
+
+s3 = place string(|string = [83, 67, 65,76, 69, 128, 45, 1], main_color =(0,0,0,255)|) center (0, s3.height * 0.5) offset s3;
+
+main = place scale s3 by 2 center (0, - main.height * 0.9) offset main;
+draw main;

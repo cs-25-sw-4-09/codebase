@@ -1,0 +1,11 @@
+import transformExample1 "./transformationExample1.dap";
+import transformExample2 "./transformationExample2.dap";
+import transformExample3 "./transformationExample3.dap";
+import transformExample4 "./transformationExample4.dap";
+
+begin
+
+main: shape = place transformExample2(||) bottom (0, -25) offset transformExample1(||);
+main = place transformExample3(||) bottom (-12, -25) offset main;
+main = place transformExample4(||) bottom (0,-25) offset main;
+draw main;

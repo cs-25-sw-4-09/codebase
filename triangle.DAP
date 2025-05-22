@@ -1,0 +1,9 @@
+width: int;
+height: int;
+fill: color;
+
+begin
+
+triangle: shape = (0,0)--(width, 0)--(width/2,height)--*(|fill = fill|);
+
+draw triangle;
