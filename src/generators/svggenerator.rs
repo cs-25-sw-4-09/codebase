@@ -20,8 +20,10 @@ impl Generator for SvgGenerator {
         self.calc_viewbox(&draw_array)?;
         self.calc_paths(&draw_array)?;
 
-        let mut file = File::create(format!("{}.svg", file_name))?;
-        writeln!(file, "{}", self.svg_string().as_str()).map_err(|e| e.to_string())?;
+        writeln!(
+            File::create(format!("{}.svg", file_name))?, 
+            "{}", self.svg_string()
+        )?;
         Ok(())
     }
 }
@@ -41,14 +43,15 @@ impl SvgGenerator {
 
     pub fn calc_viewbox(&mut self, draw_array: &FigureArray) -> Result<(), Box<dyn Error>> {
         //Calc Max_Line_Width
-        let line_thickness_max = draw_array.get_figures().iter().fold(1, |max_line, fig| {
+        let line_thickness_max = draw_array.get_figures().iter()
+        .fold(1, |max_line, fig| 
             fig.get_attributes()
                 .get("thickness")
                 .map(|thick| thick.get_int().ok())
                 .flatten()
                 .unwrap_or(1)
                 .max(max_line)
-        }) as f64;
+        ) as f64;
 
         //Get all points in the form (x, y)
         let x_y_cords = draw_array
