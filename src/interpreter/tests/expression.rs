@@ -840,7 +840,7 @@ fn array_interpret() {
         .interpret(&mut env)
         .unwrap();
 
-    assert_eq!(i2, Value::Array(vec![Box::new(Value::Integer(4))]));
+    assert_eq!(i2, Value::Array(vec![Value::Integer(4)]));
 }
 
 #[test]
@@ -1723,9 +1723,9 @@ pub fn fcall_remove() {
     env.vtable_push(
         "x".into(),
         Value::Array(vec![
-            Box::new(Value::Integer(1)),
-            Box::new(Value::Integer(2)),
-            Box::new(Value::Integer(3)),
+            Value::Integer(1),
+            Value::Integer(2),
+            Value::Integer(3),
         ]),
     );
 
@@ -1742,8 +1742,8 @@ pub fn fcall_remove() {
     assert_eq!(
         i1,
         Value::Array(vec![
-            Box::new(Value::Integer(1)),
-            Box::new(Value::Integer(3))
+            Value::Integer(1),
+            Value::Integer(3)
         ])
     )
 }
@@ -1755,9 +1755,9 @@ pub fn fcall_push() {
     env.vtable_push(
         "x".into(),
         Value::Array(vec![
-            Box::new(Value::Integer(1)),
-            Box::new(Value::Integer(2)),
-            Box::new(Value::Integer(3)),
+            Value::Integer(1),
+            Value::Integer(2),
+            Value::Integer(3),
         ]),
     );
 
@@ -1774,10 +1774,10 @@ pub fn fcall_push() {
     assert_eq!(
         i1,
         Value::Array(vec![
-            Box::new(Value::Integer(1)),
-            Box::new(Value::Integer(2)),
-            Box::new(Value::Integer(3)),
-            Box::new(Value::Integer(4))
+            Value::Integer(1),
+            Value::Integer(2),
+            Value::Integer(3),
+            Value::Integer(4)
         ])
     )
 }

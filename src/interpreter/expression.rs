@@ -116,7 +116,7 @@ impl InterpretE for Expr {
                         let i1 = args[0].interpret(environment)?;
                         let i2 = args[1].interpret(environment)?;
                         let mut array = i1.get_array()?;
-                        array.push(Box::new(i2));
+                        array.push(i2);
                         Value::Array(array)
                     }
                     "remove" => {
@@ -336,9 +336,9 @@ impl InterpretE for Expr {
                 }
             }
             Expr::Array(exprs) => {
-                let mut values: Vec<Box<Value>> = Vec::new();
+                let mut values: Vec<Value> = Vec::new();
                 for expr in exprs {
-                    values.push(Box::new(expr.interpret(environment)?));
+                    values.push(expr.interpret(environment)?);
                 }
                 Value::Array(values)
             }
@@ -477,7 +477,7 @@ impl InterpretE for Expr {
                 let v2 = index.interpret(environment)?.get_int()?;
 
                 let idx: usize = v2.try_into().map_err(|_| errors::ArrayOutOfBoundsWithNumbers(v1.len(), v2))?;
-                *v1.get(idx).ok_or_else(|| errors::ArrayOutOfBoundsWithNumbers(v1.len(), v2))?.clone()
+                v1.get(idx).ok_or_else(|| errors::ArrayOutOfBoundsWithNumbers(v1.len(), v2))?.clone()
             },
         };
 

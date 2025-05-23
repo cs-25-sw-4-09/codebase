@@ -15,7 +15,7 @@ pub enum Value {
     Color(Box<Value>, Box<Value>, Box<Value>, Box<Value>),
     Shape(FigureArray),
     Figure(Figure),
-    Array(Vec<Box<Value>>),
+    Array(Vec<Value>),
 }
 
 impl Value {
@@ -34,7 +34,7 @@ impl Value {
         }
     }
 
-    pub fn get_array(&self) -> Result<Vec<Box<Value>>, Box<dyn Error>> {
+    pub fn get_array(&self) -> Result<Vec<Value>, Box<dyn Error>> {
         match self {
             Value::Array(i) => Ok(i.clone()),
             _ => Err(crate::program::errors::ExprParseAsFloatError.into()),

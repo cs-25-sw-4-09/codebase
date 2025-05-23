@@ -383,12 +383,12 @@ fn decl_default() {
 fn array_assign() {
     let mut env = IEnvironment::new();
 
-    env.vtable_push("x".into(), Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(2)), Box::new(Value::Integer(3))]));
+    env.vtable_push("x".into(), Value::Array(vec![Value::Integer(1), Value::Integer(2), Value::Integer(3)]));
 
     let i1 = Stmt::ArrayAssign{ name: "x".into(), value: Expr::Integer(5), index: Expr::Integer(1)}
     .interpret(&mut env);
 
     assert!(i1.is_ok());
 
-    assert_eq!(env.vtable_find("x".into()).unwrap().clone(),Value::Array(vec![Box::new(Value::Integer(1)), Box::new(Value::Integer(5)), Box::new(Value::Integer(3))]))
+    assert_eq!(env.vtable_find("x".into()).unwrap().clone(),Value::Array(vec![Value::Integer(1), Value::Integer(5), Value::Integer(3)]))
 }

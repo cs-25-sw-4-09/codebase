@@ -123,7 +123,7 @@ impl InterpretS for Stmt {
             }
             Stmt::ArrayAssign { name, value, index } => {
                 let index = index.interpret(environment)?.get_int()?;
-                let new_value = Box::new(value.interpret(environment)?);
+                let new_value = value.interpret(environment)?;
 
                 let Value::Array(array) = environment.vtable_find(name.to_owned()).unwrap() else {
                     unreachable!()
