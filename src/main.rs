@@ -1,17 +1,14 @@
 use std::{env, error::Error, path::Path};
 
 use codebase::{
-    generators::generator::get_generator,
-    interpreter::{value::Value, InterpretE, InterpretP},
-    program::{program::Program, statement::Stmt},
-    typechecker::{TypeCheckE, TypeCheckP},
+    generators::generator::get_generator, interpreter::InterpretP, program::program::Program, typechecker::TypeCheckP,
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
     //Lexer/Parser
 
     let mut args = env::args();
-    let executable_name = args.next().unwrap();
+    let executable_name = args.next().unwrap(); // Will always exists, returns name of exetuable the program was executed using
     let file_to_parse = args.next().ok_or_else(|| {
         format!(
             "{} <input> <generator> [-argument value] [-argument2 value2]...",
@@ -32,98 +29,46 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(str::to_string)
         .collect();
 
-    let mut program = Program::from_file(Path::new(file_to_parse.as_str())).map_err(|err| format!("[Lexer/Parser] {}", err))?;
-
-    if let Err(err) = program.type_check() {
-        println!("[Typechecker] error: {}", err);
-        return Err(err);
-    }
-    let mut checkprogramargs = String::from("begin\n");
-    while let (Some(mut arg_name), Some(arg_value)) = (args.next(), args.next()) {
-        if arg_name.starts_with("-") {
-            // only parse if on correct form
-            arg_name = arg_name.replacen("-", "", 1); // Remove -
-            checkprogramargs.extend(format!("{} = {};\n", arg_name, arg_value).chars());
-        }
-    }
-
-    checkprogramargs.extend("return 0;".to_string().chars());
-
-    let mut checkprogramargs = Program::new(&checkprogramargs)
+    let mut program = Program::from_file(Path::new(file_to_parse.as_str()))
         .map_err(|err| format!("[Lexer/Parser] {}", err))?;
-    checkprogramargs.stmts.pop();
-    for stmt in &checkprogramargs.stmts {
-        let Stmt::Assign {
-            name: identifier,
-            value: expr,
-        } = stmt
-        else {
-            unreachable!()
-        };
-        match program.tenvironment.vdtable_lookup(identifier) {
-            Ok(program_argument_type) => match expr.type_check(&mut program.tenvironment.clone()) {
-                Ok(expr_type) => match expr_type == *program_argument_type {
-                    true => {
-                        // Add the interpreted expression to the interpreter environment before execution.
-                        let i1 = expr.interpret(&mut program.ienvironment).or_else(|_| {
-                            return Err(format!(
-                            "[Typechecker] Command line argument with name {}'s value could not be interpreted.",
-                            identifier
-                        ));
-                        })?;
-                        program.ienvironment.vtable_push(identifier.into(), i1);
-                    }
-                    false => {
-                        return Err(format!(
-                            "[Typechecker] Command line argument with name {}'s value is not of the correct type: {:?}.",
-                            identifier, program_argument_type
-                        )
-                        .into());
-                    }
-                },
-                Err(_) => {
-                    return Err(format!(
-                        "[Typechecker] Command line argument with name {}'s value could not be type checked.",
-                        identifier
-                    )
-                    .into());
-                }
-            },
-            Err(_) => {
-                return Err(format!(
-                    "[Typechecker] Command line argument with name {} not allowed",
-                    identifier
-                )
-                .into());
-            }
-        }
-    }
+    program
+        .type_check()
+        .map_err(|err| format!("[Typechecker] {}", err))?;
+
+    program.parse_terminal_args(args)?;
     program.tenvironment.clear();
     println!("[Typechecker] OK");
 
     //Interpret
-    match program.interpret() {
-        Ok(_) => println!("[Interpreter] OK"),
-        Err(err) => return Err(format!("[Interpreter] error: {}", err).into()),
-    }
+    program
+        .interpret()
+        .map_err(|err| format!("[Interpreter] {}", err))?;
+    println!("[Interpreter] OK");
 
-    if program.ienvironment.rvalue_get().is_some() && program.ienvironment.rvalue_get().unwrap().get_int()? != 0 {
-        return Err(format!("[Interpreter] exited with error code: {}", program.ienvironment.rvalue_get().unwrap().get_int()?).into());
+    if let Some(returnvalue) = program.ienvironment.rvalue_get() {
+        let exit_code = returnvalue.get_int()?;
+        if exit_code != 0 {
+            return Err(format!("[Interpreter] exited with error code: {}", exit_code).into());
+        }
     }
 
     //Generate Files from draw array
-    output_generators.into_iter().filter_map(|gen_name| {
-        let generator = get_generator(&gen_name);
-        if generator.is_none() { 
-            println!("Unsupported format: {}", gen_name); 
-        }
-        Some(gen_name).zip(generator)
-    }).for_each(|(gen_name, mut generator)| {
-        let is_success = generator.generate(program.ienvironment.darray_get().clone(), file_stem.into());
-        if let Err(err) = is_success { 
-            println!("Failed to generate format: {}, err: {}", gen_name, err); 
-        }
-    });
+    output_generators
+        .into_iter()
+        .filter_map(|gen_name| {
+            let generator = get_generator(&gen_name);
+            if generator.is_none() {
+                println!("Unsupported format: {}", gen_name);
+            }
+            Some(gen_name).zip(generator)
+        })
+        .for_each(|(gen_name, mut generator)| {
+            let is_success =
+                generator.generate(program.ienvironment.darray_get().clone(), file_stem.into());
+            if let Err(err) = is_success {
+                println!("Failed to generate format: {}, err: {}", gen_name, err);
+            }
+        });
 
     Ok(())
 }
