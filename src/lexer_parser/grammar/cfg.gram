@@ -89,7 +89,7 @@ grammar cfg
     FCall -> IDENTIFIER '('! Args? ')'!;
     Args -> ExprT (','! ExprT)*;
 
-    ArrayIdx -> IDENTIFIER '['! ExprV ']'!;
+    ArrayIdx -> (IDENTIFIER | Array) '['! ExprV ']'!;
     Member -> IDENTIFIER '.'! IDENTIFIER;
 
     //Types
