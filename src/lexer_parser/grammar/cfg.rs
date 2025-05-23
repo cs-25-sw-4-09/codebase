@@ -362,97 +362,97 @@ fn new_lexer<'a: 'b, 'b, 'c>(
 /// Static resource for the serialized parser automaton
 static PARSER_AUTOMATON: &[u8] = include_bytes!("cfg_parser.bin");
 
-/// The unique identifier for variable `program`
+/// The unique identifier for variable `Program`
 pub const ID_VARIABLE_PROGRAM: u32 = 0x000E;
-/// The unique identifier for variable `declS`
+/// The unique identifier for variable `DeclS`
 pub const ID_VARIABLE_DECL_S: u32 = 0x000F;
-/// The unique identifier for variable `import`
+/// The unique identifier for variable `Import`
 pub const ID_VARIABLE_IMPORT: u32 = 0x0010;
-/// The unique identifier for variable `decl`
+/// The unique identifier for variable `Decl`
 pub const ID_VARIABLE_DECL: u32 = 0x0011;
-/// The unique identifier for variable `stmtS`
+/// The unique identifier for variable `StmtS`
 pub const ID_VARIABLE_STMT_S: u32 = 0x0012;
-/// The unique identifier for variable `forkS`
+/// The unique identifier for variable `ForkS`
 pub const ID_VARIABLE_FORK_S: u32 = 0x0013;
-/// The unique identifier for variable `fork`
+/// The unique identifier for variable `Fork`
 pub const ID_VARIABLE_FORK: u32 = 0x0014;
-/// The unique identifier for variable `forkCase`
+/// The unique identifier for variable `ForkCase`
 pub const ID_VARIABLE_FORK_CASE: u32 = 0x0015;
-/// The unique identifier for variable `otherwise`
+/// The unique identifier for variable `Otherwise`
 pub const ID_VARIABLE_OTHERWISE: u32 = 0x0016;
-/// The unique identifier for variable `for`
+/// The unique identifier for variable `For`
 pub const ID_VARIABLE_FOR: u32 = 0x0017;
-/// The unique identifier for variable `draw`
+/// The unique identifier for variable `Draw`
 pub const ID_VARIABLE_DRAW: u32 = 0x0018;
-/// The unique identifier for variable `return`
+/// The unique identifier for variable `Return`
 pub const ID_VARIABLE_RETURN: u32 = 0x0019;
-/// The unique identifier for variable `funcDecl`
+/// The unique identifier for variable `FuncDecl`
 pub const ID_VARIABLE_FUNC_DECL: u32 = 0x001A;
-/// The unique identifier for variable `params`
+/// The unique identifier for variable `Params`
 pub const ID_VARIABLE_PARAMS: u32 = 0x001B;
-/// The unique identifier for variable `param`
+/// The unique identifier for variable `Param`
 pub const ID_VARIABLE_PARAM: u32 = 0x001C;
-/// The unique identifier for variable `assign`
+/// The unique identifier for variable `Assign`
 pub const ID_VARIABLE_ASSIGN: u32 = 0x001D;
-/// The unique identifier for variable `varDecl`
+/// The unique identifier for variable `VarDecl`
 pub const ID_VARIABLE_VAR_DECL: u32 = 0x001E;
-/// The unique identifier for variable `arrayAssign`
+/// The unique identifier for variable `ArrayAssign`
 pub const ID_VARIABLE_ARRAY_ASSIGN: u32 = 0x001F;
-/// The unique identifier for variable `exprT`
+/// The unique identifier for variable `ExprT`
 pub const ID_VARIABLE_EXPR_T: u32 = 0x0020;
-/// The unique identifier for variable `array`
+/// The unique identifier for variable `Array`
 pub const ID_VARIABLE_ARRAY: u32 = 0x0021;
-/// The unique identifier for variable `point`
+/// The unique identifier for variable `Point`
 pub const ID_VARIABLE_POINT: u32 = 0x0022;
-/// The unique identifier for variable `color`
+/// The unique identifier for variable `Color`
 pub const ID_VARIABLE_COLOR: u32 = 0x0023;
-/// The unique identifier for variable `path`
+/// The unique identifier for variable `Path`
 pub const ID_VARIABLE_PATH: u32 = 0x0024;
-/// The unique identifier for variable `polygon`
+/// The unique identifier for variable `Polygon`
 pub const ID_VARIABLE_POLYGON: u32 = 0x0025;
-/// The unique identifier for variable `exprS`
+/// The unique identifier for variable `ExprS`
 pub const ID_VARIABLE_EXPR_S: u32 = 0x0026;
-/// The unique identifier for variable `manipulation`
+/// The unique identifier for variable `Manipulation`
 pub const ID_VARIABLE_MANIPULATION: u32 = 0x0027;
-/// The unique identifier for variable `scale`
+/// The unique identifier for variable `Scale`
 pub const ID_VARIABLE_SCALE: u32 = 0x0028;
-/// The unique identifier for variable `rotate`
+/// The unique identifier for variable `Rotate`
 pub const ID_VARIABLE_ROTATE: u32 = 0x0029;
-/// The unique identifier for variable `place`
+/// The unique identifier for variable `Place`
 pub const ID_VARIABLE_PLACE: u32 = 0x002A;
-/// The unique identifier for variable `pos`
+/// The unique identifier for variable `Pos`
 pub const ID_VARIABLE_POS: u32 = 0x002B;
 /// The unique identifier for variable `SCall`
 pub const ID_VARIABLE_SCALL: u32 = 0x002C;
-/// The unique identifier for variable `attrS`
+/// The unique identifier for variable `AttrS`
 pub const ID_VARIABLE_ATTR_S: u32 = 0x002D;
-/// The unique identifier for variable `attr`
+/// The unique identifier for variable `Attr`
 pub const ID_VARIABLE_ATTR: u32 = 0x002E;
-/// The unique identifier for variable `exprV`
+/// The unique identifier for variable `ExprV`
 pub const ID_VARIABLE_EXPR_V: u32 = 0x002F;
-/// The unique identifier for variable `exprV1`
+/// The unique identifier for variable `ExprV1`
 pub const ID_VARIABLE_EXPR_V1: u32 = 0x0030;
-/// The unique identifier for variable `exprV2`
+/// The unique identifier for variable `ExprV2`
 pub const ID_VARIABLE_EXPR_V2: u32 = 0x0031;
-/// The unique identifier for variable `exprV3`
+/// The unique identifier for variable `ExprV3`
 pub const ID_VARIABLE_EXPR_V3: u32 = 0x0032;
-/// The unique identifier for variable `exprV4`
+/// The unique identifier for variable `ExprV4`
 pub const ID_VARIABLE_EXPR_V4: u32 = 0x0033;
-/// The unique identifier for variable `exprV5`
+/// The unique identifier for variable `ExprV5`
 pub const ID_VARIABLE_EXPR_V5: u32 = 0x0034;
-/// The unique identifier for variable `exprV6`
+/// The unique identifier for variable `ExprV6`
 pub const ID_VARIABLE_EXPR_V6: u32 = 0x0035;
-/// The unique identifier for variable `exprV7`
+/// The unique identifier for variable `ExprV7`
 pub const ID_VARIABLE_EXPR_V7: u32 = 0x0036;
 /// The unique identifier for variable `FCall`
 pub const ID_VARIABLE_FCALL: u32 = 0x0037;
-/// The unique identifier for variable `args`
+/// The unique identifier for variable `Args`
 pub const ID_VARIABLE_ARGS: u32 = 0x0038;
-/// The unique identifier for variable `arrayIdx`
+/// The unique identifier for variable `ArrayIdx`
 pub const ID_VARIABLE_ARRAY_IDX: u32 = 0x0039;
-/// The unique identifier for variable `member`
+/// The unique identifier for variable `Member`
 pub const ID_VARIABLE_MEMBER: u32 = 0x003A;
-/// The unique identifier for variable `types`
+/// The unique identifier for variable `Types`
 pub const ID_VARIABLE_TYPES: u32 = 0x003B;
 
 
@@ -462,123 +462,123 @@ pub const ID_VARIABLE_TYPES: u32 = 0x003B;
 pub const VARIABLES: &[Symbol] = &[
     Symbol {
         id: 0x000E,
-        name: "program"
+        name: "Program"
     },
     Symbol {
         id: 0x000F,
-        name: "declS"
+        name: "DeclS"
     },
     Symbol {
         id: 0x0010,
-        name: "import"
+        name: "Import"
     },
     Symbol {
         id: 0x0011,
-        name: "decl"
+        name: "Decl"
     },
     Symbol {
         id: 0x0012,
-        name: "stmtS"
+        name: "StmtS"
     },
     Symbol {
         id: 0x0013,
-        name: "forkS"
+        name: "ForkS"
     },
     Symbol {
         id: 0x0014,
-        name: "fork"
+        name: "Fork"
     },
     Symbol {
         id: 0x0015,
-        name: "forkCase"
+        name: "ForkCase"
     },
     Symbol {
         id: 0x0016,
-        name: "otherwise"
+        name: "Otherwise"
     },
     Symbol {
         id: 0x0017,
-        name: "for"
+        name: "For"
     },
     Symbol {
         id: 0x0018,
-        name: "draw"
+        name: "Draw"
     },
     Symbol {
         id: 0x0019,
-        name: "return"
+        name: "Return"
     },
     Symbol {
         id: 0x001A,
-        name: "funcDecl"
+        name: "FuncDecl"
     },
     Symbol {
         id: 0x001B,
-        name: "params"
+        name: "Params"
     },
     Symbol {
         id: 0x001C,
-        name: "param"
+        name: "Param"
     },
     Symbol {
         id: 0x001D,
-        name: "assign"
+        name: "Assign"
     },
     Symbol {
         id: 0x001E,
-        name: "varDecl"
+        name: "VarDecl"
     },
     Symbol {
         id: 0x001F,
-        name: "arrayAssign"
+        name: "ArrayAssign"
     },
     Symbol {
         id: 0x0020,
-        name: "exprT"
+        name: "ExprT"
     },
     Symbol {
         id: 0x0021,
-        name: "array"
+        name: "Array"
     },
     Symbol {
         id: 0x0022,
-        name: "point"
+        name: "Point"
     },
     Symbol {
         id: 0x0023,
-        name: "color"
+        name: "Color"
     },
     Symbol {
         id: 0x0024,
-        name: "path"
+        name: "Path"
     },
     Symbol {
         id: 0x0025,
-        name: "polygon"
+        name: "Polygon"
     },
     Symbol {
         id: 0x0026,
-        name: "exprS"
+        name: "ExprS"
     },
     Symbol {
         id: 0x0027,
-        name: "manipulation"
+        name: "Manipulation"
     },
     Symbol {
         id: 0x0028,
-        name: "scale"
+        name: "Scale"
     },
     Symbol {
         id: 0x0029,
-        name: "rotate"
+        name: "Rotate"
     },
     Symbol {
         id: 0x002A,
-        name: "place"
+        name: "Place"
     },
     Symbol {
         id: 0x002B,
-        name: "pos"
+        name: "Pos"
     },
     Symbol {
         id: 0x002C,
@@ -586,43 +586,43 @@ pub const VARIABLES: &[Symbol] = &[
     },
     Symbol {
         id: 0x002D,
-        name: "attrS"
+        name: "AttrS"
     },
     Symbol {
         id: 0x002E,
-        name: "attr"
+        name: "Attr"
     },
     Symbol {
         id: 0x002F,
-        name: "exprV"
+        name: "ExprV"
     },
     Symbol {
         id: 0x0030,
-        name: "exprV1"
+        name: "ExprV1"
     },
     Symbol {
         id: 0x0031,
-        name: "exprV2"
+        name: "ExprV2"
     },
     Symbol {
         id: 0x0032,
-        name: "exprV3"
+        name: "ExprV3"
     },
     Symbol {
         id: 0x0033,
-        name: "exprV4"
+        name: "ExprV4"
     },
     Symbol {
         id: 0x0034,
-        name: "exprV5"
+        name: "ExprV5"
     },
     Symbol {
         id: 0x0035,
-        name: "exprV6"
+        name: "ExprV6"
     },
     Symbol {
         id: 0x0036,
-        name: "exprV7"
+        name: "ExprV7"
     },
     Symbol {
         id: 0x0037,
@@ -630,19 +630,19 @@ pub const VARIABLES: &[Symbol] = &[
     },
     Symbol {
         id: 0x0038,
-        name: "args"
+        name: "Args"
     },
     Symbol {
         id: 0x0039,
-        name: "arrayIdx"
+        name: "ArrayIdx"
     },
     Symbol {
         id: 0x003A,
-        name: "member"
+        name: "Member"
     },
     Symbol {
         id: 0x003B,
-        name: "types"
+        name: "Types"
     },
     Symbol {
         id: 0x003D,

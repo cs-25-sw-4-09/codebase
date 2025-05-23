@@ -1,6 +1,6 @@
 use std::{error::Error, fs, path::Path};
 use hime_redist::symbols::SemanticElementTrait;
-use crate::{interpreter::environment::IEnvironment, lexer_parser::{grammar::cfg, utils::tree_converter::stringify_tree}, typechecker::environment::TEnvironment};
+use crate::{interpreter::environment::IEnvironment, lexer_parser::grammar::cfg, typechecker::environment::TEnvironment};
 use super::{errors, statement::Stmt};
 
 #[derive(Debug, Clone)]
@@ -28,12 +28,12 @@ impl Program {
 
         for node in root_node.children() {
             match node.get_symbol().name {
-                "declS" => {
+                "DeclS" => {
                     for decl in node.children() {
                         decl_f.push(Stmt::new(decl)?);
                     }
                 }
-                "stmtS" => {
+                "StmtS" => {
                     for stmt in node.children() {
                         stmts.push(Stmt::new(stmt)?);
                     }

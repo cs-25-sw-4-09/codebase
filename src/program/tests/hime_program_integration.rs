@@ -11,7 +11,6 @@ use crate::{
         r#type::Type,
         statement::Stmt,
     },
-    typechecker::TypeCheckP,
 };
 
 //----------------------------------------------------
