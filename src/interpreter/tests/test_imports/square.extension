@@ -1,0 +1,6 @@
+size: int;
+border_color: color;
+
+begin
+
+x:int =2;
