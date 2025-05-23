@@ -3,3 +3,4 @@ pub mod program;
 pub mod typechecker;
 pub mod interpreter;
 pub mod generators;
+pub mod terminal;
