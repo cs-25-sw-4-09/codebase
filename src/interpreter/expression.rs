@@ -1,6 +1,3 @@
-
-use std::env;
-
 use crate::{
     interpreter::{data_types::line::Line, InterpretS},
     program::expression::Expr,

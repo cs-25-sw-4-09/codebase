@@ -1,4 +1,4 @@
-use crate::interpreter::{data_types::{direction::Direction, line::Line, point::Point}, value::Value};
+use crate::interpreter::{data_types::{direction::Direction, line::Line}, value::Value};
 
 use super::super::utils::manipulation::*;
 use super::*;

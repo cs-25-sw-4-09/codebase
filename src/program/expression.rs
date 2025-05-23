@@ -134,17 +134,17 @@ impl Expr {
                     .ok_or_else(|| errors::ASTNodeValueInvalid(expr.get_symbol().name.to_owned()))?
                     .parse()?,
             ),
-            "point" => Expr::Point(
+            "Point" => Expr::Point(
                 Box::new(Expr::new(expr.child(0))?),
                 Box::new(Expr::new(expr.child(1))?),
             ),
-            "array" => Expr::Array(
+            "Array" => Expr::Array(
                 expr.children()
                     .iter()
                     .map(|arg| Expr::new(arg))
                     .collect::<Result<Vec<_>, _>>()?,
             ),
-            "arrayIdx" => {
+            "ArrayIdx" => {
                 if expr.children_count() != 2 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(2, expr.children_count()).into(),
@@ -155,7 +155,7 @@ impl Expr {
                     index: Box::new(Expr::new(expr.child(1))?),
                 }
             }
-            "color" => {
+            "Color" => {
                 if expr.children_count() != 4 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(4, expr.children_count()).into(),
@@ -275,7 +275,7 @@ impl Expr {
                     }
                 }
             }
-            "member" => {
+            "Member" => {
                 if expr.children_count() != 2 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(2, expr.children_count()).into(),
@@ -299,7 +299,7 @@ impl Expr {
                         .into(),
                 }
             }
-            "manipulation" => {
+            "Manipulation" => {
                 if expr.children_count() != 1 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(1, expr.children_count()).into(),
@@ -307,7 +307,7 @@ impl Expr {
                 }
                 let to_match = expr.child(0).to_string();
                 match to_match.as_str() {
-                    "place" => {
+                    "Place" => {
                         let first_shape = Box::new(Expr::new(expr.child(0).child(0))?);
 
                         let placement = expr.child(0).child(1).get_symbol().to_string();
@@ -330,7 +330,7 @@ impl Expr {
                             }
                         }
                     }
-                    "rotate" => {
+                    "Rotate" => {
                         let shape = Box::new(Expr::new(expr.child(0).child(0))?);
                         let factor = Box::new(Expr::new(expr.child(0).child(1))?);
                         Expr::Rotate {
@@ -338,7 +338,7 @@ impl Expr {
                             factor: factor,
                         }
                     }
-                    "scale" => {
+                    "Scale" => {
                         let shape = Box::new(Expr::new(expr.child(0).child(0))?);
                         let factor = Box::new(Expr::new(expr.child(0).child(1))?);
                         Expr::Scale {

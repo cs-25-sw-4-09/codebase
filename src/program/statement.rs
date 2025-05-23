@@ -61,7 +61,7 @@ impl Stmt {
             //-----
             // Decl
             //-----
-            "decl" => {
+            "Decl" => {
                 if !(stmt.children_count() == 3 || stmt.children_count() == 2) {
                     return Err(errors::ASTNodeChildrenCountInvalidEither(
                         2,
@@ -88,7 +88,7 @@ impl Stmt {
                     },
                 }
             }
-            "import" => {
+            "Import" => {
                 if stmt.children_count() != 2 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
@@ -114,7 +114,7 @@ impl Stmt {
             //-----
             // Stmt
             //-----
-            "varDecl" => {
+            "VarDecl" => {
                 if stmt.children_count() != 3 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(3, stmt.children_count()).into(),
@@ -134,7 +134,7 @@ impl Stmt {
                     value: Expr::new(stmt.child(2))?,
                 }
             }
-            "assign" => {
+            "Assign" => {
                 if stmt.children_count() != 2 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
@@ -151,7 +151,7 @@ impl Stmt {
                     value: Expr::new(stmt.child(1))?,
                 }
             }
-            "arrayAssign" => {
+            "ArrayAssign" => {
                 if stmt.children_count() != 3 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(2, stmt.children_count()).into(),
@@ -169,7 +169,7 @@ impl Stmt {
                     index: (Expr::new(stmt.child(1))?),
                 }
             }
-            "funcDecl" => {
+            "FuncDecl" => {
                 if stmt.children_count() == 3 {
                     let parameters = Vec::new();
                     let mut statements = Vec::new();
@@ -258,7 +258,7 @@ impl Stmt {
                 }
             }
 
-            "return" => {
+            "Return" => {
                 if stmt.children_count() != 1 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(1, stmt.children_count()).into(),
@@ -267,7 +267,7 @@ impl Stmt {
                 Stmt::Return(Expr::new(stmt.child(0))?)
             }
 
-            "draw" => {
+            "Draw" => {
                 if stmt.children_count() == 1 {
                     Stmt::Draw {
                         shape: Expr::new(stmt.child(0))?,
@@ -287,7 +287,7 @@ impl Stmt {
                     .into());
                 }
             }
-            "for" => {
+            "For" => {
                 if stmt.children_count() != 4 {
                     return Err(
                         errors::ASTNodeChildrenCountInvalid(4, stmt.children_count()).into(),
@@ -311,20 +311,20 @@ impl Stmt {
                     body: statements,
                 }
             }
-            "fork" => {
+            "Fork" => {
                 let mut branchs = vec![];
                 let mut otherwise = None;
                 let mut statements: Vec<Stmt>;
                 for forkexpr in stmt.children() {
                     match forkexpr.to_string().as_str() {
-                        "forkCase" => {
+                        "ForkCase" => {
                             statements = vec![];
                             for stmt in forkexpr.child(1).children() {
                                 statements.push(Stmt::new(stmt)?);
                             }
                             branchs.push((Expr::new(forkexpr.child(0))?, statements));
                         }
-                        "otherwise" => {
+                        "Otherwise" => {
                             statements = vec![];
                             for stmt in forkexpr.child(0).children() {
                                 statements.push(Stmt::new(stmt)?);
