@@ -11,6 +11,10 @@ mod manipulation;
 #[cfg(test)]
 mod data_types;
 
+#[cfg(test)]
+mod whole_program_test;
+pub mod valid_programs;
+
 use crate::interpreter::data_types::line::Line;
 use super::value::Value;
 #[allow(dead_code)]
