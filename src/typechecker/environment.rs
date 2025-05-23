@@ -129,8 +129,8 @@ impl TEnvironment {
         self.s_table.insert(identifier, parameters);
     }
 
-    pub fn clone(&self) -> Self {
-        let mut new = Clone::clone(self);
+    pub fn clone_and_clear_vtable(&self) -> Self {
+        let mut new = self.clone();
         new.v_table.clear();
         new
     }
