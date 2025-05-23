@@ -55,20 +55,21 @@ pub fn place_point_at(point_top_left: &Point, point: &Point, offset: &Point) -> 
 /*************************  Rotate ****************************/
 pub fn rotate(mut s: FigureArray, rotate_by: Value) -> FigureArray {
     let rotate_around = s.get_center();
-    let radians = &rotate_by * &(f64::consts::PI / 180.).into();
+    //Convert degrees into radians
+    let theta = &rotate_by * &(f64::consts::PI / 180.).into();
     s.get_mut_figures().iter_mut().for_each(|fig| {
         fig.get_mut_lines().iter_mut().for_each(|line| {
             line.get_mut_points()
                 .iter_mut()
-                .for_each(|point| *point = rotate_point(point, &rotate_around, &radians));
+                .for_each(|point| *point = rotate_point(point, &rotate_around, &theta));
         })
     });
     s
 }
 
-pub fn rotate_point(p: &Point, rotate_around: &Point, radians: &Value) -> Point {
+pub fn rotate_point(p: &Point, rotate_around: &Point, theta: &Value) -> Point {
     let dist = p - rotate_around;
-    let (cos_theta, sin_theta) = calc_sin_theta(radians);
+    let (cos_theta, sin_theta) = calc_sin_theta(theta);
     let transformed_dist: Point = (
         dist.get_x() * &cos_theta + dist.get_y() * &sin_theta, //x
         -(dist.get_x() * &sin_theta) + dist.get_y() * &cos_theta, //y
@@ -78,10 +79,10 @@ pub fn rotate_point(p: &Point, rotate_around: &Point, radians: &Value) -> Point 
 }
 
 /**Gives cleaner outpus for sin and cos*/
-fn calc_sin_theta(radians: &Value) -> (Value, Value) {
+fn calc_sin_theta(theta: &Value) -> (Value, Value) {
     let (cos, sin) = (
-        snap_zero(cos(&radians), 1e-10),
-        snap_zero(sin(&radians), 1e-10),
+        snap_zero(cos(&theta), 1e-10),
+        snap_zero(sin(&theta), 1e-10),
     );
     (cos, sin)
 }
