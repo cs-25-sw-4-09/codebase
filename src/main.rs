@@ -40,7 +40,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     program.tenvironment.clear();
     println!("[Typechecker] OK");
 
-    //Interpret
     program
         .interpret()
         .map_err(|err| format!("[Interpreter] {}", err))?;
