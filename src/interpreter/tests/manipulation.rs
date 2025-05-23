@@ -262,7 +262,8 @@ fn rotate_point_test() {
     // Rotates the point (0,5) around (0,0) clockwise and counter-clockwise
     let i1 = (0,0).into();
     let i2 = (0,5).into();
-    let i3 = 90.into();
+    //Calculate Radians
+    let i3 = (90. * std::f64::consts::PI / 180.).into();
     let i4 = rotate_point(&i2, &i1, &i3);
     assert_eq!(i4, (5.,0.).into());
     let i4 = rotate_point(&i4, &i1, &i3);
@@ -272,7 +273,8 @@ fn rotate_point_test() {
     let i4 = rotate_point(&i4, &i1, &i3);
     assert_eq!(i4, (0.,5.).into());
 
-    let i3 = (-90).into();
+    //Calculate Radians
+    let i3 = (-90. * std::f64::consts::PI / 180.).into();
     let i4 = rotate_point(&i2, &i1, &i3);
     assert_eq!(i4, (-5.,0.).into());
     let i4 = rotate_point(&i4, &i1, &i3);
