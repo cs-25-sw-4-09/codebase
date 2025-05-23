@@ -126,7 +126,7 @@ impl InterpretS for Stmt {
                 let new_value = Box::new(value.interpret(environment)?);
 
                 let Value::Array(array) = environment.vtable_find(name.to_owned()).unwrap() else {
-                    return Err(errors::InvalidArrayAccess(name.to_owned()).into());
+                    unreachable!()
                 };
                 if index < 0 || index >= array.len() as i64 {
                     return Err(errors::ArrayOutOfBounds(name.to_owned()).into());
