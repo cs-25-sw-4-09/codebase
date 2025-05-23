@@ -78,7 +78,7 @@ pub fn rotate_point(p: &Point, rotate_around: &Point, theta: &Value) -> Point {
     &transformed_dist + rotate_around
 }
 
-/**Gives cleaner outpus for sin and cos*/
+/**Gives cleaner outputs for sin and cos*/
 fn calc_sin_theta(theta: &Value) -> (Value, Value) {
     let (cos, sin) = (
         snap_zero(cos(&theta), 1e-10),
@@ -87,6 +87,7 @@ fn calc_sin_theta(theta: &Value) -> (Value, Value) {
     (cos, sin)
 }
 
+/**This exists because floating point arithmetic is unprecise*/
 fn snap_zero(x: Value, eps: f64) -> Value {
     match x {
         Value::Integer(_) => x,
