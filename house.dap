@@ -1,7 +1,7 @@
-import triangle "./triangle.DAP";
-import rectangle "./rectangle.DAP";
-import window "./window.DAP";
-import circle "./circle.DAP";
+import triangle "./triangle.dap";
+import rectangle "./rectangle.dap";
+import window "./window.dap";
+import circle "./circle.dap";
 
 width: int;
 height: int;

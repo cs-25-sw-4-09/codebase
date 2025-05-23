@@ -1,5 +1,5 @@
 
-import square "./square.DAP";
+import square "./square.dap";
 
 scale_size: int; 
 border_color: color = (100,120,200,255); 
