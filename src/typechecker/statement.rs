@@ -198,8 +198,7 @@ impl TypeCheckS for Stmt {
                     return Err(errors::ForLoopTypeError(t1, t2).into());
                 }
                 // Both lines are needed as the first clone does not clone over the environment
-                let mut new_environment = environment.clone_and_clear_vtable();
-                new_environment.clone_from(&environment);
+                let mut new_environment = environment.clone();
 
                 new_environment.vtable_set(counter.to_string(), Type::Int);
 
@@ -219,7 +218,6 @@ impl TypeCheckS for Stmt {
                         return Err(errors::ForkNotBooltypeError(t1).into());
                     }
                     let mut new_environment = environment.clone();
-                    new_environment.clone_from(&environment);
 
                     for stmt in body {
                         stmt.type_check(&mut new_environment)?;
