@@ -4,23 +4,6 @@ use crate::interpreter::value::Value;
 use core::f64;
 use std::error::Error;
 
-/*************************  Scale ****************************/
-pub fn scale(mut shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
-    let top_left = shape.get_top_left();
-    shape.get_mut_figures().iter_mut().for_each(|fig| {
-        fig.get_mut_lines().iter_mut().for_each(|line| {
-            line.get_mut_points().iter_mut().for_each(|point| {
-                *point = scale_point(point, &top_left, &factor);
-            });
-        });
-    });
-    Ok(shape)
-}
-
-pub fn scale_point(p: &Point, top_left: &Point, factor: &Value) -> Point {
-    &((p - top_left) * factor) + top_left
-}
-
 /*************************  Place ****************************/
 pub fn place(
     s1: FigureArray,
@@ -50,6 +33,23 @@ pub fn place_shape_at(mut s: FigureArray, p: Point) -> FigureArray {
 
 pub fn place_point_at(point_top_left: &Point, point: &Point, offset: &Point) -> Point {
     &(point - point_top_left) + offset
+}
+
+/*************************  Scale ****************************/
+pub fn scale(mut shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
+    let top_left = shape.get_top_left();
+    shape.get_mut_figures().iter_mut().for_each(|fig| {
+        fig.get_mut_lines().iter_mut().for_each(|line| {
+            line.get_mut_points().iter_mut().for_each(|point| {
+                *point = scale_point(point, &top_left, &factor);
+            });
+        });
+    });
+    Ok(shape)
+}
+
+pub fn scale_point(p: &Point, top_left: &Point, factor: &Value) -> Point {
+    &((p - top_left) * factor) + top_left
 }
 
 /*************************  Rotate ****************************/
