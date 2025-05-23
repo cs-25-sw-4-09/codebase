@@ -4,23 +4,6 @@ use crate::interpreter::value::Value;
 use core::f64;
 use std::error::Error;
 
-/*************************  Scale ****************************/
-pub fn scale(mut shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
-    let top_left = shape.get_top_left();
-    shape.get_mut_figures().iter_mut().for_each(|fig| {
-        fig.get_mut_lines().iter_mut().for_each(|line| {
-            line.get_mut_points().iter_mut().for_each(|point| {
-                *point = scale_point(point, &top_left, &factor);
-            });
-        });
-    });
-    Ok(shape)
-}
-
-pub fn scale_point(p: &Point, top_left: &Point, factor: &Value) -> Point {
-    &((p - top_left) * factor) + top_left
-}
-
 /*************************  Place ****************************/
 pub fn place(
     s1: FigureArray,
@@ -52,22 +35,41 @@ pub fn place_point_at(point_top_left: &Point, point: &Point, offset: &Point) -> 
     &(point - point_top_left) + offset
 }
 
+/*************************  Scale ****************************/
+pub fn scale(mut shape: FigureArray, factor: Value) -> Result<FigureArray, Box<dyn Error>> {
+    let top_left = shape.get_top_left();
+    shape.get_mut_figures().iter_mut().for_each(|fig| {
+        fig.get_mut_lines().iter_mut().for_each(|line| {
+            line.get_mut_points().iter_mut().for_each(|point| {
+                *point = scale_point(point, &top_left, &factor);
+            });
+        });
+    });
+    Ok(shape)
+}
+
+pub fn scale_point(p: &Point, top_left: &Point, factor: &Value) -> Point {
+    &((p - top_left) * factor) + top_left
+}
+
 /*************************  Rotate ****************************/
 pub fn rotate(mut s: FigureArray, rotate_by: Value) -> FigureArray {
     let rotate_around = s.get_center();
+    //Convert degrees into radians
+    let theta = &rotate_by * &(f64::consts::PI / 180.).into();
     s.get_mut_figures().iter_mut().for_each(|fig| {
         fig.get_mut_lines().iter_mut().for_each(|line| {
             line.get_mut_points()
                 .iter_mut()
-                .for_each(|point| *point = rotate_point(point, &rotate_around, &rotate_by));
+                .for_each(|point| *point = rotate_point(point, &rotate_around, &theta));
         })
     });
     s
 }
 
-pub fn rotate_point(p: &Point, rotate_around: &Point, degrees: &Value) -> Point {
+pub fn rotate_point(p: &Point, rotate_around: &Point, theta: &Value) -> Point {
     let dist = p - rotate_around;
-    let (cos_theta, sin_theta) = calc_sin_theta(degrees);
+    let (cos_theta, sin_theta) = calc_sin_theta(theta);
     let transformed_dist: Point = (
         dist.get_x() * &cos_theta + dist.get_y() * &sin_theta, //x
         -(dist.get_x() * &sin_theta) + dist.get_y() * &cos_theta, //y
@@ -76,16 +78,16 @@ pub fn rotate_point(p: &Point, rotate_around: &Point, degrees: &Value) -> Point 
     &transformed_dist + rotate_around
 }
 
-/**Gives cleaner outpus for sin and cos*/
-fn calc_sin_theta(degrees: &Value) -> (Value, Value) {
-    let radians = degrees * &(f64::consts::PI / 180.).into();
+/**Gives cleaner outputs for sin and cos*/
+fn calc_sin_theta(theta: &Value) -> (Value, Value) {
     let (cos, sin) = (
-        snap_zero(cos(&radians), 1e-10),
-        snap_zero(sin(&radians), 1e-10),
+        snap_zero(cos(&theta), 1e-10),
+        snap_zero(sin(&theta), 1e-10),
     );
     (cos, sin)
 }
 
+/**This exists because floating point arithmetic is unprecise*/
 fn snap_zero(x: Value, eps: f64) -> Value {
     match x {
         Value::Integer(_) => x,
