@@ -5,8 +5,9 @@ import String "./dap-lib/digital-font/string.dap";
 begin
 
 landColor: color = (0,155,0,200);
-string: int[] = [68, 69, 78, 77, 65, 82, 75];
-text: shape = String(|string = string, main_color = landColor|);
+stringDenmark: int[] = [68, 69, 78, 77, 65, 82, 75];
+stringSweden: int[] = [83, 87, 69, 68, 69, 78];
+text: shape = String(|string = stringSweden, main_color = landColor|);
 land: shape = Denmark(|mapColor = landColor|);
 
 margin: float = land.width / 8;
@@ -15,8 +16,10 @@ land = place scale rotate text by 90 by (land.height / text.width) right (margin
 
 
 
-baseColor: color = (255,0,0,255);
-crossColor: color = (255,255,255,255);
+baseColor: color = (0,0,255,255);
+crossColor: color = (0,255,255,255);
+//baseColor: color = (255,0,0,255);
+//crossColor: color = (255,255,255,255);
 withBackground: shape = Background(|baseShape = land, baseColor = baseColor, crossColor = crossColor, margin = margin|);
 
 draw withBackground;
