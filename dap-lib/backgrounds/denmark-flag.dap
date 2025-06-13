@@ -1,0 +1,19 @@
+import dotLine "./dap-lib/lines/dottedLine-rec.dap";
+import rectangle "./dap-lib/basic-shapes/rectangle.dap";
+
+baseShape: shape;
+baseColor:color = (100,100,100,255);
+crossColor:color = (255,100,0,255);
+margin: float = 0.0;
+
+begin
+
+base: shape = rectangle(|height = (baseShape.height + margin), width = (baseShape.width + margin), fill = baseColor, thickness = 0|);
+h: shape = rectangle(|height = ((baseShape.height + margin)/7), width = (baseShape.width + margin), fill = crossColor, thickness = 0|);
+w: shape = rectangle(|height = ((baseShape.height + margin)), width = ((baseShape.width + margin)/(37/4)), fill = crossColor, thickness = 0|);
+base = place h center base;
+base = place w center (-(baseShape.width + margin)/(37/5.5),0) offset base;
+
+baseShape = place baseShape center base;
+
+draw baseShape;

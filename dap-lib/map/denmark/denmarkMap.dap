@@ -6,27 +6,27 @@ import Zealand       "./dap-lib/map/denmark/Zealand.dap";
 import Lolland       "./dap-lib/map/denmark/Lolland.dap";
 import Falster       "./dap-lib/map/denmark/Falster.dap";
 
-green: color = (0, 128, 0, 255);  // solid green fill
+mapColor: color = (0, 128, 0, 255);  // solid green fill
 
 begin
 
 // Base shape — Jutland mainland at the origin
-map: shape = JutlandMain(| fill_color = green |);
+map: shape = JutlandMain(| fill_color = mapColor |);
 
 // Add northern Jutland (island)
-map = place JutlandNorth(| fill_color = green |) top (1, -1) offset map;
+map = place JutlandNorth(| fill_color = mapColor |) top (1, -1) offset map;
 
 // Add Funen (Fyn)
-Funen: shape = Funen(| fill_color = green |);
+Funen: shape = Funen(| fill_color = mapColor |);
 map = place Funen right (-Funen.width * 0.8, -map.height + Funen.height *1.5) offset map;
 
 // Add Zealand (Sjælland)
-Zealand: shape = Zealand(| fill_color = green |);
+Zealand: shape = Zealand(| fill_color = mapColor |);
 map = place Zealand right (Zealand.width * 0.2, -map.height + Funen.height * 2.25) offset map;
 
 // Add Lolland
-Lolland: shape = Lolland(| fill_color = green |);
-Falster: shape = Falster(| fill_color = green |);
+Lolland: shape = Lolland(| fill_color = mapColor |);
+Falster: shape = Falster(| fill_color = mapColor |);
 Lolland = place rotate Falster by 150 right (-0.5, Falster.height * 0.5) offset Lolland;
 
 // Add Falster
