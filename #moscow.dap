@@ -3,13 +3,13 @@ import Background "./dap-lib/backgrounds/curved-corner.dap";
 
 begin
 
-m: int[] = [77];
-s: int[] = [83];
-c: int[] = [67];
-w: int[] = [87];
+m: int[] = [68];
+s: int[] = [69];
+c: int[] = [77];
+w: int[] = [79];
 c1: color = (67,178,236,255);
 c2: color = (163,200,46,255);
-c3: color = (255,192,8,255);
+c3: color = (78,197,165,255);
 c4: color = (249,81,27,255);
 
 mS: shape = Background(| fill = c1, margin = 2.0, baseShape = String(|string = m, main_color = (255,255,255,255)|)|);
@@ -22,4 +22,19 @@ mS = place cS right (1,0) offset mS;
 mS = place wS right (1,0) offset mS;
 
 
-draw scale mS by 10;
+d: int[] = [68];
+a: int[] = [65];
+p1: int[] = [80];
+c11: color = (255,192,8,255);
+c21: color = (209,59,64,255);
+c31: color = (221,111,157,255);
+
+ma: shape = Background(| fill = c11, margin = 2.0, baseShape = String(|string = d, main_color = (255,255,255,255)|)|);
+sa: shape = Background(| fill = c21, margin = 2.0, baseShape = String(|string = a, main_color = (255,255,255,255)|)|);
+ca: shape = Background(| fill = c31, margin = 2.0, baseShape = String(|string = p1, main_color = (255,255,255,255)|)|);
+
+ma = place sa right (1,0) offset ma;
+ma = place ca right (1,0) offset ma;
+
+
+draw scale place ma center (0, mS.height+1) offset mS by 100;
