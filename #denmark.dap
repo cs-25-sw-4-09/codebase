@@ -7,19 +7,19 @@ begin
 landColor: color = (0,155,0,200);
 stringDenmark: int[] = [68, 69, 78, 77, 65, 82, 75];
 stringSweden: int[] = [83, 87, 69, 68, 69, 78];
-text: shape = String(|string = stringSweden, main_color = landColor|);
+text: shape = rotate String(|string = stringDenmark, main_color = landColor|) by 45;
 land: shape = Denmark(|mapColor = landColor|);
 
 margin: float = land.width / 8;
 
-land = place scale rotate text by 90 by (land.height / text.width) right (margin,0) offset land;
+land = place scale text by (land.height / text.height) right (margin,0) offset land;
 
 
 
-baseColor: color = (0,0,255,255);
-crossColor: color = (0,255,255,255);
-//baseColor: color = (255,0,0,255);
-//crossColor: color = (255,255,255,255);
+//baseColor: color = (0,0,255,255);
+//crossColor: color = (255,255,0,255);
+baseColor: color = (255,0,0,255);
+crossColor: color = (255,255,255,255);
 withBackground: shape = Background(|baseShape = land, baseColor = baseColor, crossColor = crossColor, margin = margin|);
 
 draw withBackground;

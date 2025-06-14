@@ -1,0 +1,25 @@
+import String "./dap-lib/digital-font/string.dap";
+import Background "./dap-lib/backgrounds/curved-corner.dap";
+
+begin
+
+m: int[] = [77];
+s: int[] = [83];
+c: int[] = [67];
+w: int[] = [87];
+c1: color = (67,178,236,255);
+c2: color = (163,200,46,255);
+c3: color = (255,192,8,255);
+c4: color = (249,81,27,255);
+
+mS: shape = Background(| fill = c1, margin = 2.0, baseShape = String(|string = m, main_color = (255,255,255,255)|)|);
+sS: shape = Background(| fill = c2, margin = 2.0, baseShape = String(|string = s, main_color = (255,255,255,255)|)|);
+cS: shape = Background(| fill = c3, margin = 2.0, baseShape = String(|string = c, main_color = (255,255,255,255)|)|);
+wS: shape = Background(| fill = c4, margin = 2.0, baseShape = String(|string = w, main_color = (255,255,255,255)|)|);
+
+mS = place sS right (1,0) offset mS;
+mS = place cS right (1,0) offset mS;
+mS = place wS right (1,0) offset mS;
+
+
+draw scale mS by 10;
