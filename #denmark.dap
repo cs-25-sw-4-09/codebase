@@ -1,25 +1,21 @@
-import Denmark   "./dap-lib/map/denmark/denmarkMap.dap";
+import Denmark "./dap-lib/map/denmark/denmarkMap.dap";
 import Background "./dap-lib/backgrounds/denmark-flag.dap";
 import String "./dap-lib/digital-font/string.dap";
 
 begin
-
 landColor: color = (0,155,0,200);
-stringDenmark: int[] = [68, 69, 78, 77, 65, 82, 75];
-stringSweden: int[] = [83, 87, 69, 68, 69, 78];
-text: shape = rotate String(|string = stringDenmark, main_color = landColor|) by 45;
 land: shape = Denmark(|mapColor = landColor|);
 
+stringDenmark: int[] = [68, 69, 78, 77, 65, 82, 75]; // DENMARK
+stringSweden: int[] = [83, 87, 69, 68, 69, 78]; // SWEDEN
+text: shape = rotate String(|string = stringSweden, main_color = landColor|) by 90;
+
 margin: float = land.width / 8;
+text = scale text by (land.height / text.height);
+land = place text right (margin,0) offset land;
 
-land = place scale text by (land.height / text.height) right (margin,0) offset land;
-
-
-
-//baseColor: color = (0,0,255,255);
-//crossColor: color = (255,255,0,255);
-baseColor: color = (255,0,0,255);
-crossColor: color = (255,255,255,255);
+baseColor: color = (0,0,255,255);
+crossColor: color = (255,255,0,255);
 withBackground: shape = Background(|baseShape = land, baseColor = baseColor, crossColor = crossColor, margin = margin|);
 
 draw withBackground;
