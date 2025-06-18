@@ -1,0 +1,17 @@
+import font "./font.DAP";
+import circle "./circle.dap";
+
+begin
+
+str3: int[] = [10,0,12,0,11];
+text: shape = font(|str = str3, letterSize = 5, fontColor = (200,29,51, 255)|);
+pointC: shape =circle(|fill = (200,29,51, 255)|);
+
+draw (0, -100)--(0,0)(|stroke= (0,0,0,255)|);
+draw (0, -100)--(5, -95)(|stroke= (0,0,0,255)|);
+draw (0, -100)--(-5, -95)(|stroke= (0,0,0,255)|);
+draw (100, 0)--(95, 5)(|stroke= (0,0,0,255)|);
+draw (100, 0)--(95, -5)(|stroke= (0,0,0,255)|);
+draw place scale pointC by 1.5 center (-50,0) offset (0, 0)--(100,0)(|stroke= (0,0,0,255)|);
+
+draw text at (-12, 8);
