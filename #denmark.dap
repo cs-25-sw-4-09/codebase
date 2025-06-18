@@ -1,10 +1,10 @@
-import Denmark "./dap-lib/map/denmark/denmarkMap.dap";
+import DenmarkMap "./dap-lib/map/denmark/denmarkMap.dap";
 import Background "./dap-lib/backgrounds/denmark-flag.dap";
 import String "./dap-lib/digital-font/string.dap";
 
 begin
 landColor: color = (0,155,0,200);
-land: shape = Denmark(|mapColor = landColor|);
+land: shape = DenmarkMap(|mapColor = landColor|);
 
 stringDenmark: int[] = [68, 69, 78, 77, 65, 82, 75]; // DENMARK
 stringSweden: int[] = [83, 87, 69, 68, 69, 78]; // SWEDEN
