@@ -11,10 +11,10 @@ begin
 size: int = 50;
 triangle: shape = triangle(|width = size + 0.0, height = size + 0.0, stroke_color = (0,255,0,100)|);
 square: shape = rect(|size = size, stroke = (0,0,255,100)|);
-leftFig: shape = arrow(|dir = true|);
-rightFig: shape = arrow(|dir = false|);
+leftFig: shape = arrow(|dir = !true|);
+rightFig: shape = arrow(|dir = !false|);
 
-combine: shape = place leftFig right rightFig;
+combine: shape = place leftFig left rightFig;
 main: shape = place square center combine;
 main = place main center triangle;
 
