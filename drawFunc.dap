@@ -1,0 +1,60 @@
+import string "./dap-lib/digital-font/string.dap";
+import dotSquare "./dap-lib/backgrounds/curved-corner.dap";
+import triangle "./dap-lib/basic-shapes/triangle.dap";
+import arrow "./dap-lib/basic-shapes/arrow.dap";
+import rect "./dap-lib/basic-shapes/square.dap";
+
+begin
+
+
+
+size: int = 50;
+triangle: shape = triangle(|width = size + 0.0, height = size + 0.0, stroke_color = (0,255,0,100)|);
+square: shape = rect(|size = size, stroke = (0,0,255,100)|);
+leftFig: shape = arrow(|dir = true|);
+rightFig: shape = arrow(|dir = false|);
+
+combine: shape = place leftFig right rightFig;
+main: shape = place square center combine;
+main = place main center triangle;
+
+
+main = dotSquare(|baseShape = main, stroke = (0,0,0,255), margin = size/10.0|);
+combine = dotSquare(|baseShape = combine, stroke = (0,0,0,255), margin = size/10.0|);
+triangle = dotSquare(|baseShape = triangle, stroke = (0,0,0,255), margin = size/10.0|);
+square = dotSquare(|baseShape = square, stroke = (0,0,0,255), margin =size/10.0 |);
+leftFig = dotSquare(|baseShape = leftFig, stroke = (0,0,0,255), margin =size/10.0 |);
+rightFig = dotSquare(|baseShape = rightFig, stroke = (0,0,0,255), margin = size/10.0|);
+
+
+charStringLeft: int[] = [76, 69, 70, 84];
+charStringRight: int[] = [82, 73, 71, 72, 84];
+charStringTriangle: int[] = [84, 82, 73, 65, 78, 71, 76, 69];
+charStringSquare: int[] = [83, 81, 85, 65, 82, 69];
+charStringMain: int[] = [77,65,73,78];
+charStringCombine: int[] = [67, 79, 77, 66, 73, 78, 69];
+
+c1: color = (0,0,0,255);
+
+textLeft: shape = string(|string = charStringLeft, main_color = c1|);
+textRight: shape = string(|string = charStringRight, main_color = c1|);
+textTriangle: shape = string(|string = charStringTriangle, main_color = c1|);
+textSqaure: shape = string(|string = charStringSquare, main_color = c1|);
+textMain: shape = string(|string = charStringMain, main_color = c1|);
+textCombine: shape = string(|string = charStringCombine, main_color = c1|);
+
+leftFig = place textLeft center (0, -textLeft.height - leftFig.height/2) offset leftFig;
+rightFig = place textRight center (0, -textRight.height - rightFig.height/2) offset rightFig;
+triangle = place textTriangle center (0, -textTriangle.height - triangle.height/2) offset triangle;
+square = place textSqaure center (0, -textSqaure.height - square.height/2) offset square;
+main = place textMain center (0, -textMain.height - main.height/2) offset main;
+combine = place textCombine center (0, -textCombine.height - combine.height/2) offset combine;
+
+_offset: int = -10;
+draw leftFig at (_offset,0);
+draw rightFig at (_offset + rightFig.width * 1.25, 0);
+
+draw combine at (0, leftFig.height * 1.5);
+draw square at (0, leftFig.height * 2 + combine.height);
+draw triangle at (0, leftFig.height * 2.5 + combine.height + square.height);
+draw main at (rightFig.width * 4, 0);

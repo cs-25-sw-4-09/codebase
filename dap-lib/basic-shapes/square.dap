@@ -1,6 +1,6 @@
 size: int;
-fill: color = (0,0,0,255);
-stroke: color = (0,0,0,255);
+fill: color = (0,0,0,0);
+stroke: color = (0,0,0,0);
 thickness:int  = 1;
 
 begin

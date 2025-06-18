@@ -2,7 +2,9 @@ import DenmarkMap "./dap-lib/map/denmark/denmarkMap.dap";
 import Background "./dap-lib/backgrounds/denmark-flag.dap";
 import String "./dap-lib/digital-font/string.dap";
 
+
 begin
+
 landColor: color = (0,155,0,200);
 land: shape = DenmarkMap(|mapColor = landColor|);
 

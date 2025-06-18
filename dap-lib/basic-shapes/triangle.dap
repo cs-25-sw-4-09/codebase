@@ -1,6 +1,6 @@
 width: float;
 height: float;
-fill: color = (0,0,0,255);
+fill: color = (0,0,0,0);
 stroke_color: color = (0,0,0,0);
 thickness:int  = 1;
 

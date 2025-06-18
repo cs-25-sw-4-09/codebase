@@ -1,0 +1,12 @@
+dir: bool = false;
+begin
+
+fork{
+    (dir) -> {
+        leftArrow: shape = (0,0)--(20,20)--(0,40)(|stroke = (128,0,255,100)|);
+        draw leftArrow;
+    }
+    (otherwise) -> {
+        rightArrow: shape = (0,0)--(20,20)--(0,40)(|stroke = (255,0,128,100)|);
+        draw rotate rightArrow by 180;}
+}

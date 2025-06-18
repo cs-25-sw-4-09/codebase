@@ -160,6 +160,10 @@ impl SvgGenerator {
         for att in attributes {
             attr_str.push_str(att?.as_str());
         }
+        if !fig.get_attributes().contains_key("fill") {
+            attr_str.push_str("fill=\"rgba(0,0,0,0)\"")
+        }
+        
         Ok(attr_str)
     }
 
